@@ -168,6 +168,105 @@ body.touch #joy{display:block}
 #vidList{display:flex;gap:8px;flex-wrap:wrap}
 #vidList .on{border-color:#c084fc;color:#e9d5ff}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== MODERN GLASSMORPHISM & SCI-FI AESTHETICS ===== */
+:root {
+  --glass-bg: rgba(13, 14, 22, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --neon-glow: 0 0 20px rgba(167, 139, 250, 0.45);
+}
+
+.pill {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.pill:hover {
+  background: rgba(26, 28, 42, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.65), 0 0 15px rgba(167, 139, 250, 0.3) !important;
+}
+
+#toolbar {
+  background: rgba(11, 12, 18, 0.75) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  border-radius: 16px !important;
+  padding: 6px 10px !important;
+  gap: 4px !important;
+}
+#toolbar button {
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+}
+#toolbar button:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+}
+#toolbar button.on {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(192, 38, 211, 0.4)) !important;
+  border: 1px solid rgba(192, 38, 211, 0.5) !important;
+}
+
+.drop, .drawer, #sashaCard, .card, #mini, #emojiPop, #drawPal {
+  background: rgba(12, 13, 20, 0.85) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+#sashaCard {
+  border: 1px solid var(--nc, rgba(167, 139, 250, 0.6)) !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px var(--nc, rgba(124, 58, 237, 0.35)) !important;
+  border-radius: 18px !important;
+}
+
+.btn {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: 10px !important;
+}
+.btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(247, 181, 0, 0.35) !important;
+  filter: brightness(1.1) !important;
+}
+
+.toast {
+  background: rgba(15, 16, 26, 0.88) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6) !important;
+  border-radius: 12px !important;
+}
+
+#mini {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(124, 58, 237, 0.25) !important;
+}
+
+#loader {
+  background: radial-gradient(circle at 50% 30%, #2e1065 0%, #0c081c 70%, #05040a 100%) !important;
+}
+#ldGo {
+  background: linear-gradient(135deg, #8b5cf6, #d946ef) !important;
+  box-shadow: 0 10px 35px rgba(217, 70, 239, 0.5) !important;
+}
+
+canvas {
+  filter: contrast(1.03) saturate(1.06);
+}
+
 </style>
 
 </head>
@@ -2642,6 +2741,7 @@ function buildWorld(scene2, quality) {
     const fl = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshStandardMaterial({ map: texFrom(fc), roughness: k === "atrium" || k === "keris" ? 0.22 : 0.6, metalness: k === "keris" || k === "csn" ? 0.25 : 0, emissive: 16777215, emissiveMap: k === "git" || k === "csn" || k === "keris" ? texFrom(fc) : null, emissiveIntensity: k === "git" || k === "csn" || k === "keris" ? 0.45 : 0 }));
     fl.rotation.x = -Math.PI / 2;
     fl.position.set((r.x0 + r.x1) / 2, 0, (r.z0 + r.z1) / 2);
+    fl.receiveShadow = true;
     scene2.add(fl);
     api.floors.push(fl);
     const s = new THREE.Shape();
@@ -4025,7 +4125,7 @@ var store = {
   }
 };
 var cleanName = (s) => String(s || "").replace(/[^\p{L}\p{N} ._'\u2019-]/gu, "").trim().slice(0, 16) || "IT'ers";
-var S = Object.assign({ name: "IT'ers", color: "#7c3aed", quality: "med", sens: 1, invert: false, fp: false, minimap: true, speed: 1, music: true, vol: 0.55 }, store.get("settings", {}));
+var S = Object.assign({ name: "IT'ers", color: "#7c3aed", quality: "med", sens: 1, invert: false, fp: false, minimap: true, speed: 1, music: true, vol: 0.85 }, store.get("settings", {}));
 if (!store.get("settings", null) && matchMedia("(pointer:coarse)").matches)
   S.quality = "low";
 S.name = cleanName(S.name);
@@ -4035,7 +4135,7 @@ if (!["low", "med", "high"].includes(S.quality))
   S.quality = "med";
 S.sens = clamp(+S.sens || 1, 0.3, 3);
 S.speed = clamp(+S.speed || 1, 0.5, 2);
-S.vol = clamp(isFinite(+S.vol) ? +S.vol : 0.55, 0, 1);
+S.vol = clamp(isFinite(+S.vol) ? +S.vol : 0.85, 0, 1);
 S.music = S.music !== false;
 var saveS = () => store.set("settings", S);
 function toast(msg, ms = 3200) {
@@ -4052,18 +4152,144 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, S.quality === "high" ? 2 : S.q
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE2.SRGBColorSpace;
 renderer.toneMapping = THREE2.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1;
+renderer.toneMappingExposure = 1.12;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE2.PCFSoftShadowMap;
 renderer.xr.enabled = true;
 $("app").appendChild(renderer.domElement);
 renderer.domElement.tabIndex = 0;
 var scene = new THREE2.Scene();
-scene.background = new THREE2.Color(1315881);
+scene.background = new THREE2.Color(0x0a0914);
+scene.fog = new THREE2.FogExp2(0x0a0914, 0.010);
 var pmrem = new THREE2.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-scene.add(new THREE2.HemisphereLight(16777215, 15193834, 1.25));
-var sun = new THREE2.DirectionalLight(16777215, 0.9);
-sun.position.set(12, 30, 10);
+scene.add(new THREE2.HemisphereLight(0xffffff, 0x1a1630, 1.15));
+var sun = new THREE2.DirectionalLight(0xffffff, 0.95);
+sun.position.set(14, 32, 12);
+sun.castShadow = true;
+sun.shadow.mapSize.width = 2048;
+sun.shadow.mapSize.height = 2048;
+sun.shadow.camera.near = 0.5;
+sun.shadow.camera.far = 120;
+sun.shadow.camera.left = -48;
+sun.shadow.camera.right = 48;
+sun.shadow.camera.top = 48;
+sun.shadow.camera.bottom = -48;
+sun.shadow.bias = -0.0003;
+sun.shadow.normalBias = 0.02;
 scene.add(sun);
+
+// --- Lab Room Ambient Spotlights ---
+const roomLights = [
+  { x: 0, y: 5.5, z: 20, col: 0xf59e0b, intensity: 2.2, dist: 18 },  // Sambutan
+  { x: 0, y: 7.2, z: 0, col: 0xfcd34d, intensity: 2.8, dist: 28 },   // Atrium
+  { x: -25, y: 5.0, z: 0, col: 0x06b6d4, intensity: 3.2, dist: 32 }, // KERIS
+  { x: -14, y: 5.0, z: -24, col: 0x10b981, intensity: 3.0, dist: 32 },// GIT
+  { x: 14, y: 5.0, z: -24, col: 0xa855f7, intensity: 3.0, dist: 32 }, // SE
+  { x: 25, y: 5.0, z: 0, col: 0xf59e0b, intensity: 3.0, dist: 32 }   // CSN
+];
+roomLights.forEach(l => {
+  const pl = new THREE2.PointLight(l.col, l.intensity, l.dist);
+  pl.position.set(l.x, l.y, l.z);
+  scene.add(pl);
+});
+
+// --- Ambient Floating Cyber Motes (Debu Cahaya Melayang) ---
+const moteCount = 950;
+const moteGeo = new THREE2.BufferGeometry();
+const motePos = new Float32Array(moteCount * 3);
+const moteBaseY = new Float32Array(moteCount);
+const moteSpeeds = new Float32Array(moteCount);
+for (let i = 0; i < moteCount; i++) {
+  motePos[i * 3] = (Math.random() - 0.5) * 80;
+  moteBaseY[i] = 0.5 + Math.random() * 4.2;
+  motePos[i * 3 + 1] = moteBaseY[i];
+  motePos[i * 3 + 2] = (Math.random() - 0.5) * 75;
+  moteSpeeds[i] = 0.4 + Math.random() * 1.6;
+}
+moteGeo.setAttribute('position', new THREE2.BufferAttribute(motePos, 3));
+const pCanvas = document.createElement('canvas');
+pCanvas.width = pCanvas.height = 64;
+const pCtx = pCanvas.getContext('2d');
+const pGrad = pCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+pGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+pGrad.addColorStop(0.35, 'rgba(216, 180, 254, 0.85)');
+pGrad.addColorStop(0.7, 'rgba(147, 197, 253, 0.3)');
+pGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+pCtx.fillStyle = pGrad;
+pCtx.fillRect(0, 0, 64, 64);
+const pTex = new THREE2.CanvasTexture(pCanvas);
+const motes = new THREE2.Points(moteGeo, new THREE2.PointsMaterial({
+  size: 0.16,
+  map: pTex,
+  transparent: true,
+  opacity: 0.8,
+  blending: THREE2.AdditiveBlending,
+  depthWrite: false
+}));
+scene.add(motes);
+
+// ---------- Procedural WebAudio SFX Engine ----------
+var SFX = (() => {
+  let ctx = null;
+  const getCtx = () => {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) ctx = new AC();
+    }
+    if (ctx && ctx.state === "suspended") ctx.resume();
+    return ctx;
+  };
+  return {
+    step() {
+      const c = getCtx(); if (!c) return;
+      const osc = c.createOscillator(), g = c.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(110 + Math.random() * 20, c.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(45, c.currentTime + 0.08);
+      g.gain.setValueAtTime(0.09, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.08);
+      osc.connect(g); g.connect(c.destination);
+      osc.start(); osc.stop(c.currentTime + 0.08);
+    },
+    bloop(pitch = 1) {
+      const c = getCtx(); if (!c) return;
+      const osc = c.createOscillator(), g = c.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(460 * pitch, c.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880 * pitch, c.currentTime + 0.15);
+      g.gain.setValueAtTime(0.22, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.18);
+      osc.connect(g); g.connect(c.destination);
+      osc.start(); osc.stop(c.currentTime + 0.18);
+    },
+    chime() {
+      const c = getCtx(); if (!c) return;
+      [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+        const osc = c.createOscillator(), g = c.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, c.currentTime + i * 0.06);
+        g.gain.setValueAtTime(0.15, c.currentTime + i * 0.06);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + i * 0.06 + 0.35);
+        osc.connect(g); g.connect(c.destination);
+        osc.start(c.currentTime + i * 0.06);
+        osc.stop(c.currentTime + i * 0.06 + 0.35);
+      });
+    },
+    whoosh() {
+      const c = getCtx(); if (!c) return;
+      const osc = c.createOscillator(), g = c.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(150, c.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(600, c.currentTime + 0.2);
+      g.gain.setValueAtTime(0.16, c.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 0.25);
+      osc.connect(g); g.connect(c.destination);
+      osc.start(); osc.stop(c.currentTime + 0.25);
+    }
+  };
+})();
+
 var camera = new THREE2.PerspectiveCamera(68, innerWidth / innerHeight, 0.05, 900);
 var dolly = new THREE2.Group();
 dolly.add(camera);
@@ -4104,41 +4330,109 @@ function micCanvas(on) {
 }
 function makeAvatar(color, name) {
   const g = new THREE2.Group(), col = new THREE2.Color(color);
-  const mat = new THREE2.MeshStandardMaterial({ color: col, roughness: 0.38, metalness: 0.05 });
+  // Material utama (bisa diubah warna dari pengaturan)
+  const mat = new THREE2.MeshStandardMaterial({ color: col, roughness: 0.24, metalness: 0.45 });
+  const trimM = new THREE2.MeshStandardMaterial({ color: 0x11131a, roughness: 0.3, metalness: 0.7 });
+  const goldM = new THREE2.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.2, metalness: 0.85 });
+  const glowM = new THREE2.MeshBasicMaterial({ color: 0x38bdf8, toneMapped: false });
+
+  // Badan robotik / jaket teknologi futuristik
   const pts = [];
   for (let i = 0; i <= 20; i++) {
-    const t2 = i / 20, y = 0.42 + t2 * 0.78, r = 0.07 + Math.sin(Math.min(1, t2 * 1.05) * Math.PI * 0.62) * 0.2;
+    const t2 = i / 20, y = 0.42 + t2 * 0.82, r = 0.08 + Math.sin(Math.min(1, t2 * 1.05) * Math.PI * 0.65) * 0.21;
     pts.push(new THREE2.Vector2(t2 > 0.97 ? r * (1 - (t2 - 0.97) * 12) : r, y));
   }
   pts.unshift(new THREE2.Vector2(0, 0.42));
-  pts.push(new THREE2.Vector2(0, 1.2));
+  pts.push(new THREE2.Vector2(0, 1.24));
   const body = new THREE2.Mesh(new THREE2.LatheGeometry(pts, 36), mat);
+  body.castShadow = true;
   g.add(body);
+
+  // Kerah dan pelindung bahu (Shoulder Guards)
+  const collar = new THREE2.Mesh(new THREE2.TorusGeometry(0.18, 0.035, 12, 32), trimM);
+  collar.rotation.x = Math.PI / 2;
+  collar.position.y = 1.24;
+  g.add(collar);
+
+  for (const sx of [-1, 1]) {
+    const pad = new THREE2.Mesh(new THREE2.BoxGeometry(0.12, 0.05, 0.2), trimM);
+    pad.position.set(sx * 0.26, 1.22, 0);
+    pad.rotation.z = -sx * 0.2;
+    pad.castShadow = true;
+    g.add(pad);
+    // Strip bercahaya pada bahu
+    const padGlow = new THREE2.Mesh(new THREE2.BoxGeometry(0.04, 0.015, 0.16), glowM);
+    padGlow.position.set(sx * 0.26, 1.25, 0);
+    padGlow.rotation.z = -sx * 0.2;
+    g.add(padGlow);
+  }
+
+  // Lambang reaktor inti / dada bercahaya
+  const core = new THREE2.Mesh(new THREE2.CylinderGeometry(0.045, 0.045, 0.03, 16), glowM);
+  core.rotation.x = Math.PI / 2;
+  core.position.set(0, 1.04, 0.22);
+  g.add(core);
+
+  // Kepala
   const headG = new THREE2.Group();
-  headG.position.y = 1.5;
+  headG.position.y = 1.54;
   g.add(headG);
   const head = new THREE2.Mesh(new THREE2.SphereGeometry(0.26, 36, 24), mat);
-  head.scale.set(1, 0.92, 1);
+  head.scale.set(1, 0.94, 1);
+  head.castShadow = true;
   headG.add(head);
-  const visor = new THREE2.Mesh(new THREE2.SphereGeometry(0.268, 36, 12, Math.PI * 1.05, Math.PI * 0.9, Math.PI * 0.42, Math.PI * 0.2), new THREE2.MeshStandardMaterial({ color: 1706786, roughness: 0.2, metalness: 0.3 }));
-  visor.scale.set(1, 0.92, 1);
+
+  // Helm / Visor Glossy Modern dengan HUD melengkung
+  const visor = new THREE2.Mesh(
+    new THREE2.SphereGeometry(0.268, 36, 16, Math.PI * 1.02, Math.PI * 0.96, Math.PI * 0.4, Math.PI * 0.24),
+    new THREE2.MeshStandardMaterial({ color: 0x05060b, roughness: 0.12, metalness: 0.85 })
+  );
+  visor.scale.set(1, 0.94, 1);
   headG.add(visor);
-  const band = new THREE2.Mesh(new THREE2.SphereGeometry(0.262, 36, 10, 0, Math.PI * 2, Math.PI * 0.56, Math.PI * 0.16), new THREE2.MeshStandardMaterial({ color: 3803711, roughness: 0.3 }));
-  band.scale.set(1, 0.92, 1);
-  headG.add(band);
-  const eyeM = new THREE2.MeshBasicMaterial({ color: 16777215 });
+
+  // Garis HUD digital futuristik di dalam visor
+  const hudArc = new THREE2.Mesh(
+    new THREE2.TorusGeometry(0.12, 0.008, 6, 24, Math.PI * 0.8),
+    glowM
+  );
+  hudArc.rotation.z = -Math.PI * 0.4;
+  hudArc.position.set(0, 0.02, -0.264);
+  headG.add(hudArc);
+
+  // Headset Komunikasi Cyber dengan Cincin Lampu LED di Telinga
   for (const sx of [-1, 1]) {
-    const e = new THREE2.Mesh(new THREE2.RingGeometry(0.026, 0.042, 20), eyeM);
-    e.position.set(sx * 0.075, 0, -0.262);
-    e.rotation.y = Math.PI;
-    headG.add(e);
+    const earCup = new THREE2.Mesh(new THREE2.CylinderGeometry(0.08, 0.08, 0.06, 24), trimM);
+    earCup.rotation.z = Math.PI / 2;
+    earCup.position.set(sx * 0.27, 0.01, 0);
+    headG.add(earCup);
+
+    const earRing = new THREE2.Mesh(new THREE2.TorusGeometry(0.055, 0.01, 8, 24), glowM);
+    earRing.rotation.y = Math.PI / 2;
+    earRing.position.set(sx * 0.305, 0.01, 0);
+    headG.add(earRing);
   }
+
+  // Mini Companion Drone / Thruster Pack di belakang punggung
+  const pack = new THREE2.Mesh(new THREE2.BoxGeometry(0.2, 0.24, 0.08), trimM);
+  pack.position.set(0, 0.98, -0.22);
+  g.add(pack);
+  for (const sx of [-1, 1]) {
+    const noz = new THREE2.Mesh(new THREE2.CylinderGeometry(0.035, 0.045, 0.06, 16), goldM);
+    noz.position.set(sx * 0.065, 0.84, -0.22);
+    g.add(noz);
+    const fire = new THREE2.Mesh(new THREE2.SphereGeometry(0.025, 12, 8), glowM);
+    fire.position.set(sx * 0.065, 0.8, -0.22);
+    g.add(fire);
+  }
+
+  // Label nama & mic
   const tag = spriteFrom(nameCanvas(name), 0.2);
-  tag.position.y = 2.05;
+  tag.position.y = 2.12;
   g.add(tag);
   const mic = spriteFrom(micCanvas(false), 0.13);
-  mic.position.y = 1.88;
+  mic.position.y = 1.94;
   g.add(mic);
+
   g.userData = { mat, body, headG, tag, mic };
   return g;
 }
@@ -4957,6 +5251,7 @@ function showHeadset() {
     };
 }
 function teleport(x, z, yaw) {
+  if (typeof SFX !== "undefined") SFX.whoosh();
   const f2 = $("fade");
   f2.style.opacity = 1;
   setTimeout(() => {
@@ -5935,7 +6230,7 @@ function mpTick(dt) {
     r.av.userData.body.scale.y = r.sit ? 0.85 : 1;
     if (r.audio) {
       const d = Math.hypot(r.cur.x - P.x, r.cur.z - P.z);
-      r.audio.volume = r.mega ? 1 : clamp(1 - (d - 3) / 14, 0, 1);
+      r.audio.volume = r.mega ? 1 : clamp(1 - (d - 8) / 36, 0.25, 1);
     }
   }
   presT += dt;
@@ -6000,6 +6295,7 @@ function makePC(id) {
     if (!r.audio) {
       r.audio = new Audio();
       r.audio.autoplay = true;
+      r.audio.volume = 1;
     }
     r.audio.srcObject = e.streams[0] || new MediaStream([e.track]);
     r.audio.play().catch(() => {
@@ -6100,6 +6396,13 @@ var camPos = new THREE2.Vector3();
 var camRay = new THREE2.Raycaster();
 function update(dt) {
   t += dt;
+  if (typeof motes !== "undefined" && motes.geometry) {
+    const arr = motes.geometry.attributes.position.array;
+    for (let i = 0; i < moteCount; i++) {
+      arr[i * 3 + 1] = moteBaseY[i] + Math.sin(t * moteSpeeds[i] + i) * 0.22;
+    }
+    motes.geometry.attributes.position.needsUpdate = true;
+  }
   for (const f3 of world.anim)
     f3(t, dt);
   npcTick(dt);
@@ -6394,94 +6697,165 @@ function hintSprite(ch, col) {
 function makeRobot(lab) {
   const L = LABS[lab], b = L.bot, pos = NPC_POS[lab], g = new THREE2.Group();
   g.position.set(pos.x, 0, pos.z);
-  const bodyM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(b.body), roughness: 0.28, metalness: 0.15 });
-  const accM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(b.accent), roughness: 0.35, emissive: new THREE2.Color(b.accent), emissiveIntensity: 0.35 });
+  const bodyM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(b.body), roughness: 0.18, metalness: 0.55 });
+  const accM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(b.accent), roughness: 0.25, metalness: 0.8, emissive: new THREE2.Color(b.accent), emissiveIntensity: 0.45 });
   const glowM = new THREE2.MeshBasicMaterial({ color: new THREE2.Color(b.eye), toneMapped: false });
   const rig = new THREE2.Group();
   g.add(rig);
-  // dasar melayang
-  const ring = new THREE2.Mesh(new THREE2.TorusGeometry(0.42, 0.04, 10, 40), glowM);
+
+  // Dasar Melayang: Cincin Ganda Berlawanan Arah (Dual Thrusters)
+  const ring = new THREE2.Mesh(new THREE2.TorusGeometry(0.44, 0.035, 10, 48), glowM);
   ring.rotation.x = Math.PI / 2;
-  ring.position.y = 0.06;
+  ring.position.y = 0.08;
   g.add(ring);
-  const shadow = world.glowSprite(b.eye, 1.3, 0.45);
-  shadow.position.y = 0.08;
+
+  const ring2 = new THREE2.Mesh(new THREE2.TorusGeometry(0.32, 0.02, 8, 36), accM);
+  ring2.rotation.x = Math.PI / 2;
+  ring2.position.y = 0.05;
+  g.add(ring2);
+
+  const shadow = world.glowSprite(b.eye, 1.5, 0.55);
+  shadow.position.y = 0.06;
   g.add(shadow);
-  // badan
-  const torso = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.34, 0.42, 10, 24), bodyM);
+
+  // Badan robot dengan proporsi dinamis & bayangan
+  const torso = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.35, 0.44, 12, 28), bodyM);
   torso.position.y = 0.95;
-  torso.scale.set(1, 1, 0.85);
+  torso.scale.set(1, 1, 0.86);
+  torso.castShadow = true;
   rig.add(torso);
-  const belt = new THREE2.Mesh(new THREE2.TorusGeometry(0.35, 0.035, 8, 32), accM);
+
+  const belt = new THREE2.Mesh(new THREE2.TorusGeometry(0.36, 0.038, 10, 36), accM);
   belt.rotation.x = Math.PI / 2;
   belt.position.y = 0.78;
-  belt.scale.set(1, 0.85, 1);
+  belt.scale.set(1, 0.86, 1);
   rig.add(belt);
+
+  // Layar dada dengan border berkilau
   const chestC = mkCanvas(256, 160), cx = chestC.getContext("2d");
-  cx.fillStyle = "#0b0a1a";
-  rr(cx, 0, 0, 256, 160, 30);
+  cx.fillStyle = "#090914";
+  rr(cx, 0, 0, 256, 160, 24);
   cx.fill();
+  cx.strokeStyle = b.eye;
+  cx.lineWidth = 6;
+  rr(cx, 4, 4, 248, 152, 20);
+  cx.stroke();
   cx.fillStyle = b.eye;
-  cx.font = `700 ${L.code.length > 3 ? 60 : 76}px ${FONT}`;
+  cx.font = `700 ${L.code.length > 3 ? 56 : 72}px ${FONT}`;
   cx.textAlign = "center";
   cx.textBaseline = "middle";
-  cx.fillText(L.code, 128, 84);
+  cx.fillText(L.code, 128, 82);
   const chestT = new THREE2.CanvasTexture(chestC);
   chestT.colorSpace = THREE2.SRGBColorSpace;
-  const chest = new THREE2.Mesh(new THREE2.PlaneGeometry(0.34, 0.21), new THREE2.MeshBasicMaterial({ map: chestT, toneMapped: false }));
-  chest.position.set(0, 1.02, 0.296);
+  const chest = new THREE2.Mesh(new THREE2.PlaneGeometry(0.36, 0.22), new THREE2.MeshBasicMaterial({ map: chestT, toneMapped: false }));
+  chest.position.set(0, 1.02, 0.305);
   rig.add(chest);
-  // kepala
+
+  // Kepala
   const headG = new THREE2.Group();
-  headG.position.y = 1.62;
+  headG.position.y = 1.64;
   rig.add(headG);
-  const head = new THREE2.Mesh(new THREE2.SphereGeometry(0.3, 32, 24), bodyM);
-  head.scale.set(1.25, 0.95, 1);
+  const head = new THREE2.Mesh(new THREE2.SphereGeometry(0.31, 32, 24), bodyM);
+  head.scale.set(1.22, 0.95, 1);
+  head.castShadow = true;
   headG.add(head);
-  const visor = new THREE2.Mesh(new THREE2.SphereGeometry(0.305, 32, 16, Math.PI * 0.1, Math.PI * 0.8, Math.PI * 0.3, Math.PI * 0.42), new THREE2.MeshStandardMaterial({ color: 1118498, roughness: 0.15, metalness: 0.5 }));
-  visor.scale.set(1.25, 0.95, 1);
-  visor.rotation.y = -Math.PI / 2 + Math.PI;
+
+  // Visor Futuristik Gelap Berkilau
+  const visor = new THREE2.Mesh(new THREE2.SphereGeometry(0.315, 32, 16, Math.PI * 0.1, Math.PI * 0.8, Math.PI * 0.28, Math.PI * 0.44), new THREE2.MeshStandardMaterial({ color: 0x05060c, roughness: 0.1, metalness: 0.9 }));
+  visor.scale.set(1.22, 0.95, 1);
   visor.rotation.y = 0;
   headG.add(visor);
-  // visor: arahkan ke depan (+z)
-  visor.rotation.y = Math.PI / 2 - Math.PI * 0.5;
+
+  // Mata Ekspresif Bercahaya
   const eyes = [];
   for (const sx of [-1, 1]) {
-    const e = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.035, 0.05, 6, 12), glowM);
-    e.position.set(sx * 0.12, 0.02, 0.3);
+    const e = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.038, 0.055, 8, 16), glowM);
+    e.position.set(sx * 0.12, 0.02, 0.31);
     headG.add(e);
     eyes.push(e);
   }
-  const mouth = new THREE2.Mesh(new THREE2.TorusGeometry(0.06, 0.012, 6, 16, Math.PI), glowM);
-  mouth.position.set(0, -0.08, 0.29);
+  const mouth = new THREE2.Mesh(new THREE2.TorusGeometry(0.065, 0.012, 6, 20, Math.PI), glowM);
+  mouth.position.set(0, -0.08, 0.3);
   mouth.rotation.z = Math.PI;
   headG.add(mouth);
+
   for (const sx of [-1, 1]) {
-    const ear = new THREE2.Mesh(new THREE2.CylinderGeometry(0.09, 0.09, 0.08, 20), accM);
+    const ear = new THREE2.Mesh(new THREE2.CylinderGeometry(0.095, 0.095, 0.08, 24), accM);
     ear.rotation.z = Math.PI / 2;
-    ear.position.set(sx * 0.38, 0, 0);
+    ear.position.set(sx * 0.39, 0, 0);
     headG.add(ear);
+    const earLight = new THREE2.Mesh(new THREE2.TorusGeometry(0.065, 0.01, 8, 20), glowM);
+    earLight.rotation.y = Math.PI / 2;
+    earLight.position.set(sx * 0.44, 0, 0);
+    headG.add(earLight);
   }
-  const ant = new THREE2.Mesh(new THREE2.CylinderGeometry(0.012, 0.012, 0.22, 8), bodyM);
-  ant.position.y = 0.36;
+
+  const ant = new THREE2.Mesh(new THREE2.CylinderGeometry(0.014, 0.014, 0.24, 12), accM);
+  ant.position.y = 0.38;
   headG.add(ant);
-  const tip = new THREE2.Mesh(new THREE2.SphereGeometry(0.05, 16, 12), glowM);
-  tip.position.y = 0.48;
+  const tip = new THREE2.Mesh(new THREE2.SphereGeometry(0.055, 16, 12), glowM);
+  tip.position.y = 0.52;
   headG.add(tip);
-  const tipGlow = world.glowSprite(b.eye, 0.4, 0.8);
-  tipGlow.position.y = 0.48;
+  const tipGlow = world.glowSprite(b.eye, 0.5, 0.85);
+  tipGlow.position.y = 0.52;
   headG.add(tipGlow);
-  // lengan
+
+  // --- 3D Holographic Lab Symbol Floating Over Head ---
+  const holoG = new THREE2.Group();
+  holoG.position.y = 0.86;
+  headG.add(holoG);
+  if (lab === "keris") {
+    // 🧠 AI Neural Cluster: Inti bercahaya + 4 node berputar
+    const coreH = new THREE2.Mesh(new THREE2.SphereGeometry(0.08, 16, 12), glowM);
+    holoG.add(coreH);
+    for (let i = 0; i < 4; i++) {
+      const ang = (i / 4) * Math.PI * 2;
+      const node = new THREE2.Mesh(new THREE2.SphereGeometry(0.035, 10, 8), accM);
+      node.position.set(Math.cos(ang) * 0.16, Math.sin(ang) * 0.1, Math.sin(ang * 2) * 0.08);
+      holoG.add(node);
+    }
+  } else if (lab === "git") {
+    // 🌍 Wireframe Globe + Mini Satellite
+    const globeH = new THREE2.Mesh(new THREE2.SphereGeometry(0.12, 14, 10), new THREE2.MeshBasicMaterial({ color: new THREE2.Color(b.eye), wireframe: true }));
+    holoG.add(globeH);
+    const orbRing = new THREE2.Mesh(new THREE2.TorusGeometry(0.17, 0.008, 6, 24), glowM);
+    orbRing.rotation.x = Math.PI / 3;
+    holoG.add(orbRing);
+  } else if (lab === "se") {
+    // 💻 Glowing Code Brackets { }
+    const brMat = new THREE2.MeshBasicMaterial({ color: new THREE2.Color(b.eye), wireframe: true });
+    const b1 = new THREE2.Mesh(new THREE2.TorusGeometry(0.12, 0.02, 6, 16, Math.PI * 0.7), glowM);
+    b1.position.x = -0.1;
+    b1.rotation.z = Math.PI * 0.65;
+    holoG.add(b1);
+    const b2 = new THREE2.Mesh(new THREE2.TorusGeometry(0.12, 0.02, 6, 16, Math.PI * 0.7), glowM);
+    b2.position.x = 0.1;
+    b2.rotation.z = -Math.PI * 0.35;
+    holoG.add(b2);
+  } else {
+    // 🛡️ CSN Cyber Shield
+    const shield = new THREE2.Mesh(new THREE2.CylinderGeometry(0.14, 0.02, 0.18, 6), glowM);
+    shield.rotation.y = Math.PI / 6;
+    holoG.add(shield);
+  }
+
+  // Lengan dengan sarung tangan sendi & shadow
   const arms = [];
   for (const sx of [-1, 1]) {
     const sh = new THREE2.Group();
-    sh.position.set(sx * 0.4, 1.18, 0);
+    sh.position.set(sx * 0.42, 1.18, 0);
     rig.add(sh);
-    const a = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.065, 0.32, 6, 12), bodyM);
+    const a = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.065, 0.32, 8, 16), bodyM);
     a.position.y = -0.22;
+    a.castShadow = true;
     sh.add(a);
+    const cuff = new THREE2.Mesh(new THREE2.TorusGeometry(0.075, 0.015, 8, 20), accM);
+    cuff.rotation.x = Math.PI / 2;
+    cuff.position.y = -0.38;
+    sh.add(cuff);
     const hand = new THREE2.Mesh(new THREE2.SphereGeometry(0.085, 16, 12), accM);
-    hand.position.y = -0.45;
+    hand.position.y = -0.46;
+    hand.castShadow = true;
     sh.add(hand);
     sh.rotation.z = sx * 0.18;
     arms.push(sh);
@@ -6498,80 +6872,111 @@ function makeRobot(lab) {
   world.interact.push(torso, head, visor, chest, ...arms.map((a) => a.children[0]));
   world.circles.push({ x: pos.x, z: pos.z, r: 0.55 });
   scene.add(g);
-  return { id: lab, kind: "robot", lab, name: b.name, role: b.role, col: L.col, g, rig, headG, eyes, arms, hint, tag, x: pos.x, z: pos.z, room: pos.room, base: 0.12, wave: 0, blink: 2 + Math.random() * 3, pitch: 1.35 };
+  return { id: lab, kind: "robot", lab, name: b.name, role: b.role, col: L.col, g, rig, headG, eyes, arms, hint, tag, holoG, ring, ring2, x: pos.x, z: pos.z, room: pos.room, base: 0.12, wave: 0, blink: 2 + Math.random() * 3, pitch: 1.35 };
 }
 function makeReceptionist() {
   const pos = NPC_POS.tia, g = new THREE2.Group();
   g.position.set(pos.x, 0, pos.z);
-  const skin = new THREE2.MeshStandardMaterial({ color: 15248784, roughness: 0.6 });
-  const hijabM = new THREE2.MeshStandardMaterial({ color: 11768308, roughness: 0.7 });
-  const blazer = new THREE2.MeshStandardMaterial({ color: 3804542, roughness: 0.55 });
-  const shirt = new THREE2.MeshStandardMaterial({ color: 16250871, roughness: 0.6 });
+  const skin = new THREE2.MeshStandardMaterial({ color: 0xf6d0b5, roughness: 0.52 });
+  const hijabM = new THREE2.MeshStandardMaterial({ color: 0xb598df, roughness: 0.65 });
+  const blazer = new THREE2.MeshStandardMaterial({ color: 0x3b2d6a, roughness: 0.45, metalness: 0.1 });
+  const shirt = new THREE2.MeshStandardMaterial({ color: 0xffffff, roughness: 0.55 });
+  const goldM = new THREE2.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.2, metalness: 0.85 });
   const rig = new THREE2.Group();
   g.add(rig);
+
   const pts = [];
   for (let i = 0; i <= 16; i++) {
-    const t2 = i / 16, y = t2 * 1.36, r = 0.2 + Math.sin(t2 * Math.PI * 0.85) * 0.09 - (t2 > 0.85 ? (t2 - 0.85) * 0.9 : 0);
+    const t2 = i / 16, y = t2 * 1.36, r = 0.21 + Math.sin(t2 * Math.PI * 0.85) * 0.09 - (t2 > 0.85 ? (t2 - 0.85) * 0.9 : 0);
     pts.push(new THREE2.Vector2(r, y));
   }
   pts.push(new THREE2.Vector2(0, 1.36));
   const body = new THREE2.Mesh(new THREE2.LatheGeometry(pts, 32), blazer);
+  body.castShadow = true;
   rig.add(body);
+
   const collar = new THREE2.Mesh(new THREE2.ConeGeometry(0.12, 0.3, 3, 1, true), shirt);
   collar.position.set(0, 1.18, 0.2);
   collar.rotation.x = Math.PI;
   collar.scale.set(1, 1, 0.3);
   rig.add(collar);
-  const badgeM = new THREE2.Mesh(new THREE2.BoxGeometry(0.1, 0.06, 0.01), new THREE2.MeshBasicMaterial({ color: 16761856, toneMapped: false }));
-  badgeM.position.set(0.14, 1.12, 0.27);
+
+  // Bros Emas Elegan pada Kerah
+  const brooch = new THREE2.Mesh(new THREE2.SphereGeometry(0.022, 12, 8), goldM);
+  brooch.position.set(0.08, 1.2, 0.22);
+  rig.add(brooch);
+
+  // Tali Lanyard Resmi UIKA + ID Card Menggantung
+  const lanyard = new THREE2.Mesh(new THREE2.TorusGeometry(0.14, 0.012, 6, 24, Math.PI * 0.9), new THREE2.MeshBasicMaterial({ color: 0x7c3aed }));
+  lanyard.rotation.x = Math.PI * 0.65;
+  lanyard.position.set(0, 1.16, 0.14);
+  rig.add(lanyard);
+
+  const badgeM = new THREE2.Mesh(new THREE2.BoxGeometry(0.09, 0.12, 0.01), new THREE2.MeshBasicMaterial({ color: 0xfffbeb }));
+  badgeM.position.set(0, 0.98, 0.23);
+  badgeM.castShadow = true;
   rig.add(badgeM);
+
   const headG = new THREE2.Group();
   headG.position.y = 1.62;
   rig.add(headG);
   const head = new THREE2.Mesh(new THREE2.SphereGeometry(0.17, 32, 24), skin);
   head.scale.set(0.95, 1.08, 0.98);
+  head.castShadow = true;
   headG.add(head);
-  // hijab: cangkang belakang + tutup atas + juntai
-  const shell = new THREE2.Mesh(new THREE2.SphereGeometry(0.2, 32, 24, Math.PI * 0.5 + 0.95, Math.PI * 2 - 1.9), hijabM);
+
+  // Hijab Berlapis Cantik & Alami
+  const shell = new THREE2.Mesh(new THREE2.SphereGeometry(0.205, 32, 24, Math.PI * 0.5 + 0.95, Math.PI * 2 - 1.9), hijabM);
   shell.scale.set(1, 1.1, 1);
   headG.add(shell);
-  const cap = new THREE2.Mesh(new THREE2.SphereGeometry(0.202, 32, 12, 0, Math.PI * 2, 0, 0.72), hijabM);
+  const cap = new THREE2.Mesh(new THREE2.SphereGeometry(0.207, 32, 12, 0, Math.PI * 2, 0, 0.72), hijabM);
   cap.scale.set(1, 1.1, 1);
   headG.add(cap);
-  const drape = new THREE2.Mesh(new THREE2.CylinderGeometry(0.2, 0.36, 0.34, 32, 1, true), hijabM);
+  const drape = new THREE2.Mesh(new THREE2.CylinderGeometry(0.205, 0.38, 0.36, 32, 1, true), hijabM);
   drape.position.y = -0.24;
   headG.add(drape);
-  const drapeTop = new THREE2.Mesh(new THREE2.RingGeometry(0.0, 0.36, 32), hijabM);
+  const drapeTop = new THREE2.Mesh(new THREE2.RingGeometry(0.0, 0.38, 32), hijabM);
   drapeTop.rotation.x = Math.PI / 2;
-  drapeTop.position.y = -0.41;
+  drapeTop.position.y = -0.42;
   headG.add(drapeTop);
-  const eyeM = new THREE2.MeshBasicMaterial({ color: 2105376 });
+
+  // Mata Dinamis, Rona Pipi & Senyum Ramah
+  const eyeM = new THREE2.MeshBasicMaterial({ color: 0x1f2430 });
   const eyes = [];
   for (const sx of [-1, 1]) {
-    const e = new THREE2.Mesh(new THREE2.SphereGeometry(0.022, 12, 8), eyeM);
-    e.position.set(sx * 0.06, 0.03, 0.155);
+    const e = new THREE2.Mesh(new THREE2.SphereGeometry(0.024, 14, 10), eyeM);
+    e.position.set(sx * 0.06, 0.03, 0.16);
     e.scale.set(1, 1.3, 0.6);
     headG.add(e);
     eyes.push(e);
-    const ch = new THREE2.Mesh(new THREE2.CircleGeometry(0.03, 16), new THREE2.MeshBasicMaterial({ color: 16294546, transparent: true, opacity: 0.55 }));
-    ch.position.set(sx * 0.095, -0.04, 0.15);
-    ch.rotation.y = sx * 0.5;
-    headG.add(ch);
+
+    const blush = new THREE2.Mesh(new THREE2.CircleGeometry(0.034, 16), new THREE2.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.5 }));
+    blush.position.set(sx * 0.098, -0.035, 0.155);
+    blush.rotation.y = sx * 0.45;
+    headG.add(blush);
   }
-  const smile = new THREE2.Mesh(new THREE2.TorusGeometry(0.035, 0.008, 6, 16, Math.PI), new THREE2.MeshBasicMaterial({ color: 12730965 }));
-  smile.position.set(0, -0.06, 0.158);
+  const smile = new THREE2.Mesh(new THREE2.TorusGeometry(0.038, 0.009, 6, 20, Math.PI), new THREE2.MeshBasicMaterial({ color: 0xd946ef }));
+  smile.position.set(0, -0.06, 0.162);
   smile.rotation.z = Math.PI;
   headG.add(smile);
+
+  // Lengan dengan pergelangan tangan halus & castShadow
   const arms = [];
   for (const sx of [-1, 1]) {
     const sh = new THREE2.Group();
-    sh.position.set(sx * 0.27, 1.22, 0);
+    sh.position.set(sx * 0.28, 1.22, 0);
     rig.add(sh);
-    const a = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.06, 0.4, 6, 12), blazer);
+    const a = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.065, 0.4, 8, 16), blazer);
     a.position.y = -0.25;
+    a.castShadow = true;
     sh.add(a);
-    const hnd = new THREE2.Mesh(new THREE2.SphereGeometry(0.055, 12, 10), skin);
+    const cuff = new THREE2.Mesh(new THREE2.TorusGeometry(0.07, 0.012, 6, 16), goldM);
+    cuff.rotation.x = Math.PI / 2;
+    cuff.position.y = -0.42;
+    sh.add(cuff);
+    const hnd = new THREE2.Mesh(new THREE2.SphereGeometry(0.055, 14, 12), skin);
     hnd.position.y = -0.5;
+    hnd.castShadow = true;
     sh.add(hnd);
     sh.rotation.x = -0.5;
     sh.rotation.z = sx * 0.12;
@@ -6596,6 +7001,14 @@ function makeNpcs() {
 }
 function npcTick(dt) {
   for (const n of Object.values(NPCS)) {
+    if (n.holoG) {
+      n.holoG.rotation.y += dt * 1.5;
+      n.holoG.position.y = 0.86 + Math.sin(t * 2.8 + n.x) * 0.04;
+    }
+    if (n.ring && n.ring2) {
+      n.ring.rotation.z += dt * 2.4;
+      n.ring2.rotation.z -= dt * 2.0;
+    }
     const d = Math.hypot(P.x - n.x, P.z - n.z);
     if (d > 26) continue;
     if (n.kind === "robot") n.rig.position.y = n.base + Math.sin(t * 2 + n.x) * 0.06;
@@ -6610,6 +7023,7 @@ function npcTick(dt) {
     if (d < 6 && !n.near) {
       n.near = true;
       n.wave = 1.6;
+      if (typeof SFX !== "undefined") SFX.bloop(n.kind === "robot" ? 1.25 : 1.0);
     } else if (d > 9) n.near = false;
     n.wave = Math.max(0, n.wave - dt);
     const R = n.arms[1];
@@ -6777,6 +7191,7 @@ function speak(t2, pitch = 1.1) {
     u.lang = "id-ID";
     u.rate = 1.04;
     u.pitch = pitch;
+    u.volume = 1.0;
     const v = speechSynthesis.getVoices().find((v2) => /id/i.test(v2.lang));
     if (v) u.voice = v;
     speechSynthesis.speak(u);
@@ -7203,7 +7618,7 @@ function ytTick(dt) {
   yt.volT += dt;
   if (yt.playing && yt.volT > 0.6) {
     yt.volT = 0;
-    const d = Math.hypot(P.x - 0, P.z - 29.6), v = Math.round(clamp(110 - d * 4, 30, 100));
+    const d = Math.hypot(P.x - 0, P.z - 29.6), v = Math.round(clamp(115 - d * 2.5, 55, 100));
     if (Math.abs(v - yt.vol) > 3) {
       yt.vol = v;
       ytPost("setVolume", [v]);
@@ -7228,8 +7643,8 @@ var Music = {
     this.out = c.createGain();
     this.out.gain.value = S.music ? S.vol : 0;
     const comp = c.createDynamicsCompressor();
-    comp.threshold.value = -18;
-    comp.ratio.value = 3;
+    comp.threshold.value = -12;
+    comp.ratio.value = 2.5;
     this.out.connect(comp);
     comp.connect(c.destination);
     this.labGain = c.createGain();
@@ -7248,11 +7663,11 @@ var Music = {
     this.rev = c.createConvolver();
     this.rev.buffer = ir;
     const wet = c.createGain();
-    wet.gain.value = 0.42;
+    wet.gain.value = 0.5;
     this.rev.connect(wet);
     wet.connect(this.labGain);
     this.dry = c.createGain();
-    this.dry.gain.value = 0.8;
+    this.dry.gain.value = 1.0;
     this.dry.connect(this.labGain);
     this.timer = setInterval(() => this.sched(), 90);
     return true;
@@ -7264,7 +7679,7 @@ var Music = {
   },
   setVol() {
     if (!this.ctx) return;
-    this.out.gain.setTargetAtTime(S.music ? S.vol * (this.ducked ? 0.15 : 1) : 0, this.ctx.currentTime, 0.3);
+    this.out.gain.setTargetAtTime(S.music ? S.vol * (this.ducked ? 0.35 : 1) : 0, this.ctx.currentTime, 0.3);
   },
   duck(on) {
     this.ducked = on;
@@ -7274,25 +7689,22 @@ var Music = {
     this.want = lab;
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
-    if (lab) {
-      if (this.lab !== lab) {
-        this.labGain.gain.cancelScheduledValues(now);
-        this.labGain.gain.setTargetAtTime(0, now, 0.25);
-        const go = () => {
-          if (this.want !== lab) return;
-          this.lab = lab;
-          this.beat = 0;
-          this.nextT = this.ctx.currentTime + 0.1;
-          this.labGain.gain.setTargetAtTime(1, this.ctx.currentTime, 0.8);
-        };
-        if (this.lab) setTimeout(go, 900);
-        else go();
-      } else this.labGain.gain.setTargetAtTime(1, now, 0.8);
+    const targetLab = lab || "se";
+    const targetGain = lab ? 1.0 : 0.65;
+    if (this.lab !== targetLab) {
+      this.labGain.gain.cancelScheduledValues(now);
+      this.labGain.gain.setTargetAtTime(0, now, 0.25);
+      const go = () => {
+        if (this.want !== lab) return;
+        this.lab = targetLab;
+        this.beat = 0;
+        this.nextT = this.ctx.currentTime + 0.1;
+        this.labGain.gain.setTargetAtTime(targetGain, this.ctx.currentTime, 0.8);
+      };
+      if (this.lab) setTimeout(go, 900);
+      else go();
     } else {
-      this.labGain.gain.setTargetAtTime(0, now, 0.6);
-      setTimeout(() => {
-        if (!this.want) this.lab = null;
-      }, 3500);
+      this.labGain.gain.setTargetAtTime(targetGain, now, 0.8);
     }
   },
   note(time, midi, vel, dur) {
@@ -7307,7 +7719,7 @@ var Music = {
     g.connect(this.rev);
     const amp = [1, 0.5, 0.28, 0.16, 0.09, 0.05], low = midi < 52 ? 1.5 : 1;
     const tau = (midi < 50 ? 1.8 : midi < 64 ? 1.2 : 0.8) * low;
-    const peak = vel * 0.16;
+    const peak = vel * 0.38;
     g.gain.setValueAtTime(0, time);
     g.gain.linearRampToValueAtTime(peak, time + 0.006);
     g.gain.setTargetAtTime(peak * 0.35, time + 0.01, tau * 0.25);
@@ -7333,7 +7745,7 @@ var Music = {
     ns.buffer = nb;
     bp.type = "bandpass";
     bp.frequency.value = Math.min(6e3, f0 * 4);
-    ng.gain.value = vel * 0.05;
+    ng.gain.value = vel * 0.10;
     ns.connect(bp);
     bp.connect(ng);
     ng.connect(lp);
