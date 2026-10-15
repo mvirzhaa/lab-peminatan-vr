@@ -258,7 +258,54 @@ body.touch #joy{display:block}
 #loader {
   background: radial-gradient(circle at 50% 30%, #2e1065 0%, #0c081c 70%, #05040a 100%) !important;
 }
+#ldForm {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  width: min(390px, 88vw);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  margin-top: 6px;
+  animation: ldPop .35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+@keyframes ldPop {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+#ldName {
+  width: 100%;
+  height: 48px;
+  background: rgba(18, 12, 36, 0.8);
+  border: 1.5px solid rgba(192, 38, 211, 0.55);
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+#ldName:focus {
+  border-color: #d946ef;
+  background: rgba(25, 16, 50, 0.95);
+  box-shadow: 0 0 0 3px rgba(217, 70, 239, 0.35);
+}
 #ldGo {
+  width: 100%;
+  border-radius: 12px !important;
+  height: 48px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  cursor: pointer;
   background: linear-gradient(135deg, #8b5cf6, #d946ef) !important;
   box-shadow: 0 10px 35px rgba(217, 70, 239, 0.5) !important;
 }
@@ -272,7 +319,18 @@ canvas {
 </head>
 <body>
 <div id="app"></div>
-<div id="loader" role="status" aria-live="polite"><div class="kick">TEKNIK INFORMATIKA · UIKA BOGOR</div><div class="ttl">Lab Peminatan VR</div><div class="labs"><span style="color:#c4b5fd">KERIS</span><span style="color:#f0abfc">GIT</span><span style="color:#a5b4fc">SE</span><span style="color:#7dd3fc">CSN</span></div><div class="sub" id="ldTxt">Menyiapkan ruang 3D…</div><div class="bar"><i id="ldBar"></i></div><button id="ldGo" hidden>MASUK SEBAGAI IT'ers ▶</button></div>
+<div id="loader" role="status" aria-live="polite">
+  <div class="kick">TEKNIK INFORMATIKA · UIKA BOGOR</div>
+  <div class="ttl">Lab Peminatan VR</div>
+  <div class="labs"><span style="color:#c4b5fd">KERIS</span><span style="color:#f0abfc">GIT</span><span style="color:#a5b4fc">SE</span><span style="color:#7dd3fc">CSN</span></div>
+  <div class="sub" id="ldTxt">Menyiapkan ruang 3D…</div>
+  <div class="bar" id="ldBarBox"><i id="ldBar"></i></div>
+  <div id="ldForm">
+    <label for="ldName" style="font-size:12px;color:#e9d5ff;font-weight:700;letter-spacing:.08em;text-transform:uppercase">Masukkan Nama Anda</label>
+    <input type="text" id="ldName" maxlength="16" placeholder="Ketik nama atau panggilan..." autocomplete="nickname" spellcheck="false">
+    <button id="ldGo" type="button">MASUK KE GALERI ▶</button>
+  </div>
+</div>
 <div id="fade"></div>
 
 <div id="top">
@@ -3969,9 +4027,10 @@ function wsUrl() {
   return null;
 }
 function offlineNet() {
-  return { mode: "offline", selfId: "me", voice: false, connected: () => false, setPresence() {
-  }, signal() {
-  } };
+  return {
+    mode: "offline", selfId: "me", voice: false, connected: () => false, setPresence() {}, signal() {},
+    sendWbStroke() {}, sendWbUndo() {}, sendWbClear() {}, sendNoteAdd() {}, sendNoteDel() {}
+  };
 }
 function roomNet(room, h) {
   let pres = {};
@@ -3995,7 +4054,8 @@ function roomNet(room, h) {
       });
     },
     signal() {
-    }
+    },
+    sendWbStroke() {}, sendWbUndo() {}, sendWbClear() {}, sendNoteAdd() {}, sendNoteDel() {}
   };
 }
 function wsNet(url, h) {
@@ -4041,6 +4101,8 @@ function wsNet(url, h) {
           if (p && typeof p.id === "string" && p.id !== selfId)
             peers.set(p.id, { id: p.id, presence: obj(p.data) });
         emitPeers();
+        if (Array.isArray(m.wb)) h.onWbInit && h.onWbInit(m.wb);
+        if (Array.isArray(m.notes)) h.onNotesInit && h.onNotesInit(m.notes);
       } else if (m.type === "presence" && typeof m.id === "string" && m.id !== selfId) {
         peers.set(m.id, { id: m.id, presence: obj(m.data) });
         emitPeers();
@@ -4048,8 +4110,19 @@ function wsNet(url, h) {
         peers.delete(m.id);
         emitPeers();
         h.onLeave && h.onLeave(m.id);
-      } else if (m.type === "signal" && typeof m.from === "string" && peers.has(m.from))
+      } else if (m.type === "signal" && typeof m.from === "string" && peers.has(m.from)) {
         h.onSignal && h.onSignal(m.from, m.data);
+      } else if (m.type === "wb_stroke" && m.stroke) {
+        h.onWbStroke && h.onWbStroke(m.stroke);
+      } else if (m.type === "wb_undo") {
+        h.onWbUndo && h.onWbUndo();
+      } else if (m.type === "wb_clear") {
+        h.onWbClear && h.onWbClear();
+      } else if (m.type === "note_add" && m.note) {
+        h.onNoteAdd && h.onNoteAdd(m.note);
+      } else if (m.type === "note_del") {
+        h.onNoteDel && h.onNoteDel(m.id, m.idx);
+      }
     };
     ws.onclose = () => {
       open = false;
@@ -4092,6 +4165,21 @@ function wsNet(url, h) {
     },
     signal(to, data) {
       send({ type: "signal", to, data });
+    },
+    sendWbStroke(stroke) {
+      send({ type: "wb_stroke", stroke });
+    },
+    sendWbUndo() {
+      send({ type: "wb_undo" });
+    },
+    sendWbClear() {
+      send({ type: "wb_clear" });
+    },
+    sendNoteAdd(note) {
+      send({ type: "note_add", note });
+    },
+    sendNoteDel(id, idx) {
+      send({ type: "note_del", id, idx });
     }
   };
   connect();
@@ -4124,11 +4212,12 @@ var store = {
     }
   }
 };
-var cleanName = (s) => String(s || "").replace(/[^\p{L}\p{N} ._'\u2019-]/gu, "").trim().slice(0, 16) || "IT'ers";
-var S = Object.assign({ name: "IT'ers", color: "#7c3aed", quality: "med", sens: 1, invert: false, fp: false, minimap: true, speed: 1, music: true, vol: 0.85 }, store.get("settings", {}));
+var cleanName = (s) => String(s || "").replace(/[^\p{L}\p{N} ._'\u2019-]/gu, "").trim().slice(0, 16);
+var S = Object.assign({ name: "", color: "#7c3aed", quality: "med", sens: 1, invert: false, fp: false, minimap: true, speed: 1, music: true, vol: 0.85 }, store.get("settings", {}));
 if (!store.get("settings", null) && matchMedia("(pointer:coarse)").matches)
   S.quality = "low";
 S.name = cleanName(S.name);
+if (S.name === "IT'ers") S.name = "";
 if (!/^#[0-9a-f]{6}$/i.test(S.color))
   S.color = "#7c3aed";
 if (!["low", "med", "high"].includes(S.quality))
@@ -4608,7 +4697,7 @@ cv.addEventListener("pointerup", (e) => {
   dragging = false;
   down = null;
   if (wasDraw) {
-    world.wb.cur = null;
+    wbEndStroke();
     return;
   }
   if (wasDrag)
@@ -5038,6 +5127,16 @@ function wbStroke(uv, start) {
     wb.cur.p.push(p);
   wbRedraw();
 }
+function wbEndStroke() {
+  const wb = world && world.wb;
+  if (!wb) return;
+  if (wb.cur && wb.cur.p && wb.cur.p.length) {
+    if (net && typeof net.sendWbStroke === "function") {
+      net.sendWbStroke(wb.cur);
+    }
+  }
+  wb.cur = null;
+}
 function setDrawMode(on) {
   drawMode = on;
   $("btnDraw").classList.toggle("on", on);
@@ -5072,6 +5171,7 @@ function wbButton(a) {
   else if (a === "revert") {
     wb.strokes.pop();
     wbRedraw();
+    if (net && typeof net.sendWbUndo === "function") net.sendWbUndo();
     toast("Goresan terakhir dibatalkan.");
   } else if (a === "transparent") {
     wb.transparent = !wb.transparent;
@@ -5102,10 +5202,12 @@ function openWbZoom() {
     world.wb.strokes.pop();
     wbRedraw();
     wbRedraw(c);
+    if (net && typeof net.sendWbUndo === "function") net.sendWbUndo();
   }], ["Hapus semua", () => {
     world.wb.strokes.length = 0;
     wbRedraw();
     wbRedraw(c);
+    if (net && typeof net.sendWbClear === "function") net.sendWbClear();
   }], ["Unduh", () => downloadCanvas(world.wb.canvas, "papan-tulis.png")]]) {
     const b = document.createElement("button");
     b.className = "ghost wbx";
@@ -5135,16 +5237,28 @@ function openWbZoom() {
   });
   c.addEventListener("pointerup", () => {
     on = false;
-    world.wb.cur = null;
+    wbEndStroke();
+  });
+  c.addEventListener("pointercancel", () => {
+    on = false;
+    wbEndStroke();
   });
 })();
 $("wbClose").onclick = () => $("wbOv").classList.remove("show");
-var SEED_NOTES = [{ n: "Contoh", t: "Aku pilih GIT karena suka drone dan ingin membuat peta risiko banjir untuk Bogor.", ex: true }, { n: "Contoh", t: "KERIS! Penasaran cara melatih model AI pakai GPU lab.", ex: true }];
+var SEED_NOTES = [
+  { id: "seed-1", n: "Kak Tias", t: "Selamat datang di Lab Peminatan VR! Tulis pendapatmu mengenai lab pilihanmu di papan ini ya.", time: Date.now() },
+  { id: "seed-2", n: "IT'ers", t: "Aku tertarik dengan KERIS karena fokus di Artificial Intelligence & Machine Learning!", time: Date.now() }
+];
+var sharedNotes = null;
 var getNotes = () => {
+  if (Array.isArray(sharedNotes)) return sharedNotes;
   const n = store.get("notes", null);
-  return Array.isArray(n) ? n.filter((x) => x && typeof x.t === "string").slice(-60) : SEED_NOTES.slice();
+  sharedNotes = Array.isArray(n) ? n.filter((x) => x && typeof x.t === "string").slice(-60) : SEED_NOTES.slice();
+  return sharedNotes;
 };
+var diskusiRenderFn = null;
 function drawDiskusi() {
+  if (!world || !world.diskusi || !world.diskusi.canvas) return;
   const c = world.diskusi.canvas, x = c.getContext("2d"), W = c.width, H = c.height;
   const gr = x.createLinearGradient(0, 0, W, H);
   gr.addColorStop(0, "#1c1338");
@@ -5165,7 +5279,7 @@ function drawDiskusi() {
     x.fill();
     x.fillStyle = "#2b2a1a";
     x.font = `600 22px ${FONT}`;
-    x.fillText(n.n, nx + 20, ny + 38);
+    x.fillText(n.n || "Anonim", nx + 20, ny + 38);
     x.font = `400 23px ${FONT}`;
     wrap(x, n.t, nx + 20, ny + 76, 330, 30, 5);
   });
@@ -5176,13 +5290,13 @@ function drawDiskusi() {
   }
   x.fillStyle = "#fbbf24";
   x.font = `500 24px ${FONT}`;
-  x.fillText("Klik papan untuk menambah catatan", 50, H - 30);
+  x.fillText("Klik papan untuk menambah catatan · Tersinkron Real-time", 50, H - 30);
   world.diskusi.mesh.userData.tex.needsUpdate = true;
 }
 function openDiskusi() {
   const render = () => {
     const notes = getNotes();
-    genCard(`<button class="x" id="gx" aria-label="Tutup">\xD7</button><h2>Papan Pesan IT'ers</h2><p>Lab peminatan mana yang paling menarik untukmu, dan kenapa? Catatan tersimpan di browser ini.</p><div class="notes" id="nts"></div><label class="f" for="nIn">Catatan Anda (${S.name})</label><textarea id="nIn" maxlength="280" rows="3" placeholder="Tulis pendapat Anda\u2026"></textarea><div class="rowf" style="margin-top:10px"><button class="btn" id="nAdd">Tempel catatan</button><span style="font-size:11px;color:var(--mut)">Maks. 280 karakter</span></div>`);
+    genCard(`<button class="x" id="gx" aria-label="Tutup">\xD7</button><h2>Papan Pesan IT'ers</h2><p>Lab peminatan mana yang paling menarik untukmu, dan kenapa? Catatan tersinkronisasi langsung dengan seluruh pengunjung.</p><div class="notes" id="nts"></div><label class="f" for="nIn">Catatan Anda (${S.name || "IT'ers"})</label><textarea id="nIn" maxlength="280" rows="3" placeholder="Tulis pendapat Anda\u2026"></textarea><div class="rowf" style="margin-top:10px"><button class="btn" id="nAdd">Tempel catatan</button><span style="font-size:11px;color:var(--mut)">Maks. 280 karakter · Tersinkron otomatis</span></div>`);
     const box = $("nts");
     notes.forEach((n, i) => {
       const d = document.createElement("div");
@@ -5198,10 +5312,15 @@ function openDiskusi() {
       del.setAttribute("aria-label", "Hapus catatan");
       del.onclick = () => {
         const arr = getNotes();
+        const deleted = arr[i];
         arr.splice(i, 1);
         store.set("notes", arr);
+        if (net && typeof net.sendNoteDel === "function") {
+          net.sendNoteDel(deleted ? deleted.id : null, i);
+        }
         drawDiskusi();
         render();
+        toast("Catatan dihapus.");
       };
       d.appendChild(del);
       box.appendChild(d);
@@ -5212,15 +5331,27 @@ function openDiskusi() {
         $("nIn").focus();
         return;
       }
+      const note = {
+        id: "nt-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7),
+        n: S.name || "IT'ers",
+        t: t2,
+        time: Date.now()
+      };
       const arr = getNotes();
-      arr.push({ n: S.name, t: t2 });
+      arr.push(note);
+      if (arr.length > 60) arr.shift();
       store.set("notes", arr);
+      if (net && typeof net.sendNoteAdd === "function") {
+        net.sendNoteAdd(note);
+      }
       drawDiskusi();
       render();
       toast("Catatan ditempel di Papan Pesan.");
+      $("nIn").value = "";
     };
     $("gx").onclick = closeGen;
   };
+  diskusiRenderFn = render;
   render();
 }
 function genCard(html) {
@@ -5231,6 +5362,7 @@ function genCard(html) {
     x.onclick = closeGen;
 }
 function closeGen() {
+  diskusiRenderFn = null;
   $("genOv").classList.remove("show");
 }
 $("genOv").addEventListener("pointerdown", (e) => {
@@ -6247,13 +6379,75 @@ async function startNet() {
     onStatus: (c, why) => {
       if (why === "gave_up")
         toast("Server multi-user tidak ditemukan \u2014 galeri berjalan dalam mode sendiri.");
+    },
+    onWbInit: (strokes) => {
+      if (world && world.wb) {
+        world.wb.strokes = Array.isArray(strokes) ? strokes.slice(-400) : [];
+        wbRedraw();
+        const c = $("wbCv");
+        if ($("wbOv").classList.contains("show")) wbRedraw(c);
+      }
+    },
+    onWbStroke: (stroke) => {
+      if (world && world.wb && stroke) {
+        world.wb.strokes.push(stroke);
+        if (world.wb.strokes.length > 400) world.wb.strokes.shift();
+        wbRedraw();
+        const c = $("wbCv");
+        if ($("wbOv").classList.contains("show")) wbRedraw(c);
+      }
+    },
+    onWbUndo: () => {
+      if (world && world.wb) {
+        world.wb.strokes.pop();
+        wbRedraw();
+        const c = $("wbCv");
+        if ($("wbOv").classList.contains("show")) wbRedraw(c);
+      }
+    },
+    onWbClear: () => {
+      if (world && world.wb) {
+        world.wb.strokes.length = 0;
+        wbRedraw();
+        const c = $("wbCv");
+        if ($("wbOv").classList.contains("show")) wbRedraw(c);
+      }
+    },
+    onNotesInit: (notes) => {
+      if (Array.isArray(notes) && notes.length) {
+        sharedNotes = notes;
+        store.set("notes", sharedNotes);
+      }
+      if (world && world.diskusi) drawDiskusi();
+      if (diskusiRenderFn) diskusiRenderFn();
+    },
+    onNoteAdd: (note) => {
+      if (!sharedNotes) getNotes();
+      sharedNotes.push(note);
+      if (sharedNotes.length > 60) sharedNotes.shift();
+      store.set("notes", sharedNotes);
+      if (world && world.diskusi) drawDiskusi();
+      if (diskusiRenderFn) diskusiRenderFn();
+      toast(`📌 Catatan baru dari ${note.n || "Pengunjung"} ditempel di Papan Pesan.`);
+    },
+    onNoteDel: (id, idx) => {
+      if (!sharedNotes) getNotes();
+      if (typeof id === "string") {
+        const i = sharedNotes.findIndex((x) => x.id === id);
+        if (i !== -1) sharedNotes.splice(i, 1);
+      } else if (typeof idx === "number" && idx >= 0 && idx < sharedNotes.length) {
+        sharedNotes.splice(idx, 1);
+      }
+      store.set("notes", sharedNotes);
+      if (world && world.diskusi) drawDiskusi();
+      if (diskusiRenderFn) diskusiRenderFn();
     }
   });
   if (net.mode === "room") {
     chatMsg("Sistem", "Mode multi-user aktif: semua orang yang membuka galeri ini sekarang bisa terlihat dan mengobrol di sini.");
     mpPresence(true);
   } else if (net.mode === "ws") {
-    chatMsg("Sistem", "Terhubung ke server multi-user. Nyalakan mikrofon untuk mengobrol dengan suara.");
+    chatMsg("Sistem", "Terhubung ke server multi-user. Papan tulis dan pesan tersinkronisasi otomatis.");
     setTimeout(() => mpPresence(true), 300);
   }
   updPeopleCount();
@@ -6639,7 +6833,7 @@ async function boot() {
   }
   P.y = groundH(P.x, P.z);
   curRoom = roomAt(P.x, P.z);
-  prog(1, "Siap! Klik MASUK untuk mulai.");
+  prog(1, "Siap! Masukkan nama Anda untuk mulai.");
   renderer.setAnimationLoop(loop);
   startNet().catch(() => {
     net = { mode: "offline", connected: () => false, setPresence() {
@@ -6647,6 +6841,21 @@ async function boot() {
     } };
   });
   const enter = () => {
+    const raw = $("ldName") ? $("ldName").value.trim() : "";
+    const nm = cleanName(raw);
+    if (!nm || nm === "IT'ers") {
+      toast("Harap masukkan nama Anda terlebih dahulu!", 3500);
+      if ($("ldName")) {
+        $("ldName").focus();
+        $("ldName").style.borderColor = "#ef4444";
+        setTimeout(() => { if ($("ldName")) $("ldName").style.borderColor = ""; }, 1500);
+      }
+      return;
+    }
+    S.name = nm;
+    saveS();
+    setAvatarName(S.name);
+    mpPresence(true);
     Music.resume();
     Music.enter(roomLab(curRoom));
     $("loader").style.transition = "opacity .5s";
@@ -6657,8 +6866,30 @@ async function boot() {
     setTimeout(() => toast(`Selamat datang, ${S.name}! Tonton video sambutan, lalu jalan ke utara menuju Atrium & 4 lab.`, 6e3), 700);
   };
   const go = $("ldGo");
+  const form = $("ldForm");
+  const nameIn = $("ldName");
+  if (form) form.style.display = "flex";
+  if (nameIn) {
+    if (S.name && S.name !== "IT'ers") {
+      nameIn.value = S.name;
+      go.textContent = `MASUK SEBAGAI ${S.name} ▶`;
+    } else {
+      nameIn.value = "";
+      go.textContent = "MASUK KE GALERI ▶";
+    }
+    nameIn.focus();
+    nameIn.addEventListener("input", () => {
+      const v = cleanName(nameIn.value.trim());
+      go.textContent = v && v !== "IT'ers" ? `MASUK SEBAGAI ${v} ▶` : "MASUK KE GALERI ▶";
+    });
+    nameIn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        enter();
+      }
+    });
+  }
   go.hidden = false;
-  go.focus();
   go.onclick = enter;
   window.__galeri = { remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd };
 }

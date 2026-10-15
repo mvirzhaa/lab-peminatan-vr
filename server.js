@@ -15,8 +15,8 @@ const PORT = +process.env.PORT || 8080;
 const MAX_CLIENTS = +process.env.MAX_CLIENTS || 150;     // total koneksi
 const MAX_PER_ROOM = +process.env.MAX_PER_ROOM || 60;    // per ruang (?room=kelas-a)
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean); // kosong = semua
-const MAX_MSG = 8 * 1024;            // byte per pesan
-const RATE = 40;                     // pesan per detik per klien
+const MAX_MSG = 16 * 1024;           // byte per pesan (16 KB)
+const RATE = 60;                     // pesan per detik per klien
 const PUBLIC = path.join(__dirname, 'public');
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json' };
@@ -37,7 +37,7 @@ const server = http.createServer((req, res) => {
 });
 
 const wss = new WebSocketServer({ noServer: true, maxPayload: MAX_MSG });
-const rooms = new Map(); // nama → Set klien
+const rooms = new Map(); // nama → { members: Set, wb: Array, notes: Array }
 
 server.on('upgrade', (req, socket, head) => {
   let url; try { url = new URL(req.url, 'http://x'); } catch { return socket.destroy(); }
@@ -45,7 +45,7 @@ server.on('upgrade', (req, socket, head) => {
   if (ALLOWED_ORIGINS.length && !ALLOWED_ORIGINS.includes(req.headers.origin)) return socket.destroy();
   if (wss.clients.size >= MAX_CLIENTS) return socket.destroy();
   const room = (url.searchParams.get('room') || 'lobi').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 32) || 'lobi';
-  if ((rooms.get(room)?.size || 0) >= MAX_PER_ROOM) return socket.destroy();
+  if ((rooms.get(room)?.members?.size || 0) >= MAX_PER_ROOM) return socket.destroy();
   wss.handleUpgrade(req, socket, head, ws => wss.emit('connection', ws, room));
 });
 
@@ -55,9 +55,25 @@ const isPlainObj = v => v && typeof v === 'object' && !Array.isArray(v);
 wss.on('connection', (ws, room) => {
   ws.id = crypto.randomBytes(8).toString('hex');
   ws.room = room; ws.presence = {}; ws.alive = true; ws.tokens = RATE; ws.last = Date.now();
-  if (!rooms.has(room)) rooms.set(room, new Set());
-  const members = rooms.get(room);
-  send(ws, { type: 'welcome', id: ws.id, peers: [...members].map(c => ({ id: c.id, data: c.presence })) });
+  if (!rooms.has(room)) {
+    rooms.set(room, {
+      members: new Set(),
+      wb: [],
+      notes: [
+        { id: 'seed-1', n: 'Kak Tias', t: 'Selamat datang di Lab Peminatan VR! Tulis pendapatmu mengenai lab pilihanmu di papan ini ya.', time: Date.now() },
+        { id: 'seed-2', n: "IT'ers", t: 'Aku tertarik dengan KERIS karena fokus di Artificial Intelligence & Machine Learning!', time: Date.now() }
+      ]
+    });
+  }
+  const rData = rooms.get(room);
+  const members = rData.members;
+  send(ws, {
+    type: 'welcome',
+    id: ws.id,
+    peers: [...members].map(c => ({ id: c.id, data: c.presence })),
+    wb: rData.wb,
+    notes: rData.notes
+  });
   members.add(ws);
 
   ws.on('pong', () => { ws.alive = true; });
@@ -73,10 +89,32 @@ wss.on('connection', (ws, room) => {
       for (const c of members) if (c !== ws) send(c, { type: 'presence', id: ws.id, data: ws.presence });
     } else if (m.type === 'signal' && typeof m.to === 'string' && isPlainObj(m.data)) {
       for (const c of members) if (c.id === m.to) { send(c, { type: 'signal', from: ws.id, data: m.data }); break; }
+    } else if (m.type === 'wb_stroke' && isPlainObj(m.stroke)) {
+      rData.wb.push(m.stroke);
+      if (rData.wb.length > 500) rData.wb.shift();
+      for (const c of members) if (c !== ws) send(c, { type: 'wb_stroke', stroke: m.stroke });
+    } else if (m.type === 'wb_undo') {
+      rData.wb.pop();
+      for (const c of members) if (c !== ws) send(c, { type: 'wb_undo' });
+    } else if (m.type === 'wb_clear') {
+      rData.wb.length = 0;
+      for (const c of members) if (c !== ws) send(c, { type: 'wb_clear' });
+    } else if (m.type === 'note_add' && isPlainObj(m.note)) {
+      rData.notes.push(m.note);
+      if (rData.notes.length > 60) rData.notes.shift();
+      for (const c of members) if (c !== ws) send(c, { type: 'note_add', note: m.note });
+    } else if (m.type === 'note_del') {
+      if (typeof m.id === 'string') {
+        const idx = rData.notes.findIndex(x => x.id === m.id);
+        if (idx !== -1) rData.notes.splice(idx, 1);
+      } else if (typeof m.idx === 'number') {
+        rData.notes.splice(m.idx, 1);
+      }
+      for (const c of members) if (c !== ws) send(c, { type: 'note_del', id: m.id, idx: m.idx });
     }
   });
   ws.on('close', () => {
-    members.delete(ws); if (!members.size) rooms.delete(room);
+    members.delete(ws);
     for (const c of members) send(c, { type: 'leave', id: ws.id });
   });
   ws.on('error', () => {});
