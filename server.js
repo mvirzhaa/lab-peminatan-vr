@@ -18,6 +18,35 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => 
 const MAX_MSG = 16 * 1024;           // byte per pesan (16 KB)
 const RATE = 60;                     // pesan per detik per klien
 const PUBLIC = path.join(__dirname, 'public');
+const MAX_HOF_MSG = 64 * 1024;       // pesan Hall of Fame (berisi foto) boleh s.d. 64 KB
+
+// ---- Hall of Fame: disimpan permanen di folder data/ (global untuk semua ruang) ----
+const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(__dirname, 'data'));
+const PHOTO_DIR = path.join(DATA_DIR, 'hof');
+const HOF_FILE = path.join(DATA_DIR, 'hof.json');
+fs.mkdirSync(PHOTO_DIR, { recursive: true });
+let HOF = [];
+try { const raw = JSON.parse(fs.readFileSync(HOF_FILE, 'utf8')); if (Array.isArray(raw)) HOF = raw.filter(e => e && /^[a-f0-9]{16}$/.test(e.id) && typeof e.n === 'string'); } catch { /* belum ada */ }
+let hofSaveT = null;
+function hofSave() {
+  clearTimeout(hofSaveT);
+  hofSaveT = setTimeout(() => {
+    const tmp = HOF_FILE + '.tmp';
+    fs.writeFile(tmp, JSON.stringify(HOF), err => { if (!err) fs.rename(tmp, HOF_FILE, () => {}); });
+  }, 300);
+}
+const hofPublic = e => ({ id: e.id, n: e.n, t: e.t, v: e.v });
+const sha = s => crypto.createHash('sha256').update(String(s)).digest('hex');
+const cleanHofName = v => (typeof v === 'string' ? v : '').replace(/[\u0000-\u001f\u007f\u200b-\u200f\u202a-\u202e\u2066-\u2069]/g, '').replace(/[^\p{L}\p{N} .,'\u2019~-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 40);
+function decodePhoto(d) {
+  // hanya JPEG base64 kecil yang diterima; byte awal harus penanda JPEG asli
+  if (typeof d !== 'string' || d.length > 60000) return null;
+  const m = /^data:image\/jpeg;base64,([A-Za-z0-9+/]+={0,2})$/.exec(d); if (!m) return null;
+  const b = Buffer.from(m[1], 'base64');
+  if (b.length < 800 || b.length > 45000 || b[0] !== 0xFF || b[1] !== 0xD8 || b[2] !== 0xFF || b[b.length - 2] !== 0xFF || b[b.length - 1] !== 0xD9) return null;
+  return b;
+}
+let hofGlobal = { t: 0, n: 0 };
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json' };
 const server = http.createServer((req, res) => {
@@ -25,6 +54,15 @@ const server = http.createServer((req, res) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405, secHeaders); return res.end(); }
   let p; try { p = decodeURIComponent(new URL(req.url, 'http://x').pathname); } catch { res.writeHead(400, secHeaders); return res.end(); }
   if (p === '/health') { res.writeHead(200, { ...secHeaders, 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: true, clients: wss.clients.size })); }
+  const hm = /^\/hof\/([a-f0-9]{16})\.jpg$/.exec(p);
+  if (hm) {
+    const f = path.join(PHOTO_DIR, hm[1] + '.jpg');
+    return fs.readFile(f, (err, buf) => {
+      if (err) { res.writeHead(404, secHeaders); return res.end(); }
+      res.writeHead(200, { ...secHeaders, 'Content-Type': 'image/jpeg', 'Cache-Control': 'public, max-age=600', 'Content-Security-Policy': "default-src 'none'" });
+      res.end(req.method === 'HEAD' ? undefined : buf);
+    });
+  }
   if (p === '/' || p === '') p = '/index.html';
   const file = path.normalize(path.join(PUBLIC, p));
   if (!file.startsWith(PUBLIC + path.sep)) { res.writeHead(403, secHeaders); return res.end(); } // cegah path traversal
@@ -36,7 +74,7 @@ const server = http.createServer((req, res) => {
   });
 });
 
-const wss = new WebSocketServer({ noServer: true, maxPayload: MAX_MSG });
+const wss = new WebSocketServer({ noServer: true, maxPayload: MAX_HOF_MSG });
 const rooms = new Map(); // nama → { members: Set, wb: Array, notes: Array }
 
 server.on('upgrade', (req, socket, head) => {
@@ -81,7 +119,6 @@ wss.on('connection', (ws, room) => {
     rooms.set(room, {
       members: new Set(),
       wb: [],
-      fame: [],
       notes: [
         { id: 'seed-1', n: 'Kak Tias', t: 'Selamat datang di Lab Peminatan VR! Tulis pendapatmu mengenai lab pilihanmu di papan ini ya.', time: Date.now() },
         { id: 'seed-2', n: "IT'ers", t: 'Aku tertarik dengan KERIS karena fokus di Artificial Intelligence & Machine Learning!', time: Date.now() }
@@ -96,7 +133,7 @@ wss.on('connection', (ws, room) => {
     peers: [...members].map(c => ({ id: c.id, data: c.presence })),
     wb: rData.wb,
     notes: rData.notes,
-    fame: rData.fame
+    hof: HOF.map(hofPublic)
   });
   members.add(ws);
 
@@ -105,7 +142,8 @@ wss.on('connection', (ws, room) => {
     // token bucket: batasi banjir pesan
     const now = Date.now(); ws.tokens = Math.min(RATE, ws.tokens + (now - ws.last) / 1000 * RATE); ws.last = now;
     if (ws.tokens < 1) return; ws.tokens -= 1;
-    if (isBinary || buf.length > MAX_MSG) return;
+    if (isBinary || buf.length > MAX_HOF_MSG) return;
+    if (buf.length > MAX_MSG && buf.subarray(0, 23).toString('latin1') !== '{"type":"hof_add","n":"' ) return;
     let m; try { m = JSON.parse(buf.toString('utf8')); } catch { return; }
     if (!isPlainObj(m)) return;
     if (m.type === 'auth') {
@@ -139,15 +177,39 @@ wss.on('connection', (ws, room) => {
       rData.notes.push(note);
       if (rData.notes.length > 60) rData.notes.shift();
       for (const c of members) if (c !== ws) send(c, { type: 'note_add', note });
-    } else if (m.type === 'fame_add' && isPlainObj(m.entry)) {
-      // Papan Kehormatan: satu entri per nama per ruang, satu kali per koneksi
-      const n = cleanNameS(m.entry.n); if (!n || ws.famed) return;
-      ws.famed = true;
-      if (rData.fame.some(e => e.n.toLowerCase() === n.toLowerCase())) return;
-      const entry = { n, d: cleanText(m.entry.d, 20) };
-      rData.fame.push(entry);
-      if (rData.fame.length > 200) rData.fame.shift();
-      for (const c of members) if (c !== ws) send(c, { type: 'fame_add', entry });
+    } else if (m.type === 'hof_add') {
+      // Hall of Fame: nama + foto. Nama yang sudah terdaftar hanya bisa diperbarui pemilik token-nya.
+      const reply = (ok, extra) => send(ws, { type: 'hof_res', ok, ...extra });
+      ws.hofN = (ws.hofN || 0) + 1;
+      if (ws.hofN > 5) return reply(false, { err: 'Terlalu banyak percobaan. Muat ulang halaman lalu coba lagi.' });
+      const now2 = Date.now();
+      if (now2 - hofGlobal.t > 60000) hofGlobal = { t: now2, n: 0 };
+      if (++hofGlobal.n > 30) return reply(false, { err: 'Server sedang sibuk, coba sebentar lagi.' });
+      const n = cleanHofName(m.n); if (n.length < 2) return reply(false, { err: 'Nama minimal 2 huruf.' });
+      const img = decodePhoto(m.photo); if (!img) return reply(false, { err: 'Foto tidak valid (gunakan JPG/PNG/WebP biasa).' });
+      let e = HOF.find(x => x.n.toLowerCase() === n.toLowerCase());
+      const tok = typeof m.tok === 'string' && m.tok.length <= 64 ? m.tok : '';
+      let newTok = null;
+      if (e && !(tok && e.th === sha(tok))) return reply(false, { err: 'Nama itu sudah ada di Hall of Fame. Gunakan nama lengkap yang berbeda.' });
+      if (!e && tok) { const own = HOF.find(x => x.th === sha(tok)); if (own) e = own; }
+      if (!e) {
+        if (HOF.length >= 2000) return reply(false, { err: 'Hall of Fame penuh.' });
+        newTok = crypto.randomBytes(16).toString('hex');
+        e = { id: crypto.randomBytes(8).toString('hex'), n, t: Date.now(), v: 1, th: sha(newTok) };
+        HOF.push(e);
+      } else { e.n = n; e.v = (e.v || 1) + 1; }
+      fs.writeFile(path.join(PHOTO_DIR, e.id + '.jpg'), img, err => {
+        if (err) return reply(false, { err: 'Gagal menyimpan foto.' });
+        hofSave();
+        reply(true, { e: hofPublic(e), tok: newTok || tok });
+        for (const c of wss.clients) if (c !== ws) send(c, { type: 'hof_add', e: hofPublic(e) });
+      });
+    } else if (m.type === 'hof_del' && typeof m.id === 'string') {
+      if (!ws.admin) return;
+      const idx = HOF.findIndex(x => x.id === m.id); if (idx === -1) return;
+      HOF.splice(idx, 1); hofSave();
+      fs.unlink(path.join(PHOTO_DIR, m.id + '.jpg'), () => {});
+      for (const c of wss.clients) send(c, { type: 'hof_del', id: m.id });
     } else if (m.type === 'note_del') {
       if (typeof m.id === 'string' && m.id.length <= 40) {
         const idx = rData.notes.findIndex(x => x.id === m.id);

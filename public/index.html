@@ -351,6 +351,42 @@ canvas {
 #ldKey:focus{border-color:#facc15;box-shadow:0 0 0 3px rgba(250,204,21,.3)}
 .it .kickb{margin-left:auto;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(239,68,68,.15);color:#fca5a5;cursor:pointer;flex:none}
 .it .kickb:hover,.it .kickb.arm{background:#ef4444;color:#fff}
+#snakeHud{position:fixed;right:16px;bottom:84px;z-index:30;width:min(300px,calc(100vw - 32px));background:rgba(17,12,38,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(250,204,21,.35);border-radius:18px;padding:12px 14px;color:#fff;box-shadow:0 12px 40px rgba(0,0,0,.45);display:grid;gap:8px}
+#snakeHud[hidden]{display:none}
+#snakeHud .snh-top{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;letter-spacing:.04em}
+#snakeHud .snh-top span{font-weight:700;color:#fde68a;font-variant-numeric:tabular-nums}
+#snakeHud .snh-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+#snakeHud .snh-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f472b6,#facc15,#34d399);transition:width .4s}
+#snMsg{font-size:13px;min-height:18px;color:#e9d5ff}
+#snRoll{width:100%;font-size:15px;padding:11px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;border:0;font-weight:700}
+#snRoll:disabled{opacity:.55}
+#snRoll kbd{font:600 11px/1 ui-monospace,monospace;background:rgba(0,0,0,.25);padding:3px 6px;border-radius:5px;margin-left:6px}
+.hofAsk{background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.45);border-radius:12px;padding:10px 12px;font-size:13.5px;margin:8px 0}
+.hofForm{display:grid;grid-template-columns:220px 1fr;gap:16px;margin-top:10px}
+@media(max-width:600px){.hofForm{grid-template-columns:1fr}.hofPrev{max-width:220px;margin:auto}}
+.hofPrev{position:relative;aspect-ratio:4/5;border-radius:16px;overflow:hidden;background:#1a1230;border:1.5px dashed rgba(255,255,255,.25)}
+.hofPrev canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.hfEmpty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:42px;color:#a78bfa;pointer-events:none}
+.hfEmpty span{font-size:13px;margin-top:6px}
+.hfEmpty[hidden]{display:none}
+.hofFields{display:flex;flex-direction:column;gap:10px}
+.hfL{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--mut,#a1a1aa)}
+.hfL input[type=text]{height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:inherit;padding:0 12px;font-size:15px}
+.hfFile{position:relative;overflow:hidden;text-align:center;cursor:pointer}
+.hfFile input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.hfTip{font-size:11.5px;opacity:.7;margin:0}
+.hfOk{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:1.45}
+.hfOk input{margin-top:2px;accent-color:#f59e0b}
+#hfMsg{min-height:18px;font-size:13px;margin:0}
+.hofGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:12px;max-height:56vh;overflow:auto;padding:2px}
+.hofCard{position:relative;background:linear-gradient(180deg,#2e1065,#4c1d95);border:1.5px solid rgba(245,198,107,.6);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:4px;text-align:center}
+.hofCard img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;background:#1a1230}
+.hofCard b{font-size:13px;line-height:1.3;color:#fff}
+.hofCard span{font-size:11px;color:#c4b5fd}
+.hofCard .kickb{position:absolute;top:12px;right:12px}
+.hofCard .kickb{padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(239,68,68,.85);color:#fff;border:0;cursor:pointer}
+
+@media(max-width:640px){#snakeHud{right:auto;left:50%;transform:translateX(-50%)}}
 </style>
 
 </head>
@@ -4123,7 +4159,7 @@ function wsNet(url, h) {
       send({ type: "presence", data: pres });
     };
     ws.onmessage = (ev) => {
-      if (typeof ev.data !== "string" || ev.data.length > MAX_MSG * 4)
+      if (typeof ev.data !== "string" || ev.data.length > 4e6)
         return;
       let m;
       try {
@@ -4143,7 +4179,7 @@ function wsNet(url, h) {
         emitPeers();
         if (Array.isArray(m.wb)) h.onWbInit && h.onWbInit(m.wb);
         if (Array.isArray(m.notes)) h.onNotesInit && h.onNotesInit(m.notes);
-        if (Array.isArray(m.fame)) h.onFameInit && h.onFameInit(m.fame);
+        if (Array.isArray(m.hof)) h.onHofInit && h.onHofInit(m.hof);
       } else if (m.type === "presence" && typeof m.id === "string" && m.id !== selfId) {
         peers.set(m.id, { id: m.id, presence: obj(m.data) });
         emitPeers();
@@ -4170,8 +4206,12 @@ function wsNet(url, h) {
         h.onNoteAdd && h.onNoteAdd(m.note);
       } else if (m.type === "note_del") {
         h.onNoteDel && h.onNoteDel(m.id, m.idx);
-      } else if (m.type === "fame_add" && m.entry) {
-        h.onFameAdd && h.onFameAdd(m.entry);
+      } else if (m.type === "hof_add" && m.e) {
+        h.onHofAdd && h.onHofAdd(m.e);
+      } else if (m.type === "hof_del" && typeof m.id === "string") {
+        h.onHofDel && h.onHofDel(m.id);
+      } else if (m.type === "hof_res") {
+        if (api.hofCb) { api.hofCb(m); api.hofCb = null; }
       }
     };
     ws.onclose = () => {
@@ -4232,8 +4272,18 @@ function wsNet(url, h) {
     sendNoteDel(id, idx) {
       send({ type: "note_del", id, idx });
     },
-    sendFame(entry) {
-      send({ type: "fame_add", entry });
+    sendHof(o) {
+      // pesan berfoto: dikirim langsung (melebihi batas pesan biasa); "type" & "n" harus di depan
+      return new Promise((res) => {
+        const s = JSON.stringify({ type: "hof_add", n: String(o.n || ""), photo: o.photo, tok: o.tok || "" });
+        if (!open || s.length > 62000) return res(null);
+        api.hofCb = res;
+        ws.send(s);
+        setTimeout(() => { if (api.hofCb === res) { api.hofCb = null; res(null); } }, 15e3);
+      });
+    },
+    hofDel(id) {
+      send({ type: "hof_del", id });
     },
     auth(key) {
       api.modKey = key;
@@ -6474,8 +6524,9 @@ async function startNet() {
       if (why === "gave_up")
         toast("Server multi-user tidak ditemukan \u2014 galeri berjalan dalam mode sendiri.");
     },
-    onFameInit: (list) => fameInit(list),
-    onFameAdd: (e) => fameAdd(e),
+    onHofInit: (list) => hofInit(list),
+    onHofAdd: (e) => hofUpsert(e),
+    onHofDel: (id) => hofDelete(id),
     onWbInit: (strokes) => {
       if (world && world.wb) {
         world.wb.strokes = Array.isArray(strokes) ? strokes.slice(-400) : [];
@@ -6791,6 +6842,7 @@ function update(dt) {
     }
   }
   const sp = (run ? 6.4 : 3.4) * S.speed;
+  if (typeof snakeLock === "function" && snakeLock()) { mx = mz = 0; P.walkTo = null; }
   if (mx || mz) {
     if (P.sit) {
       P.sit = false;
@@ -6805,7 +6857,7 @@ function update(dt) {
       P.camYaw = lerpAngle(P.camYaw, P.yaw, dt * 1.5);
   } else
     P.moving = Math.max(0, P.moving - dt * 5);
-  const gh = groundH(P.x, P.z);
+  const gh = groundH(P.x, P.z) + (typeof xGround === "function" ? xGround() : 0);
   P.y += (gh - P.y) * Math.min(1, dt * 12);
   const ud = avatar.userData;
   avatar.position.set(P.x, P.y + (P.sit ? -0.38 : Math.abs(Math.sin(t * 9)) * 0.05 * P.moving), P.z);
@@ -6849,7 +6901,9 @@ function update(dt) {
 function loop() {
   const dt = Math.min(0.05, clock.getDelta());
   update(dt);
+  if (typeof xShakePre === "function") xShakePre(dt);
   renderer.render(scene, camera);
+  if (typeof xShakePost === "function") xShakePost();
   if (cssR && yt.visible)
     cssR.render(cssScene, camera);
 }
@@ -7009,7 +7063,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd };
 }
 boot().catch((err) => {
   console.error(err);
@@ -7381,9 +7435,9 @@ function npcTick(dt) {
       R.rotation.x = 0;
     } else {
       R.rotation.z = lerpAngle(R.rotation.z, n.kind === "robot" ? 0.18 : 0.12, dt * 4);
-      R.rotation.x = lerpAngle(R.rotation.x, n.kind === "robot" ? Math.sin(t * 1.5) * 0.1 : -0.5, dt * 4);
+      R.rotation.x = lerpAngle(R.rotation.x, n.kind === "robot" ? Math.sin(t * 1.5) * 0.1 : n.kind === "human" ? -0.06 : -0.5, dt * 4);
     }
-    n.arms[0].rotation.x = n.kind === "robot" ? -Math.sin(t * 1.5) * 0.1 : -0.5;
+    n.arms[0].rotation.x = n.kind === "robot" ? -Math.sin(t * 1.5) * 0.1 : n.kind === "human" ? -0.06 : -0.5;
     n.hint.position.y = (n.kind === "robot" ? 2.66 : 2.52) + Math.sin(t * 2.6) * 0.05;
   }
 }
@@ -7471,6 +7525,8 @@ function rel(res, top) {
   return [["Lihat juga: " + p.title.slice(0, 26), () => openZoom(p.id)]];
 }
 function npcAnswer(npcId, q) {
+  const spR = typeof spAnswer === "function" ? spAnswer(npcId, q) : null;
+  if (spR) return spR;
   if (NPCS[npcId] && NPCS[npcId].custom) return NPCS[npcId].custom.answer(q);
   const n = NPCS[npcId] || NPCS.tia, lab = n.lab, L = lab ? LABS[lab] : null;
   const ql = norm(q).trim();
@@ -7653,7 +7709,7 @@ function openNpc(id, tab) {
   $("sIn").placeholder = `Tanya ${n.name}… (mis. ${n.custom ? n.custom.chips[0] : n.lab ? LABS[n.lab].chips[0] : "bagaimana cara mendaftar?"})`;
   const ch = $("sChips");
   ch.textContent = "";
-  const chips = n.custom ? n.custom.chips : n.lab ? LABS[n.lab].chips.concat(["Cara daftar"]) : ["Cara daftar", "Lab apa saja?", "Bingung pilih lab", "Antar ke Lab GIT", "Kuis"];
+  const chips = n.custom ? n.custom.chips : n.lab ? LABS[n.lab].chips.concat(["Cara daftar", "\u{1F510} Secret passage"]) : ["Cara daftar", "Lab apa saja?", "Bingung pilih lab", "Antar ke Lab GIT", "Kuis"];
   chips.forEach((t2) => {
     const b = document.createElement("button");
     b.textContent = t2;
@@ -8386,6 +8442,8 @@ var SECRET_ROOMS = {
   s_glass: { x0: -4.2, x1: 19.8, z0: -108, z1: -84, name: "Lorong 2 · Rumah Kaca", short: "Rumah Kaca" },
   s_link2: { x0: 15, x1: 17.4, z0: -112, z1: -108, name: "Lorong Rahasia", short: "Lorong ???" },
   s_riddle: { x0: 13.2, x1: 19.2, z0: -170, z1: -112, name: "Lorong 3 · Teka-teki", short: "Teka-teki" },
+  s_link3: { x0: 19.2, x1: 21.6, z0: -168.7, z1: -166.3, name: "Lorong Rahasia", short: "Lorong ???" },
+  s_snake: { x0: 21.6, x1: 47.6, z0: -170, z1: -140, name: "Lorong 4 · Ular Tangga", short: "Ular Tangga" },
   s_garden: { x0: -16, x1: 48, z0: -236, z1: -170, name: "Taman Apresiasi", short: "Taman" }
 };
 function secretRoomAt(x, z) {
@@ -8400,14 +8458,18 @@ function Q() {
   const k = questKey();
   if (questCache.key !== k) {
     const v = store.get(k.slice(0), null);
-    questCache = { key: k, v: Object.assign({ labs: [], bots: [], maze: false, glass: false, riddles: [], garden: false, t0: 0, t1: 0, tries: {}, cert: "" }, v && typeof v === "object" ? v : {}) };
+    questCache = { key: k, v: Object.assign({ labs: [], bots: [], maze: false, glass: false, riddles: [], garden: false, t0: 0, t1: 0, tries: {}, cert: "", sp: {}, spTries: {}, sn: 0, snake: false, hof: null }, v && typeof v === "object" ? v : {}) };
     for (const a of ["labs", "bots", "riddles"]) if (!Array.isArray(questCache.v[a])) questCache.v[a] = [];
+    for (const a of ["sp", "spTries", "tries"]) if (!questCache.v[a] || typeof questCache.v[a] !== "object") questCache.v[a] = {};
+    const sn = +questCache.v.sn; questCache.v.sn = Number.isInteger(sn) && sn >= 0 && sn <= 40 ? sn : 0;
   }
   return questCache.v;
 }
 function saveQ() { store.set(questKey(), Q()); }
-var questUnlocked = () => Q().labs.length >= 4 && Q().bots.length >= 4;
-var gardenUnlocked = () => Q().riddles.length >= 10;
+// pintu rahasia terbuka setelah keempat robot lab menerima jawaban "secret passage" yang benar
+var questUnlocked = () => LAB_IDS.every((id) => !!Q().sp[id]);
+var riddlesDone = () => Q().riddles.length >= 10;
+var gardenUnlocked = () => riddlesDone() && !!Q().snake;
 function questTalk(npcId) {
   if (npcId === "tama") { unlockSkins(); return; }
   if (!LAB_IDS.includes(npcId)) return;
@@ -8417,43 +8479,29 @@ function questTalk(npcId) {
   saveQ();
   questProgress();
 }
-function questProgress() {
-  updHud();
-  if (questUnlocked() && !Q().doorNotified) {
-    Q().doorNotified = true;
-    saveQ();
-    if (XT.door) XT.door.setOpen(true);
-    setTimeout(() => {
-      if (typeof SFX !== "undefined") SFX.chime();
-      toast("🗝 Terdengar gemuruh dari dinding utara Lab Software Engineering… sebuah pintu rahasia terbuka!", 7000);
-      sayBubble(`${S.name}, kamu sudah menjelajahi semua lab! Cari pintu rahasia di dinding utara labku ya 😉`, "npc_se");
-    }, 900);
-  }
-}
+function questProgress() { updHud(); }
 
 // ---------- HUD misi ----------
 function updHud() {
   if (!XT.hud) return;
   const q = Q(), h = XT.hud;
   let txt;
-  if (!questUnlocked()) {
-    if (!q.labs.length && !q.bots.length) { h.hidden = true; return; }
-    txt = `🔍 Misi rahasia · Lab ${q.labs.length}/4 · Robot ${q.bots.length}/4`;
-  } else if (!q.maze) txt = "🗝 Pintu rahasia terbuka di Lab SE · Lorong 1: Labirin";
+  // rahasia: tanpa petunjuk apa pun sampai pemain sendiri melangkah masuk ke lorong
+  if (!questUnlocked() || !q.t0) { h.hidden = true; return; }
+  else if (!q.maze) txt = "🌀 Lorong 1: Labirin — cari jalan keluar";
   else if (!q.glass) txt = "🪞 Lorong 2: temukan jalan keluar Rumah Kaca";
-  else if (!gardenUnlocked()) txt = `🧩 Lorong 3: teka-teki ${q.riddles.length}/10`;
-  else txt = "🌷 Taman Apresiasi terbuka · ambil sertifikatmu!";
+  else if (!riddlesDone()) txt = `🧩 Lorong 3: teka-teki ${q.riddles.length}/10`;
+  else if (!q.snake) txt = `🎲 Lorong 4 · Ular Tangga: pijakan ${q.sn}/40`;
+  else if (!q.hof) txt = "🌷 Taman Apresiasi · temui Kang Santo untuk sertifikat & Hall of Fame";
+  else txt = "🏆 Kamu sudah tercatat di Hall of Fame!";
   h.hidden = false;
   h.textContent = txt;
 }
 function showQuestCard() {
   const q = Q(), ck = (b) => b ? "✅" : "⬜";
-  const labs = LAB_IDS.map((id) => `<li>${ck(q.labs.includes(id))} Masuk Lab ${LABS[id].code}</li>`).join("");
-  const bots = LAB_IDS.map((id) => `<li>${ck(q.bots.includes(id))} Bertanya pada robot ${LABS[id].bot.name}</li>`).join("");
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🗝 Misi Rahasia</h2>
-  <p>Di galeri ini tersembunyi tiga lorong rahasia yang tidak tampil di denah. Pintunya baru terbuka setelah kamu masuk ke <b>keempat lab peminatan</b> dan <b>berbicara dengan setiap robot pemandunya</b> (ajukan minimal satu pertanyaan).</p>
-  <ul class="qlist">${labs}${bots}</ul>
-  <ul class="qlist"><li>${ck(questUnlocked())} Pintu rahasia terbuka</li><li>${ck(q.maze)} Lorong 1 · Labirin</li><li>${ck(q.glass)} Lorong 2 · Rumah Kaca</li><li>${ck(gardenUnlocked())} Lorong 3 · 10 teka-teki (${q.riddles.length}/10)</li><li>${ck(!!q.cert)} Sertifikat dari Taman Apresiasi</li></ul>
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🗝 Lorong Rahasia</h2>
+  <p>Kamu telah menemukan jalan rahasia di balik dinding Lab SE. Taklukkan keempat lorong untuk mencapai Taman Apresiasi.</p>
+  <ul class="qlist"><li>${ck(questUnlocked())} Pintu rahasia terbuka</li><li>${ck(q.maze)} Lorong 1 · Labirin</li><li>${ck(q.glass)} Lorong 2 · Rumah Kaca</li><li>${ck(riddlesDone())} Lorong 3 · 10 teka-teki (${q.riddles.length}/10)</li><li>${ck(!!q.snake)} Lorong 4 · Ular Tangga (pijakan ${q.sn}/40)</li><li>${ck(!!q.cert)} Sertifikat dari Kang Santo</li><li>${ck(!!q.hof)} Tercatat di Hall of Fame</li></ul>
   <p style="font-size:12px;color:var(--mut)">Progres tersimpan di browser ini atas nama <b id="qnm"></b>.</p>`);
   $("qnm").textContent = S.name || "-";
 }
@@ -8871,7 +8919,7 @@ function buildRiddles() {
   x.fillStyle = "#2b2235"; x.fillRect(0, 0, 512, 512);
   for (let r = 0; r < 8; r++) for (let c = 0; c < 4; c++) { const ox = (r % 2) * 64; x.fillStyle = `hsl(${265 + Rn() * 20},${12 + Rn() * 10}%,${16 + Rn() * 8}%)`; x.fillRect(c * 128 + ox - 64 + 3, r * 64 + 3, 122, 58); }
   const stoneM = new THREE2.MeshStandardMaterial({ map: xTex(sc, [6, 2]), roughness: 0.95 });
-  xRoomWalls(R, { S: [[15, 17.4]], N: [[14.7, 17.7]] }, H, stoneM);
+  xRoomWalls(R, { S: [[15, 17.4]], N: [[14.7, 17.7]], E: [[SECRET_ROOMS.s_link3.z0, SECRET_ROOMS.s_link3.z1]] }, H, stoneM);
   const fl = mkCanvas(512, 512), fx3 = fl.getContext("2d");
   fx3.fillStyle = "#1c1626"; fx3.fillRect(0, 0, 512, 512);
   for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) { fx3.fillStyle = `hsl(270,10%,${12 + Rn() * 8}%)`; fx3.fillRect(c * 128 + 3, r * 128 + 3, 122, 122); }
@@ -8969,7 +9017,7 @@ function openRiddle(i) {
       closeGen(); refreshGates(false); updHud();
       if (typeof SFX !== "undefined") SFX.chime();
       spawnSparkle(); if (typeof mpFx === "function") mpFx();
-      toast(gardenUnlocked() ? "🌷 Semua teka-teki terjawab! Gerbang Taman Apresiasi terbuka." : `✅ Benar! Gerbang ${i + 1} terbuka.`, 4500);
+      toast(riddlesDone() ? "🧩 Semua teka-teki terjawab! Pintu Lorong 4 · Ular Tangga terbuka di sisi timur ujung lorong." : `✅ Benar! Gerbang ${i + 1} terbuka.`, 5000);
     } else {
       q.tries = q.tries || {}; q.tries[i] = (q.tries[i] || 0) + 1; saveQ();
       $("rdMsg").textContent = "❌ Belum tepat, coba lagi.";
@@ -9120,7 +9168,8 @@ function buildGarden() {
   drawPeopleBoards(dosC, mhsC).then(() => { bD.material.map.needsUpdate = true; bM.material.map.needsUpdate = true; });
   // papan kehormatan (timur)
   const fameC = mkCanvas(1600, 1200);
-  XT.fameBoard = boardAt(fameC, 4.4, 3.3, 33.4, -203, -Math.PI / 2, "Papan Kehormatan");
+  XT.fameBoard = boardAt(fameC, 4.4, 3.3, 33.4, -203, -Math.PI / 2, "Hall of Fame");
+  XT.fameBoard.userData.act = { type: "x_hof" };
   XT.fameC = fameC;
   drawFame();
   // portal kembali
@@ -9133,21 +9182,23 @@ function buildGarden() {
   const plm = xPlane(plc, 2.4, 0.47); plm.position.y = 3.4; pg2.add(plm); xAct(plm, { type: "x_portal" });
   XT.anim.push((dt) => { pr.rotation.z += dt * 0.8; pd.material.opacity = 0.35 + Math.sin(t * 2) * 0.1; });
   // NPC sertifikat
-  makeCustomRobot("tama", {
-    code: "TAMAN", name: "TAMA", role: "Robot Penjaga Taman · pemberi sertifikat", col: "#16a34a", body: "#f0fdf4", accent: "#22c55e", eye: "#fde047", icon: "🏅",
-    x: cx + 3.6, z: -185.5, room: "s_garden", secret: true,
-    chips: ["Ambil sertifikat", "Aktifkan skin baru", "Siapa saja yang lulus?", "Apa isi taman ini?", "Kembali ke atrium"],
-    roleNote: "pemberi sertifikat penjelajah",
-    knowText: "TAMA menjaga Taman Apresiasi dan memberi sertifikat kepada penjelajah yang menuntaskan ketiga lorong rahasia.",
-    greetActs: () => [["🏅 Ambil sertifikat", openCertificate], ["👕 Lemari Skin", openSkins]],
+  makeCustomHuman("tama", {
+    code: "TAMAN", name: "Kang Santo", role: "Penjaga Taman Apresiasi", col: "#16a34a", icon: "🏅",
+    x: cx + 3.6, z: -185.5, room: "s_garden", secret: true, tag: "KANG SANTO · PENJAGA TAMAN",
+    chips: ["Ambil sertifikat", "Masuk Hall of Fame", "Aktifkan skin baru", "Siapa saja yang lulus?", "Apa isi taman ini?", "Kembali ke atrium"],
+    roleNote: "sertifikat, Hall of Fame & skin",
+    knowText: "Kang Santo menjaga Taman Apresiasi: memberi sertifikat, mencatat penjelajah ke Hall of Fame (nama + foto), dan mengaktifkan skin eksklusif.",
+    greetActs: () => [["🏆 Isi Hall of Fame", openHofForm], ["🏅 Ambil sertifikat", openCertificate], ["👕 Lemari Skin", openSkins]],
     onCard: () => tamaCard(),
     answer: (q) => {
       const ql = norm(q);
-      if (/sertifikat|piagam|hadiah/.test(ql) || !ql.trim() || /^(halo|hai|hi)\b/.test(ql)) return { text: `Selamat, ${S.name}! Kamu berhasil melewati Labirin, Rumah Kaca, dan 10 teka-teki. Ambil sertifikatmu di sini ya 🏅${skinsUnlocked() ? " Sebagai hadiah, 3 skin eksklusif sudah kuaktifkan untukmu — buka Lemari Skin untuk mencobanya!" : ""}`, acts: [["🏅 Ambil sertifikat", openCertificate], ["👕 Lemari Skin", openSkins]] };
-      if (/lulus|siapa|kehormatan|daftar/.test(ql)) return { text: `Nama-nama penjelajah yang berhasil terpampang di Papan Kehormatan sebelah timur air mancur. Saat ini tercatat ${XT.fame.length} penjelajah.` };
-      if (/skin|kostum|baju|tampilan|avatar|lemari/.test(ql)) return { text: skinsUnlocked() ? "Skin eksklusifmu sudah aktif: Astronot Nebula, Ronin Neon, dan Hantu Hologram. Buka Lemari Skin untuk berganti kapan saja (menu ☰ atau tombol K)." : "Bicara denganku setelah menaklukkan ketiga lorong untuk membuka 3 skin eksklusif.", acts: [["👕 Lemari Skin", openSkins]] };
+      const hofAsk = Q().hof ? "" : " Satu lagi: tuliskan namamu dan unggah fotomu supaya tampil di Hall of Fame Atrium ya!";
+      if (/hall|fame|foto|unggah|upload/.test(ql)) return { text: Q().hof ? "Kamu sudah tercatat di Hall of Fame. Mau memperbarui fotomu?" : "Tuliskan nama dan unggah fotomu, nanti tampil di layar Hall of Fame di Atrium dan di papan taman ini.", acts: [["🏆 Isi Hall of Fame", openHofForm], ["Lihat Hall of Fame", openHofGallery]] };
+      if (/sertifikat|piagam|hadiah/.test(ql) || !ql.trim() || /^(halo|hai|hi)\b/.test(ql)) return { text: `Selamat, ${S.name}! Kamu berhasil melewati Labirin, Rumah Kaca, 10 teka-teki, dan Ular Tangga. Ambil sertifikatmu di sini ya 🏅${skinsUnlocked() ? " Sebagai hadiah, 3 skin eksklusif sudah kuaktifkan untukmu." : ""}${hofAsk}`, acts: [["🏆 Isi Hall of Fame", openHofForm], ["🏅 Ambil sertifikat", openCertificate], ["👕 Lemari Skin", openSkins]] };
+      if (/lulus|siapa|kehormatan|daftar/.test(ql)) return { text: `Penjelajah yang berhasil tampil di Hall of Fame: papan sebelah timur air mancur dan layar besar di Atrium. Saat ini tercatat ${HOF.list.length} penjelajah.`, acts: [["Lihat Hall of Fame", openHofGallery]] };
+      if (/skin|kostum|baju|tampilan|avatar|lemari/.test(ql)) return { text: skinsUnlocked() ? "Skin eksklusifmu sudah aktif: Astronot Nebula, Ronin Neon, dan Hantu Hologram. Buka Lemari Skin untuk berganti kapan saja (menu ☰ atau tombol K)." : "Bicara denganku setelah menaklukkan keempat lorong untuk membuka 3 skin eksklusif.", acts: [["👕 Lemari Skin", openSkins]] };
       if (/kembali|atrium|pulang|keluar/.test(ql)) return { text: "Gunakan portal ungu di ujung utara taman, atau menu GO TO.", acts: [["⟲ Ke Atrium", () => teleportSpot("atrium")]] };
-      return { text: "Taman ini berisi air mancur, paviliun dengan Daftar Dosen dan Daftar Mahasiswa, Papan Kehormatan, dan portal kembali ke Atrium. Silakan berkeliling!", acts: [["🏅 Ambil sertifikat", openCertificate]] };
+      return { text: "Taman ini berisi air mancur, paviliun dengan Daftar Dosen dan Daftar Mahasiswa, papan Hall of Fame, dan portal kembali ke Atrium. Silakan berkeliling!", acts: [["🏅 Ambil sertifikat", openCertificate]] };
     }
   });
 }
@@ -9183,34 +9234,9 @@ async function drawPeopleBoards(dc, mc) {
   head(m, 3000, "Daftar Mahasiswa", MHS_LIST.length, "#16a34a");
   for (let i = 0; i < MHS_LIST.length; i++) { const [n, ang, role, app, img] = MHS_LIST[i], c = i % 5, r = Math.floor(i / 5); await cardF(m, 40 + c * 590, 180 + r * 600, 560, 570, n, "Angkatan " + ang, role, app, img); }
 }
-function drawFame() {
-  const c = XT.fameC; if (!c) return;
-  const x = c.getContext("2d");
-  const g = x.createLinearGradient(0, 0, 0, 1200); g.addColorStop(0, "#1e1036"); g.addColorStop(1, "#3b0764");
-  x.fillStyle = g; x.fillRect(0, 0, 1600, 1200);
-  x.strokeStyle = "#f5c66b"; x.lineWidth = 10; rr(x, 20, 20, 1560, 1160, 40); x.stroke();
-  x.fillStyle = "#fde68a"; x.font = `700 84px ${FONT}`; x.textAlign = "center"; x.fillText("🏆 PAPAN KEHORMATAN", 800, 140);
-  x.fillStyle = "#e9d5ff"; x.font = `400 38px ${FONT}`; x.fillText("Para penjelajah yang menaklukkan Labirin, Rumah Kaca & 10 Teka-teki", 800, 210);
-  const list = XT.fame.slice(-24);
-  x.font = `600 40px ${FONT}`;
-  if (!list.length) { x.fillStyle = "#c4b5fd"; x.fillText("Belum ada nama. Jadilah yang pertama!", 800, 600); }
-  list.forEach((e, i) => { const col = Math.floor(i / 12), row = i % 12; x.textAlign = "left"; x.fillStyle = "#fff"; x.fillText(`${i + 1 + Math.max(0, XT.fame.length - 24)}. ${e.n}`, 120 + col * 720, 300 + row * 72); x.fillStyle = "#a78bfa"; x.font = `400 30px ${FONT}`; x.fillText(e.d || "", 520 + col * 720, 300 + row * 72); x.font = `600 40px ${FONT}`; });
-  x.textAlign = "left";
-  if (XT.fameBoard) XT.fameBoard.material.map.needsUpdate = true;
-}
-function fameAdd(e) {
-  if (!e || typeof e.n !== "string") return;
-  const n = cleanName(e.n);
-  if (!n || XT.fame.some((f2) => f2.n.toLowerCase() === n.toLowerCase())) return;
-  XT.fame.push({ n, d: typeof e.d === "string" ? e.d.slice(0, 20) : "" });
-  if (XT.fame.length > 200) XT.fame.shift();
-  store.set("fame", XT.fame);
-  drawFame();
-}
-function fameInit(list) { if (Array.isArray(list)) list.forEach(fameAdd); }
 function openCertificate() {
   hidePopups();
-  if (!gardenUnlocked()) { toast("Sertifikat hanya untuk penjelajah yang menuntaskan ketiga lorong rahasia."); return; }
+  if (!gardenUnlocked()) { toast("Sertifikat hanya untuk penjelajah yang menuntaskan keempat lorong rahasia."); return; }
   const q = Q();
   if (!q.cert) { q.cert = (riddleHash(S.name + "|" + (q.t1 || Date.now())) + riddleHash(S.name)).toUpperCase().slice(0, 10); saveQ(); updHud(); }
   const c = mkCanvas(2000, 1414), x = c.getContext("2d");
@@ -9228,19 +9254,19 @@ function openCertificate() {
     x.fillStyle = "#7f00ff"; x.font = `italic 700 120px ${FONT}`; x.fillText(S.name || "Penjelajah", 1000, 770);
     x.strokeStyle = "#e9d5ff"; x.lineWidth = 4; x.beginPath(); x.moveTo(520, 810); x.lineTo(1480, 810); x.stroke();
     x.fillStyle = "#1f2937"; x.font = `400 40px ${FONT}`;
-    wrap(x, "atas keberhasilannya menjelajahi seluruh Lab Peminatan (KERIS, GIT, SE, CSN) dan menaklukkan tiga lorong rahasia — Labirin, Rumah Kaca, dan 10 Teka-teki — di Galeri VR Lab Peminatan Teknik Informatika.", 300, 890, 1400, 58, 3, "center");
+    wrap(x, "atas keberhasilannya menjelajahi seluruh Lab Peminatan (KERIS, GIT, SE, CSN) dan menaklukkan empat lorong rahasia — Labirin, Rumah Kaca, 10 Teka-teki, dan Ular Tangga — di Galeri VR Lab Peminatan Teknik Informatika.", 300, 890, 1400, 58, 3, "center");
     const mins = q.t0 && q.t1 ? Math.max(1, Math.round((q.t1 - q.t0) / 60000)) : 0;
     const dt = new Date(q.t1 || Date.now()).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
     x.fillStyle = "#4c1d95"; x.font = `600 38px ${FONT}`; x.fillText(`Bogor, ${dt}${mins ? ` · waktu tempuh ${mins} menit` : ""}`, 1000, 1110);
     x.fillStyle = "#6b7280"; x.font = `400 30px ${FONT}`; x.fillText(`Kode sertifikat: ${q.cert}  ·  Galeri VR Lab Peminatan TI · Fakultas Teknik dan Sains`, 1000, 1230);
     x.textAlign = "left";
     const url = c.toDataURL("image/png");
-    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 Sertifikat Penjelajah</h2><p>Selamat, <b id="cnm"></b>! Simpan sertifikatmu di bawah ini.</p><img id="certImg" alt="Sertifikat penjelajah" style="width:100%;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.35)"><div class="rowf" style="margin-top:12px"><button class="btn" id="certDl">Unduh PNG</button><button class="ghost" id="certFame">Lihat Papan Kehormatan</button></div>`);
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 Sertifikat Penjelajah</h2><p>Selamat, <b id="cnm"></b>! Simpan sertifikatmu di bawah ini.</p><img id="certImg" alt="Sertifikat penjelajah" style="width:100%;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.35)"><div class="rowf" style="margin-top:12px"><button class="btn" id="certDl">Unduh PNG</button><button class="ghost" id="certFame">🏆 Hall of Fame</button></div>`);
     $("genCard").classList.add("wide");
     $("cnm").textContent = S.name;
     $("certImg").src = url;
     $("certDl").onclick = () => c.toBlob((b) => b && saveFile(`sertifikat-penjelajah-${(S.name || "it").replace(/[^a-z0-9]/gi, "_")}.png`, b), "image/png");
-    $("certFame").onclick = () => { closeGen(); xTeleport(29.5, -203, Math.PI / 2); };
+    $("certFame").onclick = () => (Q().hof ? openHofGallery() : openHofForm());
     if (typeof SFX !== "undefined") SFX.chime();
     spawnSparkle();
   };
@@ -9346,6 +9372,9 @@ function xHandleAct(act, hit, e) {
     case "x_kurikiosk": { const v = hit && hit.uv ? 1 - hit.uv.y : 0.5; const i = clamp(Math.floor((v * 760 - 200) / 130), 0, 3); kuriCard(["visi", "profil", "cpl", "mk"][i]); break; }
     case "x_board": genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2 id="xbT"></h2><img id="xbI" alt="" style="width:100%;border-radius:10px">`); $("genCard").classList.add("wide"); $("xbT").textContent = act.title; $("xbI").src = act.canvas.toDataURL("image/jpeg", 0.92); $("xbI").alt = act.title; break;
     case "x_portal": teleportSpot("atrium"); break;
+    case "x_hof": openHofGallery(); break;
+    case "x_dice": snakeRoll(); break;
+    case "x_snportal": if (Q().snake) xTeleport(16.2, -176, 0); else toast("Portal finis aktif setelah kamu tepat mencapai pijakan 40."); break;
     case "x_door": toast(questUnlocked() ? "Pintu rahasia terbuka — masuklah ke lorong!" : "Dinding ini terasa… berbeda. Mungkin ada sesuatu di baliknya.", 3500); break;
   }
 }
@@ -9366,6 +9395,7 @@ function extrasTick(dt) {
   skinTick();
   // animasi gerbang teka-teki
   for (const G of XT.gates) { const tgt = G.open ? 1 : 0; G.k += (tgt - G.k) * Math.min(1, dt * 2); G.fm.opacity = (1 - G.k) * (0.45 + Math.sin(t * 4 + G.i) * 0.12); G.field.visible = G.k < 0.98; G.fm.map.offset.y = (G.fm.map.offset.y + dt * 0.6) % 1; }
+  snakeTick(dt, secretRoomAt(P.x, P.z));
   if (XT.gardenGate) { const open = gardenUnlocked(); XT.gardenGate.vm.opacity = open ? 0.05 + Math.sin(t * 2) * 0.03 : 0.45 + Math.sin(t * 3) * 0.1; }
   const sr = secretRoomAt(P.x, P.z);
   if (XT.glassUpdate) XT.glassUpdate(dt, sr === "s_glass");
@@ -9390,27 +9420,26 @@ function extrasTick(dt) {
   if (lab && !q.labs.includes(lab)) { q.labs.push(lab); saveQ(); questProgress(); }
   // penjaga aturan: tidak boleh berada di area rahasia tanpa hak
   if (sr && !questUnlocked()) { xTeleport(12, -33, Math.PI); toast("Lorong itu masih tersegel."); return; }
-  if (sr === "s_garden" && !gardenUnlocked()) { xTeleport(16.2, -166, 0); toast("Taman hanya bisa dimasuki setelah menjawab 10 teka-teki."); return; }
+  if ((sr === "s_snake" || sr === "s_link3") && !riddlesDone()) { xTeleport(16.2, -114, 0); toast("Lorong itu masih tersegel."); return; }
+  if (sr === "s_garden" && !gardenUnlocked()) { xTeleport(16.2, -166, 0); toast(riddlesDone() ? "Taman hanya bisa dimasuki setelah menuntaskan Lorong 4 · Ular Tangga." : "Taman hanya bisa dimasuki setelah menjawab 10 teka-teki."); return; }
   if (sr !== XT.inSecret) {
     const prev = XT.inSecret;
     XT.inSecret = sr;
     $("mini").style.visibility = sr && sr !== "s_garden" ? "hidden" : "";
-    if (sr === "s_tunnel" && !q.t0) { q.t0 = Date.now(); saveQ(); }
+    if (sr === "s_tunnel" && !q.t0) { q.t0 = Date.now(); saveQ(); updHud(); }
     if (sr === "s_maze" && prev !== "s_maze") toast("🌀 Lorong 1 · Labirin — cari jalan keluar di sisi utara. Denah tidak berfungsi di sini!", 5000);
     if (sr === "s_glass" && !q.maze) { q.maze = true; saveQ(); updHud(); toast("✅ Labirin ditaklukkan! 🪞 Lorong 2 · Rumah Kaca: hati-hati, tidak semua pantulan adalah jalan.", 5500); if (typeof SFX !== "undefined") SFX.chime(); }
     if (sr === "s_riddle" && !q.glass) { q.glass = true; saveQ(); updHud(); toast("✅ Rumah Kaca terlewati! 🧩 Lorong 3: jawab 10 teka-teki di setiap tablet untuk membuka gerbang.", 5500); if (typeof SFX !== "undefined") SFX.chime(); }
+    if (sr === "s_snake" && prev !== "s_snake" && !q.snake) toast(q.sn ? `🎲 Lanjutkan permainan dari pijakan ${q.sn}. Tekan R atau klik dadu.` : "🎲 Lorong 4 · Ular Tangga — lempar dadu (R) dan capai tepat pijakan 40. Awas ular & lubang hitam!", 6000);
     if (sr === "s_garden") {
       if (!q.garden) {
         q.garden = true; q.t1 = Date.now(); saveQ(); updHud();
         if (!SPOTS.some((s) => s.id === "taman")) SPOTS.push({ id: "taman", name: "🌷 Taman Apresiasi", x: 16.2, z: -176, yaw: 0 });
-        const d = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
-        fameAdd({ n: S.name, d });
-        if (net && typeof net.sendFame === "function") net.sendFame({ n: S.name, d });
-        chatMsg("Sistem", `🏆 ${S.name} berhasil menaklukkan ketiga lorong rahasia!`);
-        if (typeof mpSay === "function") mpSay(`🏆 Aku berhasil menaklukkan ketiga lorong rahasia!`);
-        setTimeout(() => sayBubble(`Selamat datang di Taman Apresiasi, ${S.name}! Temui aku untuk sertifikatmu 🏅`, "npc_tama"), 800);
+        chatMsg("Sistem", `🏆 ${S.name} berhasil menaklukkan keempat lorong rahasia!`);
+        if (typeof mpSay === "function") mpSay(`🏆 Aku berhasil menaklukkan keempat lorong rahasia!`);
+        setTimeout(() => sayBubble(`Selamat datang di Taman Apresiasi, ${S.name}! Temui aku untuk sertifikat & Hall of Fame 🏅`, "npc_tama"), 800);
       }
-      toast("🌷 Taman Apresiasi — temui robot TAMA untuk sertifikatmu.", 4500);
+      toast("🌷 Taman Apresiasi — temui Kang Santo untuk sertifikat & Hall of Fame.", 4500);
     }
   }
   if (sr === "s_maze" || sr === "s_glass") P.camPitch = clamp(P.camPitch, -0.45, 0.55);
@@ -9419,7 +9448,7 @@ function extrasTick(dt) {
 // ---------- pembangunan ----------
 function buildExtras() {
   try {
-    XT.fame = (store.get("fame", []) || []).filter((e) => e && typeof e.n === "string").slice(-200);
+    hofLoadLocal();
     buildWelcomeWall();
     buildKaprodi();
     buildKuri();
@@ -9428,6 +9457,8 @@ function buildExtras() {
     buildGlass();
     buildRiddles();
     buildGarden();
+    buildSnake();
+    buildHofRibbon();
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -9445,6 +9476,7 @@ function xOnName() {
   if (XT.door) { XT.door.setOpen(questUnlocked()); }
   refreshGates(true);
   refreshMySkin();
+  if (typeof snHud === "function") snHud();
   if (gardenUnlocked() && !SPOTS.some((s) => s.id === "taman")) SPOTS.push({ id: "taman", name: "🌷 Taman Apresiasi", x: 16.2, z: -176, yaw: 0 });
   updHud();
 }
@@ -9463,7 +9495,7 @@ function xPathClear(ax, az, bx, bz) {
 // =====================================================================
 // src/ext_skin.js — 3 skin alternatif pemain (Astronot Nebula, Ronin Neon,
 // Hantu Hologram). Terbuka setelah masuk Taman Apresiasi & berbicara
-// dengan robot TAMA. Skin tersinkron ke pemain lain lewat presence "sk".
+// dengan Kang Santo. Skin tersinkron ke pemain lain lewat presence "sk".
 // =====================================================================
 var SKINS = [
   { id: "default", name: "Standar", desc: "Robot berjaket teknologi bawaan galeri.", tag: "BAWAAN" },
@@ -9641,7 +9673,7 @@ function openSkins() {
   hidePopups();
   const open = skinsUnlocked(), cur = mySkin();
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👕 Lemari Skin</h2>
-  <p>${open ? "Pilih tampilan avatarmu. Skin terlihat oleh semua pemain di galeri." : "🔒 Tiga skin eksklusif masih terkunci. Taklukkan ketiga lorong rahasia, masuk ke <b>Taman Apresiasi</b>, lalu bicara dengan robot <b>TAMA</b> untuk mengaktifkannya."}</p>
+  <p>${open ? "Pilih tampilan avatarmu. Skin terlihat oleh semua pemain di galeri." : "🔒 Tiga skin eksklusif masih terkunci. Taklukkan keempat lorong rahasia, masuk ke <b>Taman Apresiasi</b>, lalu bicara dengan <b>Kang Santo</b> untuk mengaktifkannya."}</p>
   <div class="skins" id="skinGrid"></div>`);
   $("genCard").classList.add("wide");
   const grid = $("skinGrid");
@@ -9674,15 +9706,16 @@ function openSkins() {
 function tamaCard() {
   hidePopups();
   const fresh = unlockSkins(true), q = Q();
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 TAMA · Penjaga Taman</h2>
-  <p>${fresh ? `Selamat, <b id="tnm"></b>! Karena kamu menaklukkan ketiga lorong rahasia, aku mengaktifkan <b>3 skin eksklusif</b> untukmu: Astronot Nebula, Ronin Neon, dan Hantu Hologram.` : `Halo <b id="tnm"></b>! Ambil sertifikatmu atau ganti skin avatarmu di sini.`}</p>
-  <div class="rowf"><button class="btn" id="tmCert">🏅 Ambil sertifikat</button><button class="btn" id="tmSkin" style="background:#a855f7;color:#fff">👕 Lemari Skin</button><button class="ghost" id="tmAsk">Tanya TAMA</button></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 Kang Santo · Penjaga Taman</h2>
+  <p>${fresh ? `Selamat, <b id="tnm"></b>! Kamu menaklukkan keempat lorong rahasia. Aku mengaktifkan <b>3 skin eksklusif</b> untukmu: Astronot Nebula, Ronin Neon, dan Hantu Hologram.` : `Halo <b id="tnm"></b>! Ambil sertifikatmu atau ganti skin avatarmu di sini.`}</p>
+  ${q.hof ? `<p>✅ Kamu sudah tercatat di <b>Hall of Fame</b>.</p>` : `<div class="hofAsk">🏆 <b>Satu langkah lagi:</b> tuliskan namamu dan unggah fotomu agar tampil di <b>Hall of Fame</b> di Atrium.</div>`}
+  <div class="rowf"><button class="btn" id="tmHof" style="background:#f59e0b;color:#1f1300">🏆 ${q.hof ? "Perbarui Hall of Fame" : "Isi Hall of Fame"}</button><button class="btn" id="tmCert">🏅 Ambil sertifikat</button><button class="btn" id="tmSkin" style="background:#a855f7;color:#fff">👕 Lemari Skin</button><button class="ghost" id="tmAsk">Tanya Kang Santo</button></div>`);
   $("tnm").textContent = S.name;
+  $("tmHof").onclick = openHofForm;
   $("tmCert").onclick = openCertificate;
   $("tmSkin").onclick = openSkins;
   $("tmAsk").onclick = () => { closeGen(); openNpc("tama", "chat"); };
   if (fresh) { if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); toast("👕 3 skin baru diaktifkan!", 5000); }
-  void q;
 }
 
 // =====================================================================
@@ -9714,6 +9747,787 @@ function modKicked() {
   try { S.name = ""; saveS(); } catch { /* abaikan */ }
   try { renderer.xr.getSession()?.end(); } catch { /* abaikan */ }
   location.reload();
+}
+
+// =====================================================================
+// src/ext_sp.js — "Secret passage": setiap robot lab mengajukan satu
+// pertanyaan. Setelah keempatnya terjawab benar, terasa guncangan kecil
+// dan pintu rahasia di Lab SE terbuka — tanpa pemberitahuan apa pun.
+// =====================================================================
+var SP_Q = {
+  se: { q: "Pertanyaan secret passage dariku: apa VISI Universitas Ibn Khaldun Bogor? Tuliskan selengkapnya.", a: "Menjadi universitas unggul berbasis riset keislaman dan teknologi yang berdaya saing global pada tahun 2040" },
+  git: { q: "Pertanyaan secret passage dariku: apa VISI Fakultas Teknik dan Sains UIKA? Tuliskan selengkapnya.", a: "Menjadi Fakultas yang Islami dan Unggul dalam Riset di Bidang Teknik dan Sains untuk Mendukung Daya Saing Global pada Tahun 2040" },
+  keris: { q: "Pertanyaan secret passage dariku: apa VISI Program Studi Teknik Informatika? Tuliskan selengkapnya.", a: "Menjadi program studi Informatika yang unggul di bidang riset keruangan dalam rumpun keilmuan Software Engineering, Artificial Intelligence, Computer System and Networking, Geospatial Information Technology, dengan lulusan islami berdaya saing global di tahun 2040" },
+  csn: { q: "Pertanyaan secret passage dariku: sebutkan nama keempat lab peminatan yang ada di Teknik Informatika! (urutan bebas)", labs: true }
+};
+var SP_TRIGGER = /secret\s*passage|lorong rahasia|pintu rahasia|pertanyaan rahasia/;
+var spWait = {};
+var spNorm = (s) => String(s || "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").trim();
+var spToks = (s) => spNorm(s).split(" ").filter(Boolean).map((w) => (w === "dan" ? "and" : w));
+function spLev(a, b) {
+  if (Math.abs(a.length - b.length) > 2) return 9;
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[b.length];
+}
+// skor kecocokan jawaban panjang (visi): toleran salah ketik & tanda baca, urutan kata bebas
+function spScore(ans, exp) {
+  const A = spToks(ans), E = spToks(exp), used = new Array(A.length).fill(false);
+  let hit = 0;
+  for (const w of E) {
+    const tol = w.length >= 9 ? 2 : w.length >= 5 ? 1 : 0;
+    let k = A.findIndex((x, i) => !used[i] && x === w);
+    if (k < 0 && tol) k = A.findIndex((x, i) => !used[i] && spLev(x, w) <= tol);
+    if (k >= 0) { used[k] = true; hit++; }
+  }
+  return { score: hit / E.length, extra: A.length - hit, len: E.length };
+}
+function spCheck(id, ans) {
+  const Qd = SP_Q[id];
+  if (Qd.labs) {
+    const s = spNorm(ans).replace(/\bdan\b/g, "and");
+    const got = [/\b(se|rpl|software engineering)\b/, /\bkeris\b/, /\b(csn|comput(er|ing) systems? and network(s|ing)?)\b/, /\b(git|geospatial information technology)\b/].filter((r) => r.test(s)).length;
+    return { ok: got === 4, msg: got === 4 ? "" : `Baru ${got} dari 4 nama lab yang tepat.` };
+  }
+  const r = spScore(ans, Qd.a);
+  const ok = r.score >= 0.85 && r.extra <= Math.max(6, r.len * 0.5) && /2040/.test(ans);
+  return { ok, msg: ok ? "" : `Kecocokan jawabanmu ${Math.round(r.score * 100)}%.${/2040/.test(ans) ? "" : " Visi itu punya target tahun, lho."}` };
+}
+// dipanggil dari npcAnswer (patch) sebelum jawaban biasa; null = bukan urusan secret passage
+function spAnswer(npcId, q) {
+  if (!SP_Q[npcId]) return null;
+  const n = NPCS[npcId], L = LABS[npcId], ql = norm(q).trim(), Qs = Q();
+  if (SP_TRIGGER.test(ql)) {
+    if (Qs.sp[npcId]) return { text: `Kamu sudah menjawab pertanyaan secret passage-ku dengan benar ✔` };
+    spWait[npcId] = true;
+    return { text: `${SP_Q[npcId].q} Ketik jawabanmu di kotak chat di bawah (ketik “batal” untuk berhenti).` };
+  }
+  if (!spWait[npcId]) return null;
+  if (/^(batal|cancel|stop|nanti)$/.test(ql)) { spWait[npcId] = false; return { text: "Baik, kapan-kapan kita lanjutkan." }; }
+  // klik chip lain = pertanyaan biasa, bukan jawaban
+  if (L && L.chips.concat(["Cara daftar"]).some((c) => norm(c).trim() === ql)) { spWait[npcId] = false; return null; }
+  const r = spCheck(npcId, q);
+  if (r.ok) {
+    spWait[npcId] = false;
+    Qs.sp[npcId] = true;
+    saveQ();
+    if (typeof SFX !== "undefined") SFX.chime();
+    spawnSparkle();
+    if (questUnlocked()) setTimeout(spOpenDoor, 1600);
+    return { text: `✅ Tepat sekali, ${S.name}! Jawabanmu sudah kucatat.` };
+  }
+  const tr = Qs.spTries[npcId] = (Qs.spTries[npcId] || 0) + 1;
+  saveQ();
+  const hint = tr >= 3 ? (SP_Q[npcId].labs ? " Petunjuk: perhatikan papan nama di atas keempat pintu lab di Atrium." : " Petunjuk: robot KURI di Ruang Sambutan hafal visi universitas, fakultas, dan prodi.") : "";
+  return { text: `❌ Belum tepat. ${r.msg}${hint} Coba ketik lagi jawabanmu.` };
+  void n;
+}
+function spOpenDoor() {
+  if (XT.door) XT.door.setOpen(true);
+  updHud();
+  xShake(1.8, 0.075);
+}
+
+// ---------- guncangan kecil (kamera + gemuruh lirih + getar kontroler VR) ----------
+var XS = { t: 9, dur: 0, amp: 0, on: false, off: new THREE2.Vector3() };
+function xShake(dur, amp) {
+  XS.t = 0; XS.dur = dur; XS.amp = amp;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext, ac = xShake.ac = xShake.ac || new AC();
+    const len = Math.floor(ac.sampleRate * dur), buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < len; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.2; }
+    const src = ac.createBufferSource(), lp = ac.createBiquadFilter(), g = ac.createGain();
+    src.buffer = buf; lp.type = "lowpass"; lp.frequency.value = 110;
+    const v = 0.55 * (S.vol ?? 0.85), now = ac.currentTime;
+    g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(v, now + 0.15); g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+    src.connect(lp).connect(g).connect(ac.destination); src.start();
+  } catch { /* audio opsional */ }
+  try { renderer.xr.getSession()?.inputSources.forEach((s) => s.gamepad?.hapticActuators?.[0]?.pulse?.(0.6, dur * 600)); } catch { /* opsional */ }
+}
+function xShakePre(dt) {
+  if (XS.t >= XS.dur || renderer.xr.isPresenting) return;
+  XS.t += dt;
+  const k = Math.max(0, 1 - XS.t / XS.dur), a = XS.amp * k * k;
+  XS.off.set((Math.random() - 0.5) * a, (Math.random() - 0.5) * a * 0.7, (Math.random() - 0.5) * a);
+  camera.position.add(XS.off);
+  XS.on = true;
+}
+function xShakePost() { if (XS.on) { camera.position.sub(XS.off); XS.on = false; } }
+
+// ---------- Kang Santo: NPC manusia (botak, berkacamata, kurus) ----------
+function makeCustomHuman(id, cfg) {
+  LABS[id] = { code: cfg.code, col: cfg.col, bot: { name: cfg.name, role: cfg.role }, chips: cfg.chips, greet: "", faq: [], quiz: [] };
+  NPC_POS[id] = { x: cfg.x, z: cfg.z, room: cfg.room };
+  const g = new THREE2.Group(); g.position.set(cfg.x, 0, cfg.z);
+  const rig = new THREE2.Group(); g.add(rig);
+  const skin = new THREE2.MeshStandardMaterial({ color: 0xc98d62, roughness: 0.5 });
+  const scalp = new THREE2.MeshStandardMaterial({ color: 0xc98d62, roughness: 0.28, metalness: 0.05 });
+  // kemeja batik hijau (motif kawung sederhana)
+  const bc = mkCanvas(256, 256), bx = bc.getContext("2d");
+  bx.fillStyle = "#14532d"; bx.fillRect(0, 0, 256, 256);
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) {
+    const cx = c * 64 + 32, cy = r * 64 + 32;
+    bx.fillStyle = "#facc15"; for (const [dx, dy] of [[0, -14], [0, 14], [-14, 0], [14, 0]]) { bx.beginPath(); bx.ellipse(cx + dx, cy + dy, dx ? 11 : 6, dx ? 6 : 11, 0, 0, 7); bx.fill(); }
+    bx.fillStyle = "#166534"; bx.beginPath(); bx.arc(cx, cy, 4, 0, 7); bx.fill();
+  }
+  const batik = new THREE2.MeshStandardMaterial({ map: xTex(bc, [3, 2]), roughness: 0.75 });
+  const pants = new THREE2.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.7 });
+  const shoe = new THREE2.MeshStandardMaterial({ color: 0x3f2a1d, roughness: 0.4 });
+  const frameM = new THREE2.MeshStandardMaterial({ color: 0x111111, roughness: 0.25, metalness: 0.6 });
+  // kaki ramping
+  for (const sx of [-1, 1]) {
+    const leg = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.06, 0.74, 6, 12), pants); leg.position.set(sx * 0.085, 0.47, 0); leg.castShadow = true; rig.add(leg);
+    const sh = new THREE2.Mesh(new THREE2.BoxGeometry(0.11, 0.07, 0.24), shoe); sh.position.set(sx * 0.085, 0.035, 0.04); rig.add(sh);
+  }
+  // badan kurus
+  const pts = [];
+  for (let i = 0; i <= 14; i++) { const k = i / 14, y = 0.86 + k * 0.62, r = 0.135 + Math.sin(k * Math.PI * 0.8) * 0.03 - (k > 0.88 ? (k - 0.88) * 0.8 : 0); pts.push(new THREE2.Vector2(r, y)); }
+  pts.push(new THREE2.Vector2(0, 1.48));
+  const body = new THREE2.Mesh(new THREE2.LatheGeometry(pts, 28), batik); body.scale.z = 0.78; body.castShadow = true; rig.add(body);
+  const belt = new THREE2.Mesh(new THREE2.TorusGeometry(0.138, 0.016, 6, 24), new THREE2.MeshStandardMaterial({ color: 0x111827 })); belt.rotation.x = Math.PI / 2; belt.scale.y = 0.78; belt.position.y = 0.88; rig.add(belt);
+  const neck = new THREE2.Mesh(new THREE2.CylinderGeometry(0.045, 0.05, 0.12, 12), skin); neck.position.y = 1.52; rig.add(neck);
+  const collar = new THREE2.Mesh(new THREE2.TorusGeometry(0.065, 0.02, 6, 18), batik); collar.rotation.x = Math.PI / 2; collar.position.y = 1.47; rig.add(collar);
+  // kepala botak mengilap
+  const headG = new THREE2.Group(); headG.position.y = 1.71; rig.add(headG);
+  const head = new THREE2.Mesh(new THREE2.SphereGeometry(0.15, 32, 24), scalp); head.scale.set(0.9, 1.12, 0.98); head.castShadow = true; headG.add(head);
+  const shine = new THREE2.Mesh(new THREE2.SphereGeometry(0.035, 12, 8), new THREE2.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 })); shine.scale.set(1.6, 0.6, 1); shine.position.set(-0.03, 0.15, 0.06); headG.add(shine);
+  for (const sx of [-1, 1]) { const ear = new THREE2.Mesh(new THREE2.SphereGeometry(0.033, 12, 8), skin); ear.scale.set(0.5, 1, 0.8); ear.position.set(sx * 0.135, 0, 0); headG.add(ear); }
+  const nose = new THREE2.Mesh(new THREE2.ConeGeometry(0.022, 0.06, 10), skin); nose.rotation.x = Math.PI / 2; nose.position.set(0, -0.01, 0.155); headG.add(nose);
+  const eyeM = new THREE2.MeshBasicMaterial({ color: 0x1f2430 }), eyes = [];
+  for (const sx of [-1, 1]) {
+    const e = new THREE2.Mesh(new THREE2.SphereGeometry(0.016, 12, 8), eyeM); e.position.set(sx * 0.052, 0.03, 0.14); e.scale.set(1, 1, 0.6); headG.add(e); eyes.push(e);
+    const brow = new THREE2.Mesh(new THREE2.BoxGeometry(0.05, 0.009, 0.01), new THREE2.MeshBasicMaterial({ color: 0x2b1d14 })); brow.position.set(sx * 0.052, 0.078, 0.145); brow.rotation.z = -sx * 0.12; headG.add(brow);
+    // kacamata: bingkai bulat + lensa tipis
+    const rim = new THREE2.Mesh(new THREE2.TorusGeometry(0.036, 0.006, 8, 28), frameM); rim.position.set(sx * 0.054, 0.03, 0.158); headG.add(rim);
+    const lens = new THREE2.Mesh(new THREE2.CircleGeometry(0.034, 24), new THREE2.MeshStandardMaterial({ color: 0xbfe3ff, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0.3 })); lens.position.set(sx * 0.054, 0.03, 0.159); headG.add(lens);
+    const temple = new THREE2.Mesh(new THREE2.BoxGeometry(0.006, 0.006, 0.15), frameM); temple.position.set(sx * 0.092, 0.035, 0.085); temple.rotation.y = sx * 0.12; headG.add(temple);
+  }
+  const bridge = new THREE2.Mesh(new THREE2.BoxGeometry(0.035, 0.006, 0.006), frameM); bridge.position.set(0, 0.04, 0.162); headG.add(bridge);
+  const smile = new THREE2.Mesh(new THREE2.TorusGeometry(0.03, 0.006, 6, 18, Math.PI), new THREE2.MeshBasicMaterial({ color: 0x7c2d12 })); smile.position.set(0, -0.065, 0.142); smile.rotation.z = Math.PI; headG.add(smile);
+  // lengan panjang ramping
+  const arms = [];
+  for (const sx of [-1, 1]) {
+    const sh = new THREE2.Group(); sh.position.set(sx * 0.175, 1.42, 0); rig.add(sh);
+    const up = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.045, 0.24, 6, 12), batik); up.position.y = -0.15; up.castShadow = true; sh.add(up);
+    const fo = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.036, 0.24, 6, 12), skin); fo.position.y = -0.43; sh.add(fo);
+    const hnd = new THREE2.Mesh(new THREE2.SphereGeometry(0.042, 12, 10), skin); hnd.position.y = -0.6; sh.add(hnd);
+    sh.rotation.z = sx * 0.08;
+    arms.push(sh);
+  }
+  const tag = npcLabel(cfg.tag || cfg.name.toUpperCase(), cfg.col); tag.position.y = 2.22; g.add(tag);
+  const hint = hintSprite("💬", cfg.col); hint.position.y = 2.52; g.add(hint);
+  g.traverse((o) => { if (o.isMesh) o.userData.act = { type: "npc", id }; });
+  world.interact.push(body, head);
+  world.circles.push({ x: cfg.x, z: cfg.z, r: 0.35 });
+  scene.add(g);
+  const n = { id, kind: "human", lab: null, name: cfg.name, role: cfg.role, col: cfg.col, g, rig, headG, eyes, arms, hint, tag, x: cfg.x, z: cfg.z, room: cfg.room, base: 0, wave: 0, blink: 3, pitch: 0.92, custom: cfg, secret: !!cfg.secret };
+  NPCS[id] = n;
+  return n;
+}
+
+// =====================================================================
+// src/ext_snake.js — LORONG 4: Ular Tangga raksasa (40 pijakan).
+// Maju hanya lewat dadu. Tangga = naik, ular = turun, Lubang Hitam (35) =
+// kembali ke Ruang Sambutan & mengulang dari Lorong 1. Harus TEPAT di 40.
+// =====================================================================
+var SN = {
+  TS: 2.7, X0: 25.0, Z0: -163.0,
+  LAD: { 4: 14, 9: 23, 17: 30, 22: 33, 27: 37 },
+  SNK: { 13: 5, 19: 8, 26: 16, 32: 21, 36: 24, 39: 29 },
+  HOLE: 35,
+  busy: false, anims: [], y: 0, curves: {}, die: null, dieVal: 1, hud: null, portal: null, lastMsg: ""
+};
+function snTilePos(i) {
+  if (i <= 0) return [23.2, -167.5];
+  const r = Math.floor((i - 1) / 8), c0 = (i - 1) % 8, c = r % 2 ? 7 - c0 : c0;
+  return [SN.X0 + c * SN.TS, SN.Z0 + r * SN.TS];
+}
+var inSnake = () => secretRoomAt(P.x, P.z) === "s_snake";
+// kunci gerak bebas: setelah mulai bermain, pemain hanya berpindah lewat dadu
+function snakeLock() { const q = Q(); return inSnake() && !q.snake && (q.sn > 0 || SN.busy); }
+function xGround() { return SN.anims.length ? SN.y : 0; }
+
+function buildSnake() {
+  const R = SECRET_ROOMS.s_snake, L = SECRET_ROOMS.s_link3, H = 5.5, Rg = rndGen(4040);
+  // dinding & lantai
+  const wc = mkCanvas(512, 512), wx = wc.getContext("2d");
+  const wg = wx.createLinearGradient(0, 0, 0, 512); wg.addColorStop(0, "#1e1b4b"); wg.addColorStop(1, "#312e81");
+  wx.fillStyle = wg; wx.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 26; i++) { wx.fillStyle = ["#f472b6", "#facc15", "#34d399", "#60a5fa", "#f97316"][i % 5] + "55"; wx.beginPath(); wx.arc(Rg() * 512, Rg() * 512, 6 + Rg() * 18, 0, 7); wx.fill(); }
+  const wallM = new THREE2.MeshStandardMaterial({ map: xTex(wc, [5, 1]), roughness: 0.8 });
+  xRoomWalls(R, { W: [[L.z0, L.z1]] }, H, wallM);
+  const lm = new THREE2.MeshStandardMaterial({ color: 0x1e1b4b, roughness: 0.8 });
+  xRoomWalls(L, { W: [[L.z0, L.z1]], E: [[L.z0, L.z1]] }, 3.4, lm);
+  xFloor(L, new THREE2.MeshStandardMaterial({ color: 0x17132b }));
+  xCeil(L, lm, 3.4);
+  const fc = mkCanvas(256, 256), fx = fc.getContext("2d");
+  fx.fillStyle = "#14123a"; fx.fillRect(0, 0, 256, 256); fx.strokeStyle = "rgba(167,139,250,.25)"; fx.lineWidth = 2; fx.strokeRect(1, 1, 254, 254);
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(fc, [13, 15]), roughness: 0.7 }));
+  const cc = mkCanvas(256, 256), cx = cc.getContext("2d");
+  cx.fillStyle = "#0f0c29"; cx.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 50; i++) { cx.fillStyle = `rgba(255,255,255,${0.2 + Rg() * 0.7})`; cx.beginPath(); cx.arc(Rg() * 256, Rg() * 256, Rg() * 1.8 + 0.4, 0, 7); cx.fill(); }
+  xCeil(R, new THREE2.MeshBasicMaterial({ map: xTex(cc, [6, 6]), toneMapped: false }), H);
+  for (let i = 0; i < 14; i++) { const s = world.glowSprite(["#f472b6", "#facc15", "#34d399", "#60a5fa"][i % 4], 1.6, 0.5); s.position.set(R.x0 + 1.5 + Rg() * (R.x1 - R.x0 - 3), 4.6, R.z0 + 1 + Rg() * (R.z1 - R.z0 - 2)); scene.add(s); }
+
+  // papan permainan (satu kanvas, dibaca dari sisi start)
+  const W = 8 * SN.TS, D = 5 * SN.TS, bc = mkCanvas(2048, 1280), b = bc.getContext("2d");
+  const pal = ["#fde68a", "#a7f3d0", "#bfdbfe", "#fbcfe8", "#ddd6fe"], palD = ["#b45309", "#047857", "#1d4ed8", "#be185d", "#6d28d9"];
+  b.fillStyle = "#1e1b4b"; b.fillRect(0, 0, 2048, 1280);
+  for (let i = 1; i <= 40; i++) {
+    const r = Math.floor((i - 1) / 8), c0 = (i - 1) % 8, c = r % 2 ? 7 - c0 : c0, px = (7 - c) * 256, py = (4 - r) * 256, k = (r + c) % 5;
+    const hole = i === SN.HOLE, fin = i === 40;
+    b.fillStyle = hole ? "#0b0614" : fin ? "#f59e0b" : pal[k];
+    rr(b, px + 8, py + 8, 240, 240, 26); b.fill();
+    b.strokeStyle = hole ? "#a855f7" : fin ? "#fff7ed" : palD[k]; b.lineWidth = 6; rr(b, px + 11, py + 11, 234, 234, 23); b.stroke();
+    b.fillStyle = hole ? "#e9d5ff" : fin ? "#fff" : palD[k]; b.font = `800 ${hole || fin ? 64 : 96}px ${FONT}`; b.textAlign = "left"; b.fillText(String(i), px + 28, py + (hole || fin ? 84 : 110));
+    b.textAlign = "center";
+    if (SN.LAD[i]) { b.fillStyle = "#16a34a"; rr(b, px + 40, py + 160, 176, 62, 31); b.fill(); b.fillStyle = "#fff"; b.font = `800 40px ${FONT}`; b.fillText(`▲ ${SN.LAD[i]}`, px + 128, py + 205); }
+    if (SN.SNK[i]) { b.fillStyle = "#dc2626"; rr(b, px + 40, py + 160, 176, 62, 31); b.fill(); b.fillStyle = "#fff"; b.font = `800 40px ${FONT}`; b.fillText(`▼ ${SN.SNK[i]}`, px + 128, py + 205); }
+    if (hole) { b.fillStyle = "#f0abfc"; b.font = `800 30px ${FONT}`; b.fillText("LUBANG", px + 128, py + 180); b.fillText("HITAM", px + 128, py + 216); }
+    if (fin) { b.fillStyle = "#fff"; b.font = `800 54px ${FONT}`; b.fillText("FINISH", px + 128, py + 200); }
+    if (i === 1) { b.fillStyle = "#1e1b4b"; b.font = `800 34px ${FONT}`; b.fillText("START", px + 150, py + 210); }
+    b.textAlign = "left";
+  }
+  const board = new THREE2.Mesh(new THREE2.PlaneGeometry(W, D), new THREE2.MeshBasicMaterial({ map: xTex(bc), toneMapped: false }));
+  board.rotation.set(-Math.PI / 2, 0, Math.PI);
+  board.position.set(SN.X0 + 3.5 * SN.TS, 0.02, SN.Z0 + 2 * SN.TS);
+  board.material.map.anisotropy = 16;
+  scene.add(board);
+  const rimM = new THREE2.MeshStandardMaterial({ color: 0xf5c66b, metalness: 0.7, roughness: 0.3 });
+  const bx0 = SN.X0 - SN.TS / 2, bx1 = bx0 + W, bz0 = SN.Z0 - SN.TS / 2, bz1 = bz0 + D;
+  for (const [x0, z0, x1, z1] of [[bx0, bz0, bx1, bz0], [bx0, bz1, bx1, bz1], [bx0, bz0, bx0, bz1], [bx1, bz0, bx1, bz1]]) xBox(Math.abs(x1 - x0) + 0.12, 0.08, Math.abs(z1 - z0) + 0.12, rimM, (x0 + x1) / 2, 0.04, (z0 + z1) / 2);
+  // pijakan start
+  const [sx0, sz0] = snTilePos(0);
+  const start = new THREE2.Mesh(new THREE2.CylinderGeometry(0.85, 0.9, 0.06, 40), new THREE2.MeshStandardMaterial({ color: 0x22c55e, emissive: 0x14532d, roughness: 0.4 })); start.position.set(sx0, 0.03, sz0); scene.add(start);
+  const stc = mkCanvas(512, 160), stx = stc.getContext("2d"); stx.fillStyle = "#fff"; stx.font = `800 96px ${FONT}`; stx.textAlign = "center"; stx.fillText("START", 256, 118);
+  const stl = xPlane(stc, 1.3, 0.4); stl.rotation.x = -Math.PI / 2; stl.rotation.z = Math.PI / 2; stl.position.set(sx0, 0.07, sz0); scene.add(stl);
+
+  // tangga melengkung (jembatan pelangi kayu)
+  const woodM = new THREE2.MeshStandardMaterial({ color: 0xd97706, roughness: 0.45, metalness: 0.2 });
+  const rungM = new THREE2.MeshStandardMaterial({ color: 0xfde68a, roughness: 0.4 });
+  let li = 0;
+  for (const [a, bb] of Object.entries(SN.LAD)) {
+    const [ax, az] = snTilePos(+a), [bx2, bz2] = snTilePos(bb), d = Math.hypot(bx2 - ax, bz2 - az), hgt = 1.3 + d * 0.16 + (li++ % 2) * 0.6;
+    const p0 = new THREE2.Vector3(ax, 0.1, az), p2 = new THREE2.Vector3(bx2, 0.1, bz2), p1 = p0.clone().lerp(p2, 0.5); p1.y = hgt * 2;
+    const curve = new THREE2.QuadraticBezierCurve3(p0, p1, p2);
+    SN.curves["L" + a] = curve;
+    const side = new THREE2.Vector3(-(bz2 - az), 0, bx2 - ax).normalize().multiplyScalar(0.36);
+    for (const sgn of [-1, 1]) {
+      const off = side.clone().multiplyScalar(sgn), rc = new THREE2.QuadraticBezierCurve3(p0.clone().add(off), p1.clone().add(off), p2.clone().add(off));
+      const rail = new THREE2.Mesh(new THREE2.TubeGeometry(rc, 48, 0.06, 8, false), woodM); rail.castShadow = true; scene.add(rail);
+    }
+    const nR = Math.max(4, Math.floor(curve.getLength() / 0.42));
+    const rungs = new THREE2.InstancedMesh(new THREE2.CylinderGeometry(0.035, 0.035, 0.72, 8), rungM, nR - 1), o = new THREE2.Object3D();
+    for (let k = 1; k < nR; k++) { const p = curve.getPointAt(k / nR); o.position.copy(p); o.lookAt(p.clone().add(side)); o.rotateX(Math.PI / 2); o.updateMatrix(); rungs.setMatrixAt(k - 1, o.matrix); }
+    scene.add(rungs);
+  }
+  // ular: tabung meruncing dengan sisik, kepala bermata & lidah bercabang
+  const snakeCols = [["#16a34a", "#bbf7d0"], ["#dc2626", "#fde68a"], ["#7c3aed", "#f0abfc"], ["#0891b2", "#a5f3fc"], ["#ea580c", "#fef08a"], ["#be123c", "#fecdd3"]];
+  let si = 0;
+  for (const [h, tl] of Object.entries(SN.SNK)) {
+    const [hx, hz] = snTilePos(+h), [tx, tz] = snTilePos(tl), [c1, c2] = snakeCols[si++ % snakeCols.length];
+    const dir = new THREE2.Vector2(tx - hx, tz - hz), len = dir.length(); dir.normalize();
+    const nrm = new THREE2.Vector2(-dir.y, dir.x), pts = [], waves = 2 + Math.round(len / 6);
+    for (let k = 0; k <= 24; k++) { const u = k / 24, amp = Math.sin(u * Math.PI) * 0.9, w = Math.sin(u * Math.PI * waves) * amp; pts.push(new THREE2.Vector3(hx + dir.x * len * u + nrm.x * w, 0.22, hz + dir.y * len * u + nrm.y * w)); }
+    const curve = new THREE2.CatmullRomCurve3(pts);
+    SN.curves["S" + h] = curve;
+    const sc = mkCanvas(256, 64), sx = sc.getContext("2d");
+    sx.fillStyle = c1; sx.fillRect(0, 0, 256, 64);
+    for (let k = 0; k < 8; k++) { sx.fillStyle = c2; sx.beginPath(); sx.moveTo(k * 32, 32); sx.lineTo(k * 32 + 16, 8); sx.lineTo(k * 32 + 32, 32); sx.lineTo(k * 32 + 16, 56); sx.closePath(); sx.fill(); }
+    const tex = xTex(sc, [Math.round(len * 1.6), 1]);
+    const TS2 = 120, RS = 12, geo = new THREE2.TubeGeometry(curve, TS2, 0.2, RS, false), pos = geo.attributes.position, pv = new THREE2.Vector3();
+    for (let i = 0; i <= TS2; i++) {
+      const c = curve.getPointAt(i / TS2), taper = 1.0 - (i / TS2) * 0.82;
+      for (let j = 0; j <= RS; j++) { const idx = i * (RS + 1) + j; pv.fromBufferAttribute(pos, idx).sub(c).multiplyScalar(taper); pv.y *= 0.8; pv.add(c); pos.setXYZ(idx, pv.x, pv.y, pv.z); }
+    }
+    geo.computeVertexNormals();
+    const body = new THREE2.Mesh(geo, new THREE2.MeshStandardMaterial({ map: tex, roughness: 0.35, metalness: 0.15 })); body.castShadow = true; scene.add(body);
+    const head = new THREE2.Group(); head.position.set(hx, 0.3, hz); head.rotation.y = Math.atan2(-dir.x, -dir.y); scene.add(head);
+    const hm = new THREE2.Mesh(new THREE2.SphereGeometry(0.34, 24, 16), new THREE2.MeshStandardMaterial({ color: c1, roughness: 0.35 })); hm.scale.set(1, 0.7, 1.35); head.add(hm);
+    for (const ex of [-1, 1]) {
+      const e = new THREE2.Mesh(new THREE2.SphereGeometry(0.09, 14, 10), new THREE2.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 })); e.position.set(ex * 0.17, 0.16, 0.2); head.add(e);
+      const pu = new THREE2.Mesh(new THREE2.SphereGeometry(0.045, 10, 8), new THREE2.MeshBasicMaterial({ color: 0x111111 })); pu.position.set(ex * 0.19, 0.19, 0.27); head.add(pu);
+    }
+    const tongue = new THREE2.Group(); tongue.position.set(0, -0.02, 0.45); head.add(tongue);
+    const tm = new THREE2.MeshBasicMaterial({ color: 0xef4444 });
+    const t0 = new THREE2.Mesh(new THREE2.BoxGeometry(0.03, 0.01, 0.22), tm); t0.position.z = 0.1; tongue.add(t0);
+    for (const fx2 of [-1, 1]) { const f = new THREE2.Mesh(new THREE2.BoxGeometry(0.025, 0.01, 0.1), tm); f.position.set(fx2 * 0.03, 0, 0.24); f.rotation.y = fx2 * 0.5; tongue.add(f); }
+    const ph = Rg() * 6;
+    XT.anim.push(() => { tongue.scale.z = Math.max(0, Math.sin(t * 3 + ph)) * 1.0 + 0.05; head.position.y = 0.3 + Math.sin(t * 1.6 + ph) * 0.04; });
+  }
+  // lubang hitam (pijakan 35)
+  {
+    const [hx, hz] = snTilePos(SN.HOLE), vc = mkCanvas(256, 256), v = vc.getContext("2d");
+    const gr = v.createRadialGradient(128, 128, 4, 128, 128, 128); gr.addColorStop(0, "#000"); gr.addColorStop(0.35, "#1e0533"); gr.addColorStop(0.7, "#7e22ce"); gr.addColorStop(1, "rgba(126,34,206,0)");
+    v.fillStyle = gr; v.fillRect(0, 0, 256, 256);
+    v.strokeStyle = "rgba(240,171,252,.7)"; v.lineWidth = 5;
+    for (let a = 0; a < 4; a++) { v.beginPath(); for (let k = 0; k < 60; k++) { const ang = a * Math.PI / 2 + k * 0.09, rad = 18 + k * 1.8; v.lineTo(128 + Math.cos(ang) * rad, 128 + Math.sin(ang) * rad); } v.stroke(); }
+    const vortex = new THREE2.Mesh(new THREE2.CircleGeometry(1.15, 48), new THREE2.MeshBasicMaterial({ map: xTex(vc), transparent: true, depthWrite: false, toneMapped: false }));
+    vortex.rotation.x = -Math.PI / 2; vortex.position.set(hx, 0.05, hz); scene.add(vortex);
+    const gl = world.glowSprite("#a855f7", 2.6, 0.55); gl.position.set(hx, 0.6, hz); scene.add(gl);
+    XT.anim.push((dt) => { vortex.rotation.z -= dt * 2.2; gl.material.opacity = 0.45 + Math.sin(t * 3) * 0.15; });
+  }
+  // portal finis
+  {
+    const [fx3, fz3] = snTilePos(40), pg = new THREE2.Group(); pg.position.set(fx3, 0, fz3 + 3.6); pg.rotation.y = Math.PI; scene.add(pg);
+    const goldM = new THREE2.MeshStandardMaterial({ color: 0xf5c66b, metalness: 0.85, roughness: 0.25, emissive: 0x3a2a00 });
+    const ring = new THREE2.Mesh(new THREE2.TorusGeometry(1.25, 0.12, 14, 48), goldM); ring.position.y = 1.55; pg.add(ring);
+    const pm = new THREE2.MeshBasicMaterial({ color: 0x86efac, transparent: true, opacity: 0.15, side: THREE2.DoubleSide, depthWrite: false, toneMapped: false, blending: THREE2.AdditiveBlending });
+    const disc = new THREE2.Mesh(new THREE2.CircleGeometry(1.18, 40), pm); disc.position.y = 1.55; pg.add(disc);
+    xAct(disc, { type: "x_snportal" });
+    const tc = mkCanvas(1024, 200), tx2 = tc.getContext("2d"); tx2.fillStyle = "#4c1d95"; rr(tx2, 0, 0, 1024, 200, 40); tx2.fill(); tx2.fillStyle = "#fde68a"; tx2.font = `800 76px ${FONT}`; tx2.textAlign = "center"; tx2.fillText("🌷 MENUJU TAMAN", 512, 128);
+    const tp = xPlane(tc, 2.4, 0.47); tp.position.y = 3.15; pg.add(tp);
+    SN.portal = { pos: [fx3, fz3 + 3.6], pm };
+    XT.anim.push((dt) => { ring.rotation.z += dt * 0.6; pm.opacity = Q().snake ? 0.4 + Math.sin(t * 2.5) * 0.12 : 0.1; });
+  }
+  // papan judul & aturan
+  const sign = (w, h, x, z, ry, y, draw) => { const c = mkCanvas(Math.round(w * 200), Math.round(h * 200)), g = c.getContext("2d"); draw(g, c.width, c.height); const m = xPlane(c, w, h); m.position.set(x, y, z); m.rotation.y = ry; scene.add(m); return m; };
+  sign(10, 1.7, 34.6, -140.2, Math.PI, 4.2, (g, w, h) => {
+    const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, "#db2777"); gr.addColorStop(0.5, "#7c3aed"); gr.addColorStop(1, "#0891b2");
+    g.fillStyle = gr; rr(g, 0, 0, w, h, 60); g.fill();
+    g.fillStyle = "#fff"; g.font = `800 ${h * 0.42}px ${FONT}`; g.textAlign = "center"; g.fillText("LORONG 4 · ULAR TANGGA", w / 2, h * 0.55);
+    g.font = `500 ${h * 0.17}px ${FONT}`; g.fillStyle = "#fef3c7"; g.fillText("Lempar dadu · capai tepat pijakan 40 · hindari ular & lubang hitam", w / 2, h * 0.83);
+  });
+  sign(5.6, 3.6, 47.45, -158, -Math.PI / 2, 2.4, (g, w, h) => {
+    g.fillStyle = "rgba(15,12,41,.95)"; rr(g, 0, 0, w, h, 50); g.fill(); g.strokeStyle = "#facc15"; g.lineWidth = 10; rr(g, 8, 8, w - 16, h - 16, 44); g.stroke();
+    g.fillStyle = "#fde68a"; g.font = `800 80px ${FONT}`; g.textAlign = "center"; g.fillText("ATURAN MAIN", w / 2, 120); g.textAlign = "left";
+    const rules = [["🎲", "Tekan R / klik dadu di atas kepalamu untuk melempar."], ["🪜", "Berhenti di kaki tangga (▲) → naik ke pijakan atas."], ["🐍", "Berhenti di kepala ular (▼) → turun ke ekornya."], ["🕳", "Pijakan 35 · Lubang Hitam → kembali ke Ruang Sambutan, ulangi dari Lorong 1!"], ["🏁", "Harus TEPAT di 40. Lebih → mundur sisa langkahnya."]];
+    rules.forEach(([ic, tx3], i) => { g.font = `60px ${FONT}`; g.fillStyle = "#fff"; g.fillText(ic, 60, 230 + i * 120); g.font = `500 40px ${FONT}`; g.fillStyle = "#e9d5ff"; wrap(g, tx3, 150, 215 + i * 120, w - 200, 46, 2); });
+  });
+  sign(2.2, 0.62, 19.04, -167.5, -Math.PI / 2, 3.2, (g, w, h) => { g.fillStyle = "rgba(20,14,30,.92)"; rr(g, 0, 0, w, h, 30); g.fill(); g.strokeStyle = "#f472b6"; g.lineWidth = 6; rr(g, 4, 4, w - 8, h - 8, 26); g.stroke(); g.fillStyle = "#fbcfe8"; g.font = `800 52px ${FONT}`; g.textAlign = "center"; g.fillText("LORONG 4 →", w / 2, h * 0.64); });
+  // dadu raksasa dekoratif di sudut
+  const dieMats = snDieMats();
+  for (const [x, z, s, ry] of [[45.6, -142.2, 1.5, 0.5], [23.8, -142.6, 1.2, -0.4], [46.3, -168.2, 1.0, 0.9]]) {
+    const d = new THREE2.Mesh(new THREE2.BoxGeometry(s, s, s), dieMats); d.position.set(x, s / 2, z); d.rotation.y = ry; d.castShadow = true; scene.add(d);
+    world.circles.push({ x, z, r: s * 0.72 });
+  }
+  // dadu pribadi pemain (melayang di atas kepala)
+  const die = new THREE2.Mesh(new THREE2.BoxGeometry(0.5, 0.5, 0.5), dieMats);
+  die.visible = false; scene.add(die);
+  xAct(die, { type: "x_dice" });
+  SN.die = { m: die, spin: 0, q: new THREE2.Quaternion(), settle: 0 };
+  // HUD
+  const hud = document.createElement("div");
+  hud.id = "snakeHud"; hud.hidden = true;
+  hud.innerHTML = `<div class="snh-top"><b>🎲 LORONG 4 · ULAR TANGGA</b><span id="snPos"></span></div><div class="snh-bar"><i id="snBar"></i></div><div id="snMsg" aria-live="polite"></div><button id="snRoll" class="btn">🎲 Lempar dadu <kbd>R</kbd></button>`;
+  document.body.appendChild(hud);
+  SN.hud = hud;
+  $("snRoll").onclick = () => snakeRoll();
+  addEventListener("keydown", (e) => { if (e.code === "KeyR" && !e.repeat && !(e.target.closest && e.target.closest("input,textarea,select")) && inSnake()) snakeRoll(); });
+}
+function snDieMats() {
+  if (SN.mats) return SN.mats;
+  const pips = { 1: [[0.5, 0.5]], 2: [[0.27, 0.27], [0.73, 0.73]], 3: [[0.25, 0.25], [0.5, 0.5], [0.75, 0.75]], 4: [[0.27, 0.27], [0.73, 0.27], [0.27, 0.73], [0.73, 0.73]], 5: [[0.25, 0.25], [0.75, 0.25], [0.5, 0.5], [0.25, 0.75], [0.75, 0.75]], 6: [[0.27, 0.22], [0.73, 0.22], [0.27, 0.5], [0.73, 0.5], [0.27, 0.78], [0.73, 0.78]] };
+  const face = (v) => { const c = mkCanvas(256, 256), x = c.getContext("2d"); x.fillStyle = "#fffaf0"; x.fillRect(0, 0, 256, 256); x.strokeStyle = "#e5d5b5"; x.lineWidth = 10; rr(x, 6, 6, 244, 244, 40); x.stroke(); x.fillStyle = v === 1 ? "#dc2626" : "#1e1b4b"; for (const [a, b] of pips[v]) { x.beginPath(); x.arc(a * 256, b * 256, v === 1 ? 34 : 24, 0, 7); x.fill(); } return new THREE2.MeshStandardMaterial({ map: xTex(c), roughness: 0.35 }); };
+  // urutan sisi BoxGeometry: +x,-x,+y,-y,+z,-z  → 3,4,1,6,2,5 (sisi berlawanan berjumlah 7)
+  return SN.mats = [face(3), face(4), face(1), face(6), face(2), face(5)];
+}
+var SN_NORMAL = { 1: [0, 1, 0], 6: [0, -1, 0], 2: [0, 0, 1], 5: [0, 0, -1], 3: [1, 0, 0], 4: [-1, 0, 0] };
+
+// ---------- animasi berbasis promise ----------
+function snAnim(dur, fn) {
+  return new Promise((res, rej) => SN.anims.push({ t: 0, dur, fn, res, rej }));
+}
+function snMove(x0, z0, x1, z1, dur, hopH) {
+  const dx = x1 - x0, dz = z1 - z0;
+  if (Math.hypot(dx, dz) > 0.01) P.yaw = Math.atan2(-dx, -dz);
+  return snAnim(dur, (k) => { const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; P.x = x0 + dx * e; P.z = z0 + dz * e; SN.y = Math.sin(Math.PI * k) * hopH; P.moving = 1; });
+}
+function snFollow(curve, dur, lift = 0) {
+  return snAnim(dur, (k) => { const p = curve.getPointAt(Math.min(1, k)), p2 = curve.getPointAt(Math.min(1, k + 0.02)); P.x = p.x; P.z = p.z; SN.y = p.y + lift; if (Math.hypot(p2.x - p.x, p2.z - p.z) > 1e-4) P.yaw = Math.atan2(-(p2.x - p.x), -(p2.z - p.z)); P.moving = 1; });
+}
+function snMsg(m) { SN.lastMsg = m; if ($("snMsg")) $("snMsg").textContent = m; }
+function snHud() {
+  if (!SN.hud) return;
+  const q = Q(), show = inSnake() && riddlesDone();
+  SN.hud.hidden = !show;
+  if (!show) return;
+  $("snPos").textContent = q.snake ? "Selesai ✓" : `Pijakan ${q.sn} / 40`;
+  $("snBar").style.width = (q.snake ? 100 : q.sn / 40 * 100) + "%";
+  $("snRoll").disabled = SN.busy || q.snake;
+  $("snRoll").innerHTML = q.snake ? "🌷 Menuju Taman" : `🎲 Lempar dadu <kbd>R</kbd>`;
+  if (q.snake) $("snRoll").disabled = false, $("snRoll").onclick = () => xTeleport(16.2, -176, 0);
+  else $("snRoll").onclick = () => snakeRoll();
+  if (!SN.lastMsg) snMsg(q.sn >= 34 ? `Butuh tepat ${40 - q.sn} untuk finis.` : "Lempar dadu untuk maju.");
+}
+function snRand6() { const a = new Uint32Array(1); do crypto.getRandomValues(a); while (a[0] >= 4294967292); return 1 + (a[0] % 6); }
+
+async function snakeRoll() {
+  const q = Q();
+  if (SN.busy || !inSnake() || q.snake || !riddlesDone()) return;
+  SN.busy = true; snHud();
+  try {
+    const v = snRand6();
+    // lempar dadu: berputar di atas kepala lalu menunjukkan angka ke kamera
+    const D = SN.die; D.m.visible = true; D.spin = 1;
+    if (typeof SFX !== "undefined") SFX.bloop(1.6);
+    snMsg("Dadu bergulir…");
+    await snAnim(0.9, () => {});
+    D.spin = 0; D.val = v; D.settle = 0.35;
+    SN.dieVal = v;
+    await snAnim(0.45, () => {});
+    let pos = q.sn;
+    const [cx, cz] = snTilePos(pos);
+    if (Math.hypot(P.x - cx, P.z - cz) > 0.2) await snMove(P.x, P.z, cx, cz, 0.5, 0.2);
+    snMsg(`🎲 Dadu: ${v}`);
+    let target = pos + v, bounce = 0;
+    if (target > 40) { bounce = target - 40; target = 40 - bounce; }
+    for (let i = pos + 1; i <= Math.min(pos + v, 40); i++) { const [a, b] = snTilePos(i - 1), [c, d] = snTilePos(i); await snMove(a, b, c, d, 0.3, 0.45); if (typeof SFX !== "undefined") SFX.step(); }
+    for (let i = 39; bounce && i >= target; i--) { const [a, b] = snTilePos(i + 1), [c, d] = snTilePos(i); await snMove(a, b, c, d, 0.3, 0.45); if (typeof SFX !== "undefined") SFX.step(); }
+    if (bounce) snMsg(`🎲 ${v} — kelebihan ${bounce}, mundur ke ${target}.`);
+    pos = target; q.sn = pos; saveQ();
+    if (SN.LAD[pos]) {
+      const to = SN.LAD[pos];
+      snMsg(`🪜 Tangga! Naik dari ${pos} ke ${to}.`);
+      if (typeof SFX !== "undefined") SFX.chime();
+      await snFollow(SN.curves["L" + pos], 1.6, 0);
+      pos = to; spawnSparkle();
+    } else if (SN.SNK[pos]) {
+      const to = SN.SNK[pos];
+      snMsg(`🐍 Ular! Meluncur turun dari ${pos} ke ${to}.`);
+      if (typeof SFX !== "undefined") SFX.whoosh();
+      await snFollow(SN.curves["S" + pos], 1.7, 0.15);
+      pos = to;
+    } else if (pos === SN.HOLE) {
+      await snBlackHole();
+      return;
+    }
+    const [ex, ez] = snTilePos(pos);
+    P.x = ex; P.z = ez; SN.y = 0;
+    q.sn = pos; saveQ();
+    if (pos === 40) {
+      q.snake = true; saveQ();
+      snMsg("🏁 Pijakan 40! Lorong 4 tuntas — gerbang taman terbuka.");
+      refreshGates(false); updHud();
+      if (typeof SFX !== "undefined") SFX.chime();
+      spawnSparkle(); if (typeof mpFx === "function") mpFx();
+      toast("🏁 Lorong 4 tuntas! Masuki portal emas di depanmu menuju Taman Apresiasi.", 6000);
+    } else if (pos >= 34 && !SN.LAD[pos]) snMsg(`${SN.lastMsg} Butuh tepat ${40 - pos} untuk finis.`);
+  } catch (e) {
+    if (e !== "abort") console.error(e);
+  } finally {
+    SN.busy = false;
+    snHud(); updHud();
+  }
+}
+async function snBlackHole() {
+  const q = Q();
+  snMsg("🕳 Lubang Hitam! Kamu tersedot kembali ke awal…");
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  const y0 = P.yaw;
+  SN.hole = true;
+  await snAnim(1.4, (k) => { P.yaw = y0 + k * k * 14; SN.y = -k * 0.8; avatar.scale.setScalar(1 - k * 0.85); });
+  avatar.scale.setScalar(1);
+  // ulangi dari Lorong 1 (pintu rahasia tetap terbuka)
+  q.maze = false; q.glass = false; q.riddles = []; q.sn = 0; q.snake = false; q.tries = {};
+  saveQ();
+  SN.anims.length = 0; SN.y = 0; SN.lastMsg = ""; SN.busy = false; SN.hole = false;
+  refreshGates(true); updHud();
+  xTeleport(0, 18.5, Math.PI);
+  setTimeout(() => toast("🕳 Kamu terlempar kembali ke Ruang Sambutan! Ulangi petualangan dari Lorong 1 · Labirin.", 7000), 400);
+  snHud();
+}
+function snakeTick(dt, sr) {
+  // pemain berteleport keluar di tengah animasi → batalkan
+  if (SN.anims.length && sr !== "s_snake" && !SN.hole) { const list = SN.anims.splice(0); SN.y = 0; list.forEach((a) => a.rej("abort")); }
+  // jalankan animasi aktif
+  if (SN.anims.length) {
+    const a = SN.anims[0];
+    a.t += dt;
+    const k = Math.min(1, a.t / a.dur);
+    a.fn(k);
+    if (k >= 1) { SN.anims.shift(); a.res(); }
+  }
+  const D = SN.die;
+  if (D) {
+    const show = sr === "s_snake" && !Q().snake && !renderer.xr.isPresenting;
+    D.m.visible = show;
+    if (show) {
+      D.m.position.set(P.x, (P.y || 0) + 2.75 + Math.sin(t * 2) * 0.05, P.z);
+      if (D.spin) { D.m.rotation.x += dt * 13; D.m.rotation.y += dt * 9; D.m.rotation.z += dt * 7; D.m.position.y += Math.abs(Math.sin(t * 10)) * 0.25; }
+      else {
+        const n = SN_NORMAL[D.val || SN.dieVal], to = new THREE2.Vector3().subVectors(camera.position, D.m.position).normalize();
+        D.q.setFromUnitVectors(new THREE2.Vector3(...n), to);
+        D.m.quaternion.slerp(D.q, Math.min(1, dt * 8));
+      }
+    }
+  }
+  if (sr === "s_snake" || SN.hud && !SN.hud.hidden) {
+    if (sr !== "s_snake") { SN.hud.hidden = true; return; }
+    if (SN.hud.hidden) { SN.lastMsg = ""; snHud(); if (!Q().snake && !renderer.xr.isPresenting) { P.camPitch = Math.min(P.camPitch, -0.5); P.camDist = Math.max(P.camDist || 0, 5.5); } }
+    const q = Q();
+    // portal finis: berjalan masuk
+    if (q.snake && SN.portal && Math.hypot(P.x - SN.portal.pos[0], P.z - SN.portal.pos[1]) < 0.9) xTeleport(16.2, -176, 0);
+    // terkunci di pijakan: kembalikan bila bergeser (mis. dari kontroler VR)
+    if (snakeLock() && !SN.busy) {
+      const [x, z] = snTilePos(q.sn);
+      if (Math.hypot(P.x - x, P.z - z) > 0.3) { SN.busy = true; snMove(P.x, P.z, x, z, 0.6, 0.2).catch(() => {}).then(() => { SN.busy = false; snHud(); }); }
+    }
+  }
+}
+
+// =====================================================================
+// src/ext_hof.js — HALL OF FAME: nama + foto penjelajah yang menuntaskan
+// keempat lorong. Disimpan permanen di server (data/hof.json + foto JPEG),
+// tampil di pita LED Atrium (ruang resepsionis), papan taman, dan galeri.
+// =====================================================================
+var HOF = { list: [], local: true, cards: [], idx: 0, header: null, gallery: false };
+var hofName = (s) => String(s || "").replace(/[^\p{L}\p{N} .,'’~-]/gu, "").replace(/\s+/g, " ").trim().slice(0, 40);
+var hofOK = (e) => e && typeof e.id === "string" && /^[a-z0-9]{6,32}$/.test(e.id) && typeof e.n === "string";
+function hofUrl(e) { return e.ph && /^data:image\/jpeg;base64,/.test(e.ph) ? e.ph : `hof/${e.id}.jpg?v=${+e.v || 1}`; }
+function hofDate(e) { return new Date(+e.t || Date.now()).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }); }
+function hofSorted() { return HOF.list.slice().sort((a, b) => (+b.t || 0) - (+a.t || 0)); }
+function hofLoadLocal() {
+  try { HOF.list = (store.get("hofLocal", []) || []).filter(hofOK).map((e) => ({ id: e.id, n: hofName(e.n), t: +e.t || 0, v: +e.v || 1, ph: typeof e.ph === "string" ? e.ph : "" })); } catch { HOF.list = []; }
+  HOF.local = true;
+}
+function hofSaveLocal() { if (!HOF.local) return; try { store.set("hofLocal", HOF.list.slice(-60)); } catch { /* kuota penuh */ } }
+function hofInit(list) {
+  HOF.local = false;
+  HOF.list = (Array.isArray(list) ? list : []).filter(hofOK).map((e) => ({ id: e.id, n: hofName(e.n), t: +e.t || 0, v: +e.v || 1 }));
+  hofChanged();
+}
+function hofUpsert(e) {
+  if (!hofOK(e)) return;
+  const v = { id: e.id, n: hofName(e.n), t: +e.t || Date.now(), v: +e.v || 1, ph: e.ph || "" };
+  const i = HOF.list.findIndex((x) => x.id === v.id);
+  if (i >= 0) HOF.list[i] = v; else HOF.list.push(v);
+  hofSaveLocal();
+  hofChanged();
+}
+function hofDelete(id) {
+  const i = HOF.list.findIndex((x) => x.id === id);
+  if (i < 0) return;
+  HOF.list.splice(i, 1);
+  const q = Q(); if (q.hof && q.hof.id === id) { q.hof = null; saveQ(); }
+  hofSaveLocal();
+  hofChanged();
+}
+function hofChanged() {
+  drawFame();
+  hofDrawHeader();
+  HOF.cards.forEach((c) => { c.entry = null; });
+  HOF.idx = 0;
+  HOF.cards.forEach((c) => hofAssign(c));
+  if (HOF.gallery && $("hfGrid")) hofRenderGrid();
+  updHud();
+}
+
+// ---------- formulir: nama + foto ----------
+function openHofForm() {
+  hidePopups();
+  if (!gardenUnlocked()) { toast("Hall of Fame hanya untuk penjelajah yang menuntaskan keempat lorong rahasia."); return; }
+  const q = Q(), mine = q.hof && HOF.list.find((e) => e.id === q.hof.id);
+  HOF.gallery = false;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏆 ${mine ? "Perbarui" : "Masuk"} Hall of Fame</h2>
+  <p>Tuliskan nama dan unggah fotomu. Keduanya tampil di layar <b>Hall of Fame</b> di Atrium dan di papan Taman Apresiasi.</p>
+  <div class="hofForm">
+    <div class="hofPrev" id="hfPrev"><canvas id="hfCv" width="480" height="600" aria-label="Pratinjau foto"></canvas><div class="hfEmpty" id="hfEmpty">📷<span>Belum ada foto</span></div></div>
+    <div class="hofFields">
+      <label class="hfL">Nama lengkap<input type="text" id="hfName" maxlength="40" autocomplete="name" spellcheck="false"></label>
+      <label class="btn hfFile" tabindex="0">📁 Pilih foto<input type="file" id="hfFile" accept="image/jpeg,image/png,image/webp"></label>
+      <label class="hfL">Perbesar<input type="range" id="hfZoom" min="1" max="3" step="0.01" value="1" disabled></label>
+      <p class="hfTip">Seret foto di pratinjau untuk mengatur posisi wajah.</p>
+      <label class="hfOk"><input type="checkbox" id="hfAgree"> Saya setuju nama & foto saya ditampilkan kepada semua pengunjung galeri.</label>
+      <button class="btn" id="hfSend" disabled>Kirim ke Hall of Fame</button>
+      <p id="hfMsg" role="status"></p>
+    </div>
+  </div>`);
+  $("genCard").classList.add("wide");
+  $("hfName").value = mine ? mine.n : S.name || "";
+  const cv = $("hfCv"), cx = cv.getContext("2d"), st = { img: null, z: 1, ox: 0, oy: 0 };
+  const geom = (W, H) => { const s = Math.max(W / st.img.width, H / st.img.height) * st.z, w = st.img.width * s, h = st.img.height * s; st.ox = clamp(st.ox, -(w - W) / 2, (w - W) / 2); st.oy = clamp(st.oy, -(h - H) / 2, (h - H) / 2); return [(W - w) / 2 + st.ox, (H - h) / 2 + st.oy, w, h]; };
+  const draw = () => {
+    cx.fillStyle = "#1a1230"; cx.fillRect(0, 0, 480, 600);
+    if (!st.img) return;
+    const [x, y, w, h] = geom(480, 600); cx.drawImage(st.img, x, y, w, h);
+    cx.strokeStyle = "rgba(255,255,255,.35)"; cx.lineWidth = 2; cx.setLineDash([8, 8]); cx.beginPath(); cx.ellipse(240, 250, 130, 165, 0, 0, 7); cx.stroke(); cx.setLineDash([]);
+  };
+  const ready = () => { $("hfSend").disabled = !(st.img && $("hfAgree").checked && hofName($("hfName").value).length >= 2); };
+  draw();
+  if (mine) xLoad(hofUrl(mine)).then((im) => { if (im && !st.img) { st.img = im; $("hfEmpty").hidden = true; $("hfZoom").disabled = false; draw(); ready(); } });
+  $("hfFile").onchange = async () => {
+    const f = $("hfFile").files[0];
+    if (!f) return;
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type) || f.size > 15 * 1024 * 1024) { hofMsg("Gunakan foto JPG, PNG, atau WebP maksimal 15 MB.", true); return; }
+    try {
+      st.img = await (window.createImageBitmap ? createImageBitmap(f, { imageOrientation: "from-image" }) : new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(f); }));
+    } catch { hofMsg("Foto tidak dapat dibaca.", true); return; }
+    st.z = 1; st.ox = st.oy = 0; $("hfZoom").value = 1; $("hfZoom").disabled = false; $("hfEmpty").hidden = true;
+    hofMsg(""); draw(); ready();
+  };
+  $("hfZoom").oninput = () => { st.z = +$("hfZoom").value; draw(); };
+  let drag = null;
+  cv.onpointerdown = (e) => { if (!st.img) return; drag = [e.clientX, e.clientY, st.ox, st.oy]; cv.setPointerCapture(e.pointerId); };
+  cv.onpointermove = (e) => { if (!drag) return; const k = 480 / cv.getBoundingClientRect().width; st.ox = drag[2] + (e.clientX - drag[0]) * k; st.oy = drag[3] + (e.clientY - drag[1]) * k; draw(); };
+  cv.onpointerup = cv.onpointercancel = () => { drag = null; };
+  cv.onwheel = (e) => { if (!st.img) return; e.preventDefault(); st.z = clamp(st.z - e.deltaY * 0.0015, 1, 3); $("hfZoom").value = st.z; draw(); };
+  $("hfAgree").onchange = ready; $("hfName").oninput = ready;
+  $("hfSend").onclick = async () => {
+    const n = hofName($("hfName").value);
+    if (n.length < 2) { hofMsg("Nama minimal 2 huruf.", true); return; }
+    // ekspor 240×300 JPEG, kualitas diturunkan bila perlu agar < ±30 KB
+    const out = mkCanvas(240, 300), ox = out.getContext("2d"), [x, y, w, h] = geom(480, 600);
+    ox.fillStyle = "#1a1230"; ox.fillRect(0, 0, 240, 300); ox.drawImage(st.img, x / 2, y / 2, w / 2, h / 2);
+    let qual = 0.86, data = out.toDataURL("image/jpeg", qual);
+    while (data.length > 42000 && qual > 0.4) { qual -= 0.08; data = out.toDataURL("image/jpeg", qual); }
+    $("hfSend").disabled = true; hofMsg("Mengirim…");
+    const q = Q();
+    if (net && net.mode === "ws" && typeof net.sendHof === "function" && net.connected()) {
+      const r = await net.sendHof({ n, photo: data, tok: q.hof ? q.hof.tok : "" });
+      if (!r || !r.ok) { hofMsg((r && r.err) || "Gagal terhubung ke server. Coba lagi.", true); ready(); return; }
+      q.hof = { id: r.e.id, tok: r.tok || (q.hof && q.hof.tok) || "" }; saveQ();
+      hofUpsert(r.e);
+    } else {
+      const id = q.hof ? q.hof.id : Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => b.toString(16).padStart(2, "0")).join("");
+      q.hof = { id, tok: "" }; saveQ();
+      hofUpsert({ id, n, t: Date.now(), v: Date.now(), ph: data });
+    }
+    if (typeof SFX !== "undefined") SFX.chime();
+    spawnSparkle(); if (typeof mpFx === "function") mpFx();
+    toast("🏆 Kamu tercatat di Hall of Fame! Lihat layarnya di Atrium.", 5000);
+    openHofGallery();
+  };
+}
+function hofMsg(m, bad) { const el = $("hfMsg"); if (!el) return; el.textContent = m; el.style.color = bad ? "#f87171" : ""; }
+
+// ---------- galeri Hall of Fame ----------
+function openHofGallery() {
+  hidePopups();
+  HOF.gallery = true;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏆 Hall of Fame</h2>
+  <p id="hfCount"></p>
+  <div class="rowf"><input type="search" id="hfSearch" placeholder="Cari nama…" aria-label="Cari nama" style="flex:1">${gardenUnlocked() ? `<button class="btn" id="hfMe">${Q().hof ? "Perbarui milikku" : "Tambah milikku"}</button>` : ""}</div>
+  <div class="hofGrid" id="hfGrid"></div>`);
+  $("genCard").classList.add("wide");
+  $("hfSearch").oninput = hofRenderGrid;
+  if ($("hfMe")) $("hfMe").onclick = openHofForm;
+  hofRenderGrid();
+}
+function hofRenderGrid() {
+  const grid = $("hfGrid"); if (!grid) return;
+  const f = norm($("hfSearch") ? $("hfSearch").value : "").trim(), list = hofSorted().filter((e) => !f || norm(e.n).includes(f));
+  $("hfCount").textContent = HOF.list.length ? `${HOF.list.length} penjelajah telah menaklukkan Labirin, Rumah Kaca, 10 Teka-teki, dan Ular Tangga.` : "Belum ada penjelajah yang tercatat. Jadilah yang pertama!";
+  grid.textContent = "";
+  for (const e of list.slice(0, 300)) {
+    const d = document.createElement("div"); d.className = "hofCard";
+    const im = document.createElement("img"); im.loading = "lazy"; im.alt = e.n; im.src = hofUrl(e);
+    const b = document.createElement("b"); b.textContent = e.n;
+    const s = document.createElement("span"); s.textContent = hofDate(e);
+    d.append(im, b, s);
+    if (IS_MOD && !HOF.local) {
+      const del = document.createElement("button"); del.className = "kickb"; del.textContent = "Hapus";
+      del.onclick = () => { if (!del.classList.contains("arm")) { del.classList.add("arm"); del.textContent = "Yakin?"; setTimeout(() => { del.classList.remove("arm"); del.textContent = "Hapus"; }, 2500); return; } if (typeof net.hofDel === "function") net.hofDel(e.id); };
+      d.appendChild(del);
+    }
+    grid.appendChild(d);
+  }
+}
+
+// ---------- kartu foto (dipakai pita LED Atrium & papan taman) ----------
+async function hofDrawCard(x, e, X, Y, W, H, tok) {
+  const g = x.createLinearGradient(X, Y, X, Y + H); g.addColorStop(0, "#2e1065"); g.addColorStop(1, "#4c1d95");
+  x.fillStyle = g; rr(x, X, Y, W, H, 22); x.fill();
+  x.strokeStyle = "#f5c66b"; x.lineWidth = 4; rr(x, X + 2, Y + 2, W - 4, H - 4, 20); x.stroke();
+  const pw = W - 28, ph = Math.round(pw * 1.25), px = X + 14, py = Y + 14;
+  x.fillStyle = "#1a1230"; rr(x, px, py, pw, ph, 14); x.fill();
+  x.textAlign = "center";
+  if (!e) {
+    x.fillStyle = "#fde68a"; x.font = `700 ${Math.round(pw * 0.36)}px ${FONT}`; x.fillText("🏆", X + W / 2, py + ph * 0.58);
+    x.fillStyle = "#e9d5ff"; x.font = `600 ${Math.round(W * 0.085)}px ${FONT}`; x.fillText("Jadilah", X + W / 2, py + ph + H * 0.1); x.fillText(HOF.list.length ? "berikutnya!" : "yang pertama!", X + W / 2, py + ph + H * 0.17);
+    x.textAlign = "left"; return;
+  }
+  x.fillStyle = "#fff"; x.font = `700 ${Math.round(W * 0.085)}px ${FONT}`;
+  wrap(x, e.n, X + 10, py + ph + H * 0.09, W - 20, Math.round(W * 0.095), 2, "center");
+  x.fillStyle = "#c4b5fd"; x.font = `500 ${Math.round(W * 0.065)}px ${FONT}`; x.fillText(hofDate(e), X + W / 2, Y + H - 14);
+  x.textAlign = "left";
+  const im = await xLoad(hofUrl(e));
+  if (tok && tok()) return;
+  if (im) { x.save(); rr(x, px, py, pw, ph, 14); x.clip(); xCover(x, im, px, py, pw, ph); x.restore(); }
+}
+// papan Hall of Fame di taman (12 terbaru)
+async function drawFame() {
+  const c = XT.fameC; if (!c) return;
+  const x = c.getContext("2d"), my = (drawFame.n = (drawFame.n || 0) + 1);
+  const g = x.createLinearGradient(0, 0, 0, 1200); g.addColorStop(0, "#1e1036"); g.addColorStop(1, "#3b0764");
+  x.fillStyle = g; x.fillRect(0, 0, 1600, 1200);
+  x.strokeStyle = "#f5c66b"; x.lineWidth = 10; rr(x, 20, 20, 1560, 1160, 40); x.stroke();
+  x.fillStyle = "#fde68a"; x.font = `800 84px ${FONT}`; x.textAlign = "center"; x.fillText("🏆 HALL OF FAME", 800, 125);
+  x.fillStyle = "#e9d5ff"; x.font = `400 36px ${FONT}`; x.fillText(`${HOF.list.length} penjelajah menaklukkan keempat lorong rahasia`, 800, 185);
+  x.textAlign = "left";
+  const list = hofSorted().slice(0, 12);
+  const jobs = [];
+  for (let i = 0; i < Math.max(1, list.length); i++) jobs.push(hofDrawCard(x, list[i] || null, 60 + (i % 6) * 250, 225 + Math.floor(i / 6) * 475, 230, 455, () => my !== drawFame.n));
+  if (XT.fameBoard) XT.fameBoard.material.map.needsUpdate = true;
+  await Promise.all(jobs.map((j) => j.catch(() => {})));
+  if (my === drawFame.n && XT.fameBoard) XT.fameBoard.material.map.needsUpdate = true;
+}
+
+// ---------- pita LED Hall of Fame di Atrium (dinding selatan, di atas pintu) ----------
+function buildHofRibbon() {
+  const p = world.onWall("atrium", "S", 0, 5.85, 0.2), g = world.group(p);
+  renderer.localClippingEnabled = true;
+  const back = new THREE2.Mesh(new THREE2.BoxGeometry(20.6, 2.0, 0.08), new THREE2.MeshStandardMaterial({ color: 0x0f0a1f, roughness: 0.35, metalness: 0.4 }));
+  back.position.z = -0.05; g.add(back);
+  const rimM = new THREE2.MeshBasicMaterial({ color: 0xf5c66b, toneMapped: false });
+  for (const y of [-1.0, 1.0]) { const r = new THREE2.Mesh(new THREE2.BoxGeometry(20.6, 0.04, 0.1), rimM); r.position.set(0, y, -0.02); g.add(r); }
+  const hc = mkCanvas(860, 400);
+  const header = xPlane(hc, 3.87, 1.8); header.position.set(-8.15, 0, 0.01); g.add(header);
+  HOF.header = { c: hc, m: header };
+  hofDrawHeader();
+  xAct(header, { type: "x_hof" }); xAct(back, { type: "x_hof" });
+  const sep = new THREE2.Mesh(new THREE2.BoxGeometry(0.05, 1.9, 0.1), rimM); sep.position.set(-6.13, 0, -0.01); g.add(sep);
+  // bidang pemotong agar kartu hanya tampak di jendela pita
+  g.updateMatrixWorld(true);
+  const right = new THREE2.Vector3(1, 0, 0).applyQuaternion(g.quaternion), xL = -6.05, xR = 10.2;
+  const pL = g.localToWorld(new THREE2.Vector3(xL, 0, 0)), pR = g.localToWorld(new THREE2.Vector3(xR, 0, 0));
+  const planes = [new THREE2.Plane(right.clone(), -right.dot(pL)), new THREE2.Plane(right.clone().negate(), right.dot(pR))];
+  const CW = 1.06, CH = 1.66, GAP = 1.2, N = Math.ceil((xR - xL) / GAP) + 2;
+  for (let i = 0; i < N; i++) {
+    const c = mkCanvas(280, 440);
+    const m = new THREE2.Mesh(new THREE2.PlaneGeometry(CW, CH), new THREE2.MeshBasicMaterial({ map: xTex(c), toneMapped: false, transparent: true, clippingPlanes: planes }));
+    m.position.set(xL + CW / 2 + i * GAP, 0, 0.02); g.add(m);
+    xAct(m, { type: "x_hof" });
+    const card = { c, m, entry: null, n: 0 };
+    HOF.cards.push(card);
+    hofAssign(card);
+  }
+  XT.anim.push((dt) => {
+    if (curRoom !== "atrium" && curRoom !== "welcome") return;
+    const sp = 0.42 * dt;
+    let maxX = -1e9;
+    for (const c of HOF.cards) { c.m.position.x -= sp; maxX = Math.max(maxX, c.m.position.x); }
+    for (const c of HOF.cards) if (c.m.position.x < xL - CW / 2 - 0.05) { c.m.position.x = maxX + GAP; maxX = c.m.position.x; hofAssign(c); }
+  });
+}
+function hofAssign(card) {
+  // sedikit entri → selingi kartu "Jadilah berikutnya!" agar pita tidak berisi foto yang sama berulang
+  const list = hofSorted(), slots = Math.max(list.length, HOF.cards.length || 14), k = HOF.idx++ % slots;
+  const e = k < list.length ? list[k] : null;
+  card.entry = e;
+  const my = ++card.n, x = card.c.getContext("2d");
+  x.clearRect(0, 0, 280, 440);
+  hofDrawCard(x, e, 0, 0, 280, 440, () => my !== card.n).then(() => { if (my === card.n) card.m.material.map.needsUpdate = true; });
+  card.m.material.map.needsUpdate = true;
+}
+function hofDrawHeader() {
+  if (!HOF.header) return;
+  const c = HOF.header.c, x = c.getContext("2d");
+  x.clearRect(0, 0, 860, 400);
+  const g = x.createLinearGradient(0, 0, 860, 400); g.addColorStop(0, "#7c2d12"); g.addColorStop(0.5, "#b45309"); g.addColorStop(1, "#f59e0b");
+  x.fillStyle = g; rr(x, 0, 0, 860, 400, 30); x.fill();
+  x.textAlign = "center";
+  x.fillStyle = "#fff7ed"; x.font = `800 112px ${FONT}`; x.fillText("HALL OF", 430, 128); x.fillText("FAME", 430, 236);
+  x.fillStyle = "#fef3c7"; x.font = `600 38px ${FONT}`; x.fillText("Penjelajah Lorong Rahasia", 430, 300);
+  x.fillStyle = "#1f1300"; rr(x, 250, 324, 360, 56, 28); x.fill();
+  x.fillStyle = "#fde68a"; x.font = `700 34px ${FONT}`; x.fillText(`${HOF.list.length} penjelajah`, 430, 363);
+  x.textAlign = "left";
+  HOF.header.m.material.map.needsUpdate = true;
 }
 
 </script>
