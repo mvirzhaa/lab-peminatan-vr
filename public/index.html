@@ -314,6 +314,43 @@ canvas {
   filter: contrast(1.03) saturate(1.06);
 }
 
+/* ---- ekstensi: HUD misi, kartu kurikulum, teka-teki, Ka Prodi ---- */
+#questHud{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left,0px));z-index:19;max-width:calc(100vw - 180px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(20,10,40,.88);border:1px solid #7c3aed;text-transform:none;letter-spacing:0;font-size:12px;font-weight:600}
+#questHud[hidden]{display:none!important}
+.card.wide{max-width:min(980px,100%)}
+.card .kk{color:var(--mut);font-size:12.5px;margin:0 0 10px}
+.kbox{background:#17121f;border:1px solid #2c2440;border-radius:12px;padding:12px 14px;margin:10px 0}
+.kbox>b{display:block;font-size:11px;letter-spacing:.08em;color:#fde68a;margin-bottom:6px}
+.kbox p{margin:0}
+.kbox ol,.kbox ul{margin:0;padding-left:20px;font-size:13px;line-height:1.6;color:#d6d3e0}
+.kbox li span{color:#a78bfa;font-size:11.5px;margin-left:6px;white-space:nowrap}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.kgrid .kbox{margin:0}
+.kcols{columns:2 220px}
+.ktab{width:100%;border-collapse:collapse;font-size:13px;line-height:1.5}
+.ktab td{border-top:1px solid #2c2440;padding:7px 8px;vertical-align:top;color:#d6d3e0}
+.ktab td:first-child{white-space:nowrap;color:#fff;font-weight:600}
+.qlist{list-style:none;padding:0;margin:8px 0;font-size:13.5px;line-height:1.9}
+.card .riddle{font-size:17px;line-height:1.6;color:#f5f3ff;background:#1b1430;border-left:4px solid #a78bfa;padding:12px 14px;border-radius:8px}
+#rdF input{flex:1;min-width:0}
+.kp{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.kp img{width:min(220px,100%);border-radius:12px;border:3px solid #c9a14a}
+.kp>div{flex:1;min-width:200px}
+@media (max-width:520px){#questHud{max-width:calc(100vw - 20px);top:calc(96px + env(safe-area-inset-top,0px))}}
+.skins{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+@media(max-width:760px){.skins{grid-template-columns:repeat(2,1fr)}}
+.skin{position:relative;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px;transition:transform .2s,border-color .2s}
+.skin:hover{transform:translateY(-2px);border-color:rgba(168,85,247,.6)}
+.skin.on{border-color:#a855f7;box-shadow:0 0 0 3px rgba(168,85,247,.25)}
+.skin img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;background:#1a1230}
+.skin.locked img{filter:grayscale(1) brightness(.45) blur(1px)}
+.skin b{font-size:14.5px}.skin p{font-size:12px;line-height:1.45;opacity:.8;margin:0;flex:1}
+.skin .stag{position:absolute;top:16px;left:16px;font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:99px;background:rgba(0,0,0,.55);color:#fde68a}
+.skin .btn{width:100%}
+#ldKey{width:100%;height:44px;background:rgba(18,12,36,.8);border:1.5px solid rgba(250,204,21,.55);border-radius:12px;padding:0 16px;font-size:14px;color:#fff;text-align:center;outline:none;box-sizing:border-box}
+#ldKey:focus{border-color:#facc15;box-shadow:0 0 0 3px rgba(250,204,21,.3)}
+.it .kickb{margin-left:auto;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(239,68,68,.15);color:#fca5a5;cursor:pointer;flex:none}
+.it .kickb:hover,.it .kickb.arm{background:#ef4444;color:#fff}
 </style>
 
 </head>
@@ -328,6 +365,7 @@ canvas {
   <div id="ldForm">
     <label for="ldName" style="font-size:12px;color:#e9d5ff;font-weight:700;letter-spacing:.08em;text-transform:uppercase">Masukkan Nama Anda</label>
     <input type="text" id="ldName" maxlength="16" placeholder="Ketik nama atau panggilan..." autocomplete="nickname" spellcheck="false">
+    <input type="password" id="ldKey" maxlength="200" placeholder="Kunci moderator" autocomplete="current-password" style="display:none">
     <button id="ldGo" type="button">MASUK KE GALERI ▶</button>
   </div>
 </div>
@@ -425,9 +463,9 @@ var LABS = {
     id: "keris", code: "KERIS", name: "Knowledge Engineering & Reliable Intelligent Systems",
     tag: "AI · Data Mining · Machine Learning · Computer Vision",
     col: "#8b5cf6", col2: "#22d3ee", ink: "#e9e5ff",
-    bot: { name: "KERI", role: "Robot pemandu Lab KERIS", body: "#ece9ff", accent: "#8b5cf6", eye: "#22d3ee" },
+    bot: { name: "Keri", role: "Robot pemandu Lab KERIS", body: "#ece9ff", accent: "#8b5cf6", eye: "#22d3ee" },
     music: { root: 50, mode: "dorian", bpm: 64, prog: [[0, 3, 7, 10], [5, 9, 12, 15], [3, 7, 10, 14], [7, 10, 14, 17]], feel: "dreamy" },
-    greet: "Halo IT'ers! Aku KERI, robot Lab KERIS. Di sini kita belajar membuat mesin yang bisa belajar dari data. Tanya aku apa saja ya!",
+    greet: "Halo IT'ers! Aku Keri, robot Lab KERIS. Di sini kita belajar membuat mesin yang bisa belajar dari data. Tanya aku apa saja ya!",
     slides: [
       { p: 1, t: "KERIS — Knowledge Engineering and Reliable Intelligent Systems", d: "Laboratorium KERIS adalah laboratorium peminatan di Program Studi Teknik Informatika, Fakultas Teknik dan Sains, Universitas Ibn Khaldun (UIKA) Bogor. KERIS berfokus pada rekayasa pengetahuan (knowledge engineering) dan sistem cerdas yang andal: kecerdasan buatan, data mining, machine learning, dan computer vision." },
       { p: 21, t: "Struktur Organisasi KERIS Research Group", d: "Kepala Laboratorium KERIS Research Group: Dr. Puspa Eosina, S.Si., M.Kom. (bidang Data Mining & Machine Learning). Bidang penelitian Semantic Web & Knowledge Engineering: Dr. Foni Agus Setiawan. Bidang penelitian Computer Vision & Pengenalan Pola: Gibtha Fitri Laxmi, S.Kom., M.Kom. Bidang penelitian IoT dan Big Data: Andi Eko K., S.Si., M.T. Bidang Pengabdian kepada Masyarakat: Dewi Primasari, S.Kom., M.Kom." },
@@ -476,9 +514,9 @@ var LABS = {
     id: "git", code: "GIT", name: "Geospatial Information Technology",
     tag: "GIS · Remote Sensing · Spatial Programming · GeoAI",
     col: "#d946ef", col2: "#a78bfa", ink: "#fbe8ff",
-    bot: { name: "GEO", role: "Robot pemandu Lab GIT", body: "#f5e8ff", accent: "#d946ef", eye: "#facc15" },
+    bot: { name: "Geo", role: "Robot pemandu Lab GIT", body: "#f5e8ff", accent: "#d946ef", eye: "#facc15" },
     music: { root: 53, mode: "lydian", bpm: 70, prog: [[0, 4, 7, 11], [2, 6, 9, 14], [7, 11, 14, 18], [4, 7, 11, 16]], feel: "space" },
-    greet: "Hai IT'ers! Aku GEO dari Lab GIT. Di sini data lokasi diubah jadi informasi, analisis, prediksi, dan keputusan. Mau tahu caranya?",
+    greet: "Hai IT'ers! Aku Geo dari Lab GIT. Di sini data lokasi diubah jadi informasi, analisis, prediksi, dan keputusan. Mau tahu caranya?",
     slides: [
       { p: 1, t: "Peminatan Geospatial Information Technology [GIT]", d: "Peminatan GIT Program Studi Teknik Informatika, Fakultas Teknik & Sains UIKA Bogor. Alurnya: dari coding, data, peta, analisis, AI, hingga solusi dunia nyata. Ruang lingkup: pemetaan digital, analisis spasial, machine learning, kecerdasan geospasial, dan dampak nyata." },
       { p: 2, t: "Struktur Organisasi Lab GIT", d: "Kepala Laboratorium GIT: Dr. Erwin Hermawan, S.Si., M.Sc. (Pemodelan Spasial Dinamik). Anggota: Iksal Yanuarsyah, S.Hut., M.Sc., Ph.D. (Aplikasi Penginderaan Jauh); Sahid Agustian H., S.T., M.Kom. (Pemrograman Spasial); Nurul Kamilah, S.Kom., M.Kom. (Perancangan Sistem Informasi Geospasial); Mohammad Aftaf Muhajir, S.Si., M.Kom. (Pemrograman Spasial); Fety Fatimah, S.Kom., M.Kom. (Perancangan Sistem Informasi Geospasial)." },
@@ -528,9 +566,9 @@ var LABS = {
     id: "se", code: "SE", name: "Software Engineering",
     tag: "Web · Mobile · UI/UX · System Analyst",
     col: "#4f46e5", col2: "#f59e0b", ink: "#eef0ff",
-    bot: { name: "CODY", role: "Robot pemandu Lab SE", body: "#ffffff", accent: "#4f46e5", eye: "#fbbf24" },
+    bot: { name: "Cody", role: "Robot pemandu Lab SE", body: "#ffffff", accent: "#4f46e5", eye: "#fbbf24" },
     music: { root: 60, mode: "major", bpm: 84, prog: [[0, 4, 7, 11], [9, 12, 16, 19], [5, 9, 12, 16], [7, 11, 14, 17]], feel: "bright" },
-    greet: "Yo IT'ers! Aku CODY dari Lab Software Engineering. Motto kami: BUILD YOUR SKILL, BUILD YOUR PRODUCT! Mau tanya apa nih?",
+    greet: "Yo IT'ers! Aku Cody dari Lab Software Engineering. Motto kami: BUILD YOUR SKILL, BUILD YOUR PRODUCT! Mau tanya apa nih?",
     slides: [
       { p: 1, t: "Software Engineering — RISE Center", d: "Laboratorium Software Engineering (RPL), RISE Center, Universitas Ibn Khaldun Bogor." },
       { p: 2, t: "What Do You Think About Software Engineer?", d: "Apa yang kamu pikirkan tentang software engineer? Full ngoding? Begadang? Serba bisa? Fullstack?" },
@@ -586,9 +624,9 @@ var LABS = {
     id: "csn", code: "CSN", name: "Computing System Networking",
     tag: "Network · Cloud · Security · IoT",
     col: "#0ea5e9", col2: "#f59e0b", ink: "#e6f6ff",
-    bot: { name: "NETA", role: "Robot pemandu Lab CSN", body: "#e8f6ff", accent: "#0ea5e9", eye: "#34f5c5" },
+    bot: { name: "Neta", role: "Robot pemandu Lab CSN", body: "#e8f6ff", accent: "#0ea5e9", eye: "#34f5c5" },
     music: { root: 57, mode: "aeolian", bpm: 72, prog: [[0, 3, 7, 10], [-4, 0, 3, 7], [-7, -3, 0, 4], [-2, 2, 5, 9]], feel: "calm" },
-    greet: "Halo IT'ers! Aku NETA dari Lab CSN. Kami menghubungkan komputasi, jaringan, dan keamanan digital. Paketmu sudah sampai dengan selamat — silakan bertanya!",
+    greet: "Halo IT'ers! Aku Neta dari Lab CSN. Kami menghubungkan komputasi, jaringan, dan keamanan digital. Paketmu sudah sampai dengan selamat — silakan bertanya!",
     slides: [
       { p: 1, t: "Peminatan Computing System Networking", d: "Peminatan CSN: menghubungkan sistem komputasi dengan jaringan modern. Apa itu CSN: arsitektur jaringan (LAN, WAN, cloud, IoT), protokol komunikasi (TCP/IP, routing, wireless), keamanan jaringan (firewall, VPN, IDS/IPS), dan integrasi sistem (server & cloud). Peluang karier: network engineer, cloud architect, cybersecurity specialist, IoT system designer. Skill yang dipelajari: network configuration (Cisco & GNS3), cloud management (AWS & Azure), keamanan jaringan (firewall), IoT & automation (IoT & drone). Contoh proyek: hands-on projects, kolaborasi industri, riset & inovasi IoT & cybersecurity. CSN: jembatan komputasi, jaringan, dan keamanan digital." },
       { p: 2, t: "Apa itu CSN?", d: "Computing System Networking adalah bidang yang menghubungkan perangkat dan sistem komputasi, mengelola data dan komunikasi dalam jaringan, serta mendukung infrastruktur IT modern." },
@@ -635,7 +673,7 @@ var ORIENT_SLIDES = [
     { i: "code", t: "SE", s: "Software Engineering", d: "Web, mobile, UI/UX, system analyst — Build Your Skill, Build Your Product — pintu utara-kanan" },
     { i: "net", t: "CSN", s: "Computing System Networking", d: "Jaringan, cloud, keamanan siber, IoT — pintu timur atrium" }
   ], foot: "Ruang Sambutan" },
-  { type: "steps", title: "CARA MEMILIH PEMINATAN", steps: [["1", "Tonton", "Video sambutan di layar besar ruang ini"], ["2", "Jelajahi", "Masuk ke 4 ruang lab lewat Atrium"], ["3", "Tanya", "Ngobrol dengan robot KERI, GEO, CODY & NETA"], ["4", "Uji diri", "Kerjakan kuis “Kasus ini cocok di lab mana?”"], ["5", "Daftar", "Isi formulir peminatan di meja resepsionis"]], note: "Musik piano santai akan menemanimu di setiap ruang lab. Matikan/nyalakan lewat tombol ♪ di toolbar.", foot: "Ruang Sambutan" },
+  { type: "steps", title: "CARA MEMILIH PEMINATAN", steps: [["1", "Tonton", "Video sambutan di layar besar ruang ini"], ["2", "Jelajahi", "Masuk ke 4 ruang lab lewat Atrium"], ["3", "Tanya", "Ngobrol dengan robot Keri, Geo, Cody & Neta"], ["4", "Uji diri", "Kerjakan kuis “Kasus ini cocok di lab mana?”"], ["5", "Daftar", "Isi formulir peminatan di meja resepsionis"]], note: "Musik piano santai akan menemanimu di setiap ruang lab. Matikan/nyalakan lewat tombol ♪ di toolbar.", foot: "Ruang Sambutan" },
   { type: "list", title: "KONTROL SINGKAT", items: ["W A S D / panah untuk berjalan, Shift untuk lari", "Seret mouse untuk melihat sekeliling, gulir untuk zoom", "Klik panel untuk Zoom In, unduh, atau tanya robot", "M untuk denah & teleport, Enter untuk chat"], art: "globe", foot: "Ruang Sambutan" }
 ];
 
@@ -656,7 +694,7 @@ var FAQ = [
   ["daftar pendaftaran formulir form gform link cara mendaftar isi", "Untuk mendaftar peminatan, isi formulir di tautan https://forms.gle/fJfi9qn8QgmJCUdPA — klik tombol “Isi Formulir Peminatan” di kartu resepsionis, atau pindai QR di meja saya."],
   ["lab apa saja peminatan ada berapa pilihan empat", "Ada 4 lab peminatan di galeri ini: KERIS (AI & sistem cerdas) di pintu barat, GIT (geospasial) di pintu utara-kiri, SE (software engineering) di pintu utara-kanan, dan CSN (jaringan & keamanan) di pintu timur."],
   ["bingung pilih rekomendasi saran cocok mana", "Coba pikirkan masalah apa yang paling ingin kamu pecahkan: suka AI & data → KERIS; suka peta, satelit, drone → GIT; suka membangun aplikasi web/mobile → SE; suka jaringan, server, keamanan → CSN. Kerjakan juga kuis di atrium ini!"],
-  ["robot npc tanya siapa pemandu", "Setiap lab punya robot pemandu: KERI di Lab KERIS, GEO di Lab GIT, CODY di Lab SE, dan NETA di Lab CSN. Klik robotnya untuk bertanya — mereka hafal isi presentasi lab masing-masing."],
+  ["robot npc tanya siapa pemandu", "Setiap lab punya robot pemandu: Keri di Lab KERIS, Geo di Lab GIT, Cody di Lab SE, dan Neta di Lab CSN. Klik robotnya untuk bertanya — mereka hafal isi presentasi lab masing-masing."],
   ["video sambutan youtube", "Video sambutan diputar di layar besar Ruang Sambutan (sebelah selatan atrium). Klik layarnya untuk memutar atau menjeda."],
   ["musik piano lagu suara", "Setiap ruang lab memutar musik piano santai yang berbeda. Gunakan tombol ♪ di toolbar untuk menyalakan/mematikan dan atur volumenya di Pengaturan."],
   ["cara jalan kontrol bergerak", "Gunakan W A S D atau tombol panah untuk berjalan, tahan Shift untuk berlari, seret mouse untuk melihat sekeliling, dan klik dua kali lantai untuk berjalan ke titik itu. Di ponsel pakai joystick kiri."],
@@ -2190,7 +2228,8 @@ var WALLS = [
   { z: -38, x: [-24, 0], f: "git", b: "git", h: 5.5 },
   { x: 0, z: [-38, -12], f: "git", b: "se", h: 5.5 },
   // SE
-  { z: -38, x: [0, 24], f: "se", b: "se", h: 5.5 },
+  { z: -38, x: [0, 19.8], f: "se", b: "se", h: 5.5 },
+  { z: -38, x: [22.2, 24], f: "se", b: "se", h: 5.5 }, // celah 19.8–22.2 = pintu rahasia (ext.js)
   { x: 24, z: [-38, -12], f: "se", b: "se", h: 5.5 }
 ];
 function groundH(x, z) {
@@ -2203,7 +2242,7 @@ function roomAt(x, z) {
   for (const [k, r] of Object.entries(ROOMS))
     if (x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1)
       return k;
-  return null;
+  return typeof secretRoomAt === "function" ? secretRoomAt(x, z) : null;
 }
 
 // ---------- tekstur prosedural ----------
@@ -3115,7 +3154,7 @@ function buildWorld(scene2, quality) {
       for (let xx = -6.6; xx <= 6.7; xx += 1.1)
         if (Math.abs(xx) > 1.2) seatStool(xx, zz, Math.PI, zz > 23 ? "#f59e0b" : "#8b5cf6");
     // papan bantuan (dinding barat)
-    const q = onWall("welcome", "W", 20.5, 2.5), g2 = group(q);
+    const q = onWall("welcome", "E", 26.6, 2.5), g2 = group(q);
     const c = mkCanvas(1200, 800), ctx = c.getContext("2d");
     const gr = ctx.createLinearGradient(0, 0, 1200, 800);
     gr.addColorStop(0, "#ffffff");
@@ -3150,11 +3189,11 @@ function buildWorld(scene2, quality) {
     api.mapBoard = mm;
     // headset VR di atas tiang
     const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 1, 24), M.white);
-    ped.position.set(-7.6, 0.5, 15.2);
+    ped.position.set(5.6, 0.5, 27.4);
     scene2.add(ped);
-    api.circles.push({ x: -7.6, z: 15.2, r: 0.5 });
+    api.circles.push({ x: 5.6, z: 27.4, r: 0.5 });
     const hs = new THREE.Group();
-    hs.position.set(-7.6, 1.25, 15.2);
+    hs.position.set(5.6, 1.25, 27.4);
     scene2.add(hs);
     const body = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.22, 0.26), new THREE.MeshStandardMaterial({ color: 16119287, roughness: 0.35 }));
     hs.add(body);
@@ -3168,7 +3207,7 @@ function buildWorld(scene2, quality) {
       hs.rotation.y = 1 + t2 * 0.5;
     });
     const lg = new THREE.Group();
-    lg.position.set(-7.6, 1.75, 15.2);
+    lg.position.set(5.6, 1.75, 27.4);
     scene2.add(lg);
     api.billboards.push(label("Headset VR", { size: 56, bg: "#3b1f7a", color: "#fff", weight: 500, padX: 20, padY: 8 }, 0.17, lg, 0, 0));
     // papan arah ke atrium
@@ -3695,8 +3734,8 @@ function buildWorld(scene2, quality) {
   // ---------- SE: studio pengembang yang ceria ----------
   {
     const id = "se", S2 = slidesOf(id), L = LABS[id];
-    const nx = [2.6, 7.3, 12, 16.7, 21.4], wz = [-35.3, -30.2, -25.1, -20, -14.9];
-    S2.slice(0, 5).forEach((s, i) => imgPanel(id, s, "se", "N", nx[i], 3.6));
+    const nx = [2.0, 5.55, 9.1, 12.65, 16.2], wz = [-35.3, -30.2, -25.1, -20, -14.9];
+    S2.slice(0, 5).forEach((s, i) => imgPanel(id, s, "se", "N", nx[i], 3.2));
     S2.slice(5, 10).forEach((s, i) => imgPanel(id, s, "se", "E", wz[i], 3.6));
     S2.slice(10, 15).forEach((s, i) => imgPanel(id, s, "se", "W", wz[4 - i], 3.6));
     imgPanel(id, S2[15], "se", "S", 21.9, 3.0);
@@ -3749,12 +3788,12 @@ function buildWorld(scene2, quality) {
     bean(20.8, -21.5, "#22c55e");
     bean(19.4, -19.2, "#6366f1");
     // rak piala
-    box(3, 0.06, 0.45, M.wood, 20.4, 1.0, -36.95);
-    box(3, 0.06, 0.45, M.wood, 20.4, 0.4, -36.95);
+    box(3, 0.06, 0.45, M.wood, 8.4, 1.0, -36.95);
+    box(3, 0.06, 0.45, M.wood, 8.4, 0.4, -36.95);
     const gold = new THREE.MeshStandardMaterial({ color: 16376890, metalness: 0.9, roughness: 0.25 });
     for (let i = 0; i < 5; i++) {
       const cup = new THREE.Group();
-      cup.position.set(19.2 + i * 0.6, 1.03, -36.95);
+      cup.position.set(7.2 + i * 0.6, 1.03, -36.95);
       scene2.add(cup);
       const c1 = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.05, 0.22, 16), gold);
       c1.position.y = 0.2;
@@ -4060,7 +4099,7 @@ function roomNet(room, h) {
 }
 function wsNet(url, h) {
   const peers = /* @__PURE__ */ new Map();
-  let ws = null, selfId = null, open = false, everOpen = false, tries = 0, pres = {}, sendT = 0, pending = false;
+  let ws = null, selfId = null, open = false, everOpen = false, tries = 0, pres = {}, sendT = 0, pending = false, stopped = false;
   const emitPeers = () => h.onPeers([...peers.values()]);
   const send = (obj2) => {
     if (!open)
@@ -4080,6 +4119,7 @@ function wsNet(url, h) {
       everOpen = true;
       tries = 0;
       h.onStatus && h.onStatus(true);
+      if (api.modKey) send({ type: "auth", key: api.modKey });
       send({ type: "presence", data: pres });
     };
     ws.onmessage = (ev) => {
@@ -4103,13 +4143,21 @@ function wsNet(url, h) {
         emitPeers();
         if (Array.isArray(m.wb)) h.onWbInit && h.onWbInit(m.wb);
         if (Array.isArray(m.notes)) h.onNotesInit && h.onNotesInit(m.notes);
+        if (Array.isArray(m.fame)) h.onFameInit && h.onFameInit(m.fame);
       } else if (m.type === "presence" && typeof m.id === "string" && m.id !== selfId) {
         peers.set(m.id, { id: m.id, presence: obj(m.data) });
         emitPeers();
+      } else if (m.type === "auth") {
+        if (!m.ok) api.modKey = null;
+        if (api.authCb) { api.authCb(!!m.ok); api.authCb = null; }
+        h.onAuth && h.onAuth(!!m.ok);
+      } else if (m.type === "kicked") {
+        stopped = true;
+        h.onKicked && h.onKicked();
       } else if (m.type === "leave" && typeof m.id === "string") {
         peers.delete(m.id);
+        h.onLeave && h.onLeave(m.id, !!m.q);
         emitPeers();
-        h.onLeave && h.onLeave(m.id);
       } else if (m.type === "signal" && typeof m.from === "string" && peers.has(m.from)) {
         h.onSignal && h.onSignal(m.from, m.data);
       } else if (m.type === "wb_stroke" && m.stroke) {
@@ -4122,6 +4170,8 @@ function wsNet(url, h) {
         h.onNoteAdd && h.onNoteAdd(m.note);
       } else if (m.type === "note_del") {
         h.onNoteDel && h.onNoteDel(m.id, m.idx);
+      } else if (m.type === "fame_add" && m.entry) {
+        h.onFameAdd && h.onFameAdd(m.entry);
       }
     };
     ws.onclose = () => {
@@ -4131,6 +4181,7 @@ function wsNet(url, h) {
         h.onLeave && h.onLeave(id);
       peers.clear();
       emitPeers();
+      if (stopped) return;
       tries++;
       if (!everOpen && tries > 2) {
         api.mode = "offline";
@@ -4180,6 +4231,21 @@ function wsNet(url, h) {
     },
     sendNoteDel(id, idx) {
       send({ type: "note_del", id, idx });
+    },
+    sendFame(entry) {
+      send({ type: "fame_add", entry });
+    },
+    auth(key) {
+      api.modKey = key;
+      return new Promise((res) => {
+        if (!open) return res(false);
+        api.authCb = res;
+        send({ type: "auth", key });
+        setTimeout(() => { if (api.authCb === res) { api.authCb = null; res(false); } }, 5e3);
+      });
+    },
+    kick(id) {
+      send({ type: "kick", id });
     }
   };
   connect();
@@ -4212,7 +4278,7 @@ var store = {
     }
   }
 };
-var cleanName = (s) => String(s || "").replace(/[^\p{L}\p{N} ._'\u2019-]/gu, "").trim().slice(0, 16);
+var cleanName = (s) => String(s || "").replace(/[^\p{L}\p{N} ._'\u2019~-]/gu, "").trim().slice(0, 16);
 var S = Object.assign({ name: "", color: "#7c3aed", quality: "med", sens: 1, invert: false, fp: false, minimap: true, speed: 1, music: true, vol: 0.85 }, store.get("settings", {}));
 if (!store.get("settings", null) && matchMedia("(pointer:coarse)").matches)
   S.quality = "low";
@@ -4527,7 +4593,8 @@ function makeAvatar(color, name) {
 }
 var avatar;
 function setAvatarColor(c) {
-  avatar.userData.mat.color.set(c);
+  if (avatar.userData.skinId && avatar.userData.skinId !== "default") applySkin(avatar, avatar.userData.skinId, c);
+  else avatar.userData.mat.color.set(c);
 }
 function setAvatarName(n) {
   const t2 = avatar.userData.tag;
@@ -4541,6 +4608,8 @@ var PR = 0.32;
 function collide(x, z) {
   for (let it = 0; it < 3; it++) {
     for (const s of world.colliders) {
+      if (s.off) continue;
+      if (s.bb && (x < s.bb[0] - 1 || x > s.bb[1] + 1 || z < s.bb[2] - 1 || z > s.bb[3] + 1)) continue;
       const ax = s.a[0], az = s.a[1], bx = s.b[0], bz = s.b[1], dx = bx - ax, dz = bz - az, L = dx * dx + dz * dz;
       let t2 = L ? ((x - ax) * dx + (z - az) * dz) / L : 0;
       t2 = clamp(t2, 0, 1);
@@ -4589,6 +4658,10 @@ function insideAnyRoom(x, z) {
   for (const r of Object.values(ROOMS))
     if (x > r.x0 + 0.3 && x < r.x1 - 0.3 && z > r.z0 + 0.3 && z < r.z1 - 0.3)
       return r;
+  if (typeof SECRET_ROOMS !== "undefined")
+    for (const r of Object.values(SECRET_ROOMS))
+      if (x > r.x0 + 0.3 && x < r.x1 - 0.3 && z > r.z0 + 0.3 && z < r.z1 - 0.3)
+        return r;
   return null;
 }
 function walkable(x, z) {
@@ -4628,6 +4701,8 @@ addEventListener("keydown", (e) => {
     closeAll();
   else if (e.code === "KeyH" || e.key === "?")
     showHelp();
+  else if (e.code === "KeyK")
+    openSkins();
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code))
     e.preventDefault();
 });
@@ -4842,6 +4917,10 @@ function sayBubble(text, key = "me") {
 }
 var curPanel = null;
 function handleAct(act, hit, e) {
+  if (act.type && act.type.startsWith("x_")) {
+    xHandleAct(act, hit, e);
+    return;
+  }
   switch (act.type) {
     case "panel":
     case "poster":
@@ -5383,6 +5462,10 @@ function showHeadset() {
     };
 }
 function teleport(x, z, yaw) {
+  if (typeof xTeleportOK === "function" && !xTeleportOK(x, z)) {
+    toast("Area itu tidak bisa dicapai dengan teleport.");
+    return;
+  }
   if (typeof SFX !== "undefined") SFX.whoosh();
   const f2 = $("fade");
   f2.style.opacity = 1;
@@ -5457,6 +5540,7 @@ $("btnPeople").onclick = () => dropdown($("btnPeople"), (d) => {
       toast("Menuju " + r.name);
     });
     b.append(dot, `${r.name}${r.guest ? " (tamu)" : ""} \xB7 ${r.where || ""}${r.mic ? " \u{1F399}" : ""}`);
+    if (IS_MOD) modKickBtn(b, r);
   }
   for (const n of Object.values(NPCS)) {
     const dot = document.createElement("span");
@@ -5479,6 +5563,7 @@ $("btnChat").onclick = () => openChat();
 $("menuBtn").onclick = () => dropdown($("menuBtn"), (d) => {
   d.insertAdjacentHTML("beforeend", "<h4>Menu</h4>");
   item(d, "\u2699", openSettings).append(" Pengaturan");
+  item(d, "\u{1F455}", openSkins).append(skinsUnlocked() ? " Lemari Skin" : " Lemari Skin \u{1F512}");
   item(d, "\u2754", showHelp).append(" Bantuan & kontrol");
   item(d, "\u{1F5FA}", () => toggleMap(true)).append(" Denah lokasi");
   item(d, "\u26F6", toggleFull).append(" Layar penuh");
@@ -5745,7 +5830,8 @@ function openSettings() {
   $("stMus").checked = S.music;
   $("stSave").onclick = () => {
     const q0 = S.quality;
-    S.name = cleanName($("stName").value);
+    S.name = cleanName($("stName").value) || S.name;
+    setTimeout(xOnName, 0);
     S.color = /^#[0-9a-f]{6}$/i.test($("stCol").value) ? $("stCol").value : S.color;
     S.quality = ["low", "med", "high"].includes($("stQ").value) ? $("stQ").value : "med";
     S.sens = clamp(+$("stSens").value, 0.3, 3);
@@ -5804,6 +5890,7 @@ function drawMap(c, opt = {}) {
   x.lineCap = "round";
   x.lineWidth = Math.max(2, 0.3 * sc);
   for (const s of world.colliders) {
+    if (s.secret) continue;
     if (s.r) {
       x.save();
       x.lineWidth = s.r * 2 * sc;
@@ -5831,6 +5918,7 @@ function drawMap(c, opt = {}) {
   x.textAlign = "center";
   x.textBaseline = "middle";
   for (const n of Object.values(NPCS)) {
+    if (n.secret) continue;
     x.fillStyle = "#fff";
     x.strokeStyle = n.col;
     x.lineWidth = Math.max(2, sc * 0.18);
@@ -5952,7 +6040,7 @@ function drawMini() {
   x.strokeStyle = "#f4f0ff";
   x.lineWidth = 0.45;
   for (const s of world.colliders) {
-    if (s.r)
+    if (s.r || s.secret)
       continue;
     x.beginPath();
     x.moveTo(s.a[0], s.a[1]);
@@ -5960,6 +6048,7 @@ function drawMini() {
     x.stroke();
   }
   for (const n of Object.values(NPCS)) {
+    if (n.secret) continue;
     x.fillStyle = "#fff";
     x.strokeStyle = n.col;
     x.lineWidth = 0.4;
@@ -6078,6 +6167,7 @@ function xrSelect(c) {
       } else if (a.type === "quiz")
         quizClick(h);
       else if (a.type === "npc") {
+        questTalk(a.id);
         const r = npcAnswer(a.id, "halo");
         showVRText(NPCS[a.id].name + ": " + r.text);
       } else if (a.type === "register")
@@ -6094,7 +6184,7 @@ function xrSelect(c) {
     }
     if (world.floors.includes(h.object)) {
       const p = h.point;
-      if (walkable(p.x, p.z)) {
+      if (walkable(p.x, p.z) && xTeleportOK(p.x, p.z) && xPathClear(P.x, P.z, p.x, p.z)) {
         const head = new THREE2.Vector3();
         camera.getWorldPosition(head);
         dolly.position.x += p.x - head.x;
@@ -6220,7 +6310,7 @@ var num = (v, a, b, d = 0) => typeof v === "number" && isFinite(v) ? clamp(v, a,
 var str = (v, n) => typeof v === "string" ? v.replace(/[\u0000-\u001f\u007f​-‏‪-‮⁦-⁩]/g, "").slice(0, n) : "";
 function myPresence() {
   const room = insideAnyRoom(P.x, P.z);
-  return { n: S.name, c: S.color, x: Math.round(P.x * 100) / 100, y: Math.round(P.y * 100) / 100, z: Math.round(P.z * 100) / 100, r: Math.round(P.yaw * 100) / 100, s: P.sit ? 1 : 0, mv: P.moving > 0.3 ? 1 : 0, m: micOn ? 1 : 0, g: mega ? 1 : 0, w: room ? room.short || room.name : "" };
+  return { n: S.name, c: S.color, x: Math.round(P.x * 100) / 100, y: Math.round(P.y * 100) / 100, z: Math.round(P.z * 100) / 100, r: Math.round(P.yaw * 100) / 100, s: P.sit ? 1 : 0, mv: P.moving > 0.3 ? 1 : 0, m: micOn ? 1 : 0, g: mega ? 1 : 0, w: room ? room.short || room.name : "", sk: mySkin() };
 }
 function mpPresence(force) {
   if (!net || net.mode === "offline")
@@ -6275,9 +6365,11 @@ function applyPeers(list) {
       r.name = name;
       setAvatarNameOf(r.av, name);
     }
-    if (color !== r.color) {
+    const sk = SKIN_IDS.includes(pr.sk) ? pr.sk : "default";
+    if (color !== r.color || sk !== (r.av.userData.skinId || "default")) {
       r.color = color;
-      r.av.userData.mat.color.set(color);
+      if (sk !== "default" || r.av.userData.skinId) applySkin(r.av, sk, color);
+      else r.av.userData.mat.color.set(color);
     }
     r.tgt = tgt;
     r.tyaw = num(pr.r, -50, 50);
@@ -6374,12 +6466,16 @@ function mpTick(dt) {
 async function startNet() {
   net = await createNet({
     onPeers: applyPeers,
-    onLeave: (id) => removeRemote(id, true),
+    onLeave: (id, quiet) => removeRemote(id, !quiet),
+    onAuth: (ok) => { IS_MOD = ok; },
+    onKicked: () => modKicked(),
     onSignal: (from, data) => voiceSignal(from, data),
     onStatus: (c, why) => {
       if (why === "gave_up")
         toast("Server multi-user tidak ditemukan \u2014 galeri berjalan dalam mode sendiri.");
     },
+    onFameInit: (list) => fameInit(list),
+    onFameAdd: (e) => fameAdd(e),
     onWbInit: (strokes) => {
       if (world && world.wb) {
         world.wb.strokes = Array.isArray(strokes) ? strokes.slice(-400) : [];
@@ -6600,6 +6696,7 @@ function update(dt) {
   for (const f3 of world.anim)
     f3(t, dt);
   npcTick(dt);
+  if (typeof extrasTick === "function") extrasTick(dt);
   zoneTick(dt);
   ytTick(dt);
   const la = world.labAnim[roomLab(curRoom)];
@@ -6789,6 +6886,7 @@ async function boot() {
   avatar = makeAvatar(S.color, S.name);
   scene.add(avatar);
   makeNpcs();
+  buildExtras();
   prog(0.85, "Membangunkan robot pemandu\u2026");
   await new Promise((r) => setTimeout(r, 20));
   drawDiskusi();
@@ -6852,8 +6950,23 @@ async function boot() {
       }
       return;
     }
+    if (isModName(nm) && !enter.ok) {
+      const key = $("ldKey").value;
+      if (!key) { $("ldKey").style.display = "block"; $("ldKey").focus(); return; }
+      if (enter.busy) return;
+      enter.busy = true;
+      $("ldGo").textContent = "MEMVERIFIKASI\u2026";
+      Promise.resolve(net && typeof net.auth === "function" ? net.auth(key) : false).then((ok) => {
+        enter.busy = false;
+        $("ldKey").value = "";
+        if (!ok) { $("ldGo").textContent = "MASUK SEBAGAI " + nm + " \u25B6"; toast("Kunci moderator tidak valid.", 3500); $("ldKey").focus(); return; }
+        IS_MOD = true; enter.ok = true; enter();
+      });
+      return;
+    }
     S.name = nm;
     saveS();
+    xOnName();
     setAvatarName(S.name);
     mpPresence(true);
     Music.resume();
@@ -6878,7 +6991,12 @@ async function boot() {
       go.textContent = "MASUK KE GALERI ▶";
     }
     nameIn.focus();
+    const keyIn = $("ldKey");
+    const syncKey = () => { keyIn.style.display = isModName(cleanName(nameIn.value.trim())) ? "block" : "none"; };
+    syncKey();
+    keyIn.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); enter(); } });
     nameIn.addEventListener("input", () => {
+      syncKey();
       const v = cleanName(nameIn.value.trim());
       go.textContent = v && v !== "IT'ers" ? `MASUK SEBAGAI ${v} ▶` : "MASUK KE GALERI ▶";
     });
@@ -6891,7 +7009,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd };
 }
 boot().catch((err) => {
   console.error(err);
@@ -7353,6 +7471,7 @@ function rel(res, top) {
   return [["Lihat juga: " + p.title.slice(0, 26), () => openZoom(p.id)]];
 }
 function npcAnswer(npcId, q) {
+  if (NPCS[npcId] && NPCS[npcId].custom) return NPCS[npcId].custom.answer(q);
   const n = NPCS[npcId] || NPCS.tia, lab = n.lab, L = lab ? LABS[lab] : null;
   const ql = norm(q).trim();
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql))
@@ -7468,6 +7587,7 @@ function sMsg(who, text, me, acts, quiz, npcId = curNpc) {
   if (!me) speak(text, NPCS[npcId]?.pitch);
 }
 function askNpc(q, npcId = curNpc) {
+  if (typeof questTalk === "function") questTalk(npcId);
   sMsg(S.name, q, true, null, null, npcId);
   const a = npcAnswer(npcId, q);
   setTimeout(() => {
@@ -7498,6 +7618,11 @@ var cardNpc = "tia";
 function showNpcCard(id, e) {
   cardNpc = id;
   const n = NPCS[id], c = $("sashaCard");
+  if (n.custom && n.custom.onCard) {
+    n.custom.onCard(e);
+    return;
+  }
+  if ($("sxReg")) $("sxReg").style.display = n.custom ? "none" : "";
   c.querySelector(".nm").textContent = n.name;
   c.querySelector(".rl").textContent = n.role;
   c.style.setProperty("--nc", n.col);
@@ -7509,10 +7634,11 @@ function showNpcCard(id, e) {
   $("sxChat").focus({ preventScroll: true });
   if (!n.greetedCard) {
     n.greetedCard = true;
-    sayBubble(n.lab ? LABS[n.lab].greet.replace("IT'ers", S.name) : `Halo ${S.name}! Mau daftar peminatan? Klik DAFTAR ya.`, "npc_" + id);
+    sayBubble(n.custom ? n.custom.answer("halo").text.slice(0, 108) + "…" : n.lab ? LABS[n.lab].greet.replace("IT'ers", S.name) : `Halo ${S.name}! Mau daftar peminatan? Klik DAFTAR ya.`, "npc_" + id);
   }
 }
 function openNpc(id, tab) {
+  if (id === "tama") questTalk(id);
   hidePopups();
   $("chatDr").classList.remove("show");
   const n = NPCS[id];
@@ -7522,12 +7648,12 @@ function openNpc(id, tab) {
     (npcLogs[id] || []).forEach((d) => $("sMsgs").appendChild(d));
   }
   $("sdName").textContent = n.name;
-  $("sdRole").textContent = n.role + (n.lab ? " · menjawab dari presentasi lab" : " · info pendaftaran & semua lab");
+  $("sdRole").textContent = n.role + (n.custom ? " · " + n.custom.roleNote : n.lab ? " · menjawab dari presentasi lab" : " · info pendaftaran & semua lab");
   $("sdAv").style.background = `radial-gradient(circle at 35% 30%,#fff,${n.col})`;
-  $("sIn").placeholder = `Tanya ${n.name}… (mis. ${n.lab ? LABS[n.lab].chips[0] : "bagaimana cara mendaftar?"})`;
+  $("sIn").placeholder = `Tanya ${n.name}… (mis. ${n.custom ? n.custom.chips[0] : n.lab ? LABS[n.lab].chips[0] : "bagaimana cara mendaftar?"})`;
   const ch = $("sChips");
   ch.textContent = "";
-  const chips = n.lab ? LABS[n.lab].chips.concat(["Cara daftar"]) : ["Cara daftar", "Lab apa saja?", "Bingung pilih lab", "Antar ke Lab GIT", "Kuis"];
+  const chips = n.custom ? n.custom.chips : n.lab ? LABS[n.lab].chips.concat(["Cara daftar"]) : ["Cara daftar", "Lab apa saja?", "Bingung pilih lab", "Antar ke Lab GIT", "Kuis"];
   chips.forEach((t2) => {
     const b = document.createElement("button");
     b.textContent = t2;
@@ -7544,7 +7670,7 @@ function openNpc(id, tab) {
   $("kForm").style.display = k ? "block" : "none";
   if (k) renderKnow();
   else {
-    if (!(npcLogs[id] || []).length) sMsg(n.name, npcAnswer(id, "halo").text, false, n.lab ? [["✍ Daftar " + LABS[n.lab].code, () => openRegister(n.lab)]] : [["✍ Isi formulir", openForm], ["Lihat QR", () => openRegister(null)]], null, id);
+    if (!(npcLogs[id] || []).length) sMsg(n.name, npcAnswer(id, "halo").text, false, n.custom ? n.custom.greetActs() : n.lab ? [["✍ Daftar " + LABS[n.lab].code, () => openRegister(n.lab)]] : [["✍ Isi formulir", openForm], ["Lihat QR", () => openRegister(null)]], null, id);
     setTimeout(() => $("sIn").focus(), 30);
   }
 }
@@ -7579,7 +7705,7 @@ function renderKnow() {
   intro.innerHTML = "<b>Sumber pengetahuan</b>";
   const n = NPCS[curNpc];
   const cnt = n.lab ? Object.values(world.panels).filter((p) => p.lab === n.lab).length : Object.keys(world.panels).length;
-  intro.append(n.lab ? `${n.name} hafal ${cnt} panel/slide presentasi Lab ${LABS[n.lab].code} + ${LABS[n.lab].faq.length} catatan, ditambah ${getKnow().length} pengetahuan tambahan Anda.` : `${n.name} mengetahui ${cnt} panel dari semua lab + ${FAQ.length} catatan pendaftaran + ${getKnow().length} pengetahuan tambahan Anda.`);
+  intro.append(n.custom ? n.custom.knowText : n.lab ? `${n.name} hafal ${cnt} panel/slide presentasi Lab ${LABS[n.lab].code} + ${LABS[n.lab].faq.length} catatan, ditambah ${getKnow().length} pengetahuan tambahan Anda.` : `${n.name} mengetahui ${cnt} panel dari semua lab + ${FAQ.length} catatan pendaftaran + ${getKnow().length} pengetahuan tambahan Anda.`);
   Lst.appendChild(intro);
   getKnow().forEach((k, i) => {
     const d = document.createElement("div");
@@ -8108,6 +8234,1486 @@ function zoneTick(dt) {
 function npcBubblePos(id) {
   const n = NPCS[id];
   return n ? { x: n.x, y: 0, z: n.z, h: n.kind === "robot" ? 3.05 : 2.9 } : null;
+}
+
+
+// =====================================================================
+// src/ext_data.js — data Kurikulum OBE Prodi TI (2025), Ka Prodi, Dosen &
+// Mahasiswa, serta teka-teki lorong rahasia. Bersumber dari dokumen
+// "KURIKULUM OBE Teknik Informatika" (September 2025).
+// =====================================================================
+var KUR = {
+  identitas: { pt: "Universitas Ibn Khaldun Bogor", fak: "Fakultas Teknik dan Sains", prodi: "Teknik Informatika (S1)", akreditasi: "Baik Sekali — LAM-INFOKOM, SK 218/SK/LAM-INFOKOM/Ak/S/XII/2024, berlaku sampai 13 Desember 2029", mhs: "510 mahasiswa", dosen: "20 dosen", alamat: "Gedung Fakultas Teknik dan Sains, Universitas Ibn Khaldun Bogor, Jl. K.H. Soleh Iskandar KM 2, Kota Bogor", telp: "+62 8810 1211 7766" },
+  visiProdi: "Menjadi program studi Informatika yang unggul di bidang riset keruangan dalam rumpun keilmuan Software Engineering, Artificial Intelligence, Computer System & Networking, Geospatial Information Technology, dengan lulusan islami berdaya saing global di tahun 2040.",
+  misiProdi: [
+    "Menyelenggarakan pendidikan informatika yang unggul dan adaptif terhadap perkembangan teknologi, dengan penekanan pada penguasaan rekayasa perangkat lunak, pengelolaan data berbasis artificial intelligence — termasuk data berbasis keruangan — serta sistem jaringan yang profesional dan aplikatif.",
+    "Mengembangkan riset yang inovatif dan berkelanjutan di bidang informatika dengan kekhususan pada pemanfaatan data dan teknologi spasial untuk menjawab tantangan dan kebutuhan di berbagai sektor kehidupan.",
+    "Melaksanakan pengabdian kepada masyarakat berbasis hasil riset dan teknologi informatika yang relevan dan kontekstual, guna meningkatkan kualitas hidup masyarakat dan mendorong pembangunan lokal yang berkelanjutan.",
+    "Menanamkan nilai-nilai keislaman dalam proses pendidikan, untuk membentuk lulusan yang berintegritas, berakhlak mulia, memiliki etos kerja tinggi, serta mampu memimpin dan berkomunikasi secara efektif di lingkungan kerja dan masyarakat."
+  ],
+  tujuan: [
+    ["TP1", "Menghasilkan lulusan yang unggul dan kompeten dalam bidang informatika, khususnya rekayasa perangkat lunak, analisis dan pengelolaan data — termasuk data berbasis keruangan —, artificial intelligence, pengelolaan jaringan sistem, serta mampu menerapkannya secara profesional untuk menjawab tantangan di era digital."],
+    ["TP2", "Menghasilkan lulusan yang mengembangkan budaya riset dan inovasi di bidang informatika yang berfokus pada pemanfaatan teknologi dan data berbasis keruangan, guna menghasilkan solusi kreatif dan aplikatif untuk permasalahan di berbagai sektor."],
+    ["TP3", "Menghasilkan lulusan yang melaksanakan pengabdian kepada masyarakat melalui penerapan teknologi informatika dan hasil riset yang relevan, untuk meningkatkan kualitas hidup masyarakat serta mendukung pembangunan berbasis potensi lokal."],
+    ["TP4", "Membentuk lulusan yang berkarakter islami, memiliki integritas, etos kerja tinggi, serta kemampuan kepemimpinan dan komunikasi yang baik dalam menghadapi dinamika perkembangan teknologi dan masyarakat."]
+  ],
+  visiUniv: "Menjadi universitas unggul berbasis riset keislaman dan teknologi yang berdaya saing global pada tahun 2040.",
+  misiUniv: ["Menguatkan kelembagaan, tata kelola, dan tata pamong yang profesional untuk mewujudkan UIKA Bogor sebagai institusi unggul.", "Menyediakan dan mengembangkan infrastruktur riset berbasis keislaman dan teknologi melalui kolaborasi strategis nasional dan internasional.", "Memperkuat model pengajaran berbasis budaya riset dengan mengintegrasikan inovasi dan technopreneurship secara berkelanjutan.", "Mengimplementasikan standar mutu dan akreditasi internasional guna meningkatkan daya saing global."],
+  visiFak: "Menjadi Fakultas yang Islami dan Unggul dalam Riset di Bidang Teknik dan Sains untuk Mendukung Daya Saing Global pada Tahun 2040.",
+  misiFak: ["Menyelenggarakan pendidikan tinggi teknik dan sains yang bermutu, berstandar internasional, dan berlandaskan nilai keislaman.", "Melaksanakan penelitian unggul, inovatif, dan relevan berbasis nilai Islam untuk pembangunan berkelanjutan.", "Mengembangkan pengabdian kepada masyarakat yang solutif dan berbasis hasil penelitian.", "Mewujudkan tata kelola fakultas yang profesional, akuntabel, dan berorientasi akreditasi unggul serta sertifikasi internasional.", "Membangun jejaring kolaboratif nasional dan internasional yang mengintegrasikan sains, teknologi, dan nilai keislaman."],
+  profil: [
+    ["PL01", "Menjunjung tinggi moral dan etika profesi, memiliki sikap religius, serta bertanggung jawab atas pekerjaannya."],
+    ["PL02", "Berpikir logis, kritis, dan sistematis dalam mengidentifikasi, menganalisis, dan merumuskan solusi atas suatu permasalahan."],
+    ["PL03", "Menganalisis persoalan computing serta menerapkan prinsip-prinsip computing dan disiplin ilmu relevan untuk mengidentifikasi solusi bagi organisasi."],
+    ["PL04", "Berkomunikasi secara efektif, bekerja sama, serta adaptif terhadap perubahan dan perkembangan teknologi."],
+    ["PL05", "Merencanakan, melaksanakan, dan mengelola proyek, berjiwa wirausaha, kreatif menyelesaikan masalah berbasis teknologi."]
+  ],
+  profesi: [
+    ["Programmer", "Mobile, Backend, dan Web Programmer"], ["IT Researcher Assistant", "Geoinformatics Researcher, AI Researcher"],
+    ["Geospatial Analyst", "Remote Sensing Analyst, UAV Mapping Specialist, Location Intelligence Specialist"],
+    ["IT Analyst", "System Analyst, Analyst Program, Spatial Data Scientist, Data Scientist, Data Analyst, BI Analyst, Analis Keamanan Siber, Desain & Implementasi Jaringan"],
+    ["Database Administrator", "Pemrograman Basis Data"], ["IT Consultant", "Software Developer, Spatial Intelligence Consultant"],
+    ["IT Support", "Network & System Administrator, Data Center"], ["IT Engineer", "Software Engineer, Supervisor Teknik Multimedia, Data Engineer Supervisor, Data Quality Engineer, NOC Engineer, Network Engineer"]
+  ],
+  cpl: [
+    ["CPL01", "Menunjukkan sikap religius, pancasilais, profesional dan tanggung jawab sosial sebagai insan terdidik yang menjalankan nilai-nilai Islam serta menjunjung etika keilmuan."],
+    ["CPL02", "Menguasai pengetahuan dan teknologi sesuai bidang keahlian serta terampil menyelesaikan masalah, berpikir kritis, kolaboratif dan inovatif untuk beradaptasi dengan perkembangan zaman."],
+    ["CPL03", "Menguasai prinsip-prinsip dasar informatika serta menerapkan teknologi dan pengetahuan informatika secara tepat sebagai landasan pengembangan solusi digital."],
+    ["CPL04", "Mengidentifikasi dan menganalisis permasalahan komputasi secara logis, kritis, dan sistematis."],
+    ["CPL05", "Merancang dan mengimplementasikan solusi teknologi informasi yang sesuai prinsip dasar informatika dan kebutuhan pengguna."],
+    ["CPL06", "Mengelola, menganalisis, dan menarik kesimpulan dari data menggunakan teknik yang tepat."],
+    ["CPL07", "Memilih dan menerapkan algoritma yang relevan untuk menyelesaikan berbagai permasalahan di bidang teknologi informasi."],
+    ["CPL08", "Merancang, membangun, dan mengevaluasi antarmuka pengguna dan aplikasi interaktif dengan mempertimbangkan pengalaman pengguna (user experience)."],
+    ["CPL09", "Memahami konsep metodologi penelitian, menerapkan prinsip kewirausahaan dan manajemen proyek di bidang Informatika."],
+    ["CPL10", "Mengomunikasikan ide, solusi, dan hasil analisis secara efektif melalui lisan, tulisan, dan visual kepada berbagai pihak."]
+  ],
+  bk: ["Society, Ethics and Professionalism", "Security", "Project Management", "User Experience Design", "Software Development Fundamentals", "Geospatial Analysis and Modeling", "Data Management", "Parallel and Distributed Computing", "Network and Communication", "Human-Computer Interaction", "Software Engineering", "Operating Systems", "Algorithmic Foundations", "Foundations of Programming Languages", "Programming Fundamentals", "Systems Fundamentals", "Architecture and Organization", "Graphics and Interactive Techniques", "Artificial Intelligence", "Specialized Platform Development", "Mathematical and Statistical Foundations", "Character and Personal Growth", "Research Methodology"],
+  sem: {
+    1: [["UIK114", "Pendidikan Agama Islam I", 2], ["UIK111", "Pancasila", 2], ["UIK113", "Bahasa Indonesia", 2], ["TIK103", "Kecakapan Intrapersonal", 2], ["TIK101", "Kalkulus 1", 3], ["TIK111", "Matematika Diskrit", 2], ["TIK113", "Pengantar Teknologi Informasi", 2], ["TIK115", "Algoritma dan Pemrograman + Praktikum", 3], ["TIK117", "Rangkaian Digital dan Organisasi Komputer", 2]],
+    2: [["UIK115", "Pendidikan Agama Islam II", 2], ["UIK112", "Pendidikan Kewarganegaraan", 2], ["TIK102", "Kalkulus 2", 3], ["TIK104", "Statistika dan Probabilitas", 3], ["TIK112", "Aljabar Linear", 3], ["TIK114", "Basis Data + Praktikum", 3], ["TIK116", "Sistem Operasi", 2], ["TIK118", "Bahasa Inggris Teknik + Praktikum", 2]],
+    3: [["UIK211", "Pendidikan Agama Islam III", 2], ["TIK211", "Metode Numerik + Praktikum", 3], ["TIK213", "Struktur Data + Praktikum", 3], ["TIK215", "Komputer dan Masyarakat", 2], ["TIK217", "Sistem Informasi", 2], ["TIK231", "Jaringan Komputer + Praktikum", 3], ["TIK221", "Rekayasa Perangkat Lunak + Praktikum", 3], ["TIK219", "Teori Bahasa dan Automata", 3]],
+    4: [["UIK212", "Pendidikan Agama Islam IV", 2], ["TIK222", "Perancangan dan Pemrograman Web + Praktikum", 3], ["TIK224", "Pemrograman Berorientasi Obyek + Praktikum", 3], ["TIK212", "Interaksi Manusia dan Komputer", 3], ["TIK214", "Keamanan Informasi + Praktikum", 3], ["TIK252", "Sistem Informasi Geografis + Praktikum", 3], ["TIK242", "Kecerdasan Buatan", 3]],
+    5: [["TIK339", "Enterprise Architecture", 2], ["TIK311", "UI UX", 2], ["TIK301", "Kewirausahaan", 2], ["TIK313", "Pemodelan dan Simulasi + Praktikum", 3], ["TIK341", "Machine Learning + Praktikum", 3], ["TIK321", "Pemrograman Perangkat Bergerak + Praktikum", 3], ["TIK***", "MK Pilihan 1", 3], ["TIK***", "MK Pilihan 2", 3]],
+    6: [["TIK312", "Kapita Selekta", 2], ["TIK322", "Teknologi Multimedia + Praktikum", 3], ["TIK316", "Metode Penelitian", 2], ["TIK314", "Manajemen Proyek", 2], ["FTS411", "Kerja Praktek (KP)", 2], ["TIK318", "Proyek Perangkat Lunak", 6], ["TIK***", "MK Pilihan 3", 3]],
+    7: [["UIK451", "Kuliah Kerja Nyata (KKN)", 4], ["TIK431", "Cloud Computing + Praktikum", 3], ["TIK413", "Sistem Pakar dan Penunjang Keputusan", 3], ["TIK411", "Etika Profesi", 2], ["FTS413", "Kolokium", 2], ["TIK***", "MK Pilihan 4", 3], ["TIK***", "MK Pilihan 5", 3]],
+    8: [["FTS414", "Tugas Akhir", 4], ["TIK400", "TOEFL", 0]]
+  },
+  pilihan: ["Rekayasa Perangkat Lunak Lanjut + Praktikum", "Blockchain", "Verifikasi dan Validasi Perangkat Lunak", "IoT + Praktikum", "Manajemen Jaringan + Praktikum", "Sistem Embedded dan Waktu Nyata + Praktikum", "Knowledge Graph + Praktikum", "Big Data + Praktikum", "Pengenalan Pola dan Visi Komputer + Praktikum", "Deep Learning + Praktikum", "Pemodelan Spasial + Praktikum", "Penginderaan Jauh + Praktikum", "Geospatial Artificial Intelligence + Praktikum", "Topik Khusus Geoinformatika", "Augmented Reality + Praktikum", "Keamanan Jaringan Komputer + Praktikum", "Data Mining + Praktikum"],
+  pengampu: [
+    ["Ade Hendri Hendrawan, S.Kom., M.Kom.", "Computer System & Networking", "Cloud Computing, PPL, Jaringan Komputer, Keamanan Jaringan Komputer, Keamanan Informasi, IoT"],
+    ["Andik Eko Kristus Pramuko, S.Si., M.T.", "KERIS", "Arsitektur dan Organisasi Komputer, Sistem Operasi, Rangkaian Digital, Big Data"],
+    ["Bayu Adhi Prakosa, S.Kom., M.T., Ph.D.", "Computer System & Networking", "Pengantar Teknologi Informasi, Manajemen Jaringan"],
+    ["Berlina Wulandari, S.T., M.Kom.", "Software Engineering", "Rekayasa Perangkat Lunak, Basis Data, Pemrograman Berorientasi Obyek"],
+    ["Dewi Primasari, S.Si., MM.", "Software Engineering", "Manajemen Proyek, Etika Profesi, Kapita Selekta"],
+    ["Dr. Erwin Hermawan, S.Si., M.Sc.", "Geospatial Information Technology", "Sistem Informasi Geografis, Pemodelan Spasial, Pemodelan dan Simulasi, Sistem Pakar dan Penunjang Keputusan, PPL, Metode Penelitian"],
+    ["Dr. Puspa Eosina, S.Si., M.Kom.", "KERIS", "Metode Numerik, Data Mining, Machine Learning, PPL, Metode Penelitian, Knowledge Graph"],
+    ["Fety Fatimah, S.Kom., M.Kom.", "Geospatial Information Technology", "Matematika Diskrit, Algoritma dan Pemrograman, Struktur Data dan Algoritma, ITK"],
+    ["Fitrah Satrya Fajar Kusumah, S.Kom., M.Kom.", "Software Engineering", "Verifikasi dan Validasi Perangkat Lunak, Rekayasa Perangkat Lunak Lanjut, PPL"],
+    ["Freza Riana, S.Si., M.Si.", "Software Engineering", "Kalkulus I, Kalkulus II, Statistika dan Probabilitas, Aljabar Linear"],
+    ["Gibtha Fitri Laxmi, S.Kom., M.Kom.", "KERIS", "Pengenalan Pola dan Visi Komputer, Teori Bahasa dan Automata, Kecerdasan Buatan, Sistem Pakar dan Penunjang Keputusan"],
+    ["Hersanto Fajri, S.Ds., MMD.", "Software Engineering", "Kecakapan Intrapersonal, UI UX, Teknologi Multimedia"],
+    ["Iksal Yanuarsyah, S.Hut., M.Sc., Ph.D.", "Geospatial Information Technology", "Pemodelan dan Simulasi, Penginderaan Jauh"],
+    ["Mohammad Aftaf Muhajir, S.Si., M.Kom.", "Geospatial Information Technology", "Sistem Informasi Geografis, Komputer dan Masyarakat"],
+    ["Nurul Kamilah, S.Kom., M.Kom.", "Geospatial Information Technology", "Basis Data, Sistem Informasi, Interaksi Manusia dan Komputer"],
+    ["Ritzkal, S.Kom., M.Kom.", "Computer System & Networking", "Keamanan Informasi, IoT"],
+    ["Safaruddin Hidayat Al Ikhsan, S.Kom., M.Kom.", "Computer System & Networking", "Perancangan dan Pemrograman Web, Pemrograman Berorientasi Obyek"],
+    ["Sahid Agustian Hudjimartsu, S.T., M.Kom.", "Geospatial Information Technology", "Pemodelan Spasial, Pemrograman Spasial, Geospatial Artificial Intelligence"],
+    ["Yuggo Afrianto, S.T., M.Kom.", "Computer System & Networking", "Jaringan Komputer, Metode Penelitian"]
+  ],
+  faq: [
+    ["apa itu obe outcome based education kurikulum", "Kurikulum OBE (Outcome-Based Education) menitikberatkan pada capaian pembelajaran lulusan (CPL) yang terukur. Setiap mata kuliah berkontribusi langsung pada CPL lewat capaian mata kuliah yang jelas, didukung project-based learning, problem-based learning, dan collaborative learning. Kurikulum OBE TI UIKA (2025) adalah revisi Kurikulum 2023 dan mengacu pada KKNI rumpun informatika serta APTIKOM 2024."],
+    ["akreditasi status lam infokom", "Prodi Teknik Informatika UIKA terakreditasi Baik Sekali dari LAM-INFOKOM (SK 218/SK/LAM-INFOKOM/Ak/S/XII/2024) yang berlaku sampai 13 Desember 2029."],
+    ["sejarah berdiri kapan dibuka didirikan historis", "Program Studi Teknik Informatika UIKA resmi dibuka 31 Juli 2003 melalui SK DIKTI No. 1617/D/T/2003. Sejak 2015 memakai kurikulum berbasis KKNI (level 6), disempurnakan 2018 (Kurikulum PSTI 2018), menerapkan MBKM sejak 2020, lalu kini kurikulum OBE 2025. UIKA sendiri berdiri berdasarkan SK Mendikbud No. 31/PPP/1961 tanggal 23 April 1961."],
+    ["jumlah mahasiswa dosen berapa banyak", "Menurut dokumen kurikulum, Prodi TI UIKA memiliki 510 mahasiswa dan 20 dosen."],
+    ["alamat lokasi kampus telepon kontak", "Prodi TI berada di Gedung Fakultas Teknik dan Sains, Universitas Ibn Khaldun Bogor, Jl. K.H. Soleh Iskandar KM 2, Kota Bogor. Telepon +62 8810 1211 7766."],
+    ["total sks jumlah berapa sks lulus beban", "Total beban studi sarjana TI adalah 145 SKS (133 SKS mata kuliah wajib + 12 SKS mata kuliah pilihan), tersebar dalam 8 semester: semester 1–2 masing-masing 20 SKS, semester 3 21 SKS, semester 4 20 SKS, semester 5 21 SKS, semester 6 21 SKS, semester 7 18 SKS, dan semester 8 4 SKS (Tugas Akhir)."],
+    ["peminatan lab laboratorium rumpun keilmuan jalur", "Kurikulum TI menawarkan lima jalur peminatan/laboratorium keilmuan: Software Engineering (SE), Computer Security and Networking (CSN), Sistem Informasi (SI), Geospatial Information Technology (GIT), dan Knowledge Engineering and Reliable Intelligent System (KERIS). Mata kuliah pilihan diambil mulai semester 5 dan menjadi dasar topik riset tugas akhir."],
+    ["mbkm merdeka belajar kampus merdeka magang", "Sejak 2020 PSTI menerapkan MBKM: mahasiswa bisa belajar di luar prodi lewat magang, proyek mandiri, KKN, studi lintas prodi/PT, penelitian, dan wirausaha — untuk membekali hard skill sekaligus soft skill (komunikasi, kolaborasi, kreativitas, berpikir kritis)."],
+    ["tracer study lulusan bekerja serapan employability relevansi", "Tracer study 2021–Juli 2025 (214 responden): 59% lulusan bekerja, 1% berwirausaha, 1% melanjutkan studi (total 61% terserap). Sebanyak 84% bekerja di bidang yang sesuai dengan ilmunya (sangat erat 29%, erat 18%, cukup erat 37%)."],
+    ["swot kekuatan kelemahan peluang ancaman evaluasi", "Kekuatan: berbasis KKNI & OBE, integrasi nilai Islami (iman, ilmu, amal), lab tematik, MBKM, materi IoT/Cloud/Big Data/ML/Cybersecurity/Geospatial. Kelemahan: beberapa MK teknologi cepat berubah perlu pembaruan rutin, sarana lab perlu modernisasi, sertifikasi profesional belum terintegrasi. Peluang: permintaan talenta TI tinggi, MBKM, AI generatif & metaverse. Ancaman: perubahan teknologi cepat dan persaingan kampus lain."],
+    ["rekomendasi perbaikan sertifikasi industri aws cisco", "Rekomendasi perbaikan kurikulum: perbarui MK teknologi disruptif minimal tiap dua tahun, integrasikan sertifikasi industri (AWS, CompTIA, CISCO), perkuat kemitraan industri, modernisasi lab (cloud, IoT kit, AI hardware), bangun tracking CPL digital, dan tambah project-based learning & capstone kasus nyata."],
+    ["metode pembelajaran cara belajar media", "Metode pembelajaran: ceramah interaktif, diskusi kelompok, project-based learning, problem-based learning, dan collaborative learning. Media: LMS, multimedia pembelajaran, laboratorium virtual, dan video conference. Bentuk penilaian berupa tes dan non-tes (portofolio, presentasi, proyek, hasil penelitian)."],
+    ["landasan filosofi motto iman ilmu amal", "Landasan filosofis prodi berpijak pada nilai Pancasila dan keislaman UIKA dengan motto Iman, Ilmu, dan Amal. Kurikulum harus “Anggung Wimbuh Linuwih” — terus tumbuh mengikuti zaman agar lulusan siap menghadapi revolusi industri 4.0 dan Society 5.0."],
+    ["kkni level jenjang", "Lulusan S1 TI disiapkan memenuhi kualifikasi KKNI level 6. CPL dipetakan ke aspek sikap (religius, etika keilmuan), pengetahuan, keterampilan umum (berpikir kritis, logika, komunikasi), dan keterampilan khusus (TI, technopreneur, solusi teknis)."],
+    ["kaprodi ketua program studi kepala prodi siapa pernah menjabat", "Kepala Program Studi TI dari masa ke masa: Oke Hendrady, S.Kom (2004–2009), Yanti, M.Kom (2009–2010), Novita Br Ginting, M.Kom (2010–2011), Dr. Ir. Budi Susetyo, M.Sc (2011–2015), Safaruddin Hidayat Al Ikhsan, M.Kom (2015–2016), Ade Hendri Hendrawan, M.Kom (2016–2018), Dr. Ir. Budi Susetyo, M.Sc (2018–2019), Fitrah Satrya Fajar Kusumah, M.Kom (2019–2020 dan 2020–2024), dan Hersanto Fajri, S.Ds., M.MD (2024–sekarang). Foto lengkapnya ada di dinding barat ruangan ini."],
+    ["tim penyusun kurikulum siapa menyusun", "Tim penyusun Kurikulum OBE TI: Dr. Puspa Eosina, S.Si., M.Kom (koordinator), Dr. Erwin Hermawan, S.Si., M.Sc, Hersanto Fajri, S.Ds., MMD, Fety Fatimah, S.Kom., M.Kom, Fitrah Satrya Fajar Kusumah, S.Kom., M.Kom, A. Hendri Hendrawan, S.Kom., M.Kom, dan Berlina Wulandari, S.T., M.Kom."],
+    ["kompetensi baru soft skill hard skill dibutuhkan", "Kebutuhan kompetensi baru dari tracer study: soft skills (komunikasi efektif, problem solving, critical thinking, leadership, manajemen proyek, teamwork), hard skills terkini (data science, AI, cloud, cyber security, big data, IoT, mobile & web modern), technopreneurship, dan kompetensi global (bahasa Inggris & literasi digital)."]
+  ]
+};
+var KAPRODI = [
+  ["Oke Hendrady, S.Kom", "2004 – 2009"], ["Yanti, M.Kom", "2009 – 2010"], ["Novita Br Ginting, M.Kom", "2010 – 2011"],
+  ["Dr. Ir. Budi Susetyo, M.Sc", "2011 – 2015"], ["Safaruddin Hidayat Al Ikhsan, M.Kom", "2015 – 2016"], ["Ade Hendri Hendrawan, M.Kom", "2016 – 2018"],
+  ["Dr. Ir. Budi Susetyo, M.Sc", "2018 – 2019"], ["Fitrah Satrya Fajar Kusumah, M.Kom", "2019 – 2020"], ["Fitrah Satrya Fajar Kusumah, M.Kom", "2020 – 2024"],
+  ["Hersanto Fajri, S.Ds., M.MD", "2024 – sekarang"]
+];
+var DOSEN_LIST = [
+  ["Fitrah S. F. K., M.Kom.", "Project Leader", "d1"], ["Safaruddin Hidayat A., M.Kom", "System Analyst", "d2"], ["Hersanto Fajri, S.Ds., M.MD", "UI/UX Advisor", "d3"],
+  ["Berlina Wulandari S.T., M.Kom", "Advisor", "d4"], ["Freza Riana, S.Si., M.Si", "Advisor", "d5"]
+];
+// [nama, angkatan, peran, aplikasi, foto]
+var MHS_LIST = [
+  ["M. Azis Pratama S.T", "2020", "Developer UCL", "UCL", "m1"], ["Wahyu Ramadhan S.T", "2020", "Mobile UCL Dev", "UCL", ""], ["Guido Tamara S.T", "2016", "Developer UCL Presensi", "UCL", "m3"],
+  ["M. Virzha Andriansyah S.T", "2022", "Developer CBT, UCL, UCL Mobile", "CBT", "m4"], ["Azka Fadhilah Rahman S.T", "2022", "Developer SIMPEG", "SIMPEG", "m5"], ["Danu Maulana Zakaria S.T", "2016", "Developer UCL Mobile", "UCL", "m6"],
+  ["M. Syaiful Nurrohman", "2022", "Developer NL-SIAK", "SIAKAD", "m7"], ["Maulana Ikhsan S.T.", "2022", "Developer RBAC", "", "m8"], ["Satria Sudirja S.T", "2022", "Developer SIAKAD OBE", "SIAKAD", "m9"],
+  ["Alvano Hastagina S.T", "2022", "Dev FR Presensi UCL Mobile", "UCL", "m10"], ["Muhamad Yopan Ramadhan S.T", "2022", "Developer SSO", "", "m11"], ["Kurniawan S.T", "2020", "Developer UCL Presensi", "UCL", "m12"],
+  ["MF. Fathin Qusyayyi S.T", "2021", "", "", "m13"], ["M. Tamam Mulya S.T", "2020", "", "", "m14"], ["Muhammad Zikri H. P S.T", "2020", "", "", ""]
+];
+// Jawaban teka-teki disimpan sebagai hash (FNV-1a + garam) agar tidak terbaca langsung di sumber.
+var RIDDLES = [
+  ["Semakin banyak kau ambil dariku, wujudku justru akan semakin besar. Siapakah aku?", ["10xkpqc"], "L", 6],
+  ["Aku adalah milikmu sejak lahir, tetapi orang lain lebih sering menggunakannya daripada dirimu sendiri. Apakah aku?", ["7frvvi"], "N", 4],
+  ["Di pagi hari aku memanjang, di siang hari aku memendek, dan di malam hari aku menghilang sepenuhnya. Siapakah aku?", ["1wig1v2", "avliot"], "B", 8],
+  ["Semakin banyak yang kau tinggalkan di belakang, semakin jauh kau telah melangkah. Apakah aku?", ["1ocm8va", "7csco6", "11qxrzr"], "J", 5],
+  ["Aku menelan semua benda: burung, pohon, dan hewan. Aku merapuhkan besi dan menggigit baja. Aku mengakhiri raja dan meruntuhkan kota. Siapakah aku?", ["13j1ms9", "s0hsfj"], "W", 5],
+  ["Aku sangat rapuh. Hanya dengan menyebut namaku saja, kau sudah menghancurkanku. Apakah aku?", ["sk3bvr", "1huo55o", "1ql80vf", "7yuhys"], "S", 5],
+  ["Aku bisa berlari tapi tidak bisa berjalan. Aku punya mulut tapi tak pernah bicara. Aku punya tempat tidur tapi tak pernah terlelap. Siapakah aku?", ["zqcz1g", "42ittq"], "S", 6],
+  ["Pembuatku tidak membutuhkanku. Pembeliku tidak memakainya untuk diri sendiri. Pemakaiku tidak akan pernah bisa melihatku. Apakah aku?", ["102rbg1", "1vo6yig", "1m4kjeh"], "P", 4],
+  ["Aku selalu lapar dan harus terus diberi makan agar tetap hidup. Namun, jika kau memberiku air, aku akan langsung mati. Siapakah aku?", ["5mw1u3"], "A", 3],
+  ["Aku selalu datang menghampiri setiap hari, tetapi pada kenyataannya aku tidak pernah benar-benar tiba. Siapakah aku?", ["1sk1nxb", "1qzouhz", "18xhzdd"], "B", 5]
+];
+
+// =====================================================================
+// src/ext.js — EKSTENSI: Robot Kurikulum (KURI), logo Prodi TI, galeri
+// Kepala Program Studi, 3 lorong rahasia (Labirin, Rumah Kaca, Teka-teki),
+// dan Taman Apresiasi (sertifikat, daftar dosen & mahasiswa).
+// =====================================================================
+var XT = { ready: false, gates: [], door: null, hud: null, inSecret: null, fame: [], imgs: {}, anim: [] };
+// Ruang rahasia: TIDAK dimasukkan ke ROOMS agar tidak tampil di denah/minimap.
+var SECRET_ROOMS = {
+  s_tunnel: { x0: 19.8, x1: 22.2, z0: -44, z1: -38, name: "Lorong Rahasia", short: "Lorong ???" },
+  s_maze: { x0: 3, x1: 39, z0: -80, z1: -44, name: "Lorong 1 · Labirin", short: "Labirin" },
+  s_link1: { x0: 7.8, x1: 10.2, z0: -84, z1: -80, name: "Lorong Rahasia", short: "Lorong ???" },
+  s_glass: { x0: -4.2, x1: 19.8, z0: -108, z1: -84, name: "Lorong 2 · Rumah Kaca", short: "Rumah Kaca" },
+  s_link2: { x0: 15, x1: 17.4, z0: -112, z1: -108, name: "Lorong Rahasia", short: "Lorong ???" },
+  s_riddle: { x0: 13.2, x1: 19.2, z0: -170, z1: -112, name: "Lorong 3 · Teka-teki", short: "Teka-teki" },
+  s_garden: { x0: -16, x1: 48, z0: -236, z1: -170, name: "Taman Apresiasi", short: "Taman" }
+};
+function secretRoomAt(x, z) {
+  for (const [k, r] of Object.entries(SECRET_ROOMS)) if (x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1) return k;
+  return null;
+}
+
+// ---------- progres per pemain (per nama, di browser ini) ----------
+var questCache = { key: null, v: null };
+function questKey() { return "quest." + (S.name || "_").toLowerCase().replace(/[^a-z0-9]/g, "_"); }
+function Q() {
+  const k = questKey();
+  if (questCache.key !== k) {
+    const v = store.get(k.slice(0), null);
+    questCache = { key: k, v: Object.assign({ labs: [], bots: [], maze: false, glass: false, riddles: [], garden: false, t0: 0, t1: 0, tries: {}, cert: "" }, v && typeof v === "object" ? v : {}) };
+    for (const a of ["labs", "bots", "riddles"]) if (!Array.isArray(questCache.v[a])) questCache.v[a] = [];
+  }
+  return questCache.v;
+}
+function saveQ() { store.set(questKey(), Q()); }
+var questUnlocked = () => Q().labs.length >= 4 && Q().bots.length >= 4;
+var gardenUnlocked = () => Q().riddles.length >= 10;
+function questTalk(npcId) {
+  if (npcId === "tama") { unlockSkins(); return; }
+  if (!LAB_IDS.includes(npcId)) return;
+  const q = Q();
+  if (q.bots.includes(npcId)) return;
+  q.bots.push(npcId);
+  saveQ();
+  questProgress();
+}
+function questProgress() {
+  updHud();
+  if (questUnlocked() && !Q().doorNotified) {
+    Q().doorNotified = true;
+    saveQ();
+    if (XT.door) XT.door.setOpen(true);
+    setTimeout(() => {
+      if (typeof SFX !== "undefined") SFX.chime();
+      toast("🗝 Terdengar gemuruh dari dinding utara Lab Software Engineering… sebuah pintu rahasia terbuka!", 7000);
+      sayBubble(`${S.name}, kamu sudah menjelajahi semua lab! Cari pintu rahasia di dinding utara labku ya 😉`, "npc_se");
+    }, 900);
+  }
+}
+
+// ---------- HUD misi ----------
+function updHud() {
+  if (!XT.hud) return;
+  const q = Q(), h = XT.hud;
+  let txt;
+  if (!questUnlocked()) {
+    if (!q.labs.length && !q.bots.length) { h.hidden = true; return; }
+    txt = `🔍 Misi rahasia · Lab ${q.labs.length}/4 · Robot ${q.bots.length}/4`;
+  } else if (!q.maze) txt = "🗝 Pintu rahasia terbuka di Lab SE · Lorong 1: Labirin";
+  else if (!q.glass) txt = "🪞 Lorong 2: temukan jalan keluar Rumah Kaca";
+  else if (!gardenUnlocked()) txt = `🧩 Lorong 3: teka-teki ${q.riddles.length}/10`;
+  else txt = "🌷 Taman Apresiasi terbuka · ambil sertifikatmu!";
+  h.hidden = false;
+  h.textContent = txt;
+}
+function showQuestCard() {
+  const q = Q(), ck = (b) => b ? "✅" : "⬜";
+  const labs = LAB_IDS.map((id) => `<li>${ck(q.labs.includes(id))} Masuk Lab ${LABS[id].code}</li>`).join("");
+  const bots = LAB_IDS.map((id) => `<li>${ck(q.bots.includes(id))} Bertanya pada robot ${LABS[id].bot.name}</li>`).join("");
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🗝 Misi Rahasia</h2>
+  <p>Di galeri ini tersembunyi tiga lorong rahasia yang tidak tampil di denah. Pintunya baru terbuka setelah kamu masuk ke <b>keempat lab peminatan</b> dan <b>berbicara dengan setiap robot pemandunya</b> (ajukan minimal satu pertanyaan).</p>
+  <ul class="qlist">${labs}${bots}</ul>
+  <ul class="qlist"><li>${ck(questUnlocked())} Pintu rahasia terbuka</li><li>${ck(q.maze)} Lorong 1 · Labirin</li><li>${ck(q.glass)} Lorong 2 · Rumah Kaca</li><li>${ck(gardenUnlocked())} Lorong 3 · 10 teka-teki (${q.riddles.length}/10)</li><li>${ck(!!q.cert)} Sertifikat dari Taman Apresiasi</li></ul>
+  <p style="font-size:12px;color:var(--mut)">Progres tersimpan di browser ini atas nama <b id="qnm"></b>.</p>`);
+  $("qnm").textContent = S.name || "-";
+}
+
+// ---------- helper geometri ----------
+function xCol(ax, az, bx, bz, r = 0.16) {
+  const c = { a: [ax, az], b: [bx, bz], r, secret: true, bb: [Math.min(ax, bx) - r, Math.max(ax, bx) + r, Math.min(az, bz) - r, Math.max(az, bz) + r] };
+  world.colliders.push(c);
+  return c;
+}
+function xBox(w, h, d, mat, x, y, z, ry = 0, parent) {
+  const m = new THREE2.Mesh(new THREE2.BoxGeometry(w, h, d), mat);
+  m.position.set(x, y, z);
+  m.rotation.y = ry;
+  (parent || scene).add(m);
+  return m;
+}
+function xWall(ax, az, bx, bz, h, mat, thick = 0.3, cam = true) {
+  const len = Math.hypot(bx - ax, bz - az);
+  const m = new THREE2.Mesh(new THREE2.BoxGeometry(len + thick, h, thick), mat);
+  m.position.set((ax + bx) / 2, h / 2, (az + bz) / 2);
+  m.rotation.y = -Math.atan2(bz - az, bx - ax);
+  (cam ? world.walls : scene).add(m);
+  xCol(ax, az, bx, bz, thick / 2 + 0.01);
+  return m;
+}
+// dinding keliling ruang dengan celah: gaps = { N:[[a,b]], S:[...], W:[...], E:[...] }
+function xRoomWalls(R, gaps, h, mat) {
+  const side = (fixed, lo, hi, list, horiz) => {
+    let cur = lo;
+    for (const [a, b] of (list || []).slice().sort((p, q) => p[0] - q[0])) {
+      if (a > cur) horiz ? xWall(cur, fixed, a, fixed, h, mat) : xWall(fixed, cur, fixed, a, h, mat);
+      cur = b;
+    }
+    if (cur < hi) horiz ? xWall(cur, fixed, hi, fixed, h, mat) : xWall(fixed, cur, fixed, hi, h, mat);
+  };
+  side(R.z0, R.x0, R.x1, gaps.N, true);
+  side(R.z1, R.x0, R.x1, gaps.S, true);
+  side(R.x0, R.z0, R.z1, gaps.W, false);
+  side(R.x1, R.z0, R.z1, gaps.E, false);
+}
+function xFloor(R, mat, y = 0) {
+  const m = new THREE2.Mesh(new THREE2.PlaneGeometry(R.x1 - R.x0, R.z1 - R.z0), mat);
+  m.rotation.x = -Math.PI / 2;
+  m.position.set((R.x0 + R.x1) / 2, y, (R.z0 + R.z1) / 2);
+  m.receiveShadow = true;
+  scene.add(m);
+  world.floors.push(m);
+  return m;
+}
+function xCeil(R, mat, h) {
+  const m = new THREE2.Mesh(new THREE2.PlaneGeometry(R.x1 - R.x0, R.z1 - R.z0), mat);
+  m.rotation.x = Math.PI / 2;
+  m.position.set((R.x0 + R.x1) / 2, h, (R.z0 + R.z1) / 2);
+  world.walls.add(m); // ikut menahan kamera (tidak bisa mengintip dari atas)
+  return m;
+}
+function xTex(c, rep) {
+  const t2 = new THREE2.CanvasTexture(c);
+  t2.colorSpace = THREE2.SRGBColorSpace;
+  t2.anisotropy = 8;
+  if (rep) { t2.wrapS = t2.wrapT = THREE2.RepeatWrapping; t2.repeat.set(rep[0], rep[1]); }
+  return t2;
+}
+function xPlane(c, w, h) {
+  const m = new THREE2.Mesh(new THREE2.PlaneGeometry(w, h), new THREE2.MeshBasicMaterial({ map: xTex(c), toneMapped: false, transparent: true }));
+  m.userData.canvas = c;
+  return m;
+}
+function xLoad(src) {
+  if (XT.imgs[src]) return XT.imgs[src];
+  return XT.imgs[src] = new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+}
+function xCover(ctx, im, x, y, w, h) {
+  if (!im) return;
+  const s = Math.max(w / im.width, h / im.height), iw = im.width * s, ih = im.height * s;
+  ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+  ctx.drawImage(im, x + (w - iw) / 2, y + (h - ih) / 2, iw, ih);
+  ctx.restore();
+}
+var xAct = (m, act) => { m.userData.act = act; world.interact.push(m); return m; };
+function genMaze(N, seed, startC, endC, loops) {
+  const R = rndGen(seed), hW = [], vW = [], seen = [];
+  for (let r = 0; r <= N; r++) { hW.push(Array(N).fill(true)); vW.push(Array(N + 1).fill(true)); seen.push(Array(N).fill(false)); }
+  const st = [[N - 1, startC]];
+  seen[N - 1][startC] = true;
+  while (st.length) {
+    const [r, c] = st[st.length - 1];
+    const nb = [[r - 1, c, "N"], [r + 1, c, "S"], [r, c - 1, "W"], [r, c + 1, "E"]].filter(([a, b]) => a >= 0 && a < N && b >= 0 && b < N && !seen[a][b]);
+    if (!nb.length) { st.pop(); continue; }
+    const [a, b, d] = nb[Math.floor(R() * nb.length)];
+    if (d === "N") hW[r][c] = false; else if (d === "S") hW[r + 1][c] = false; else if (d === "W") vW[r][c] = false; else vW[r][c + 1] = false;
+    seen[a][b] = true;
+    st.push([a, b]);
+  }
+  for (let k = 0; k < Math.floor(N * N * loops); k++) {
+    const r = 1 + Math.floor(R() * (N - 2)), c = 1 + Math.floor(R() * (N - 2));
+    if (R() < 0.5) hW[r][c] = false; else vW[r][c] = false;
+  }
+  hW[N][startC] = false;
+  hW[0][endC] = false;
+  return { hW, vW, N };
+}
+
+// ---------- logo Prodi TI (3D) ----------
+function buildLogo(parent, size) {
+  const s = size / 1000, P2 = (x, y) => new THREE2.Vector2((x - 500) * s, (500 - y) * s);
+  const shape = (pts) => { const sh = new THREE2.Shape(); pts.forEach(([x, y], i) => i ? sh.lineTo(P2(x, y).x, P2(x, y).y) : sh.moveTo(P2(x, y).x, P2(x, y).y)); sh.closePath(); return sh; };
+  const parts = [
+    ["#7f00ff", [[18, 26], [744, 26], [963, 229], [18, 229]]], ["#7f00ff", [[287, 229], [511, 229], [511, 930], [287, 930]]],
+    ["#e000ff", [[744, 26], [963, 26], [963, 229]]],
+    ["#eb5efd", [[738, 229], [963, 229], [963, 464]]], ["#e000ff", [[738, 229], [963, 464], [738, 464]]],
+    ["#eb5efd", [[738, 464], [963, 464], [738, 697]]], ["#e000ff", [[963, 464], [963, 697], [738, 697]]],
+    ["#e000ff", [[738, 697], [738, 930], [963, 930]]], ["#eb5efd", [[738, 697], [963, 697], [963, 930]]]
+  ];
+  const g = new THREE2.Group();
+  parts.forEach(([col, pts], i) => {
+    const geo = new THREE2.ExtrudeGeometry(shape(pts), { depth: 0.14 + (col === "#7f00ff" ? 0.06 : 0), bevelEnabled: true, bevelSize: 0.012, bevelThickness: 0.012, bevelSegments: 2 });
+    const m = new THREE2.Mesh(geo, new THREE2.MeshStandardMaterial({ color: new THREE2.Color(col), emissive: new THREE2.Color(col), emissiveIntensity: 0.25, roughness: 0.35, metalness: 0.25 }));
+    m.castShadow = true;
+    g.add(m);
+  });
+  parent.add(g);
+  return g;
+}
+
+// ---------- KURI: robot kurikulum & visi misi ----------
+var KURI_KB = [];
+function buildKuriKB() {
+  const add = (title, text, answer, card) => KURI_KB.push({ title, text: title + ". " + text, answer: answer || text, card });
+  add("Visi program studi teknik informatika", KUR.visiProdi, `Visi Prodi Teknik Informatika UIKA: “${KUR.visiProdi}”`, "visi");
+  add("Misi program studi teknik informatika", KUR.misiProdi.join(" "), "Misi Prodi TI UIKA:\n" + KUR.misiProdi.map((m, i) => `${i + 1}. ${m}`).join("\n"), "visi");
+  add("Tujuan pendidikan program studi TP", KUR.tujuan.map((t2) => t2.join(" ")).join(" "), "Tujuan Pendidikan Prodi TI:\n" + KUR.tujuan.map(([k, v]) => `${k} — ${v}`).join("\n"), "visi");
+  add("Visi misi universitas UIKA Ibn Khaldun", KUR.visiUniv + " " + KUR.misiUniv.join(" "), `Visi Universitas Ibn Khaldun Bogor: “${KUR.visiUniv}”\nMisi:\n` + KUR.misiUniv.map((m, i) => `${i + 1}. ${m}`).join("\n"));
+  add("Visi misi fakultas teknik dan sains FTS", KUR.visiFak + " " + KUR.misiFak.join(" "), `Visi Fakultas Teknik dan Sains: “${KUR.visiFak}”\nMisi:\n` + KUR.misiFak.map((m, i) => `${i + 1}. ${m}`).join("\n"));
+  add("Profil lulusan PL", KUR.profil.map((p) => p.join(" ")).join(" "), "Profil Lulusan Prodi TI:\n" + KUR.profil.map(([k, v]) => `${k} — ${v}`).join("\n"), "profil");
+  add("Profesi karier kerja prospek pekerjaan lulusan", KUR.profesi.map((p) => p.join(" ")).join(" "), "Profesi lulusan TI (Tabel 4.2):\n" + KUR.profesi.map(([k, v]) => `• ${k}: ${v}`).join("\n"), "profil");
+  add("Capaian pembelajaran lulusan CPL", KUR.cpl.map((c) => c.join(" ")).join(" "), "Capaian Pembelajaran Lulusan (CPL) Prodi TI:\n" + KUR.cpl.map(([k, v]) => `${k} — ${v}`).join("\n"), "cpl");
+  KUR.cpl.forEach(([k, v]) => add(k + " " + k.toLowerCase().replace("cpl0", "cpl "), v, `${k}: ${v}`, "cpl"));
+  KUR.profil.forEach(([k, v]) => add(k + " profil lulusan", v, `${k}: ${v}`, "profil"));
+  add("Bahan kajian body of knowledge BK", KUR.bk.join(" "), "23 Bahan Kajian (BK) kurikulum TI:\n" + KUR.bk.map((b, i) => `BK${String(i + 1).padStart(2, "0")} ${b}`).join("\n"));
+  add("Mata kuliah pilihan peminatan elektif", KUR.pilihan.join(" "), "17 Mata Kuliah Pilihan (diambil 5 MK, total 15 SKS, mulai semester 5):\n" + KUR.pilihan.map((m, i) => `${i + 1}. ${m}`).join("\n"), "mk");
+  for (const [s, list] of Object.entries(KUR.sem)) {
+    const tot = list.reduce((a, b) => a + b[2], 0);
+    add(`Mata kuliah semester ${s}`, list.map((m) => m[1]).join(" "), `Mata kuliah semester ${s} (${tot} SKS):\n` + list.map(([k, n, x]) => `• ${n} — ${x} SKS${k.includes("*") ? "" : " (" + k + ")"}`).join("\n"), "mk");
+    for (const [k, n, x] of list) if (!k.includes("*")) {
+      const p = KUR.pengampu.filter((d) => d[2].toLowerCase().includes(n.toLowerCase().replace(/ \+ praktikum| \(kp\)| \(kkn\)/g, "").split(" ").slice(0, 2).join(" ")));
+      add(`${n} ${k}`, `mata kuliah ${n} kode ${k} semester ${s}`, `${n} (${k}) adalah mata kuliah semester ${s} dengan bobot ${x} SKS.` + (p.length ? ` Pengampu menurut Tabel 10.1: ${p.map((d) => d[0]).join("; ")}.` : ""));
+    }
+  }
+  KUR.pengampu.forEach(([n, lab, mk]) => add(`Dosen ${n}`, `${n} ${lab} mengampu ${mk}`, `${n} — rumpun/lab ${lab}. Mengampu: ${mk}.`));
+  add("Daftar dosen pengampu tim pengajar", KUR.pengampu.map((d) => d[0]).join(" "), "Tim pengajar Prodi TI (Tabel 10.1):\n" + KUR.pengampu.map(([n, lab]) => `• ${n} — ${lab}`).join("\n"));
+  add("Identitas program studi", Object.values(KUR.identitas).join(" "), `Identitas Prodi: ${KUR.identitas.prodi}, ${KUR.identitas.fak}, ${KUR.identitas.pt}. Akreditasi ${KUR.identitas.akreditasi}. ${KUR.identitas.mhs}, ${KUR.identitas.dosen}.`);
+  KUR.faq.forEach(([k, a]) => add(k, a, a));
+  const df = {};
+  KURI_KB.forEach((d) => { d.tk = new Set(toks(d.text)); d.tt = new Set(toks(d.title)); d.tk.forEach((x) => df[x] = (df[x] || 0) + 1); });
+  KURI_KB.idf = {};
+  for (const k in df) KURI_KB.idf[k] = Math.log(1 + KURI_KB.length / df[k]);
+}
+var SEM_WORD = { satu: 1, pertama: 1, dua: 2, kedua: 2, tiga: 3, ketiga: 3, empat: 4, keempat: 4, lima: 5, kelima: 5, enam: 6, keenam: 6, tujuh: 7, ketujuh: 7, delapan: 8, kedelapan: 8, akhir: 8 };
+function kuriAnswer(q) {
+  const ql = norm(q).trim(), acts = [];
+  const card = (k, label) => acts.push([label, () => kuriCard(k)]);
+  if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql))
+    return { text: `Halo ${S.name || "IT'ers"}! Aku KURI, robot kurikulum Prodi Teknik Informatika UIKA. Aku hafal buku Kurikulum OBE 2025: visi-misi, tujuan, profil lulusan, CPL, sebaran mata kuliah per semester, mata kuliah pilihan, dosen pengampu, sampai hasil tracer study. Mau tanya apa?`, acts: [["📜 Visi & Misi", () => kuriCard("visi")], ["🎓 Profil Lulusan", () => kuriCard("profil")], ["📚 Struktur Kurikulum", () => kuriCard("mk")], ["🎯 CPL", () => kuriCard("cpl")]] };
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Semoga studimu di Teknik Informatika lancar dan berkah 😊" };
+  if (/\bkuis|quiz|tebak|uji saya\b/.test(ql)) {
+    const pool = [["Visi Prodi TI menargetkan keunggulan di bidang riset…", ["Keruangan (spasial)", "Kedokteran", "Ekonomi syariah"], 0], ["Total SKS kurikulum OBE TI adalah…", ["120 SKS", "145 SKS", "160 SKS"], 1], ["Mata kuliah Kecerdasan Buatan ada di semester…", ["2", "4", "7"], 1], ["Akreditasi Prodi TI dari LAM-INFOKOM adalah…", ["Baik", "Baik Sekali", "Unggul"], 1], ["Prodi TI UIKA resmi dibuka pada tahun…", ["1961", "2003", "2015"], 1], ["Berapa jumlah CPL pada kurikulum OBE TI?", ["5", "10", "23"], 1]];
+    const [qq, opts, a] = pool[Math.floor(Math.random() * pool.length)];
+    return { text: "🎯 " + qq, quiz: { opts, a } };
+  }
+  // semester tertentu
+  let sm = ql.match(/semester\s*(\d)/), sn = sm ? +sm[1] : 0;
+  if (!sn) { const w = ql.match(/semester\s+(\w+)/); if (w && SEM_WORD[w[1]]) sn = SEM_WORD[w[1]]; }
+  if (sn >= 1 && sn <= 8 && !/pilihan/.test(ql)) {
+    const list = KUR.sem[sn], tot = list.reduce((a, b) => a + b[2], 0);
+    card("mk", "📚 Lihat tabel semua semester");
+    return { text: `Mata kuliah semester ${sn} (${tot} SKS):\n` + list.map(([k, n, x]) => `• ${n} — ${x} SKS${k.includes("*") ? "" : " (" + k + ")"}`).join("\n"), acts };
+  }
+  const cplm = ql.match(/cpl\s*0?(\d{1,2})\b/);
+  if (cplm && +cplm[1] >= 1 && +cplm[1] <= 10) { const c = KUR.cpl[+cplm[1] - 1]; card("cpl", "🎯 Semua CPL"); return { text: `${c[0]}: ${c[1]}`, acts }; }
+  if (/\bvisi\b|\bmisi\b/.test(ql)) {
+    if (/universitas|uika|kampus/.test(ql)) return { text: `Visi Universitas Ibn Khaldun Bogor: “${KUR.visiUniv}”\nMisi:\n` + KUR.misiUniv.map((m, i) => `${i + 1}. ${m}`).join("\n") };
+    if (/fakultas|fts/.test(ql)) return { text: `Visi Fakultas Teknik dan Sains: “${KUR.visiFak}”\nMisi:\n` + KUR.misiFak.map((m, i) => `${i + 1}. ${m}`).join("\n") };
+    card("visi", "📜 Kartu Visi, Misi & Tujuan");
+    if (/\bmisi\b/.test(ql) && !/\bvisi\b/.test(ql)) return { text: "Misi Prodi Teknik Informatika:\n" + KUR.misiProdi.map((m, i) => `${i + 1}. ${m}`).join("\n"), acts };
+    return { text: `Visi Prodi Teknik Informatika UIKA:\n“${KUR.visiProdi}”\n\nMisinya ada empat: pendidikan informatika yang unggul & adaptif, riset inovatif berbasis data & teknologi spasial, pengabdian berbasis riset, serta penanaman nilai keislaman. Mau kubacakan lengkap?`, acts: acts.concat([["Baca misi lengkap", () => askNpc("misi prodi")]]) };
+  }
+  if (/\btujuan\b/.test(ql)) { card("visi", "📜 Kartu Visi, Misi & Tujuan"); return { text: "Tujuan Pendidikan Prodi TI:\n" + KUR.tujuan.map(([k, v]) => `${k} — ${v}`).join("\n"), acts }; }
+  if (/profil lulusan|\bpl ?0?\d\b/.test(ql)) { card("profil", "🎓 Kartu Profil Lulusan"); return { text: "Profil Lulusan Prodi TI:\n" + KUR.profil.map(([k, v]) => `${k} — ${v}`).join("\n"), acts }; }
+  if (/\bcpl\b|capaian pembelajaran/.test(ql)) { card("cpl", "🎯 Kartu CPL"); return { text: "Ada 10 CPL. Ringkasnya: CPL01 sikap religius & etika, CPL02 penguasaan iptek & berpikir kritis, CPL03 prinsip dasar informatika, CPL04 analisis masalah komputasi, CPL05 merancang solusi TI, CPL06 mengelola & menganalisis data, CPL07 algoritma, CPL08 UI/UX & aplikasi interaktif, CPL09 metodologi penelitian, kewirausahaan & manajemen proyek, CPL10 komunikasi efektif. Ketik misalnya “CPL06” untuk detail.", acts }; }
+  if (/pilihan|elektif/.test(ql)) { card("mk", "📚 Struktur kurikulum"); return { text: "17 Mata Kuliah Pilihan (mulai semester 5):\n" + KUR.pilihan.map((m, i) => `${i + 1}. ${m}`).join("\n"), acts }; }
+  if (/kaprodi|ketua prodi|kepala prodi|kepala program|ketua program/.test(ql)) return { text: KUR.faq.find((f2) => f2[0].startsWith("kaprodi"))[1], acts: [["🖼 Lihat galeri Ka Prodi", () => teleport(-6.2, 21, -Math.PI / 2)]] };
+  // pencarian umum
+  const qt = toks(q);
+  if (!qt.length) return { text: "Coba tanyakan visi-misi, tujuan, profil lulusan, CPL, mata kuliah semester tertentu, mata kuliah pilihan, dosen pengampu, akreditasi, atau tracer study." };
+  const idf = KURI_KB.idf, avg = KURI_KB.reduce((a, d) => a + d.tk.size, 0) / KURI_KB.length;
+  const res = KURI_KB.map((d) => {
+    let s = 0;
+    for (const t2 of qt) {
+      if (d.tk.has(t2)) s += idf[t2] || 1;
+      else for (const u of d.tk) if (u.length > 3 && t2.length > 3 && (u.startsWith(t2) || t2.startsWith(u))) { s += (idf[u] || 1) * 0.5; break; }
+      if (d.tt.has(t2)) s += (idf[t2] || 1) * 0.9;
+    }
+    s /= 0.6 + 0.4 * d.tk.size / avg;
+    return { d, s };
+  }).filter((x) => x.s > 0.7).sort((a, b) => b.s - a.s);
+  if (!res.length) return { text: "Hmm, aku belum menemukan jawabannya di buku kurikulum. Coba tanyakan: visi misi prodi, profil lulusan, CPL, mata kuliah semester 3, mata kuliah pilihan, total SKS, akreditasi, atau dosen pengampu Machine Learning.", acts: [["📜 Visi & Misi", () => kuriCard("visi")], ["📚 Struktur Kurikulum", () => kuriCard("mk")]] };
+  const top = res[0].d;
+  if (top.card) card(top.card, { visi: "📜 Kartu Visi & Misi", profil: "🎓 Kartu Profil Lulusan", cpl: "🎯 Kartu CPL", mk: "📚 Struktur Kurikulum" }[top.card]);
+  return { text: top.answer, acts };
+}
+function kuriCard(k) {
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  let html = `<button class="x" id="gx" aria-label="Tutup">×</button>`;
+  if (k === "visi") {
+    html += `<h2>Visi, Misi & Tujuan</h2><p class="kk">Program Studi Teknik Informatika · Fakultas Teknik dan Sains · UIKA Bogor</p>
+    <div class="kbox"><b>VISI</b><p>“${esc(KUR.visiProdi)}”</p></div>
+    <div class="kbox"><b>MISI</b><ol>${KUR.misiProdi.map((m) => `<li>${esc(m)}</li>`).join("")}</ol></div>
+    <div class="kbox"><b>TUJUAN PENDIDIKAN</b><ol>${KUR.tujuan.map(([kk, v]) => `<li><b>${kk}</b> ${esc(v)}</li>`).join("")}</ol></div>`;
+  } else if (k === "profil") {
+    html += `<h2>Profil Lulusan & Profesi</h2><div class="kbox"><b>PROFIL LULUSAN</b><ol>${KUR.profil.map(([kk, v]) => `<li><b>${kk}</b> ${esc(v)}</li>`).join("")}</ol></div>
+    <div class="kbox"><b>PROFESI LULUSAN</b><table class="ktab">${KUR.profesi.map(([p, b]) => `<tr><td>${esc(p)}</td><td>${esc(b)}</td></tr>`).join("")}</table></div>`;
+  } else if (k === "cpl") {
+    html += `<h2>Capaian Pembelajaran Lulusan</h2><p class="kk">10 CPL Kurikulum OBE, dipetakan ke KKNI level 6</p><table class="ktab">${KUR.cpl.map(([kk, v]) => `<tr><td><b>${kk}</b></td><td>${esc(v)}</td></tr>`).join("")}</table>`;
+  } else {
+    html += `<h2>Struktur Kurikulum OBE</h2><p class="kk">145 SKS · 8 semester · 133 SKS wajib + 12 SKS pilihan</p><div class="kgrid">${Object.entries(KUR.sem).map(([s, list]) => `<div class="kbox"><b>SEMESTER ${s} · ${list.reduce((a, b) => a + b[2], 0)} SKS</b><ul>${list.map(([kk, n, x]) => `<li>${esc(n)} <span>${x} sks</span></li>`).join("")}</ul></div>`).join("")}</div>
+    <div class="kbox"><b>MATA KULIAH PILIHAN</b><ul class="kcols">${KUR.pilihan.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>`;
+  }
+  html += `<div class="rowf" style="margin-top:12px"><button class="ghost kc" data-k="visi">Visi & Misi</button><button class="ghost kc" data-k="profil">Profil Lulusan</button><button class="ghost kc" data-k="cpl">CPL</button><button class="ghost kc" data-k="mk">Struktur Kurikulum</button><button class="btn" id="kAsk">Tanya KURI</button></div>`;
+  genCard(html);
+  $("genCard").classList.add("wide");
+  document.querySelectorAll("#genCard .kc").forEach((b) => b.onclick = () => kuriCard(b.dataset.k));
+  $("kAsk").onclick = () => { closeGen(); openNpc("kuri", "chat"); };
+}
+function makeCustomRobot(id, cfg) {
+  LABS[id] = { code: cfg.code, col: cfg.col, bot: { name: cfg.name, role: cfg.role, body: cfg.body, accent: cfg.accent, eye: cfg.eye }, chips: cfg.chips, greet: cfg.greet, faq: [], quiz: [] };
+  NPC_POS[id] = { x: cfg.x, z: cfg.z, room: cfg.room };
+  const n = makeRobot(id);
+  n.lab = null;
+  n.custom = cfg;
+  n.room = cfg.room;
+  n.secret = !!cfg.secret;
+  n.pitch = cfg.pitch || 1.1;
+  if (n.holoG) {
+    n.holoG.clear();
+    const c = mkCanvas(256, 256), x = c.getContext("2d");
+    x.font = `200px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+    x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(cfg.icon, 128, 140);
+    const sp = spriteFrom(c, 0.34);
+    n.holoG.add(sp);
+  }
+  NPCS[id] = n;
+  return n;
+}
+
+// ---------- pintu rahasia di Lab SE ----------
+function buildSecretDoor() {
+  // material dinding SE dipinjam dari dinding yang sudah ada agar menyatu
+  let wm = null;
+  world.walls.traverse((o) => { if (!wm && o.isMesh && Math.abs(o.position.z + 38) < 0.2 && o.position.x > 0 && o.position.x < 19) wm = Array.isArray(o.material) ? o.material[4] : o.material; });
+  wm = wm || new THREE2.MeshStandardMaterial({ color: 0xdfe3ff });
+  xBox(2.4 + 0.3, 2.5, 0.3, wm, 21, 3.0 + 1.25, -38, 0, world.walls); // ambang atas
+  const g = new THREE2.Group();
+  g.position.set(21, 0, -38);
+  scene.add(g);
+  const panel = new THREE2.Mesh(new THREE2.BoxGeometry(2.4, 3.0, 0.26), wm);
+  panel.position.y = 1.5;
+  g.add(panel);
+  world.walls.add(g); // ikut menahan kamera
+  // simbol </> tipis — hanya terlihat jelas saat pintu aktif
+  const c = mkCanvas(256, 128), x = c.getContext("2d");
+  x.fillStyle = "#6366f1"; x.font = `700 92px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("</>", 128, 66);
+  const glyph = xPlane(c, 0.6, 0.3);
+  glyph.position.set(0, 2.2, 0.14);
+  glyph.material.opacity = 0.18;
+  g.add(glyph);
+  const edgeM = new THREE2.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0, toneMapped: false });
+  for (const [w, h, ex, ey] of [[2.5, 0.05, 0, 3.02], [0.05, 3, -1.23, 1.5], [0.05, 3, 1.23, 1.5]]) { const e = new THREE2.Mesh(new THREE2.BoxGeometry(w, h, 0.32), edgeM); e.position.set(21 + ex, ey, -38); scene.add(e); }
+  const col = xCol(19.8, -38, 22.2, -38, 0.16);
+  xAct(panel, { type: "x_door" });
+  const D = XT.door = { g, panel, glyph, edgeM, col, open: false, k: 0, setOpen(v) { D.open = v; col.off = v; } };
+  XT.anim.push((dt) => {
+    const tgt = D.open ? 1 : 0;
+    D.k += (tgt - D.k) * Math.min(1, dt * 1.6);
+    D.panel.position.y = 1.5 + D.k * 3.05;
+    edgeM.opacity = D.open ? 0.6 + Math.sin(t * 3) * 0.3 : 0;
+    glyph.material.opacity = D.open ? 0.9 : 0.18;
+  });
+  D.setOpen(questUnlocked());
+  D.k = D.open ? 1 : 0;
+  // lorong pendek gelap
+  const R = SECRET_ROOMS.s_tunnel, stone = new THREE2.MeshStandardMaterial({ color: 0x1b1730, roughness: 0.9 });
+  xRoomWalls(R, { S: [[19.8, 22.2]], N: [[19.8, 22.2]] }, 3.4, stone);
+  xFloor(R, new THREE2.MeshStandardMaterial({ color: 0x14112a, roughness: 0.8 }));
+  xCeil(R, stone, 3.4);
+  for (let z = -39.5; z > -44; z -= 1.5) { const s = world.glowSprite("#22d3ee", 0.6, 0.8); s.position.set(20, 2.6, z); scene.add(s); const s2 = world.glowSprite("#a78bfa", 0.6, 0.8); s2.position.set(22, 2.6, z - 0.7); scene.add(s2); }
+}
+
+// ---------- LORONG 1: LABIRIN ----------
+function buildMaze() {
+  const R = SECRET_ROOMS.s_maze, C = 2.4, N = 15, X0 = R.x0, Z0 = R.z0, H = 3.6;
+  const mz = genMaze(N, 20251015, 7, 2, 0.06);
+  // lantai grid gelap
+  const fc = mkCanvas(256, 256), fx2 = fc.getContext("2d");
+  fx2.fillStyle = "#120f22"; fx2.fillRect(0, 0, 256, 256);
+  fx2.strokeStyle = "rgba(99,102,241,.35)"; fx2.lineWidth = 3; fx2.strokeRect(1.5, 1.5, 253, 253);
+  fx2.fillStyle = "rgba(34,211,238,.25)"; fx2.fillRect(120, 120, 16, 16);
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(fc, [N, N]), roughness: 0.6 }));
+  const cc = mkCanvas(256, 256), cx2 = cc.getContext("2d");
+  cx2.fillStyle = "#0b0918"; cx2.fillRect(0, 0, 256, 256);
+  const Rn = rndGen(77);
+  for (let i = 0; i < 40; i++) { cx2.fillStyle = `rgba(255,255,255,${0.2 + Rn() * 0.6})`; cx2.beginPath(); cx2.arc(Rn() * 256, Rn() * 256, Rn() * 1.6 + 0.4, 0, 7); cx2.fill(); }
+  xCeil(R, new THREE2.MeshBasicMaterial({ map: xTex(cc, [6, 6]), toneMapped: false }), H);
+  // dinding: digabung per baris/kolom, digambar sebagai InstancedMesh
+  const segs = [];
+  for (let r = 0; r <= N; r++) { let c0 = -1; for (let c = 0; c <= N; c++) { const w = c < N && mz.hW[r][c]; if (w && c0 < 0) c0 = c; if (!w && c0 >= 0) { segs.push([X0 + c0 * C, Z0 + r * C, X0 + c * C, Z0 + r * C]); c0 = -1; } } }
+  for (let c = 0; c <= N; c++) { let r0 = -1; for (let r = 0; r <= N; r++) { const w = r < N && mz.vW[r][c]; if (w && r0 < 0) r0 = r; if (!w && r0 >= 0) { segs.push([X0 + c * C, Z0 + r0 * C, X0 + c * C, Z0 + r * C]); r0 = -1; } } }
+  const wallM = new THREE2.MeshStandardMaterial({ color: 0x2a2147, roughness: 0.55, metalness: 0.2, emissive: 0x120c26, emissiveIntensity: 1 });
+  const im = new THREE2.InstancedMesh(new THREE2.BoxGeometry(1, 1, 1), wallM, segs.length);
+  const strip = new THREE2.InstancedMesh(new THREE2.BoxGeometry(1, 1, 1), new THREE2.MeshBasicMaterial({ color: 0x22d3ee, toneMapped: false }), segs.length * 2);
+  const o = new THREE2.Object3D();
+  segs.forEach(([ax, az, bx, bz], i) => {
+    const len = Math.hypot(bx - ax, bz - az) + 0.3;
+    o.position.set((ax + bx) / 2, H / 2, (az + bz) / 2); o.rotation.set(0, ax === bx ? Math.PI / 2 : 0, 0); o.scale.set(len, H, 0.3); o.updateMatrix(); im.setMatrixAt(i, o.matrix);
+    o.position.y = 1.0; o.scale.set(len - 0.02, 0.04, 0.32); o.updateMatrix(); strip.setMatrixAt(i * 2, o.matrix);
+    o.position.y = H - 0.08; o.updateMatrix(); strip.setMatrixAt(i * 2 + 1, o.matrix);
+    xCol(ax, az, bx, bz, 0.16);
+  });
+  im.castShadow = false;
+  world.walls.add(im);
+  scene.add(strip);
+  // orb cahaya melayang (penanda arah yang sengaja membingungkan)
+  const R2 = rndGen(9);
+  for (let i = 0; i < 26; i++) {
+    const s = world.glowSprite(["#22d3ee", "#a78bfa", "#f472b6"][i % 3], 0.5, 0.85);
+    const cx = X0 + (Math.floor(R2() * N) + 0.5) * C, cz = Z0 + (Math.floor(R2() * N) + 0.5) * C, ph = R2() * 6;
+    s.position.set(cx, 2.4, cz); scene.add(s);
+    XT.anim.push(() => { s.position.y = 2.3 + Math.sin(t * 1.3 + ph) * 0.25; });
+  }
+  // plakat masuk & keluar
+  const plaque = (txt, sub, x, z, ry) => {
+    const c = mkCanvas(1024, 300), cx3 = c.getContext("2d");
+    cx3.fillStyle = "rgba(10,8,24,.92)"; rr(cx3, 0, 0, 1024, 300, 30); cx3.fill();
+    cx3.strokeStyle = "#22d3ee"; cx3.lineWidth = 6; rr(cx3, 6, 6, 1012, 288, 26); cx3.stroke();
+    cx3.fillStyle = "#e9e5ff"; cx3.font = `700 84px ${FONT}`; cx3.textAlign = "center"; cx3.fillText(txt, 512, 130);
+    cx3.fillStyle = "#a5b4fc"; cx3.font = `400 40px ${FONT}`; cx3.fillText(sub, 512, 220);
+    const m = xPlane(c, 2.2, 0.64); m.position.set(x, 2.9, z); m.rotation.y = ry; scene.add(m);
+  };
+  plaque("LORONG 1 · LABIRIN", "Temukan jalan keluar di sisi utara", 21, -43.6, Math.PI);
+  plaque("RUMAH KACA ↑", "Lorong 2 menanti", 9, -80.4, Math.PI);
+}
+
+// ---------- LORONG 2: RUMAH KACA ----------
+function buildGlass() {
+  const R = SECRET_ROOMS.s_glass, C = 2.4, N = 10, X0 = R.x0, Z0 = R.z0, H = 3.3;
+  const mz = genMaze(N, 4242, 5, 8, 0.16);
+  const fc = mkCanvas(256, 256), x = fc.getContext("2d");
+  const g0 = x.createLinearGradient(0, 0, 256, 256); g0.addColorStop(0, "#eaf6ff"); g0.addColorStop(1, "#d6ecfb");
+  x.fillStyle = g0; x.fillRect(0, 0, 256, 256); x.strokeStyle = "rgba(56,189,248,.35)"; x.lineWidth = 2; x.strokeRect(1, 1, 254, 254);
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(fc, [N, N]), roughness: 0.08, metalness: 0.3 }));
+  xCeil(R, new THREE2.MeshStandardMaterial({ color: 0xf2fbff, emissive: 0xe0f2fe, emissiveIntensity: 0.9, roughness: 1 }), H + 0.2);
+  // dinding luar ruang kaca (buram) + pintu masuk/keluar
+  const opaque = new THREE2.MeshStandardMaterial({ color: 0xcfe8f7, roughness: 0.3, metalness: 0.4 });
+  const cube = new THREE2.WebGLCubeRenderTarget(128, { generateMipmaps: true, minFilter: THREE2.LinearMipmapLinearFilter });
+  const cubeCam = new THREE2.CubeCamera(0.1, 120, cube);
+  cubeCam.position.set((R.x0 + R.x1) / 2, 1.6, (R.z0 + R.z1) / 2);
+  scene.add(cubeCam);
+  const mirrorM = new THREE2.MeshStandardMaterial({ color: 0xf4fbff, metalness: 1, roughness: 0.03, envMap: cube.texture, envMapIntensity: 1.15 });
+  const clearM = new THREE2.MeshStandardMaterial({ color: 0x9fdcff, transparent: true, opacity: 0.13, roughness: 0.02, metalness: 0.1, depthWrite: false, side: THREE2.DoubleSide });
+  const panels = [];
+  const Rg = rndGen(31337);
+  for (let r = 0; r <= N; r++) for (let c = 0; c < N; c++) if (mz.hW[r][c]) panels.push([X0 + c * C, Z0 + r * C, X0 + (c + 1) * C, Z0 + r * C, r === 0 || r === N]);
+  for (let c = 0; c <= N; c++) for (let r = 0; r < N; r++) if (mz.vW[r][c]) panels.push([X0 + c * C, Z0 + r * C, X0 + c * C, Z0 + (r + 1) * C, c === 0 || c === N]);
+  const mir = [], clr = [];
+  panels.forEach((p) => (p[4] || Rg() < 0.62 ? mir : clr).push(p));
+  const o = new THREE2.Object3D();
+  const mk = (list, mat) => {
+    const im = new THREE2.InstancedMesh(new THREE2.BoxGeometry(1, 1, 1), mat, list.length);
+    list.forEach(([ax, az, bx, bz], i) => { o.position.set((ax + bx) / 2, H / 2, (az + bz) / 2); o.rotation.set(0, ax === bx ? Math.PI / 2 : 0, 0); o.scale.set(C - 0.04, H, 0.07); o.updateMatrix(); im.setMatrixAt(i, o.matrix); xCol(ax, az, bx, bz, 0.08); });
+    world.walls.add(im);
+    return im;
+  };
+  const mirIM = mk(mir, mirrorM);
+  for (const L of [SECRET_ROOMS.s_link1, SECRET_ROOMS.s_link2]) { const lm = new THREE2.MeshStandardMaterial({ color: 0x1d1838, roughness: 0.8 }); xRoomWalls(L, { N: [[L.x0, L.x1]], S: [[L.x0, L.x1]] }, 3.4, lm); xFloor(L, new THREE2.MeshStandardMaterial({ color: 0x17132b })); xCeil(L, lm, 3.4); const gs = world.glowSprite("#38bdf8", 0.8, 0.8); gs.position.set((L.x0 + L.x1) / 2, 2.9, (L.z0 + L.z1) / 2); scene.add(gs); }
+  mk(clr, clearM);
+  // tiang krom di setiap simpul & list atas-bawah tipis (sama untuk kaca bening & cermin → sulit dibedakan)
+  const nodes = [];
+  for (let r = 0; r <= N; r++) for (let c = 0; c <= N; c++) nodes.push([X0 + c * C, Z0 + r * C]);
+  const post = new THREE2.InstancedMesh(new THREE2.CylinderGeometry(0.05, 0.05, H, 10), new THREE2.MeshStandardMaterial({ color: 0xe5f6ff, metalness: 1, roughness: 0.15, envMap: cube.texture }), nodes.length);
+  nodes.forEach(([nx2, nz2], i) => { o.position.set(nx2, H / 2, nz2); o.rotation.set(0, 0, 0); o.scale.set(1, 1, 1); o.updateMatrix(); post.setMatrixAt(i, o.matrix); });
+  scene.add(post);
+  void opaque;
+  // pembaruan pantulan: hanya saat pemain di dalam rumah kaca
+  let acc = 9;
+  XT.glassUpdate = (dt, inside) => {
+    acc += dt;
+    if (!inside || acc < 3) return;
+    acc = 0;
+    mirIM.visible = false;
+    cubeCam.update(renderer, scene);
+    mirIM.visible = true;
+  };
+  const sign = mkCanvas(1024, 300), sx = sign.getContext("2d");
+  sx.fillStyle = "rgba(255,255,255,.92)"; rr(sx, 0, 0, 1024, 300, 30); sx.fill();
+  sx.fillStyle = "#0369a1"; sx.font = `700 80px ${FONT}`; sx.textAlign = "center"; sx.fillText("LORONG 2 · RUMAH KACA", 512, 128);
+  sx.fillStyle = "#334155"; sx.font = `400 38px ${FONT}`; sx.fillText("Tidak semua yang kau lihat adalah jalan…", 512, 218);
+  const sm = xPlane(sign, 2.2, 0.64); sm.position.set(9, 2.85, -83.7); sm.rotation.y = Math.PI; scene.add(sm);
+}
+
+// ---------- LORONG 3: TEKA-TEKI ----------
+function buildRiddles() {
+  const R = SECRET_ROOMS.s_riddle, H = 5;
+  const sc = mkCanvas(512, 512), x = sc.getContext("2d"), Rn = rndGen(555);
+  x.fillStyle = "#2b2235"; x.fillRect(0, 0, 512, 512);
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 4; c++) { const ox = (r % 2) * 64; x.fillStyle = `hsl(${265 + Rn() * 20},${12 + Rn() * 10}%,${16 + Rn() * 8}%)`; x.fillRect(c * 128 + ox - 64 + 3, r * 64 + 3, 122, 58); }
+  const stoneM = new THREE2.MeshStandardMaterial({ map: xTex(sc, [6, 2]), roughness: 0.95 });
+  xRoomWalls(R, { S: [[15, 17.4]], N: [[14.7, 17.7]] }, H, stoneM);
+  const fl = mkCanvas(512, 512), fx3 = fl.getContext("2d");
+  fx3.fillStyle = "#1c1626"; fx3.fillRect(0, 0, 512, 512);
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) { fx3.fillStyle = `hsl(270,10%,${12 + Rn() * 8}%)`; fx3.fillRect(c * 128 + 3, r * 128 + 3, 122, 122); }
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(fl, [3, 29]), roughness: 0.85 }));
+  xCeil(R, new THREE2.MeshStandardMaterial({ color: 0x120e1c, roughness: 1 }), H);
+  // obor & rune
+  for (let z = -114; z > -170; z -= 5.2) for (const sx2 of [13.4, 19.0]) {
+    xBox(0.12, 0.5, 0.12, new THREE2.MeshStandardMaterial({ color: 0x3f3a4a }), sx2, 2.6, z);
+    const fl2 = world.glowSprite("#f59e0b", 0.9, 0.95); fl2.position.set(sx2, 3.0, z); scene.add(fl2);
+    const ph = Math.random() * 6; XT.anim.push(() => { fl2.material.opacity = 0.75 + Math.sin(t * 9 + ph) * 0.15 + Math.sin(t * 23 + ph) * 0.08; });
+  }
+  const fieldTex = (() => { const c = mkCanvas(64, 256), y = c.getContext("2d"); for (let i = 0; i < 256; i += 16) { y.fillStyle = `rgba(167,139,250,${i % 32 ? 0.35 : 0.8})`; y.fillRect(0, i, 64, 4); } return xTex(c, [6, 2]); })();
+  XT.gates = [];
+  for (let i = 0; i < 10; i++) {
+    const z = -117.5 - i * 5.2, g = new THREE2.Group();
+    g.position.set(16.2, 0, z);
+    scene.add(g);
+    for (const sx2 of [-2.85, 2.85]) { const p = xBox(0.3, H, 0.4, new THREE2.MeshStandardMaterial({ color: 0x3b2f52, roughness: 0.6 }), sx2, H / 2, 0, 0, g); void p; }
+    const fm = new THREE2.MeshBasicMaterial({ map: fieldTex, color: 0xa78bfa, transparent: true, opacity: 0.55, side: THREE2.DoubleSide, depthWrite: false, blending: THREE2.AdditiveBlending, toneMapped: false });
+    const field = new THREE2.Mesh(new THREE2.PlaneGeometry(5.4, H - 0.2), fm);
+    field.position.y = (H - 0.2) / 2;
+    g.add(field);
+    const numC = mkCanvas(256, 256), nx = numC.getContext("2d");
+    nx.fillStyle = "#f5d0fe"; nx.font = `700 150px ${FONT}`; nx.textAlign = "center"; nx.textBaseline = "middle"; nx.fillText(String(i + 1), 128, 136);
+    const num = xPlane(numC, 0.7, 0.7); num.position.set(0, H - 0.6, 0.06); num.rotation.y = 0; g.add(num);
+    const col = xCol(13.2, z, 19.2, z, 0.12);
+    // tablet teka-teki (sebelum gerbang)
+    const tab = new THREE2.Group(); tab.position.set(14.1, 0, z + 2.0); tab.rotation.y = Math.PI / 2; scene.add(tab);
+    xBox(0.7, 1.0, 0.45, new THREE2.MeshStandardMaterial({ color: 0x3b2f52, roughness: 0.6 }), 0, 0.5, 0, 0, tab);
+    const tc = mkCanvas(640, 400);
+    const scr = xPlane(tc, 0.95, 0.6); scr.position.set(0, 1.25, 0.12); scr.rotation.x = -0.35; tab.add(scr);
+    xAct(scr, { type: "x_riddle", i });
+    world.circles.push({ x: 14.1, z: z + 2.0, r: 0.45 });
+    const G = { i, z, g, field, fm, col, scr, tc, k: 0 };
+    drawTablet(G);
+    XT.gates.push(G);
+  }
+  // gerbang taman
+  const gg = new THREE2.Group(); gg.position.set(16.2, 0, -170); scene.add(gg);
+  const goldM = new THREE2.MeshStandardMaterial({ color: 0xf5c66b, metalness: 0.85, roughness: 0.25, emissive: 0x3a2a00 });
+  for (const sx2 of [-1.75, 1.75]) xBox(0.35, 4.2, 0.45, goldM, sx2, 2.1, 0, 0, gg);
+  const arch = new THREE2.Mesh(new THREE2.TorusGeometry(1.75, 0.16, 12, 40, Math.PI), goldM); arch.position.y = 4.2; gg.add(arch);
+  const vm = new THREE2.MeshBasicMaterial({ color: 0x86efac, transparent: true, opacity: 0.45, side: THREE2.DoubleSide, depthWrite: false, toneMapped: false, blending: THREE2.AdditiveBlending });
+  const veil = new THREE2.Mesh(new THREE2.PlaneGeometry(3.2, 4.2), vm); veil.position.y = 2.1; gg.add(veil);
+  const gcol = xCol(14.7, -170, 17.7, -170, 0.12);
+  XT.gardenGate = { veil, vm, col: gcol };
+  const top = mkCanvas(1024, 220), tx = top.getContext("2d");
+  tx.fillStyle = "#fef3c7"; tx.font = `700 92px ${FONT}`; tx.textAlign = "center"; tx.fillText("TAMAN APRESIASI", 512, 130);
+  const tp = xPlane(top, 3.4, 0.73); tp.position.set(0, 5.0, 0.3); tp.rotation.y = Math.PI; gg.add(tp);
+  const head = mkCanvas(1024, 300), hx = head.getContext("2d");
+  hx.fillStyle = "rgba(20,14,30,.9)"; rr(hx, 0, 0, 1024, 300, 30); hx.fill(); hx.strokeStyle = "#f59e0b"; hx.lineWidth = 6; rr(hx, 6, 6, 1012, 288, 26); hx.stroke();
+  hx.fillStyle = "#fde68a"; hx.font = `700 78px ${FONT}`; hx.textAlign = "center"; hx.fillText("LORONG 3 · TEKA-TEKI", 512, 126);
+  hx.fillStyle = "#e9d5ff"; hx.font = `400 36px ${FONT}`; hx.fillText("Jawab 10 teka-teki — satu kata setiap jawaban", 512, 214);
+  const hp = xPlane(head, 2.6, 0.76); hp.position.set(16.2, 3.6, -112.4); hp.rotation.y = Math.PI; scene.add(hp);
+  refreshGates(true);
+}
+function drawTablet(G) {
+  const c = G.tc, x = c.getContext("2d"), solved = Q().riddles.includes(G.i);
+  x.clearRect(0, 0, 640, 400);
+  x.fillStyle = solved ? "#052e16" : "#160f24"; rr(x, 0, 0, 640, 400, 30); x.fill();
+  x.strokeStyle = solved ? "#4ade80" : "#a78bfa"; x.lineWidth = 8; rr(x, 6, 6, 628, 388, 26); x.stroke();
+  x.fillStyle = solved ? "#bbf7d0" : "#f5d0fe"; x.font = `700 58px ${FONT}`; x.textAlign = "center"; x.fillText(`TEKA-TEKI ${G.i + 1}`, 320, 110);
+  x.font = `400 34px ${FONT}`; x.fillStyle = "#e5e7eb";
+  x.fillText(solved ? "✓ Terjawab — gerbang terbuka" : "Klik untuk membaca & menjawab", 320, 200);
+  x.fillStyle = solved ? "#86efac" : "#c4b5fd"; x.font = `600 30px ${FONT}`; x.fillText(solved ? "Lanjutkan ke utara ↑" : "Jawaban: satu kata", 320, 300);
+  G.scr.material.map.needsUpdate = true;
+}
+function refreshGates(snap) {
+  const q = Q();
+  for (const G of XT.gates) { const open = q.riddles.includes(G.i); G.col.off = open; G.open = open; if (snap) G.k = open ? 1 : 0; drawTablet(G); }
+  if (XT.gardenGate) { XT.gardenGate.col.off = gardenUnlocked(); }
+}
+var riddleNorm = (s) => String(s).toLowerCase().normalize("NFKD").replace(/[^a-z]/g, "");
+function riddleHash(s) { let x = 2166136261; for (const ch of "itlab|" + riddleNorm(s)) { x ^= ch.charCodeAt(0); x = Math.imul(x, 16777619) >>> 0; } return x.toString(36); }
+function openRiddle(i) {
+  const q = Q(), [text, hs, h1, len] = RIDDLES[i];
+  if (q.riddles.includes(i)) { toast(`Teka-teki ${i + 1} sudah terjawab ✓`); return; }
+  if (i > 0 && !q.riddles.includes(i - 1)) { toast("Selesaikan teka-teki sebelumnya terlebih dahulu."); return; }
+  const tries = (q.tries && q.tries[i]) || 0;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🧩 Teka-teki ${i + 1} dari 10</h2>
+  <p class="riddle"></p>
+  <form id="rdF" class="rowf" autocomplete="off"><input type="text" id="rdIn" maxlength="30" placeholder="Jawaban satu kata" aria-label="Jawaban"><button class="btn" type="submit">Jawab</button></form>
+  <p id="rdMsg" style="min-height:22px;font-size:13px"></p><p id="rdHint" style="font-size:12.5px;color:var(--mut)"></p>`);
+  document.querySelector("#genCard .riddle").textContent = text;
+  const showHint = (n) => { if (n >= 3) $("rdHint").textContent = `Petunjuk: jawabannya diawali huruf “${h1}” dan terdiri dari ${len} huruf.`; else if (n > 0) $("rdHint").textContent = `Percobaan: ${n}. Petunjuk muncul setelah 3 kali mencoba.`; };
+  showHint(tries);
+  setTimeout(() => $("rdIn").focus(), 50);
+  $("rdF").onsubmit = (e) => {
+    e.preventDefault();
+    const v = $("rdIn").value.trim();
+    if (!v) return;
+    if (/\s/.test(v.trim()) && riddleNorm(v).length > 14) { $("rdMsg").textContent = "Jawabannya cukup satu kata."; return; }
+    if (hs.includes(riddleHash(v))) {
+      q.riddles.push(i); q.riddles = [...new Set(q.riddles)].sort((a, b) => a - b); saveQ();
+      closeGen(); refreshGates(false); updHud();
+      if (typeof SFX !== "undefined") SFX.chime();
+      spawnSparkle(); if (typeof mpFx === "function") mpFx();
+      toast(gardenUnlocked() ? "🌷 Semua teka-teki terjawab! Gerbang Taman Apresiasi terbuka." : `✅ Benar! Gerbang ${i + 1} terbuka.`, 4500);
+    } else {
+      q.tries = q.tries || {}; q.tries[i] = (q.tries[i] || 0) + 1; saveQ();
+      $("rdMsg").textContent = "❌ Belum tepat, coba lagi.";
+      $("rdMsg").style.color = "#f87171";
+      $("rdIn").select();
+      showHint(q.tries[i]);
+      if (typeof SFX !== "undefined") SFX.step();
+    }
+  };
+}
+
+// ---------- TAMAN APRESIASI ----------
+function buildGarden() {
+  const R = SECRET_ROOMS.s_garden, cx = 16.2, Rg = rndGen(2468);
+  // langit kubah (hanya terlihat di taman)
+  const sky = mkCanvas(32, 512), sk = sky.getContext("2d"), gr = sk.createLinearGradient(0, 0, 0, 512);
+  gr.addColorStop(0, "#3b82f6"); gr.addColorStop(0.45, "#93c5fd"); gr.addColorStop(0.62, "#fde7f3"); gr.addColorStop(1, "#fef3c7");
+  sk.fillStyle = gr; sk.fillRect(0, 0, 32, 512);
+  const dome = new THREE2.Mesh(new THREE2.SphereGeometry(150, 32, 16), new THREE2.MeshBasicMaterial({ map: xTex(sky), side: THREE2.BackSide, depthWrite: false, toneMapped: false, fog: false }));
+  dome.position.set(cx, 0, -203);
+  dome.visible = false;
+  scene.add(dome);
+  XT.dome = dome;
+  for (let i = 0; i < 9; i++) { const cl = world.glowSprite("#ffffff", 14 + Rg() * 10, 0.55); cl.material.fog = false; cl.position.set(cx - 70 + Rg() * 140, 40 + Rg() * 25, -203 - 60 + Rg() * 60); cl.scale.y *= 0.4; cl.visible = false; scene.add(cl); XT.clouds = (XT.clouds || []).concat(cl); }
+  // rumput
+  const gc = mkCanvas(512, 512), gx = gc.getContext("2d");
+  gx.fillStyle = "#4d9a3a"; gx.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 5000; i++) { gx.fillStyle = `hsl(${95 + Rg() * 25},${45 + Rg() * 20}%,${30 + Rg() * 18}%)`; gx.fillRect(Rg() * 512, Rg() * 512, 2, 4 + Rg() * 5); }
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(gc, [10, 10]), roughness: 0.95 }));
+  // pagar tanaman (hedge) keliling
+  const hc = mkCanvas(256, 256), hx = hc.getContext("2d");
+  hx.fillStyle = "#2f6b2a"; hx.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 900; i++) { hx.fillStyle = `hsl(${100 + Rg() * 30},${40 + Rg() * 25}%,${18 + Rg() * 16}%)`; hx.beginPath(); hx.arc(Rg() * 256, Rg() * 256, 3 + Rg() * 6, 0, 7); hx.fill(); }
+  const hedgeM = new THREE2.MeshStandardMaterial({ map: xTex(hc, [8, 1]), roughness: 1 });
+  xRoomWalls(R, { S: [[14.7, 17.7]] }, 2.6, hedgeM);
+  // jalan setapak batu
+  const pc = mkCanvas(256, 256), px = pc.getContext("2d");
+  px.fillStyle = "#d6cfc4"; px.fillRect(0, 0, 256, 256);
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) { px.fillStyle = `hsl(35,${10 + Rg() * 10}%,${72 + Rg() * 10}%)`; rr(px, c * 64 + 3, r * 64 + 3, 58, 58, 10); px.fill(); }
+  const pathM = new THREE2.MeshStandardMaterial({ map: xTex(pc, [1, 12]), roughness: 0.9 });
+  const path = (x0, z0, x1, z1, w) => { const len = Math.hypot(x1 - x0, z1 - z0); const m = new THREE2.Mesh(new THREE2.PlaneGeometry(w, len), pathM.clone()); m.material.map = xTex(pc, [w / 2, len / 2]); m.rotation.x = -Math.PI / 2; m.rotation.z = Math.atan2(x1 - x0, z1 - z0); m.position.set((x0 + x1) / 2, 0.012, (z0 + z1) / 2); m.receiveShadow = true; scene.add(m); };
+  path(cx, -170, cx, -228, 3.2);
+  path(-8, -203, 40, -203, 3.2);
+  // kolam & air mancur di tengah
+  const fz = -203;
+  const ring = new THREE2.Mesh(new THREE2.TorusGeometry(5, 0.35, 12, 64), new THREE2.MeshStandardMaterial({ color: 0xf1ede6, roughness: 0.6 }));
+  ring.rotation.x = Math.PI / 2; ring.position.set(cx, 0.35, fz); scene.add(ring);
+  const wc = mkCanvas(256, 256), wx = wc.getContext("2d");
+  wx.fillStyle = "#38bdf8"; wx.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 60; i++) { wx.strokeStyle = `rgba(255,255,255,${0.15 + Rg() * 0.3})`; wx.lineWidth = 1.5; wx.beginPath(); wx.arc(Rg() * 256, Rg() * 256, 6 + Rg() * 20, 0, Math.PI * (0.4 + Rg())); wx.stroke(); }
+  const waterT = xTex(wc, [3, 3]);
+  const water = new THREE2.Mesh(new THREE2.CircleGeometry(4.9, 48), new THREE2.MeshStandardMaterial({ map: waterT, roughness: 0.05, metalness: 0.3, transparent: true, opacity: 0.9 }));
+  water.rotation.x = -Math.PI / 2; water.position.set(cx, 0.3, fz); scene.add(water);
+  XT.anim.push((dt) => { waterT.offset.x += dt * 0.02; waterT.offset.y += dt * 0.013; });
+  world.circles.push({ x: cx, z: fz, r: 5.3 });
+  const stoneM = new THREE2.MeshStandardMaterial({ color: 0xf4f1ea, roughness: 0.5 });
+  const tier = (r, y, h) => { const m = new THREE2.Mesh(new THREE2.CylinderGeometry(r, r * 1.05, h, 32), stoneM); m.position.set(cx, y, fz); m.castShadow = true; scene.add(m); };
+  tier(0.5, 0.9, 1.2); tier(1.6, 1.55, 0.18); tier(0.25, 2.05, 0.9); tier(0.8, 2.55, 0.14);
+  // semburan air (partikel)
+  const NP = 260, pg = new THREE2.BufferGeometry(), pp = new Float32Array(NP * 3), pv = [];
+  for (let i = 0; i < NP; i++) { pv.push([0, 0, 0, Rg() * 2]); }
+  pg.setAttribute("position", new THREE2.BufferAttribute(pp, 3));
+  const drops = new THREE2.Points(pg, new THREE2.PointsMaterial({ color: 0xe0f2fe, size: 0.07, transparent: true, opacity: 0.85, depthWrite: false }));
+  scene.add(drops);
+  XT.anim.push((dt) => {
+    for (let i = 0; i < NP; i++) {
+      const v = pv[i];
+      v[3] -= dt;
+      if (v[3] <= 0) { const a = Rg() * 6.28, s = 0.6 + Rg() * 0.5; v[0] = Math.cos(a) * s; v[2] = Math.sin(a) * s; v[1] = 2.8 + Rg() * 0.8; v[3] = 1.4; pp[i * 3] = cx; pp[i * 3 + 1] = 2.7; pp[i * 3 + 2] = fz; }
+      v[1] -= dt * 4.2;
+      pp[i * 3] += v[0] * dt; pp[i * 3 + 1] = Math.max(0.32, pp[i * 3 + 1] + v[1] * dt); pp[i * 3 + 2] += v[2] * dt;
+    }
+    pg.attributes.position.needsUpdate = true;
+  });
+  // pohon (instanced) + bunga
+  const trees = [];
+  const tryTree = (x, z, s, pink) => { if (Math.abs(x - cx) < 3.2 && z > -230) return; if (Math.abs(z + 203) < 3.0) return; if (Math.hypot(x - cx, z - fz) < 8) return; if (x > -10.5 && x < 7 && z > -213 && z < -192) return; if (x > 27 && x < 36 && z > -214 && z < -192) return; trees.push([x, z, s, pink]); };
+  for (let i = 0; i < 70; i++) { const side = Rg(); let x, z; if (side < 0.5) { x = R.x0 + 2 + Rg() * (R.x1 - R.x0 - 4); z = Rg() < 0.5 ? R.z0 + 2 + Rg() * 6 : R.z1 - 2 - Rg() * 5; } else { z = R.z0 + 2 + Rg() * (R.z1 - R.z0 - 4); x = Rg() < 0.5 ? R.x0 + 2 + Rg() * 7 : R.x1 - 2 - Rg() * 7; } tryTree(x, z, 0.8 + Rg() * 0.7, Rg() < 0.3); }
+  for (const [x, z] of [[8, -190], [24, -190], [8, -216], [24, -216], [-6, -224], [38, -224], [-6, -182], [38, -182]]) tryTree(x, z, 1.25, true);
+  const trunk = new THREE2.InstancedMesh(new THREE2.CylinderGeometry(0.18, 0.28, 2.6, 8), new THREE2.MeshStandardMaterial({ color: 0x6b4423, roughness: 0.9 }), trees.length);
+  const foli = new THREE2.InstancedMesh(new THREE2.IcosahedronGeometry(1, 1), new THREE2.MeshStandardMaterial({ roughness: 0.85, flatShading: true }), trees.length * 3);
+  const o = new THREE2.Object3D(), colr = new THREE2.Color();
+  trees.forEach(([x, z, s, pink], i) => {
+    o.position.set(x, 1.3 * s, z); o.rotation.set(0, Rg() * 6, 0); o.scale.set(s, s, s); o.updateMatrix(); trunk.setMatrixAt(i, o.matrix);
+    for (let k = 0; k < 3; k++) {
+      o.position.set(x + (Rg() - 0.5) * 1.2 * s, (2.6 + k * 0.55 + Rg() * 0.4) * s, z + (Rg() - 0.5) * 1.2 * s); const fs = (1.3 - k * 0.22) * s * (0.9 + Rg() * 0.3); o.scale.set(fs, fs * 0.9, fs); o.updateMatrix(); foli.setMatrixAt(i * 3 + k, o.matrix);
+      colr.setHSL(pink ? 0.93 + Rg() * 0.04 : 0.25 + Rg() * 0.1, pink ? 0.65 : 0.5 + Rg() * 0.2, pink ? 0.78 + Rg() * 0.08 : 0.3 + Rg() * 0.12); foli.setColorAt(i * 3 + k, colr);
+    }
+    world.circles.push({ x, z, r: 0.38 * s });
+  });
+  trunk.castShadow = foli.castShadow = true;
+  scene.add(trunk, foli);
+  const fb = [];
+  const bed = (x0, z0, x1, z1, n) => { for (let i = 0; i < n; i++) fb.push([x0 + Rg() * (x1 - x0), z0 + Rg() * (z1 - z0)]); };
+  bed(cx - 3.4, -188, cx - 1.9, -172, 70); bed(cx + 1.9, -188, cx + 3.4, -172, 70);
+  bed(cx - 3.4, -228, cx - 1.9, -212, 60); bed(cx + 1.9, -228, cx + 3.4, -212, 60);
+  for (let a = 0; a < 6.28; a += 0.05) fb.push([cx + Math.cos(a) * 6.4, fz + Math.sin(a) * 6.4]);
+  const flowers = new THREE2.InstancedMesh(new THREE2.SphereGeometry(0.11, 8, 6), new THREE2.MeshStandardMaterial({ roughness: 0.6 }), fb.length);
+  const stems = new THREE2.InstancedMesh(new THREE2.CylinderGeometry(0.015, 0.015, 0.35, 4), new THREE2.MeshStandardMaterial({ color: 0x2f7d32 }), fb.length);
+  const fcol = ["#f43f5e", "#f59e0b", "#a855f7", "#ec4899", "#fde047", "#ffffff", "#60a5fa"];
+  fb.forEach(([x, z], i) => { o.rotation.set(0, 0, 0); o.position.set(x, 0.37, z); o.scale.set(1, 0.8, 1); o.updateMatrix(); flowers.setMatrixAt(i, o.matrix); flowers.setColorAt(i, colr.set(fcol[Math.floor(Rg() * fcol.length)])); o.position.y = 0.17; o.scale.set(1, 1, 1); o.updateMatrix(); stems.setMatrixAt(i, o.matrix); });
+  scene.add(flowers, stems);
+  // bangku & lampu taman
+  const benchM = new THREE2.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.7 });
+  for (const [bx, bz, ry] of [[cx - 7.6, fz + 2.5, Math.PI / 2], [cx + 7.6, fz + 2.5, -Math.PI / 2], [cx - 7.6, fz - 2.5, Math.PI / 2], [cx + 7.6, fz - 2.5, -Math.PI / 2]]) {
+    const b = new THREE2.Group(); b.position.set(bx, 0, bz); b.rotation.y = ry; scene.add(b);
+    xBox(1.8, 0.08, 0.5, benchM, 0, 0.46, 0, 0, b); xBox(1.8, 0.4, 0.06, benchM, 0, 0.7, -0.24, 0, b);
+    for (const lx of [-0.75, 0.75]) xBox(0.08, 0.46, 0.45, new THREE2.MeshStandardMaterial({ color: 0x334155 }), lx, 0.23, 0, 0, b);
+    world.circles.push({ x: bx, z: bz, r: 0.5 });
+    world.seats.push({ x: bx + Math.sin(ry) * 0.05, z: bz, yaw: ry + Math.PI });
+  }
+  for (const [lx, lz] of [[cx - 2.4, -176], [cx + 2.4, -176], [cx - 2.4, -192], [cx + 2.4, -192], [cx - 2.4, -214], [cx + 2.4, -214], [cx - 2.4, -226], [cx + 2.4, -226], [6.8, -199.4], [28.4, -201.2]]) {
+    xBox(0.1, 2.8, 0.1, new THREE2.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.6, roughness: 0.4 }), lx, 1.4, lz);
+    const bulb = new THREE2.Mesh(new THREE2.SphereGeometry(0.17, 12, 10), new THREE2.MeshBasicMaterial({ color: 0xfff1c1, toneMapped: false })); bulb.position.set(lx, 2.9, lz); scene.add(bulb);
+    const gl = world.glowSprite("#fde68a", 1.3, 0.6); gl.position.set(lx, 2.9, lz); scene.add(gl);
+  }
+  // kupu-kupu
+  for (let i = 0; i < 14; i++) {
+    const c = mkCanvas(64, 64), x = c.getContext("2d"), hue = Math.floor(Rg() * 360);
+    x.fillStyle = `hsl(${hue},85%,62%)`; x.beginPath(); x.ellipse(20, 26, 16, 20, -0.4, 0, 7); x.ellipse(44, 26, 16, 20, 0.4, 0, 7); x.fill();
+    x.fillStyle = `hsl(${hue},85%,72%)`; x.beginPath(); x.ellipse(22, 46, 10, 12, -0.3, 0, 7); x.ellipse(42, 46, 10, 12, 0.3, 0, 7); x.fill();
+    x.fillStyle = "#222"; x.fillRect(30, 16, 4, 38);
+    const s = spriteFrom(c, 0.32); scene.add(s);
+    const ox = cx - 22 + Rg() * 44, oz = -203 - 25 + Rg() * 50, ph = Rg() * 6, sp = 0.3 + Rg() * 0.3;
+    XT.anim.push(() => { s.position.set(ox + Math.sin(t * sp + ph) * 5, 1.2 + Math.sin(t * 2 + ph) * 0.5, oz + Math.cos(t * sp * 0.8 + ph) * 4); s.scale.x = 0.32 * (0.35 + Math.abs(Math.sin(t * 14 + ph)) * 0.65); });
+  }
+  // papan daftar dosen & mahasiswa (paviliun barat)
+  const pav = new THREE2.Group(); pav.position.set(-1.5, 0, -203); scene.add(pav);
+  const floorP = new THREE2.Mesh(new THREE2.CylinderGeometry(7.0, 7.1, 0.05, 8), new THREE2.MeshStandardMaterial({ color: 0xf8f5ef, roughness: 0.6 })); floorP.position.y = 0.025; floorP.receiveShadow = true; pav.add(floorP);
+  const roof = new THREE2.Mesh(new THREE2.ConeGeometry(8.2, 2.4, 8), new THREE2.MeshStandardMaterial({ color: 0x7c3aed, roughness: 0.6 })); roof.position.y = 5.5; roof.castShadow = true; pav.add(roof);
+  const roofEdge = new THREE2.Mesh(new THREE2.TorusGeometry(8.0, 0.08, 6, 8), new THREE2.MeshBasicMaterial({ color: 0xf5c66b, toneMapped: false })); roofEdge.rotation.x = Math.PI / 2; roofEdge.rotation.z = Math.PI / 8; roofEdge.position.y = 4.3; pav.add(roofEdge);
+  for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2 + Math.PI / 8; const col = new THREE2.Mesh(new THREE2.CylinderGeometry(0.14, 0.14, 4.4, 12), new THREE2.MeshStandardMaterial({ color: 0xffffff })); col.position.set(Math.cos(a) * 6.7, 2.2, Math.sin(a) * 6.7); pav.add(col); world.circles.push({ x: -1.5 + Math.cos(a) * 6.7, z: -203 + Math.sin(a) * 6.7, r: 0.2 }); }
+  const pavT = mkCanvas(1400, 200), ptx = pavT.getContext("2d"); ptx.fillStyle = "#4c1d95"; rr(ptx, 0, 0, 1400, 200, 40); ptx.fill(); ptx.fillStyle = "#fde68a"; ptx.font = `700 84px ${FONT}`; ptx.textAlign = "center"; ptx.fillText("PAVILIUN CIVITAS TI", 700, 130);
+  const pavS = xPlane(pavT, 3.5, 0.5); pavS.position.set(6.4, 3.9, 0); pavS.rotation.y = Math.PI / 2; pav.add(pavS);
+  const boardAt = (cnv, w, h, x, z, ry, title) => {
+    const b = new THREE2.Group(); b.position.set(x, 0, z); b.rotation.y = ry; scene.add(b);
+    const m = xPlane(cnv, w, h); m.position.y = 0.6 + h / 2; m.material.transparent = false; b.add(m);
+    xBox(w + 0.2, h + 0.2, 0.08, new THREE2.MeshStandardMaterial({ color: 0x1f1636 }), 0, 0.6 + h / 2, -0.06, 0, b);
+    for (const lx of [-w / 2 + 0.2, w / 2 - 0.2]) xBox(0.1, 0.6, 0.1, new THREE2.MeshStandardMaterial({ color: 0x1f1636 }), lx, 0.3, -0.06, 0, b);
+    const c1 = [x - Math.cos(ry) * w / 2, z + Math.sin(ry) * w / 2], c2 = [x + Math.cos(ry) * w / 2, z - Math.sin(ry) * w / 2];
+    xCol(c1[0], c1[1], c2[0], c2[1], 0.15);
+    xAct(m, { type: "x_board", title, canvas: cnv });
+    return m;
+  };
+  const dosC = mkCanvas(2400, 1300), mhsC = mkCanvas(3000, 2000);
+  const bD = boardAt(dosC, 5.4, 2.93, -5.02, -205.64, 0.927, "Daftar Dosen");
+  const bM = boardAt(mhsC, 6.0, 4.0, -5.02, -200.36, 2.214, "Daftar Mahasiswa");
+  drawPeopleBoards(dosC, mhsC).then(() => { bD.material.map.needsUpdate = true; bM.material.map.needsUpdate = true; });
+  // papan kehormatan (timur)
+  const fameC = mkCanvas(1600, 1200);
+  XT.fameBoard = boardAt(fameC, 4.4, 3.3, 33.4, -203, -Math.PI / 2, "Papan Kehormatan");
+  XT.fameC = fameC;
+  drawFame();
+  // portal kembali
+  const pg2 = new THREE2.Group(); pg2.position.set(cx, 0, -231.5); scene.add(pg2);
+  const pr = new THREE2.Mesh(new THREE2.TorusGeometry(1.4, 0.12, 12, 48), new THREE2.MeshBasicMaterial({ color: 0xa78bfa, toneMapped: false })); pr.position.y = 1.6; pg2.add(pr);
+  const pd = new THREE2.Mesh(new THREE2.CircleGeometry(1.35, 40), new THREE2.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.45, toneMapped: false, side: THREE2.DoubleSide })); pd.position.y = 1.6; pg2.add(pd);
+  xAct(pd, { type: "x_portal" });
+  const plc = mkCanvas(1024, 200), plx = plc.getContext("2d");
+  plx.fillStyle = "#4c1d95"; rr(plx, 0, 0, 1024, 200, 40); plx.fill(); plx.fillStyle = "#fff"; plx.font = `700 70px ${FONT}`; plx.textAlign = "center"; plx.fillText("⟲ KEMBALI KE ATRIUM", 512, 125);
+  const plm = xPlane(plc, 2.4, 0.47); plm.position.y = 3.4; pg2.add(plm); xAct(plm, { type: "x_portal" });
+  XT.anim.push((dt) => { pr.rotation.z += dt * 0.8; pd.material.opacity = 0.35 + Math.sin(t * 2) * 0.1; });
+  // NPC sertifikat
+  makeCustomRobot("tama", {
+    code: "TAMAN", name: "TAMA", role: "Robot Penjaga Taman · pemberi sertifikat", col: "#16a34a", body: "#f0fdf4", accent: "#22c55e", eye: "#fde047", icon: "🏅",
+    x: cx + 3.6, z: -185.5, room: "s_garden", secret: true,
+    chips: ["Ambil sertifikat", "Aktifkan skin baru", "Siapa saja yang lulus?", "Apa isi taman ini?", "Kembali ke atrium"],
+    roleNote: "pemberi sertifikat penjelajah",
+    knowText: "TAMA menjaga Taman Apresiasi dan memberi sertifikat kepada penjelajah yang menuntaskan ketiga lorong rahasia.",
+    greetActs: () => [["🏅 Ambil sertifikat", openCertificate], ["👕 Lemari Skin", openSkins]],
+    onCard: () => tamaCard(),
+    answer: (q) => {
+      const ql = norm(q);
+      if (/sertifikat|piagam|hadiah/.test(ql) || !ql.trim() || /^(halo|hai|hi)\b/.test(ql)) return { text: `Selamat, ${S.name}! Kamu berhasil melewati Labirin, Rumah Kaca, dan 10 teka-teki. Ambil sertifikatmu di sini ya 🏅${skinsUnlocked() ? " Sebagai hadiah, 3 skin eksklusif sudah kuaktifkan untukmu — buka Lemari Skin untuk mencobanya!" : ""}`, acts: [["🏅 Ambil sertifikat", openCertificate], ["👕 Lemari Skin", openSkins]] };
+      if (/lulus|siapa|kehormatan|daftar/.test(ql)) return { text: `Nama-nama penjelajah yang berhasil terpampang di Papan Kehormatan sebelah timur air mancur. Saat ini tercatat ${XT.fame.length} penjelajah.` };
+      if (/skin|kostum|baju|tampilan|avatar|lemari/.test(ql)) return { text: skinsUnlocked() ? "Skin eksklusifmu sudah aktif: Astronot Nebula, Ronin Neon, dan Hantu Hologram. Buka Lemari Skin untuk berganti kapan saja (menu ☰ atau tombol K)." : "Bicara denganku setelah menaklukkan ketiga lorong untuk membuka 3 skin eksklusif.", acts: [["👕 Lemari Skin", openSkins]] };
+      if (/kembali|atrium|pulang|keluar/.test(ql)) return { text: "Gunakan portal ungu di ujung utara taman, atau menu GO TO.", acts: [["⟲ Ke Atrium", () => teleportSpot("atrium")]] };
+      return { text: "Taman ini berisi air mancur, paviliun dengan Daftar Dosen dan Daftar Mahasiswa, Papan Kehormatan, dan portal kembali ke Atrium. Silakan berkeliling!", acts: [["🏅 Ambil sertifikat", openCertificate]] };
+    }
+  });
+}
+async function drawPeopleBoards(dc, mc) {
+  const head = (x, W, title, n, col) => {
+    x.fillStyle = "#f8fafc"; x.fillRect(0, 0, W, x.canvas.height);
+    x.fillStyle = col; rr(x, 50, 46, 84, 84, 22); x.fill();
+    x.fillStyle = "#fff"; x.font = `700 52px ${FONT}`; x.textAlign = "center"; x.fillText(title[0], 92, 108); x.textAlign = "left";
+    x.fillStyle = "#0f172a"; x.font = `700 64px ${FONT}`; x.fillText(title, 160, 112);
+    const tw = x.measureText(title).width;
+    x.fillStyle = "#dcfce7"; rr(x, 180 + tw, 62, 90, 58, 29); x.fill(); x.fillStyle = "#15803d"; x.font = `700 38px ${FONT}`; x.textAlign = "center"; x.fillText(String(n), 225 + tw, 104); x.textAlign = "left";
+  };
+  const cardF = async (x, cx0, cy0, w, h, name, sub1, role, app, img) => {
+    x.fillStyle = "#ffffff"; rr(x, cx0, cy0, w, h, 34); x.fill(); x.strokeStyle = "#e2e8f0"; x.lineWidth = 3; rr(x, cx0, cy0, w, h, 34); x.stroke();
+    const ps = 190, px = cx0 + w / 2 - ps / 2, py = cy0 + 34;
+    x.save(); rr(x, px, py, ps, ps, 36); x.clip();
+    const im = img ? await xLoad(`assets/ext/${img}.webp`) : null;
+    if (im) xCover(x, im, px, py, ps, ps); else { x.fillStyle = "#dcfce7"; x.fillRect(px, py, ps, ps); x.fillStyle = "#15803d"; x.font = `700 90px ${FONT}`; x.textAlign = "center"; x.fillText(name.trim()[0], px + ps / 2, py + ps / 2 + 32); x.textAlign = "left"; }
+    x.restore();
+    x.textAlign = "center"; x.fillStyle = "#0f172a"; x.font = `700 40px ${FONT}`;
+    wrap(x, name, cx0 + 20, py + ps + 66, w - 40, 46, 2, "center");
+    let yy = py + ps + 66 + (x.measureText(name).width > w - 40 ? 96 : 50);
+    if (sub1) { x.fillStyle = "#64748b"; x.font = `500 32px ${FONT}`; x.fillText(sub1, cx0 + w / 2, yy); yy += 46; }
+    if (role) { x.fillStyle = "#16a34a"; x.font = `600 32px ${FONT}`; wrap(x, role, cx0 + 20, yy, w - 40, 38, 2, "center"); yy += 46; }
+    if (app) { x.fillStyle = "#94a3b8"; x.font = `500 28px ${FONT}`; x.fillText(app, cx0 + w / 2, yy); }
+    x.textAlign = "left";
+  };
+  const d = dc.getContext("2d");
+  head(d, 2400, "Daftar Dosen", DOSEN_LIST.length, "#2563eb");
+  for (let i = 0; i < DOSEN_LIST.length; i++) { const [n, role, img] = DOSEN_LIST[i]; await cardF(d, 50 + i * 466, 190, 440, 560, n, "", role, "", img); }
+  d.fillStyle = "#475569"; d.font = `400 34px ${FONT}`; d.fillText("Tim dosen pembina — Teknik Informatika · Fakultas Teknik dan Sains · UIKA Bogor", 50, 1230);
+  const m = mc.getContext("2d");
+  head(m, 3000, "Daftar Mahasiswa", MHS_LIST.length, "#16a34a");
+  for (let i = 0; i < MHS_LIST.length; i++) { const [n, ang, role, app, img] = MHS_LIST[i], c = i % 5, r = Math.floor(i / 5); await cardF(m, 40 + c * 590, 180 + r * 600, 560, 570, n, "Angkatan " + ang, role, app, img); }
+}
+function drawFame() {
+  const c = XT.fameC; if (!c) return;
+  const x = c.getContext("2d");
+  const g = x.createLinearGradient(0, 0, 0, 1200); g.addColorStop(0, "#1e1036"); g.addColorStop(1, "#3b0764");
+  x.fillStyle = g; x.fillRect(0, 0, 1600, 1200);
+  x.strokeStyle = "#f5c66b"; x.lineWidth = 10; rr(x, 20, 20, 1560, 1160, 40); x.stroke();
+  x.fillStyle = "#fde68a"; x.font = `700 84px ${FONT}`; x.textAlign = "center"; x.fillText("🏆 PAPAN KEHORMATAN", 800, 140);
+  x.fillStyle = "#e9d5ff"; x.font = `400 38px ${FONT}`; x.fillText("Para penjelajah yang menaklukkan Labirin, Rumah Kaca & 10 Teka-teki", 800, 210);
+  const list = XT.fame.slice(-24);
+  x.font = `600 40px ${FONT}`;
+  if (!list.length) { x.fillStyle = "#c4b5fd"; x.fillText("Belum ada nama. Jadilah yang pertama!", 800, 600); }
+  list.forEach((e, i) => { const col = Math.floor(i / 12), row = i % 12; x.textAlign = "left"; x.fillStyle = "#fff"; x.fillText(`${i + 1 + Math.max(0, XT.fame.length - 24)}. ${e.n}`, 120 + col * 720, 300 + row * 72); x.fillStyle = "#a78bfa"; x.font = `400 30px ${FONT}`; x.fillText(e.d || "", 520 + col * 720, 300 + row * 72); x.font = `600 40px ${FONT}`; });
+  x.textAlign = "left";
+  if (XT.fameBoard) XT.fameBoard.material.map.needsUpdate = true;
+}
+function fameAdd(e) {
+  if (!e || typeof e.n !== "string") return;
+  const n = cleanName(e.n);
+  if (!n || XT.fame.some((f2) => f2.n.toLowerCase() === n.toLowerCase())) return;
+  XT.fame.push({ n, d: typeof e.d === "string" ? e.d.slice(0, 20) : "" });
+  if (XT.fame.length > 200) XT.fame.shift();
+  store.set("fame", XT.fame);
+  drawFame();
+}
+function fameInit(list) { if (Array.isArray(list)) list.forEach(fameAdd); }
+function openCertificate() {
+  hidePopups();
+  if (!gardenUnlocked()) { toast("Sertifikat hanya untuk penjelajah yang menuntaskan ketiga lorong rahasia."); return; }
+  const q = Q();
+  if (!q.cert) { q.cert = (riddleHash(S.name + "|" + (q.t1 || Date.now())) + riddleHash(S.name)).toUpperCase().slice(0, 10); saveQ(); updHud(); }
+  const c = mkCanvas(2000, 1414), x = c.getContext("2d");
+  const bg = x.createLinearGradient(0, 0, 2000, 1414); bg.addColorStop(0, "#fffdf7"); bg.addColorStop(1, "#f5efff");
+  x.fillStyle = bg; x.fillRect(0, 0, 2000, 1414);
+  x.strokeStyle = "#7f00ff"; x.lineWidth = 18; x.strokeRect(40, 40, 1920, 1334);
+  x.strokeStyle = "#e000ff"; x.lineWidth = 4; x.strokeRect(78, 78, 1844, 1258);
+  for (const [a, b] of [[78, 78], [1922, 78], [78, 1336], [1922, 1336]]) { x.fillStyle = "#f5c66b"; x.beginPath(); x.arc(a, b, 22, 0, 7); x.fill(); }
+  const done = (im) => {
+    if (im) x.drawImage(im, 900, 120, 200, 200);
+    x.textAlign = "center";
+    x.fillStyle = "#4c1d95"; x.font = `700 46px ${FONT}`; x.fillText("PROGRAM STUDI TEKNIK INFORMATIKA · UIKA BOGOR", 1000, 390);
+    x.fillStyle = "#0f172a"; x.font = `800 110px ${FONT}`; x.fillText("SERTIFIKAT PENJELAJAH", 1000, 530);
+    x.fillStyle = "#6b7280"; x.font = `400 40px ${FONT}`; x.fillText("Sertifikat apresiasi ini diberikan kepada", 1000, 620);
+    x.fillStyle = "#7f00ff"; x.font = `italic 700 120px ${FONT}`; x.fillText(S.name || "Penjelajah", 1000, 770);
+    x.strokeStyle = "#e9d5ff"; x.lineWidth = 4; x.beginPath(); x.moveTo(520, 810); x.lineTo(1480, 810); x.stroke();
+    x.fillStyle = "#1f2937"; x.font = `400 40px ${FONT}`;
+    wrap(x, "atas keberhasilannya menjelajahi seluruh Lab Peminatan (KERIS, GIT, SE, CSN) dan menaklukkan tiga lorong rahasia — Labirin, Rumah Kaca, dan 10 Teka-teki — di Galeri VR Lab Peminatan Teknik Informatika.", 300, 890, 1400, 58, 3, "center");
+    const mins = q.t0 && q.t1 ? Math.max(1, Math.round((q.t1 - q.t0) / 60000)) : 0;
+    const dt = new Date(q.t1 || Date.now()).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    x.fillStyle = "#4c1d95"; x.font = `600 38px ${FONT}`; x.fillText(`Bogor, ${dt}${mins ? ` · waktu tempuh ${mins} menit` : ""}`, 1000, 1110);
+    x.fillStyle = "#6b7280"; x.font = `400 30px ${FONT}`; x.fillText(`Kode sertifikat: ${q.cert}  ·  Galeri VR Lab Peminatan TI · Fakultas Teknik dan Sains`, 1000, 1230);
+    x.textAlign = "left";
+    const url = c.toDataURL("image/png");
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 Sertifikat Penjelajah</h2><p>Selamat, <b id="cnm"></b>! Simpan sertifikatmu di bawah ini.</p><img id="certImg" alt="Sertifikat penjelajah" style="width:100%;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.35)"><div class="rowf" style="margin-top:12px"><button class="btn" id="certDl">Unduh PNG</button><button class="ghost" id="certFame">Lihat Papan Kehormatan</button></div>`);
+    $("genCard").classList.add("wide");
+    $("cnm").textContent = S.name;
+    $("certImg").src = url;
+    $("certDl").onclick = () => c.toBlob((b) => b && saveFile(`sertifikat-penjelajah-${(S.name || "it").replace(/[^a-z0-9]/gi, "_")}.png`, b), "image/png");
+    $("certFame").onclick = () => { closeGen(); xTeleport(29.5, -203, Math.PI / 2); };
+    if (typeof SFX !== "undefined") SFX.chime();
+    spawnSparkle();
+  };
+  xLoad("assets/ext/logo-ti.png").then(done);
+}
+
+// ---------- galeri Kepala Program Studi (Ruang Sambutan, dinding barat) ----------
+function buildKaprodi() {
+  const N = KAPRODI.length, w = 1.36, gap = 0.2, total = N * w + (N - 1) * gap, z0 = 21 + total / 2 - w / 2;
+  const p = world.onWall("welcome", "W", 21, 0), g = world.group(p);
+  // judul
+  const tc = mkCanvas(2048, 300), tx = tc.getContext("2d");
+  tx.textAlign = "center"; tx.fillStyle = "#fde68a"; tx.font = `700 120px ${FONT}`; tx.fillText("KEPALA PROGRAM STUDI", 1024, 140);
+  tx.fillStyle = "#e9d5ff"; tx.font = `400 54px ${FONT}`; tx.fillText("Teknik Informatika · Universitas Ibn Khaldun Bogor · 2004 – sekarang", 1024, 240);
+  const tm = xPlane(tc, 7.2, 1.05); tm.position.set(0, 5.05, 0.02); g.add(tm);
+  // garis waktu
+  const line = new THREE2.Mesh(new THREE2.BoxGeometry(total + 0.4, 0.04, 0.02), new THREE2.MeshBasicMaterial({ color: 0xf5c66b, toneMapped: false })); line.position.set(0, 0.95, 0.02); g.add(line);
+  KAPRODI.forEach(([name, yrs], i) => {
+    const along = z0 - i * (w + gap), lx = -(along - 21); // sumbu x lokal grup = arah -z dunia
+    const frame = new THREE2.Mesh(new THREE2.BoxGeometry(w + 0.1, w * 1.25 + 0.1, 0.06), new THREE2.MeshStandardMaterial({ color: 0xc9a14a, metalness: 0.8, roughness: 0.3 }));
+    frame.position.set(lx, 3.05, 0.0); g.add(frame);
+    const ph = new THREE2.Mesh(new THREE2.PlaneGeometry(w, w * 1.25), new THREE2.MeshBasicMaterial({ color: 0x2a1f3d, toneMapped: false }));
+    ph.position.set(lx, 3.05, 0.04); g.add(ph);
+    new THREE2.TextureLoader().load(`assets/ext/k${i + 1}.webp`, (tx2) => { tx2.colorSpace = THREE2.SRGBColorSpace; ph.material.map = tx2; ph.material.color.set(0xffffff); ph.material.needsUpdate = true; });
+    const cc = mkCanvas(512, 300), cx = cc.getContext("2d");
+    cx.fillStyle = "rgba(20,12,36,.88)"; rr(cx, 0, 0, 512, 300, 26); cx.fill();
+    cx.fillStyle = "#fde68a"; cx.font = `700 46px ${FONT}`; cx.textAlign = "center"; cx.fillText(yrs, 256, 66);
+    cx.fillStyle = "#ffffff"; cx.font = `600 38px ${FONT}`; wrap(cx, name, 20, 132, 472, 46, 3, "center");
+    const cap = xPlane(cc, w, w * 300 / 512); cap.position.set(lx, 1.55, 0.03); g.add(cap);
+    const dot = new THREE2.Mesh(new THREE2.CircleGeometry(0.07, 20), new THREE2.MeshBasicMaterial({ color: i === N - 1 ? 0x22c55e : 0xf5c66b, toneMapped: false })); dot.position.set(lx, 0.95, 0.04); g.add(dot);
+    const nb = mkCanvas(128, 128), nx = nb.getContext("2d"); nx.fillStyle = "#7c3aed"; nx.beginPath(); nx.arc(64, 64, 60, 0, 7); nx.fill(); nx.fillStyle = "#fff"; nx.font = `700 64px ${FONT}`; nx.textAlign = "center"; nx.textBaseline = "middle"; nx.fillText(String(i + 1), 64, 68);
+    const nm = xPlane(nb, 0.32, 0.32); nm.position.set(lx - w / 2 + 0.08, 3.05 + w * 0.625 - 0.08, 0.07); g.add(nm);
+    xAct(ph, { type: "x_kaprodi", i });
+  });
+  const glow = world.glowSprite("#f5c66b", 1, 0.18); glow.scale.set(total + 2, 5.5, 1); glow.position.set(0, 3, -0.02); g.add(glow);
+}
+function showKaprodi(i) {
+  const [name, yrs] = KAPRODI[i];
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="kp"><img id="kpImg" alt=""><div><p class="kk">Kepala Program Studi ke-${i + 1}</p><h2 id="kpN"></h2><p id="kpY" style="font-size:16px;color:#fde68a;font-weight:600"></p><p>Teknik Informatika · Fakultas Teknik dan Sains · Universitas Ibn Khaldun Bogor</p><div class="rowf"><button class="ghost" id="kpPrev">◀ Sebelumnya</button><button class="ghost" id="kpNext">Berikutnya ▶</button></div></div></div>`);
+  $("kpImg").src = `assets/ext/k${i + 1}.webp`; $("kpImg").alt = name;
+  $("kpN").textContent = name; $("kpY").textContent = "Masa jabatan " + yrs;
+  $("kpPrev").onclick = () => showKaprodi((i + KAPRODI.length - 1) % KAPRODI.length);
+  $("kpNext").onclick = () => showKaprodi((i + 1) % KAPRODI.length);
+}
+
+// ---------- logo & papan nama di dinding gerbang menuju Atrium ----------
+function buildWelcomeWall() {
+  const pL = world.onWall("welcome", "N", -5.75, 3.05, 0.16), gL = world.group(pL);
+  const halo = world.glowSprite("#b04dff", 1, 0.5); halo.scale.set(6.2, 6.2, 1); halo.position.z = 0.02; gL.add(halo);
+  const back = new THREE2.Mesh(new THREE2.BoxGeometry(5.0, 5.0, 0.06), new THREE2.MeshStandardMaterial({ color: 0x150d26, roughness: 0.4, metalness: 0.3 })); back.position.z = 0.03; gL.add(back);
+  const edge = new THREE2.Mesh(new THREE2.BoxGeometry(5.08, 5.08, 0.04), new THREE2.MeshBasicMaterial({ color: 0xb04dff, toneMapped: false })); edge.position.z = 0.01; gL.add(edge);
+  const lg = buildLogo(gL, 4.3); lg.position.z = 0.07;
+  XT.anim.push(() => { halo.material.opacity = 0.42 + Math.sin(t * 1.2) * 0.1; });
+  const pR = world.onWall("welcome", "N", 5.75, 3.05, 0.16), gR = world.group(pR);
+  const c = mkCanvas(1200, 1200), x = c.getContext("2d");
+  const gg = x.createLinearGradient(0, 0, 0, 1200); gg.addColorStop(0, "#1b1030"); gg.addColorStop(1, "#2e1065");
+  x.fillStyle = gg; rr(x, 0, 0, 1200, 1200, 50); x.fill();
+  x.strokeStyle = "#e000ff"; x.lineWidth = 10; rr(x, 12, 12, 1176, 1176, 44); x.stroke();
+  x.textAlign = "center";
+  x.fillStyle = "#c4b5fd"; x.font = `600 56px ${FONT}`; x.fillText("PROGRAM STUDI", 600, 260);
+  x.fillStyle = "#ffffff"; x.font = `800 150px ${FONT}`; x.fillText("TEKNIK", 600, 440); x.fillText("INFORMATIKA", 600, 600);
+  x.fillStyle = "#f0abfc"; x.font = `500 52px ${FONT}`; x.fillText("Fakultas Teknik dan Sains", 600, 740);
+  x.fillStyle = "#e9d5ff"; x.fillText("Universitas Ibn Khaldun Bogor", 600, 815);
+  x.fillStyle = "#fde68a"; x.font = `600 44px ${FONT}`; x.fillText("Terakreditasi BAIK SEKALI · LAM-INFOKOM", 600, 960);
+  x.fillStyle = "#a78bfa"; x.font = `italic 500 42px ${FONT}`; x.fillText("Iman · Ilmu · Amal", 600, 1060);
+  const pm = xPlane(c, 4.6, 4.6); pm.position.z = 0.03; gR.add(pm);
+  xAct(pm, { type: "x_kuricard", k: "visi" });
+}
+
+// ---------- KURI di Ruang Sambutan ----------
+function buildKuri() {
+  buildKuriKB();
+  makeCustomRobot("kuri", {
+    code: "OBE", name: "KURI", role: "Robot Kurikulum & Visi Misi Prodi TI", col: "#f59e0b", body: "#fff8eb", accent: "#f59e0b", eye: "#a855f7", icon: "📘",
+    x: 4.4, z: 16.6, room: "welcome",
+    chips: ["Visi misi prodi", "Tujuan pendidikan", "Profil lulusan", "Mata kuliah semester 1", "Total SKS", "Mata kuliah pilihan", "Akreditasi", "Kuis"],
+    roleNote: "menjawab dari buku Kurikulum OBE 2025",
+    knowText: `KURI hafal ${KURI_KB.length} catatan dari buku Kurikulum OBE Teknik Informatika 2025: visi, misi, tujuan, profil lulusan, CPL, bahan kajian, sebaran mata kuliah, dosen pengampu, tracer study, dan SWOT.`,
+    greetActs: () => [["📜 Visi & Misi", () => kuriCard("visi")], ["📚 Struktur Kurikulum", () => kuriCard("mk")]],
+    answer: kuriAnswer, pitch: 1.0
+  });
+  // kios informasi di samping KURI
+  const k = new THREE2.Group(); k.position.set(6.6, 0, 16.8); k.rotation.y = -Math.PI / 2 + 0.25; scene.add(k);
+  xBox(1.2, 1.0, 0.5, new THREE2.MeshStandardMaterial({ color: 0x2e1065, roughness: 0.4, metalness: 0.3 }), 0, 0.5, 0, 0, k);
+  world.circles.push({ x: 6.6, z: 16.8, r: 0.7 });
+  const kc = mkCanvas(900, 760), kx = kc.getContext("2d");
+  kx.fillStyle = "#120a24"; rr(kx, 0, 0, 900, 760, 40); kx.fill(); kx.strokeStyle = "#f59e0b"; kx.lineWidth = 8; rr(kx, 6, 6, 888, 748, 36); kx.stroke();
+  kx.fillStyle = "#fde68a"; kx.font = `700 64px ${FONT}`; kx.textAlign = "center"; kx.fillText("KURIKULUM OBE 2025", 450, 100);
+  kx.fillStyle = "#e9d5ff"; kx.font = `400 34px ${FONT}`; kx.fillText("Teknik Informatika UIKA · klik untuk membuka", 450, 156);
+  const btns = [["📜  VISI, MISI & TUJUAN", "visi"], ["🎓  PROFIL LULUSAN", "profil"], ["🎯  10 CPL", "cpl"], ["📚  MATA KULIAH & SKS", "mk"]];
+  btns.forEach(([tt], i) => { kx.fillStyle = ["#7c3aed", "#db2777", "#0891b2", "#16a34a"][i]; rr(kx, 70, 200 + i * 130, 760, 104, 24); kx.fill(); kx.fillStyle = "#fff"; kx.font = `700 44px ${FONT}`; kx.fillText(tt, 450, 268 + i * 130); });
+  kx.textAlign = "left";
+  const scr = xPlane(kc, 1.3, 1.1); scr.position.set(0, 1.62, 0.05); scr.rotation.x = -0.2; k.add(scr);
+  xAct(scr, { type: "x_kurikiosk" });
+}
+
+// ---------- interaksi ----------
+function xHandleAct(act, hit, e) {
+  switch (act.type) {
+    case "x_riddle": openRiddle(act.i); break;
+    case "x_kaprodi": showKaprodi(act.i); break;
+    case "x_kuricard": kuriCard(act.k); break;
+    case "x_kurikiosk": { const v = hit && hit.uv ? 1 - hit.uv.y : 0.5; const i = clamp(Math.floor((v * 760 - 200) / 130), 0, 3); kuriCard(["visi", "profil", "cpl", "mk"][i]); break; }
+    case "x_board": genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2 id="xbT"></h2><img id="xbI" alt="" style="width:100%;border-radius:10px">`); $("genCard").classList.add("wide"); $("xbT").textContent = act.title; $("xbI").src = act.canvas.toDataURL("image/jpeg", 0.92); $("xbI").alt = act.title; break;
+    case "x_portal": teleportSpot("atrium"); break;
+    case "x_door": toast(questUnlocked() ? "Pintu rahasia terbuka — masuklah ke lorong!" : "Dinding ini terasa… berbeda. Mungkin ada sesuatu di baliknya.", 3500); break;
+  }
+}
+var xBypass = false;
+function xTeleport(x, z, yaw) { xBypass = true; teleport(x, z, yaw); setTimeout(() => xBypass = false, 400); }
+function xTeleportOK(x, z) {
+  if (xBypass) return true;
+  const r = secretRoomAt(x, z);
+  if (!r) return true;
+  return r === "s_garden" && gardenUnlocked();
+}
+
+// ---------- tick: progres, penjaga aturan, suasana ----------
+var xT = 0, xFogBase = null, xSunBase = null;
+function extrasTick(dt) {
+  if (!XT.ready) return;
+  for (const f3 of XT.anim) f3(dt);
+  skinTick();
+  // animasi gerbang teka-teki
+  for (const G of XT.gates) { const tgt = G.open ? 1 : 0; G.k += (tgt - G.k) * Math.min(1, dt * 2); G.fm.opacity = (1 - G.k) * (0.45 + Math.sin(t * 4 + G.i) * 0.12); G.field.visible = G.k < 0.98; G.fm.map.offset.y = (G.fm.map.offset.y + dt * 0.6) % 1; }
+  if (XT.gardenGate) { const open = gardenUnlocked(); XT.gardenGate.vm.opacity = open ? 0.05 + Math.sin(t * 2) * 0.03 : 0.45 + Math.sin(t * 3) * 0.1; }
+  const sr = secretRoomAt(P.x, P.z);
+  if (XT.glassUpdate) XT.glassUpdate(dt, sr === "s_glass");
+  // suasana taman: langit, kabut terang, bayangan matahari mengikuti pemain
+  const inGarden = sr === "s_garden" || (sr === "s_riddle" && P.z < -160);
+  if (xFogBase === null) { xFogBase = { c: scene.fog.color.clone(), d: scene.fog.density, bg: scene.background.clone() }; xSunBase = { p: sun.position.clone() }; scene.add(sun.target); }
+  const k = XT.gk = (XT.gk || 0) + ((inGarden ? 1 : 0) - (XT.gk || 0)) * Math.min(1, dt * 2);
+  if (k > 0.001 || inGarden) {
+    scene.fog.color.copy(xFogBase.c).lerp(new THREE2.Color(0xdbeafe), k);
+    scene.fog.density = xFogBase.d + (0.004 - xFogBase.d) * k;
+    scene.background.copy(xFogBase.bg).lerp(new THREE2.Color(0x93c5fd), k);
+    XT.dome.visible = k > 0.02; (XT.clouds || []).forEach((c) => c.visible = k > 0.02);
+    if (inGarden) { sun.target.position.set(P.x, 0, P.z); sun.position.set(P.x + 14, 32, P.z + 12); }
+    else if (k < 0.05) { sun.target.position.set(0, 0, 0); sun.position.copy(xSunBase.p); }
+  }
+  xT += dt;
+  if (xT < 0.25) return;
+  xT = 0;
+  const q = Q();
+  // kunjungan lab untuk misi
+  const lab = roomLab(curRoom);
+  if (lab && !q.labs.includes(lab)) { q.labs.push(lab); saveQ(); questProgress(); }
+  // penjaga aturan: tidak boleh berada di area rahasia tanpa hak
+  if (sr && !questUnlocked()) { xTeleport(12, -33, Math.PI); toast("Lorong itu masih tersegel."); return; }
+  if (sr === "s_garden" && !gardenUnlocked()) { xTeleport(16.2, -166, 0); toast("Taman hanya bisa dimasuki setelah menjawab 10 teka-teki."); return; }
+  if (sr !== XT.inSecret) {
+    const prev = XT.inSecret;
+    XT.inSecret = sr;
+    $("mini").style.visibility = sr && sr !== "s_garden" ? "hidden" : "";
+    if (sr === "s_tunnel" && !q.t0) { q.t0 = Date.now(); saveQ(); }
+    if (sr === "s_maze" && prev !== "s_maze") toast("🌀 Lorong 1 · Labirin — cari jalan keluar di sisi utara. Denah tidak berfungsi di sini!", 5000);
+    if (sr === "s_glass" && !q.maze) { q.maze = true; saveQ(); updHud(); toast("✅ Labirin ditaklukkan! 🪞 Lorong 2 · Rumah Kaca: hati-hati, tidak semua pantulan adalah jalan.", 5500); if (typeof SFX !== "undefined") SFX.chime(); }
+    if (sr === "s_riddle" && !q.glass) { q.glass = true; saveQ(); updHud(); toast("✅ Rumah Kaca terlewati! 🧩 Lorong 3: jawab 10 teka-teki di setiap tablet untuk membuka gerbang.", 5500); if (typeof SFX !== "undefined") SFX.chime(); }
+    if (sr === "s_garden") {
+      if (!q.garden) {
+        q.garden = true; q.t1 = Date.now(); saveQ(); updHud();
+        if (!SPOTS.some((s) => s.id === "taman")) SPOTS.push({ id: "taman", name: "🌷 Taman Apresiasi", x: 16.2, z: -176, yaw: 0 });
+        const d = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+        fameAdd({ n: S.name, d });
+        if (net && typeof net.sendFame === "function") net.sendFame({ n: S.name, d });
+        chatMsg("Sistem", `🏆 ${S.name} berhasil menaklukkan ketiga lorong rahasia!`);
+        if (typeof mpSay === "function") mpSay(`🏆 Aku berhasil menaklukkan ketiga lorong rahasia!`);
+        setTimeout(() => sayBubble(`Selamat datang di Taman Apresiasi, ${S.name}! Temui aku untuk sertifikatmu 🏅`, "npc_tama"), 800);
+      }
+      toast("🌷 Taman Apresiasi — temui robot TAMA untuk sertifikatmu.", 4500);
+    }
+  }
+  if (sr === "s_maze" || sr === "s_glass") P.camPitch = clamp(P.camPitch, -0.45, 0.55);
+}
+
+// ---------- pembangunan ----------
+function buildExtras() {
+  try {
+    XT.fame = (store.get("fame", []) || []).filter((e) => e && typeof e.n === "string").slice(-200);
+    buildWelcomeWall();
+    buildKaprodi();
+    buildKuri();
+    buildSecretDoor();
+    buildMaze();
+    buildGlass();
+    buildRiddles();
+    buildGarden();
+    const hud = document.createElement("button");
+    hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
+    document.body.appendChild(hud);
+    XT.hud = hud;
+    if (gardenUnlocked() && !SPOTS.some((s) => s.id === "taman")) SPOTS.push({ id: "taman", name: "🌷 Taman Apresiasi", x: 16.2, z: -176, yaw: 0 });
+    XT.ready = true;
+    updHud();
+  } catch (err) {
+    console.error("Ekstensi gagal dibangun:", err);
+  }
+}
+// saat nama berubah (login/pengaturan) muat ulang status pintu & gerbang
+function xOnName() {
+  questCache.key = null;
+  if (XT.door) { XT.door.setOpen(questUnlocked()); }
+  refreshGates(true);
+  refreshMySkin();
+  if (gardenUnlocked() && !SPOTS.some((s) => s.id === "taman")) SPOTS.push({ id: "taman", name: "🌷 Taman Apresiasi", x: 16.2, z: -176, yaw: 0 });
+  updHud();
+}
+// garis lurus dari a ke b tidak menembus dinding/gerbang rahasia yang aktif (untuk teleport VR)
+function xPathClear(ax, az, bx, bz) {
+  const cross = (p1, p2, p3, p4) => {
+    const d = (p2[0] - p1[0]) * (p4[1] - p3[1]) - (p2[1] - p1[1]) * (p4[0] - p3[0]);
+    if (Math.abs(d) < 1e-9) return false;
+    const u = ((p3[0] - p1[0]) * (p4[1] - p3[1]) - (p3[1] - p1[1]) * (p4[0] - p3[0])) / d, v = ((p3[0] - p1[0]) * (p2[1] - p1[1]) - (p3[1] - p1[1]) * (p2[0] - p1[0])) / d;
+    return u >= 0 && u <= 1 && v >= 0 && v <= 1;
+  };
+  for (const c of world.colliders) if (c.secret && !c.off && cross([ax, az], [bx, bz], c.a, c.b)) return false;
+  return true;
+}
+
+// =====================================================================
+// src/ext_skin.js — 3 skin alternatif pemain (Astronot Nebula, Ronin Neon,
+// Hantu Hologram). Terbuka setelah masuk Taman Apresiasi & berbicara
+// dengan robot TAMA. Skin tersinkron ke pemain lain lewat presence "sk".
+// =====================================================================
+var SKINS = [
+  { id: "default", name: "Standar", desc: "Robot berjaket teknologi bawaan galeri.", tag: "BAWAAN" },
+  { id: "astro", name: "Astronot Nebula", desc: "Baju antariksa putih, helm kaca berkubah dengan visor emas, dan ransel oksigen berlampu.", tag: "LANGKA" },
+  { id: "ronin", name: "Ronin Neon", desc: "Zirah samurai hitam bergaris neon, helm kabuto bertanduk bulan sabit, dan katana bercahaya di punggung.", tag: "EPIK" },
+  { id: "holo", name: "Hantu Hologram", desc: "Tubuh hologram tembus pandang dengan cincin orbit, garis pindai, dan partikel cahaya yang mengitari.", tag: "LEGENDARIS" }
+];
+var SKIN_IDS = SKINS.map((s) => s.id);
+var skinsUnlocked = () => !!Q().skins;
+function skinLathe(r0, r1, h0, h1, bulge, seg = 36) {
+  const pts = [new THREE2.Vector2(0, h0)];
+  for (let i = 0; i <= 20; i++) { const k = i / 20, y = h0 + k * (h1 - h0), r = r0 + (r1 - r0) * k + Math.sin(k * Math.PI) * bulge; pts.push(new THREE2.Vector2(k > 0.96 ? r * (1 - (k - 0.96) * 14) : r, y)); }
+  pts.push(new THREE2.Vector2(0, h1));
+  return new THREE2.LatheGeometry(pts, seg);
+}
+var SKIN_BUILD = {
+  astro(color) {
+    const g = new THREE2.Group(), body = new THREE2.Group(), headG = new THREE2.Group();
+    g.add(body); g.add(headG); headG.position.y = 1.5;
+    const suit = new THREE2.MeshStandardMaterial({ color: 0xf4f6fb, roughness: 0.55, metalness: 0.05 });
+    const tint = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(color), roughness: 0.35, metalness: 0.3, emissive: new THREE2.Color(color), emissiveIntensity: 0.25 });
+    const dark = new THREE2.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.4, metalness: 0.6 });
+    const glow = new THREE2.MeshBasicMaterial({ color: 0x5eead4, toneMapped: false });
+    const torso = new THREE2.Mesh(skinLathe(0.16, 0.25, 0.4, 1.26, 0.08), suit); torso.castShadow = true; body.add(torso);
+    for (const [y, r] of [[0.62, 0.235], [0.82, 0.27], [1.18, 0.25]]) { const b = new THREE2.Mesh(new THREE2.TorusGeometry(r, 0.025, 10, 40), tint); b.rotation.x = Math.PI / 2; b.position.y = y; body.add(b); }
+    const panel = new THREE2.Mesh(new THREE2.BoxGeometry(0.2, 0.14, 0.04), dark); panel.position.set(0, 1.0, -0.27); body.add(panel);
+    for (let i = 0; i < 3; i++) { const btn = new THREE2.Mesh(new THREE2.SphereGeometry(0.018, 10, 8), new THREE2.MeshBasicMaterial({ color: [0xef4444, 0xfacc15, 0x22c55e][i], toneMapped: false })); btn.position.set(-0.05 + i * 0.05, 1.0, -0.295); body.add(btn); }
+    const pack = new THREE2.Mesh(new THREE2.BoxGeometry(0.34, 0.42, 0.16), suit); pack.position.set(0, 1.0, 0.26); pack.castShadow = true; body.add(pack);
+    const stripe = new THREE2.Mesh(new THREE2.BoxGeometry(0.35, 0.05, 0.165), tint); stripe.position.set(0, 1.1, 0.26); body.add(stripe);
+    for (const sx of [-1, 1]) { const tank = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.055, 0.26, 6, 14), tint); tank.position.set(sx * 0.11, 0.98, 0.36); body.add(tank); }
+    const ant = new THREE2.Mesh(new THREE2.CylinderGeometry(0.008, 0.008, 0.36, 6), dark); ant.position.set(0.12, 1.36, 0.28); body.add(ant);
+    const blink = new THREE2.Mesh(new THREE2.SphereGeometry(0.03, 10, 8), new THREE2.MeshBasicMaterial({ color: 0xff3b3b, toneMapped: false })); blink.position.set(0.12, 1.55, 0.28); body.add(blink);
+    const collar = new THREE2.Mesh(new THREE2.TorusGeometry(0.2, 0.045, 12, 36), suit); collar.rotation.x = Math.PI / 2; collar.position.y = -0.24; headG.add(collar);
+    const face = new THREE2.Mesh(new THREE2.SphereGeometry(0.17, 24, 16), new THREE2.MeshStandardMaterial({ color: 0x0b1020, roughness: 0.3 })); headG.add(face);
+    const visor = new THREE2.Mesh(new THREE2.SphereGeometry(0.255, 36, 18, Math.PI * 1.08, Math.PI * 0.84, Math.PI * 0.26, Math.PI * 0.44), new THREE2.MeshStandardMaterial({ color: 0xf5b300, metalness: 1, roughness: 0.12, envMapIntensity: 1.4 })); headG.add(visor);
+    const dome = new THREE2.Mesh(new THREE2.SphereGeometry(0.3, 36, 24), new THREE2.MeshStandardMaterial({ color: 0xdff6ff, transparent: true, opacity: 0.22, roughness: 0.02, metalness: 0.2, depthWrite: false })); headG.add(dome);
+    const rim = new THREE2.Mesh(new THREE2.TorusGeometry(0.3, 0.022, 10, 40), glow); rim.position.y = -0.02; rim.rotation.x = Math.PI / 2; headG.add(rim);
+    for (const sx of [-1, 1]) { const lamp = new THREE2.Mesh(new THREE2.CylinderGeometry(0.035, 0.035, 0.05, 14), suit); lamp.rotation.z = Math.PI / 2; lamp.position.set(sx * 0.3, 0.06, 0); headG.add(lamp); }
+    const neb = world.glowSprite(color, 0.9, 0.35); neb.position.set(0, 0.6, 0.42); body.add(neb);
+    return { group: g, body, headG, mat: tint, anim: (tt) => { blink.visible = Math.sin(tt * 5) > -0.2; neb.material.opacity = 0.25 + Math.sin(tt * 2) * 0.1; } };
+  },
+  ronin(color) {
+    const g = new THREE2.Group(), body = new THREE2.Group(), headG = new THREE2.Group();
+    g.add(body); g.add(headG); headG.position.y = 1.5;
+    const armor = new THREE2.MeshStandardMaterial({ color: 0x15151c, roughness: 0.35, metalness: 0.75 });
+    const plate = new THREE2.MeshStandardMaterial({ color: 0x24242e, roughness: 0.3, metalness: 0.8 });
+    const neon = new THREE2.MeshBasicMaterial({ color: new THREE2.Color(color), toneMapped: false });
+    const gold = new THREE2.MeshStandardMaterial({ color: 0xf5c66b, roughness: 0.2, metalness: 0.9 });
+    const red = new THREE2.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.6 });
+    const torso = new THREE2.Mesh(skinLathe(0.2, 0.24, 0.4, 1.24, 0.05, 10), armor); torso.castShadow = true; body.add(torso);
+    for (let i = 0; i < 4; i++) { const y = 0.48 + i * 0.1, r = 0.27 + i * 0.012; const p = new THREE2.Mesh(new THREE2.CylinderGeometry(r, r + 0.03, 0.08, 10, 1, true), plate); p.position.y = y; body.add(p); const e = new THREE2.Mesh(new THREE2.TorusGeometry(r + 0.03, 0.008, 6, 10), neon); e.rotation.x = Math.PI / 2; e.position.y = y - 0.04; body.add(e); }
+    const obi = new THREE2.Mesh(new THREE2.TorusGeometry(0.255, 0.04, 8, 24), red); obi.rotation.x = Math.PI / 2; obi.position.y = 0.88; body.add(obi);
+    for (const sx of [-1, 1]) {
+      const sode = new THREE2.Mesh(new THREE2.BoxGeometry(0.16, 0.24, 0.3), plate); sode.position.set(sx * 0.31, 1.08, 0); sode.rotation.z = sx * 0.35; sode.castShadow = true; body.add(sode);
+      const edge = new THREE2.Mesh(new THREE2.BoxGeometry(0.17, 0.015, 0.31), neon); edge.position.set(sx * 0.35, 0.97, 0); edge.rotation.z = sx * 0.35; body.add(edge);
+    }
+    const kat = new THREE2.Group(); kat.position.set(0, 1.0, 0.27); kat.rotation.z = 0.75; body.add(kat);
+    const blade = new THREE2.Mesh(new THREE2.BoxGeometry(0.035, 0.9, 0.012), new THREE2.MeshBasicMaterial({ color: 0xe0f2fe, toneMapped: false })); blade.position.y = 0.2; kat.add(blade);
+    const bglow = world.glowSprite(color, 0.5, 0.5); bglow.scale.set(0.25, 1.0, 1); bglow.position.y = 0.2; kat.add(bglow);
+    const tsuba = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.06, 0.02, 16), gold); tsuba.position.y = -0.26; kat.add(tsuba);
+    const tsuka = new THREE2.Mesh(new THREE2.CylinderGeometry(0.022, 0.022, 0.24, 8), new THREE2.MeshStandardMaterial({ color: 0x111111 })); tsuka.position.y = -0.39; kat.add(tsuka);
+    const head = new THREE2.Mesh(new THREE2.SphereGeometry(0.24, 24, 18), armor); head.castShadow = true; headG.add(head);
+    const brim = new THREE2.Mesh(new THREE2.CylinderGeometry(0.27, 0.36, 0.1, 18, 1, true), plate); brim.position.y = -0.06; headG.add(brim);
+    const crest = new THREE2.Mesh(new THREE2.TorusGeometry(0.2, 0.022, 8, 30, Math.PI), gold); crest.position.set(0, 0.24, -0.16); crest.rotation.z = 0; headG.add(crest);
+    const gem = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.04), neon); gem.position.set(0, 0.2, -0.22); headG.add(gem);
+    const slit = new THREE2.Mesh(new THREE2.BoxGeometry(0.3, 0.035, 0.05), neon); slit.position.set(0, 0.02, -0.22); headG.add(slit);
+    const menpo = new THREE2.Mesh(new THREE2.SphereGeometry(0.2, 18, 10, Math.PI * 1.15, Math.PI * 0.7, Math.PI * 0.55, Math.PI * 0.3), plate); headG.add(menpo);
+    return { group: g, body, headG, mat: neon, anim: (tt) => { bglow.material.opacity = 0.35 + Math.sin(tt * 3.2) * 0.2; gem.rotation.y = tt * 2; } };
+  },
+  holo(color) {
+    const g = new THREE2.Group(), body = new THREE2.Group(), headG = new THREE2.Group();
+    g.add(body); g.add(headG); headG.position.y = 1.5;
+    const c = new THREE2.Color(color);
+    const skin = new THREE2.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.28, blending: THREE2.AdditiveBlending, depthWrite: false, toneMapped: false, side: THREE2.DoubleSide });
+    const wire = new THREE2.MeshBasicMaterial({ color: 0xe0faff, wireframe: true, transparent: true, opacity: 0.35, depthWrite: false, toneMapped: false });
+    const bright = new THREE2.MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
+    const geo = skinLathe(0.1, 0.24, 0.42, 1.24, 0.06, 18);
+    body.add(new THREE2.Mesh(geo, skin), new THREE2.Mesh(geo, wire));
+    const core = new THREE2.Mesh(new THREE2.IcosahedronGeometry(0.07, 0), bright); core.position.y = 1.0; body.add(core);
+    const coreG = world.glowSprite(color, 0.6, 0.8); coreG.position.y = 1.0; body.add(coreG);
+    const rings = [];
+    for (let i = 0; i < 2; i++) { const r = new THREE2.Mesh(new THREE2.TorusGeometry(0.42 + i * 0.08, 0.008, 6, 64), new THREE2.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.8, toneMapped: false })); r.position.y = 0.85 + i * 0.25; r.rotation.x = Math.PI / 2 + (i ? 0.5 : -0.4); body.add(r); rings.push(r); }
+    const scan = new THREE2.Mesh(new THREE2.TorusGeometry(0.26, 0.006, 6, 48), bright); scan.rotation.x = Math.PI / 2; body.add(scan);
+    const head = new THREE2.Mesh(new THREE2.IcosahedronGeometry(0.25, 1), wire); headG.add(head);
+    const headIn = new THREE2.Mesh(new THREE2.SphereGeometry(0.22, 20, 14), skin); headG.add(headIn);
+    for (const sx of [-1, 1]) { const e = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.025, 0.05, 4, 10), bright); e.position.set(sx * 0.08, 0.02, -0.2); headG.add(e); }
+    const NP = 36, pg = new THREE2.BufferGeometry(), pp = new Float32Array(NP * 3); pg.setAttribute("position", new THREE2.BufferAttribute(pp, 3));
+    const pts = new THREE2.Points(pg, new THREE2.PointsMaterial({ color: c, size: 0.05, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE2.AdditiveBlending })); body.add(pts);
+    const seeds = Array.from({ length: NP }, (_, i) => [Math.random() * 6.28, 0.3 + Math.random() * 0.25, 0.4 + Math.random() * 1.2, 0.6 + Math.random()]);
+    return { group: g, body, headG, mat: skin, anim: (tt) => {
+      rings[0].rotation.z = tt * 1.2; rings[1].rotation.z = -tt * 0.9;
+      scan.position.y = 0.5 + (Math.sin(tt * 1.6) * 0.5 + 0.5) * 0.75;
+      skin.opacity = 0.24 + Math.sin(tt * 11) * 0.03 + (Math.random() < 0.02 ? 0.15 : 0);
+      core.rotation.y = tt * 2;
+      seeds.forEach(([a, r, y, s], i) => { pp[i * 3] = Math.cos(a + tt * s) * r; pp[i * 3 + 1] = y + Math.sin(tt * s + a) * 0.08; pp[i * 3 + 2] = Math.sin(a + tt * s) * r; });
+      pg.attributes.position.needsUpdate = true;
+    } };
+  }
+};
+function applySkin(av, id, color) {
+  const ud = av.userData;
+  if (!ud.def) ud.def = { parts: av.children.filter((c) => !c.isSprite), body: ud.body, headG: ud.headG, mat: ud.mat };
+  if (ud.skinG) {
+    av.remove(ud.skinG);
+    ud.skinG.traverse((o) => { o.geometry?.dispose?.(); });
+    ud.skinG = null;
+    ud.skinAnim = null;
+  }
+  const curColor = color || "#" + ud.mat.color.getHexString();
+  ud.skinId = SKIN_BUILD[id] ? id : "default";
+  if (ud.skinId === "default") {
+    ud.def.parts.forEach((p) => p.visible = true);
+    ud.body = ud.def.body; ud.headG = ud.def.headG; ud.mat = ud.def.mat;
+    ud.mat.color.set(curColor);
+    return;
+  }
+  ud.def.parts.forEach((p) => p.visible = false);
+  const s = SKIN_BUILD[ud.skinId](curColor);
+  s.headG.position.y = 1.5;
+  av.add(s.group);
+  ud.skinG = s.group; ud.body = s.body; ud.headG = s.headG; ud.mat = s.mat; ud.skinAnim = s.anim;
+}
+function mySkin() { return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
+function refreshMySkin() { if (avatar && (avatar.userData.skinId || "default") !== mySkin()) applySkin(avatar, mySkin(), S.color); }
+function skinTick() {
+  if (avatar && avatar.userData.skinAnim) avatar.userData.skinAnim(t);
+  for (const r of remotes.values()) if (r.av.userData.skinAnim) r.av.userData.skinAnim(t + r.av.id);
+}
+function unlockSkins(silent) {
+  const q = Q();
+  if (q.skins || !gardenUnlocked()) return false;
+  q.skins = true;
+  saveQ();
+  if (!silent) {
+    if (typeof SFX !== "undefined") SFX.chime();
+    spawnSparkle();
+    toast("👕 3 skin baru diaktifkan! Buka Lemari Skin untuk berganti tampilan.", 6000);
+  }
+  return true;
+}
+var skinPrevCache = {};
+function skinPreview(id) {
+  const key = id + S.color;
+  if (skinPrevCache[key]) return skinPrevCache[key];
+  const W = 240, H = 300, sc = new THREE2.Scene();
+  sc.background = new THREE2.Color(0x1a1230);
+  sc.environment = scene.environment;
+  sc.add(new THREE2.HemisphereLight(0xffffff, 0x2a1f4a, 1.4));
+  const dl = new THREE2.DirectionalLight(0xffffff, 1.4); dl.position.set(-2, 3, -3); sc.add(dl);
+  const av = makeAvatar(S.color, " ");
+  av.userData.tag.visible = av.userData.mic.visible = false;
+  applySkin(av, id, S.color);
+  if (av.userData.skinAnim) av.userData.skinAnim(1.3);
+  sc.add(av);
+  const cam = new THREE2.PerspectiveCamera(32, W / H, 0.1, 20);
+  cam.position.set(1.15, 1.45, -2.7); cam.lookAt(0, 1.0, 0);
+  const rt = new THREE2.WebGLRenderTarget(W, H, { samples: 4 });
+  rt.texture.colorSpace = THREE2.SRGBColorSpace;
+  const prevT = renderer.getRenderTarget(), prevXr = renderer.xr.enabled;
+  renderer.xr.enabled = false;
+  renderer.setRenderTarget(rt);
+  renderer.render(sc, cam);
+  const px = new Uint8Array(W * H * 4);
+  renderer.readRenderTargetPixels(rt, 0, 0, W, H, px);
+  renderer.setRenderTarget(prevT);
+  renderer.xr.enabled = prevXr;
+  rt.dispose();
+  const c = mkCanvas(W, H), x = c.getContext("2d"), img = x.createImageData(W, H);
+  for (let y = 0; y < H; y++) img.data.set(px.subarray((H - 1 - y) * W * 4, (H - y) * W * 4), y * W * 4);
+  x.putImageData(img, 0, 0);
+  av.traverse((o) => { o.geometry?.dispose?.(); });
+  return skinPrevCache[key] = c.toDataURL("image/png");
+}
+function openSkins() {
+  hidePopups();
+  const open = skinsUnlocked(), cur = mySkin();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👕 Lemari Skin</h2>
+  <p>${open ? "Pilih tampilan avatarmu. Skin terlihat oleh semua pemain di galeri." : "🔒 Tiga skin eksklusif masih terkunci. Taklukkan ketiga lorong rahasia, masuk ke <b>Taman Apresiasi</b>, lalu bicara dengan robot <b>TAMA</b> untuk mengaktifkannya."}</p>
+  <div class="skins" id="skinGrid"></div>`);
+  $("genCard").classList.add("wide");
+  const grid = $("skinGrid");
+  SKINS.forEach((sk) => {
+    const locked = sk.id !== "default" && !open;
+    const d = document.createElement("div");
+    d.className = "skin" + (sk.id === cur ? " on" : "") + (locked ? " locked" : "");
+    const im = document.createElement("img");
+    im.alt = sk.name;
+    try { im.src = skinPreview(sk.id); } catch { /* pratinjau opsional */ }
+    const tg = document.createElement("span"); tg.className = "stag"; tg.textContent = locked ? "🔒 TERKUNCI" : sk.tag;
+    const h = document.createElement("b"); h.textContent = sk.name;
+    const p = document.createElement("p"); p.textContent = sk.desc;
+    const btn = document.createElement("button");
+    btn.className = sk.id === cur ? "btn sec" : "btn";
+    btn.textContent = locked ? "Terkunci" : sk.id === cur ? "Dipakai" : "Pakai skin";
+    btn.disabled = locked || sk.id === cur;
+    btn.onclick = () => {
+      S.skin = sk.id; saveS();
+      applySkin(avatar, sk.id, S.color);
+      if (typeof mpPresence === "function") mpPresence(true);
+      spawnSparkle(); if (typeof mpFx === "function") mpFx();
+      toast(`Skin “${sk.name}” dipakai ✨`);
+      openSkins();
+    };
+    d.append(im, tg, h, p, btn);
+    grid.appendChild(d);
+  });
+}
+function tamaCard() {
+  hidePopups();
+  const fresh = unlockSkins(true), q = Q();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 TAMA · Penjaga Taman</h2>
+  <p>${fresh ? `Selamat, <b id="tnm"></b>! Karena kamu menaklukkan ketiga lorong rahasia, aku mengaktifkan <b>3 skin eksklusif</b> untukmu: Astronot Nebula, Ronin Neon, dan Hantu Hologram.` : `Halo <b id="tnm"></b>! Ambil sertifikatmu atau ganti skin avatarmu di sini.`}</p>
+  <div class="rowf"><button class="btn" id="tmCert">🏅 Ambil sertifikat</button><button class="btn" id="tmSkin" style="background:#a855f7;color:#fff">👕 Lemari Skin</button><button class="ghost" id="tmAsk">Tanya TAMA</button></div>`);
+  $("tnm").textContent = S.name;
+  $("tmCert").onclick = openCertificate;
+  $("tmSkin").onclick = openSkins;
+  $("tmAsk").onclick = () => { closeGen(); openNpc("tama", "chat"); };
+  if (fresh) { if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); toast("👕 3 skin baru diaktifkan!", 5000); }
+  void q;
+}
+
+// =====================================================================
+// src/ext_mod.js — moderator (~velov~). Server memverifikasi kunci; kick
+// berlangsung diam-diam (tanpa pesan chat & tanpa log), korban kembali ke
+// layar login dan harus memasukkan nama lagi.
+// =====================================================================
+var MOD_NAME = "~velov~";
+var IS_MOD = false;
+var isModName = (n) => String(n || "").trim().toLowerCase() === MOD_NAME;
+function modKickBtn(row, r) {
+  const k = document.createElement("span");
+  k.className = "kickb";
+  k.setAttribute("role", "button");
+  k.tabIndex = 0;
+  k.textContent = "Kick";
+  const fire = (e) => {
+    e.stopPropagation();
+    if (!k.classList.contains("arm")) { k.classList.add("arm"); k.textContent = "Yakin?"; setTimeout(() => { k.classList.remove("arm"); k.textContent = "Kick"; }, 2500); return; }
+    if (net && typeof net.kick === "function") net.kick(r.id);
+    removeRemote(r.id, false);
+    hidePopups();
+  };
+  k.onclick = fire;
+  k.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") fire(e); };
+  row.appendChild(k);
+}
+function modKicked() {
+  try { S.name = ""; saveS(); } catch { /* abaikan */ }
+  try { renderer.xr.getSession()?.end(); } catch { /* abaikan */ }
+  location.reload();
 }
 
 </script>

@@ -5,7 +5,8 @@ module.exports = {
       script: 'server.js',
       env: {
         PORT: 8080,
-        NODE_ENV: 'production'
+        NODE_ENV: 'production',
+        ADMIN_KEY: 'GANTI-DENGAN-KUNCI-RAHASIA'
       },
       instances: 1,
       autorestart: true,

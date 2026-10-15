@@ -51,6 +51,28 @@ server.on('upgrade', (req, socket, head) => {
 
 const send = (ws, obj) => { if (ws.readyState === 1) ws.send(JSON.stringify(obj)); };
 const isPlainObj = v => v && typeof v === 'object' && !Array.isArray(v);
+// ---- validasi data dari klien (jangan percaya isi pesan) ----
+const cleanText = (v, n) => typeof v === 'string' ? v.replace(/[\u0000-\u001f\u007f\u200b-\u200f\u202a-\u202e\u2066-\u2069]/g, '').slice(0, n) : '';
+const cleanNameS = v => cleanText(v, 40).replace(/[^\p{L}\p{N} ._'\u2019~-]/gu, '').trim().slice(0, 16);
+// ---- moderator: nama khusus + kunci rahasia (nama saja mudah ditiru) ----
+const ADMIN_NAME = (process.env.ADMIN_NAME || '~velov~').trim().toLowerCase();
+const ADMIN_KEY = process.env.ADMIN_KEY || crypto.randomBytes(9).toString('base64url');
+const ADMIN_HASH = crypto.createHash('sha256').update(ADMIN_KEY).digest();
+const isAdminName = n => typeof n === 'string' && n.trim().toLowerCase() === ADMIN_NAME;
+const keyOK = k => typeof k === 'string' && k.length > 0 && k.length <= 200 && crypto.timingSafeEqual(crypto.createHash('sha256').update(k).digest(), ADMIN_HASH);
+function validStroke(st) {
+  if (!isPlainObj(st) || !Array.isArray(st.p) || st.p.length < 1 || st.p.length > 1500) return null;
+  const c = typeof st.c === 'string' && /^#[0-9a-fA-F]{6}$/.test(st.c) ? st.c : '#1d4fb8';
+  const w = typeof st.w === 'number' && isFinite(st.w) ? Math.max(1, Math.min(40, st.w)) : 7;
+  const p = [];
+  for (const q of st.p) { if (!Array.isArray(q) || q.length < 2) return null; const a = +q[0], b = +q[1]; if (!isFinite(a) || !isFinite(b)) return null; p.push([Math.max(0, Math.min(1, a)), Math.max(0, Math.min(1, b))]); }
+  return { c, w, p };
+}
+function validNote(nt) {
+  if (!isPlainObj(nt)) return null;
+  const t = cleanText(nt.t, 280).trim(); if (!t) return null;
+  return { id: cleanText(nt.id, 40) || crypto.randomBytes(6).toString('hex'), n: cleanNameS(nt.n) || 'Pengunjung', t, time: Date.now() };
+}
 
 wss.on('connection', (ws, room) => {
   ws.id = crypto.randomBytes(8).toString('hex');
@@ -59,6 +81,7 @@ wss.on('connection', (ws, room) => {
     rooms.set(room, {
       members: new Set(),
       wb: [],
+      fame: [],
       notes: [
         { id: 'seed-1', n: 'Kak Tias', t: 'Selamat datang di Lab Peminatan VR! Tulis pendapatmu mengenai lab pilihanmu di papan ini ya.', time: Date.now() },
         { id: 'seed-2', n: "IT'ers", t: 'Aku tertarik dengan KERIS karena fokus di Artificial Intelligence & Machine Learning!', time: Date.now() }
@@ -72,7 +95,8 @@ wss.on('connection', (ws, room) => {
     id: ws.id,
     peers: [...members].map(c => ({ id: c.id, data: c.presence })),
     wb: rData.wb,
-    notes: rData.notes
+    notes: rData.notes,
+    fame: rData.fame
   });
   members.add(ws);
 
@@ -84,15 +108,26 @@ wss.on('connection', (ws, room) => {
     if (isBinary || buf.length > MAX_MSG) return;
     let m; try { m = JSON.parse(buf.toString('utf8')); } catch { return; }
     if (!isPlainObj(m)) return;
-    if (m.type === 'presence' && isPlainObj(m.data)) {
-      ws.presence = m.data;
+    if (m.type === 'auth') {
+      // maks. 5 percobaan per koneksi untuk mencegah tebak-tebakan kunci
+      ws.authTries = (ws.authTries || 0) + 1;
+      ws.admin = ws.authTries <= 5 && keyOK(m.key);
+      send(ws, { type: 'auth', ok: ws.admin });
+      if (!ws.admin && isAdminName(ws.presence.n)) { ws.presence = { ...ws.presence, n: 'Pengunjung' }; for (const c of members) if (c !== ws) send(c, { type: 'presence', id: ws.id, data: ws.presence }); }
+    } else if (m.type === 'kick' && typeof m.id === 'string') {
+      if (!ws.admin || m.id === ws.id) return;
+      for (const c of members) if (c.id === m.id) { c.kicked = true; send(c, { type: 'kicked' }); setTimeout(() => c.close(4001), 50); break; }
+    } else if (m.type === 'presence' && isPlainObj(m.data)) {
+      // nama moderator hanya boleh dipakai klien yang sudah lolos verifikasi kunci
+      ws.presence = !ws.admin && isAdminName(m.data.n) ? { ...m.data, n: 'Pengunjung' } : m.data;
       for (const c of members) if (c !== ws) send(c, { type: 'presence', id: ws.id, data: ws.presence });
     } else if (m.type === 'signal' && typeof m.to === 'string' && isPlainObj(m.data)) {
       for (const c of members) if (c.id === m.to) { send(c, { type: 'signal', from: ws.id, data: m.data }); break; }
     } else if (m.type === 'wb_stroke' && isPlainObj(m.stroke)) {
-      rData.wb.push(m.stroke);
+      const stroke = validStroke(m.stroke); if (!stroke) return;
+      rData.wb.push(stroke);
       if (rData.wb.length > 500) rData.wb.shift();
-      for (const c of members) if (c !== ws) send(c, { type: 'wb_stroke', stroke: m.stroke });
+      for (const c of members) if (c !== ws) send(c, { type: 'wb_stroke', stroke });
     } else if (m.type === 'wb_undo') {
       rData.wb.pop();
       for (const c of members) if (c !== ws) send(c, { type: 'wb_undo' });
@@ -100,11 +135,21 @@ wss.on('connection', (ws, room) => {
       rData.wb.length = 0;
       for (const c of members) if (c !== ws) send(c, { type: 'wb_clear' });
     } else if (m.type === 'note_add' && isPlainObj(m.note)) {
-      rData.notes.push(m.note);
+      const note = validNote(m.note); if (!note) return;
+      rData.notes.push(note);
       if (rData.notes.length > 60) rData.notes.shift();
-      for (const c of members) if (c !== ws) send(c, { type: 'note_add', note: m.note });
+      for (const c of members) if (c !== ws) send(c, { type: 'note_add', note });
+    } else if (m.type === 'fame_add' && isPlainObj(m.entry)) {
+      // Papan Kehormatan: satu entri per nama per ruang, satu kali per koneksi
+      const n = cleanNameS(m.entry.n); if (!n || ws.famed) return;
+      ws.famed = true;
+      if (rData.fame.some(e => e.n.toLowerCase() === n.toLowerCase())) return;
+      const entry = { n, d: cleanText(m.entry.d, 20) };
+      rData.fame.push(entry);
+      if (rData.fame.length > 200) rData.fame.shift();
+      for (const c of members) if (c !== ws) send(c, { type: 'fame_add', entry });
     } else if (m.type === 'note_del') {
-      if (typeof m.id === 'string') {
+      if (typeof m.id === 'string' && m.id.length <= 40) {
         const idx = rData.notes.findIndex(x => x.id === m.id);
         if (idx !== -1) rData.notes.splice(idx, 1);
       } else if (typeof m.idx === 'number') {
@@ -115,7 +160,7 @@ wss.on('connection', (ws, room) => {
   });
   ws.on('close', () => {
     members.delete(ws);
-    for (const c of members) send(c, { type: 'leave', id: ws.id });
+    for (const c of members) send(c, ws.kicked ? { type: 'leave', id: ws.id, q: 1 } : { type: 'leave', id: ws.id });
   });
   ws.on('error', () => {});
 });
@@ -123,4 +168,7 @@ wss.on('connection', (ws, room) => {
 // detak jantung: putuskan koneksi mati
 setInterval(() => { for (const ws of wss.clients) { if (!ws.alive) { ws.terminate(); continue; } ws.alive = false; ws.ping(); } }, 25000);
 
-server.listen(PORT, () => console.log(`Galeri Media Imersif berjalan di http://localhost:${PORT}  (WebSocket: /ws)`));
+server.listen(PORT, () => {
+  console.log(`Galeri Media Imersif berjalan di http://localhost:${PORT}  (WebSocket: /ws)`);
+  if (!process.env.ADMIN_KEY) console.log(`Kunci moderator untuk "${ADMIN_NAME}" (sesi ini saja): ${ADMIN_KEY}  -> atur variabel ADMIN_KEY agar tetap`);
+});

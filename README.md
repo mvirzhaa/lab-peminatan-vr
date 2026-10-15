@@ -38,8 +38,19 @@ WebSocket otomatis memakai `wss://` bila halaman dibuka lewat `https://`.
 | `MAX_CLIENTS` | 150 | Batas total koneksi |
 | `MAX_PER_ROOM` | 60 | Batas orang per ruang |
 | `ALLOWED_ORIGINS` | (semua) | Daftar origin yang diizinkan, pisahkan koma |
+| `ADMIN_NAME` | `~velov~` | Nama pengguna yang berwenang kick |
+| `ADMIN_KEY` | (acak tiap start) | Kunci rahasia moderator. Jika kosong, server membuat kunci acak dan menampilkannya sekali di konsol saat start |
 
 Tambahkan `?room=nama-kelas` di URL untuk memisahkan kelompok, mis. `https://domainanda/?room=ti-2026`.
+
+## Fitur tambahan (versi ini)
+- **Ruang Sambutan**: robot **KURI** (kurikulum OBE, visi-misi prodi/fakultas/universitas, profil lulusan, CPL, mata kuliah per semester) + kios; dinding **Kepala Program Studi** (10 Ka Prodi berurutan tahun jabatan); logo besar TI 3D di dinding utara Atrium.
+- **Nama robot lab**: Keri, Geo, Cody, Neta.
+- **Misi rahasia** (tidak tampil di peta/minimap): kunjungi 4 lab dan bicara dengan 4 robot, maka pintu rahasia di dinding utara **Lab SE** terbuka. Isinya: Lorong 1 **Labirin** (15×15), Lorong 2 **Rumah Kaca** (cermin + kaca bening), Lorong 3 **10 Teka-teki** (jawaban satu kata; kunci disimpan sebagai hash, bukan teks).
+- **Taman Apresiasi**: air mancur, paviliun **Daftar Dosen & Daftar Mahasiswa**, **Papan Kehormatan** (tersinkron server), robot **TAMA** pemberi **sertifikat PNG**.
+- **Skin pemain**: Astronot Nebula, Ronin Neon, Hantu Hologram. Terkunci sampai pemain masuk taman dan bicara dengan TAMA; setelah itu buka **Menu → Lemari Skin** atau tombol **K**. Skin terlihat oleh semua pemain.
+- **Moderator**: masuk dengan nama `~velov~` lalu isi kunci moderator yang muncul di bawah kolom nama. Di daftar **PEOPLE** muncul tombol **Kick** (klik dua kali untuk konfirmasi). Pengguna yang di-kick dikembalikan ke layar login dengan nama kosong. Tidak ada pesan chat dan tidak ada log server. Orang lain yang memakai nama `~velov~` tanpa kunci tampil sebagai "Pengunjung".
+- Progres misi tersimpan **per nama** di browser masing-masing. Menjawab teka-teki dalam mode headset VR memerlukan keluar dari VR sebentar (butuh keyboard).
 
 ## Mengubah konten
 - Teks, slide yang dipasang, FAQ robot, kuis, warna & musik tiap lab ada di bagian `src/content.js`
@@ -54,3 +65,6 @@ Tambahkan `?room=nama-kelas` di URL untuk memisahkan kelompok, mis. `https://dom
 - Proteksi path traversal + header keamanan; CSP hanya mengizinkan iframe YouTube & Google Drive
 - Semua teks dari pengguna lain ditampilkan sebagai teks biasa
 - Suara mengalir peer-to-peer, server tidak menyimpan apa pun
+- Coretan papan tulis, catatan, dan Papan Kehormatan divalidasi di server (tipe, panjang, jumlah titik)
+- Wewenang kick diverifikasi **di server** dengan kunci (perbandingan hash waktu-konstan, maks. 5 percobaan per koneksi); nama saja tidak cukup
+- Skin & progres misi bersifat kosmetik di sisi klien; nilai skin dari pemain lain divalidasi terhadap daftar putih
