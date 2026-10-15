@@ -5593,6 +5593,7 @@ $("btnPeople").onclick = () => dropdown($("btnPeople"), (d) => {
     if (IS_MOD) modKickBtn(b, r);
   }
   for (const n of Object.values(NPCS)) {
+    if (n.secret || n.custom?.secret || n.id === "tama") continue;
     const dot = document.createElement("span");
     dot.className = "dot";
     dot.style.background = n.col;
