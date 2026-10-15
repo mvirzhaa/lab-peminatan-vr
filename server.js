@@ -11,6 +11,23 @@ const path = require('path');
 const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
 
+// baca file .env otomatis jika ada (memudahkan konfigurasi ADMIN_KEY tanpa terhambat cache PM2)
+try {
+  const envFile = path.join(__dirname, '.env');
+  if (fs.existsSync(envFile)) {
+    for (const line of fs.readFileSync(envFile, 'utf8').split('\n')) {
+      const m = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+      if (m) {
+        const k = m[1].trim();
+        const v = (m[2] || '').replace(/^['"]|['"]$/g, '').trim();
+        if (v && (!process.env[k] || process.env[k] === 'GANTI-DENGAN-KUNCI-RAHASIA')) {
+          process.env[k] = v;
+        }
+      }
+    }
+  }
+} catch {}
+
 const PORT = +process.env.PORT || 8080;
 const MAX_CLIENTS = +process.env.MAX_CLIENTS || 150;     // total koneksi
 const MAX_PER_ROOM = +process.env.MAX_PER_ROOM || 60;    // per ruang (?room=kelas-a)
