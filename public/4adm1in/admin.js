@@ -206,7 +206,7 @@
       const tr = el('tr'), td = el('td', 'nw'), b = el('button', k.cabut ? 'ghost' : 'del', k.cabut ? 'Aktifkan' : 'Cabut');
       b.onclick = async () => { try { await post('/api/admin/kartu/status', { no: k.no, cabut: !k.cabut }); toast(k.cabut ? 'Kartu diaktifkan kembali.' : 'Kartu dicabut — Nan tidak akan membuka gerbang untuknya.'); loadCards(); } catch (e) { toast(e.message); } };
       td.appendChild(b);
-      tr.append(el('td', 'nw', k.no), el('td', '', k.nama), el('td', 'nw', fmt(k.t)), el('td', 'nw', k.ver ? k.ver + '× · ' + fmt(k.lv) : '-'), el('td', 'nw', Object.keys(k.ch || {}).length + '/4' + (Object.values(k.ch || {}).some((c) => c.jalur === 'kode') ? ' (kode)' : '')), el('td', 'nw', Object.keys(k.lb || {}).map((b) => ({ dasar: '🔷 Dasar' })[b] || b).join(', ') || '-'), el('td', 'nw', k.cabut ? '⛔ dicabut' : '✅ aktif'), td);
+      tr.append(el('td', 'nw', k.no), el('td', '', k.nama), el('td', 'nw', fmt(k.t)), el('td', 'nw', k.ver ? k.ver + '× · ' + fmt(k.lv) : '-'), el('td', 'nw', ['kognitif', 'inggris', 'sahabat', 'coding'].filter((c) => (k.ch || {})[c]).length + '/4' + ((k.ch || {}).pustaka ? ' · Gua ✓' : '') + (Object.values(k.ch || {}).some((c) => c.jalur === 'kode') ? ' (kode)' : '')), el('td', 'nw', Object.keys(k.lb || {}).map((b) => ({ dasar: '🔷 Dasar', umum: '💡 Umum' })[b] || b).join(', ') || '-'), el('td', 'nw', k.cabut ? '⛔ dicabut' : '✅ aktif'), td);
       tb.appendChild(tr);
     }
   }

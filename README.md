@@ -155,8 +155,23 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 - **4 ruang tantangan di Lantai 2 IT-Mart** (setelah verifikasi Nan): Kognitif (matematika), Bahasa Inggris, Sahabat Rasulullah, Dasar Coding. Masing-masing 20 soal pilihan ganda acak dalam 60 detik; satu salah atau waktu habis → kembali ke Nan. Bank soal ada di `CH_BANK` (Inggris/Sahabat/Coding, 25 soal per bank, 20 diambil acak) dan `COG_BANK` (matematika).
 - **Teh Fety** (paviliun putih, Taman Apresiasi): menyematkan **Lencana Pengetahuan Dasar** bila keempat tantangan tuntas (butuh Explorer Card).
 - **Kode cepat tahap 2**: ketik `butnavudivoxyziz2` ke **Sit** (waitress IT-Mart) → keempat tantangan dinyatakan tuntas, berhak atas lencana dari Teh Fety. Kode disimpan sebagai hash.
-- **Menu CAPAIAN** (tombol 🏅 di bilah atas / menu ☰): sertifikat, Explorer Card, 7 slot lencana (Dasar, Umum, Alam, Jari, Coding, Agama Islam, Geografi — 6 terakhir "segera hadir").
+- **Menu CAPAIAN** (tombol 🏅 di bilah atas / menu ☰): sertifikat, Explorer Card, 7 slot lencana (Dasar, Umum, IoT & Drone, Jari, Coding, Agama Islam, Kerjasama Tim).
 - **Profil pemain**: klik avatar pemain lain (atau 👤 Profil di menu PEOPLE) → sertifikat, kartu (dicek ke database server) & lencananya.
 - **Pamerkan**: tombol 📣 menyiarkan capaian ke semua pemain (melayang di atas avatar 15 detik + notifikasi "Lihat"). Ikon capaian kecil di atas kepala bisa dimatikan di menu Capaian.
 - **Database kartu** (`DATA_DIR/kartu.json`) kini juga mencatat tantangan & lencana; terlihat di admin → tab Explorer Card. API publik baru: `GET /api/kartu/cek?no=…`; `POST /api/kartu/tantangan`, `POST /api/kartu/lencana` (butuh token pemilik kartu).
 - **Lorong rahasia Lab SE**: selama misi 4 robot lab belum tuntas, dinding tertutup rapat dan tampak sama persis dengan dinding sekitarnya (tanpa celah, garis, atau simbol).
+
+## Pembaruan v10 — Tahap 3 · Gua Pustaka
+- **Pintu masuk**: rak buku Silvia (IT-Mart). Silvia memeriksa **Lencana Pengetahuan Dasar** ke database kartu server; bila valid, rak bergeser dan membuka lorong ke Gua Pustaka.
+- **Gua gelap**: kabut pekat (±5 m terlihat jelas, selebihnya remang lalu gelap) + vinyet lentera; tombol "🔦 Lentera" memperbesar jarak pandang. **Mode solo**: pemain lain tidak terlihat dan tidak terdengar selama salah satu pihak berada di gua.
+- **3 nyawa untuk 3 babak**:
+  1. *Lantai Benar/Salah* — 10 pernyataan (3 tentang Kaprodi TI); berdiri di petak BENAR/SALAH dalam 9 detik. Salah → lantai runtuh, nyawa −1.
+  2. *Lini Masa* — dekati prasasti, urutkan 2 set kartu (set urutan Kaprodi TI + sejarah atau penemuan). Seret kartu atau ▲▼. Salah → nyawa −1.
+  3. *Galeri Benda* — 12 benda + 8 potret Kaprodi dalam gelap; 5 petunjuk acak, 35 detik per petunjuk; harus mendekat ±2 m untuk memilih. Salah pilih / waktu habis → nyawa −1.
+- Nyawa habis → kembali ke Silvia. Lolos → pintu ujung gua terbuka; **Teh Puspa** (tersembunyi, tidak tercantum di PEOPLE/GO TO) menyematkan **Lencana Pengetahuan Umum**.
+- **Kode cepat tahap 3**: `butnavudivoxyziz3` ke **Kang Santo** (hanya untuk pemegang Lencana Dasar) → langsung diantar ke Teh Puspa.
+- Server: tantangan `pustaka` & lencana `umum` (syarat `pustaka` + lencana `dasar`) tercatat di `kartu.json`; tampil di admin → Explorer Card.
+- **Nama NPC baru**: Ivy → Silvia, Sit → Patimah, Nan → Ananda, Dul → Haris, Vir → Virzha.
+- **Lencana diganti**: Pengetahuan Alam → **Teknologi · IoT & Drone**; Geografi → **Keterampilan · Kerjasama Tim** (tantangannya menyusul).
+- Bank soal di `public/index.html`: `CV_BS`, `CV_BS_KP` (Benar/Salah), `CV_LM` (lini masa), `CV_OBJ`, `CV_KP` (galeri).
+- **Portal Ring 1** (sudut barat laut Taman Apresiasi): portal hitam yang kelak terbuka bagi pemegang **Black Card** (diberikan setelah 7 lencana). Saat ini dijaga **Kang Ritzkal**, yang tidak bisa diajak chatting dan hanya mengatakan: "Anda hanya dapat mengakses portal ini jika memiliki Black Card".

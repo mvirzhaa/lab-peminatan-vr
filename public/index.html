@@ -520,6 +520,28 @@ canvas {
 .pfbtn{margin-left:auto;font-size:11px;background:#2a2650;border-radius:8px;padding:2px 8px;cursor:pointer;flex:none}
 .pfbtn:hover{background:#3b3570}
 @media (max-width:520px){.cap-row{grid-template-columns:1fr}}
+
+/* ===== v10: Gua Pustaka ===== */
+#cvHud{position:fixed;bottom:calc(76px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:30;width:min(640px,calc(100vw - 24px));background:rgba(18,11,6,.9);border:1px solid #92400e;border-radius:14px;padding:10px 12px;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.cvh-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;letter-spacing:.05em;color:#fde68a}
+.cvh-top span{font-size:16px;letter-spacing:2px}
+.cvh-txt{font-size:15px;font-weight:600;line-height:1.4;margin:6px 0}
+.cvh-bar{height:7px;background:#3f2a1d;border-radius:5px;overflow:hidden}.cvh-bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#f59e0b,#fde68a);transition:width .12s linear}.cvh-bar i.warn{background:linear-gradient(90deg,#ef4444,#f97316)}
+.cvh-btn{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}.cvh-btn button{height:28px;font-size:12px;padding:0 10px}.cvh-btn button.on{border-color:#fde68a;color:#fde68a}
+#cvVig{position:fixed;inset:0;z-index:5;pointer-events:none;background:radial-gradient(ellipse at 50% 58%,rgba(0,0,0,0) 30%,rgba(10,5,0,.45) 62%,rgba(0,0,0,.82) 100%);animation:cvflick 3.2s infinite}
+@keyframes cvflick{0%,100%{opacity:1}45%{opacity:.9}50%{opacity:.97}72%{opacity:.88}}
+.cv-flash{position:fixed;inset:0;z-index:7000;pointer-events:none;animation:cvfl .7s ease-out forwards}
+@keyframes cvfl{to{opacity:0}}
+.cv-fade{position:fixed;inset:0;z-index:9000;background:#000;pointer-events:none;animation:cvfd 1.6s ease forwards}
+@keyframes cvfd{0%{opacity:0}35%{opacity:1}65%{opacity:1}100%{opacity:0}}
+#cvLm{position:fixed;inset:0;z-index:8000;display:grid;place-items:center;background:radial-gradient(circle,rgba(4,20,30,.55),rgba(0,0,0,.85));padding:16px}
+.lm-card{width:min(560px,94vw);background:#071a22;border:2px solid #0e7490;border-radius:18px;padding:18px;color:#fff;box-shadow:0 20px 80px rgba(0,0,0,.7)}
+.lm-card .cog-top{color:#67e8f9}.lm-j{font-weight:700;font-size:16px;margin:8px 0 12px}
+.lm-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.lm-list li{display:flex;align-items:center;gap:8px;background:#0b2a36;border:1px solid #155e75;border-radius:12px;padding:8px 10px;cursor:grab;user-select:none}
+.lm-list li.drag{opacity:.4}.lm-n{width:24px;height:24px;border-radius:50%;background:#0e7490;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.lm-t{flex:1;font-size:15px}.lm-list button{background:#123a49;border:1px solid #1e6a80;color:#fff;border-radius:8px;width:30px;height:28px;cursor:pointer}
+.lm-msg{min-height:22px;font-size:13px;color:#a5f3fc;margin:10px 0 4px}.lm-tip{font-size:11.5px;color:#7dd3fc;opacity:.75;margin:8px 0 0}
 </style>
 
 </head>
@@ -866,8 +888,8 @@ var FAQ = [
   ["hasil pengumuman final penetapan diterima lab saya", "Hasil final peminatan diumumkan di papan pengumuman dinding timur Atrium. Klik papannya untuk mencari namamu atau mengecek dengan NIM."],
   ["statistik persentase jumlah pendaftar pie chart grafik", "Layar besar di belakang saya menampilkan persentase pendaftar tiap lab (berdasarkan pilihan 1) secara langsung. Klik layarnya untuk melihat angkanya."],
   ["quran al-quran alquran mushaf ngaji tilawah murattal ayat surah surat", "Sudut Al-Qur'an ada di sisi timur laut Atrium ini, di paviliun berkubah. Klik mushaf di atas rehal untuk membaca 114 surah lengkap dengan terjemahan Bahasa Indonesia dan audio murattal — suaranya hanya terdengar olehmu sendiri."],
-  ["eportal e-portal sso portal siakad simpeg ucl cbt vir", "Ruang E-Portal UIKA ada di selatan Ruang Sambutan (pintu hijau di dinding selatan). Di sana robot Vir memberi akses ke eportal.uika-bogor.ac.id — sistemnya masih dalam pengembangan."],
-  ["cafe kafe kopi ngopi rahman minum sit waitress", "Ada IT-Mart di sebelah timur Ruang Sambutan (pintu di dinding timur dekat gerbang Atrium). Barista Rahman bisa cerita soal jenis-jenis kopi, dosen-dosen TI, dan memberi saran dosen pembimbing; waitress Sit bisa menjelaskan semua ruangan di denah."],
+  ["eportal e-portal sso portal siakad simpeg ucl cbt vir", "Ruang E-Portal UIKA ada di selatan Ruang Sambutan (pintu hijau di dinding selatan). Di sana robot Virzha memberi akses ke eportal.uika-bogor.ac.id — sistemnya masih dalam pengembangan."],
+  ["cafe kafe kopi ngopi rahman minum sit patimah waitress", "Ada IT-Mart di sebelah timur Ruang Sambutan (pintu di dinding timur dekat gerbang Atrium). Barista Rahman bisa cerita soal jenis-jenis kopi, dosen-dosen TI, dan memberi saran dosen pembimbing; waitress Patimah bisa menjelaskan semua ruangan di denah."],
   ["lab apa saja peminatan ada berapa pilihan empat", "Ada 4 lab peminatan di galeri ini: KERIS (AI & sistem cerdas) di pintu barat, GIT (geospasial) di pintu utara-kiri, SE (software engineering) di pintu utara-kanan, dan CSN (jaringan & keamanan) di pintu timur."],
   ["bingung pilih rekomendasi saran cocok mana", "Coba pikirkan masalah apa yang paling ingin kamu pecahkan: suka AI & data → KERIS; suka peta, satelit, drone → GIT; suka membangun aplikasi web/mobile → SE; suka jaringan, server, keamanan → CSN. Kerjakan juga kuis di atrium ini!"],
   ["robot npc tanya siapa pemandu", "Setiap lab punya robot pemandu: Keri di Lab KERIS, Geo di Lab GIT, Cody di Lab SE, dan Neta di Lab CSN. Klik robotnya untuk bertanya — mereka hafal isi presentasi lab masing-masing."],
@@ -5838,7 +5860,7 @@ $("btnPeople").onclick = () => dropdown($("btnPeople"), (d) => {
     if (IS_MOD) modKickBtn(b, r);
   }
   for (const n of Object.values(NPCS)) {
-    if (n.secret || n.custom?.secret || n.id === "tama" || n.id === "fety") continue;
+    if (n.secret || (n.custom && (n.custom.secret || n.custom.hidden)) || n.id === "tama" || n.id === "fety" || n.id === "puspa" || n.id === "ritzkal") continue;
     const dot = document.createElement("span");
     dot.className = "dot";
     dot.style.background = n.col;
@@ -6755,7 +6777,7 @@ function mpTick(dt) {
     if (r.audio) {
       const d = Math.hypot(r.cur.x - P.x, r.cur.z - P.z);
       // tanpa pengeras suara: jelas ≤ 3 m, makin pelan, tidak terdengar ≥ 20 m
-      r.audio.volume = r.mega ? 1 : d <= VOICE_NEAR ? 1 : d >= VOICE_FAR ? 0 : Math.pow((VOICE_FAR - d) / (VOICE_FAR - VOICE_NEAR), 1.6);
+      r.audio.volume = (typeof caveSolo === "function" && caveSolo(r)) ? 0 : r.mega ? 1 : d <= VOICE_NEAR ? 1 : d >= VOICE_FAR ? 0 : Math.pow((VOICE_FAR - d) / (VOICE_FAR - VOICE_NEAR), 1.6);
     }
   }
   presT += dt;
@@ -7319,7 +7341,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
 }
 boot().catch((err) => {
   console.error(err);
@@ -7781,7 +7803,7 @@ function rel(res, top) {
   return [["Lihat juga: " + p.title.slice(0, 26), () => openZoom(p.id)]];
 }
 function npcAnswer(npcId, q) {
-  const cheat = (typeof codyCheat === "function" ? codyCheat(npcId, q) : null) || (typeof sitCheat === "function" ? sitCheat(npcId, q) : null);
+  const cheat = (typeof codyCheat === "function" ? codyCheat(npcId, q) : null) || (typeof sitCheat === "function" ? sitCheat(npcId, q) : null) || (typeof santoCheat === "function" ? santoCheat(npcId, q) : null);
   if (cheat) return cheat;
   const spR = typeof spAnswer === "function" ? spAnswer(npcId, q) : null;
   if (spR) return spR;
@@ -7800,7 +7822,7 @@ function npcAnswer(npcId, q) {
     return { text: L ? `Pendaftaran peminatan langsung dari galeri ini — tidak perlu Google Form lagi. Klik tombol di bawah, isi NIM & kontak, lalu pilih ${L.code} sebagai pilihan 1 bila kamu yakin!` : `Pendaftaran peminatan kini langsung dari galeri ini. Isi NIM, nama, kontak, lalu pilih lab pilihan 1 dan pilihan 2.${typeof PEM !== "undefined" && PEM.stats ? ` Saat ini sudah ${PEM.stats.total} pendaftar${PEM.stats.open ? "" : " dan pendaftaran sedang DITUTUP"}.` : ""}`, acts: [["✍ Isi formulir", () => openRegister(lab)], ["📊 Statistik", () => pemStatsCard()], ["📢 Hasil final", () => pemFinalCard()]] };
   if (!L && /\b(hasil|pengumuman|diterima|penetapan|final)\b/.test(ql)) return { text: typeof PEM !== "undefined" && PEM.final && PEM.final.published ? `Hasil final sudah diumumkan: ${PEM.final.title}. Klik tombol di bawah untuk mencari namamu, atau lihat papan pengumuman di dinding timur Atrium.` : "Hasil final peminatan belum diumumkan. Nanti akan tampil di papan pengumuman dinding timur Atrium — pantau terus ya!", acts: [["📢 Papan pengumuman", () => pemFinalCard()]] };
   if (!L && /statistik|persentase|persen|berapa (orang|pendaftar|banyak)|jumlah pendaftar|grafik|pie/.test(ql)) return { text: pemStatsText(), acts: [["📊 Lihat diagram", () => pemStatsCard()]] };
-  if (/\b(cafe|kafe|kopi|ngopi|rahman|mart|it-mart|ivy)\b/.test(ql)) return { text: "IT-Mart ada di sebelah timur Ruang Sambutan — masuk lewat pintu kayu di dinding timur dekat gerbang Atrium. Rahman si barista bisa cerita soal kopi, para dosen TI, dan memberi saran dosen pembimbing untuk judulmu ☕", acts: [["Antar ke Cafe", () => teleportSpot("cafe")]] };
+  if (/\b(cafe|kafe|kopi|ngopi|rahman|mart|it-mart|ivy|silvia)\b/.test(ql)) return { text: "IT-Mart ada di sebelah timur Ruang Sambutan — masuk lewat pintu kayu di dinding timur dekat gerbang Atrium. Rahman si barista bisa cerita soal kopi, para dosen TI, dan memberi saran dosen pembimbing untuk judulmu ☕", acts: [["Antar ke Cafe", () => teleportSpot("cafe")]] };
   const ml = mentionedLab(ql);
   if (/(lab|peminatan) apa saja|apa saja (lab|peminatan)|ada berapa (lab|peminatan)|pilihan (lab|peminatan)|daftar lab|semua lab/.test(ql))
     return { text: FAQ[1][1], acts: LAB_IDS.map((k) => [`Lab ${LABS[k].code}`, () => teleportSpot(k)]) };
@@ -7904,6 +7926,7 @@ function sMsg(who, text, me, acts, quiz, npcId = curNpc) {
   if (!me) speak(text, NPCS[npcId]?.pitch);
 }
 function askNpc(q, npcId = curNpc) {
+  if (npcId === "ritzkal") { if (typeof ritzkalSay === "function") ritzkalSay(); return; }
   if (typeof questTalk === "function") questTalk(npcId);
   sMsg(S.name, q, true, null, null, npcId);
   const a = npcAnswer(npcId, q);
@@ -7956,6 +7979,7 @@ function showNpcCard(id, e) {
   }
 }
 function openNpc(id, tab) {
+  if (id === "ritzkal") { if (typeof ritzkalSay === "function") ritzkalSay(); return; }
   if (id === "tama") questTalk(id);
   hidePopups();
   $("chatDr").classList.remove("show");
@@ -8486,7 +8510,7 @@ function zoneTick(dt) {
       if (visitedLabs.size === 4) setTimeout(() => toast("🎉 Kamu sudah mengunjungi keempat lab! Saatnya mendaftar di meja resepsionis Atrium.", 6e3), 4e3);
     }
   } else if (r === "eportal") {
-    toast("🌐 Ruang E-Portal UIKA — temui Vir di gerbang portal untuk akses eportal.uika-bogor.ac.id (masih dalam pengembangan).", 4500);
+    toast("🌐 Ruang E-Portal UIKA — temui Virzha di gerbang portal untuk akses eportal.uika-bogor.ac.id (masih dalam pengembangan).", 4500);
   } else if (r === "cafe") {
     toast("☕ IT-Mart — ngobrol dengan barista Rahman soal kopi, dosen TI, atau saran dosen pembimbing.", 4200);
     if (!store.get("cafeHint", false)) { store.set("cafeHint", true); setTimeout(() => sayBubble(`Selamat datang di IT-Mart, ${S.name}! Mau kopi apa hari ini? ☕`, "npc_rahman"), 600); }
@@ -8877,7 +8901,7 @@ function kuriAnswer(q) {
   const ql = norm(q).trim(), acts = [];
   const card = (k, label) => acts.push([label, () => kuriCard(k)]);
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql))
-    return { text: `Halo ${S.name || "IT'ers"}! Aku Dul, robot kurikulum Prodi Teknik Informatika UIKA. Aku hafal buku Kurikulum OBE 2025: visi-misi, tujuan, profil lulusan, CPL, sebaran mata kuliah per semester, mata kuliah pilihan, dosen pengampu, sampai hasil tracer study. Mau tanya apa?`, acts: [["📜 Visi & Misi", () => kuriCard("visi")], ["🎓 Profil Lulusan", () => kuriCard("profil")], ["📚 Struktur Kurikulum", () => kuriCard("mk")], ["🎯 CPL", () => kuriCard("cpl")]] };
+    return { text: `Halo ${S.name || "IT'ers"}! Aku Haris, robot kurikulum Prodi Teknik Informatika UIKA. Aku hafal buku Kurikulum OBE 2025: visi-misi, tujuan, profil lulusan, CPL, sebaran mata kuliah per semester, mata kuliah pilihan, dosen pengampu, sampai hasil tracer study. Mau tanya apa?`, acts: [["📜 Visi & Misi", () => kuriCard("visi")], ["🎓 Profil Lulusan", () => kuriCard("profil")], ["📚 Struktur Kurikulum", () => kuriCard("mk")], ["🎯 CPL", () => kuriCard("cpl")]] };
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Semoga studimu di Teknik Informatika lancar dan berkah 😊" };
   if (/\bkuis|quiz|tebak|uji saya\b/.test(ql)) {
     const pool = [["Visi Prodi TI menargetkan keunggulan di bidang riset…", ["Keruangan (spasial)", "Kedokteran", "Ekonomi syariah"], 0], ["Total SKS kurikulum OBE TI adalah…", ["120 SKS", "145 SKS", "160 SKS"], 1], ["Mata kuliah Kecerdasan Buatan ada di semester…", ["2", "4", "7"], 1], ["Akreditasi Prodi TI dari LAM-INFOKOM adalah…", ["Baik", "Baik Sekali", "Unggul"], 1], ["Prodi TI UIKA resmi dibuka pada tahun…", ["1961", "2003", "2015"], 1], ["Berapa jumlah CPL pada kurikulum OBE TI?", ["5", "10", "23"], 1]];
@@ -8942,7 +8966,7 @@ function kuriCard(k) {
     html += `<h2>Struktur Kurikulum OBE</h2><p class="kk">145 SKS · 8 semester · 133 SKS wajib + 12 SKS pilihan</p><div class="kgrid">${Object.entries(KUR.sem).map(([s, list]) => `<div class="kbox"><b>SEMESTER ${s} · ${list.reduce((a, b) => a + b[2], 0)} SKS</b><ul>${list.map(([kk, n, x]) => `<li>${esc(n)} <span>${x} sks</span></li>`).join("")}</ul></div>`).join("")}</div>
     <div class="kbox"><b>MATA KULIAH PILIHAN</b><ul class="kcols">${KUR.pilihan.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>`;
   }
-  html += `<div class="rowf" style="margin-top:12px"><button class="ghost kc" data-k="visi">Visi & Misi</button><button class="ghost kc" data-k="profil">Profil Lulusan</button><button class="ghost kc" data-k="cpl">CPL</button><button class="ghost kc" data-k="mk">Struktur Kurikulum</button><button class="btn" id="kAsk">Tanya Dul</button></div>`;
+  html += `<div class="rowf" style="margin-top:12px"><button class="ghost kc" data-k="visi">Visi & Misi</button><button class="ghost kc" data-k="profil">Profil Lulusan</button><button class="ghost kc" data-k="cpl">CPL</button><button class="ghost kc" data-k="mk">Struktur Kurikulum</button><button class="btn" id="kAsk">Tanya Haris</button></div>`;
   genCard(html);
   $("genCard").classList.add("wide");
   document.querySelectorAll("#genCard .kc").forEach((b) => b.onclick = () => kuriCard(b.dataset.k));
@@ -9332,7 +9356,7 @@ function buildGarden() {
   });
   // pohon (instanced) + bunga
   const trees = [];
-  const tryTree = (x, z, s, pink) => { if (Math.abs(x - cx) < 3.2 && z > -230) return; if (Math.abs(z + 203) < 3.0) return; if (Math.hypot(x - cx, z - fz) < 8) return; if (x > -10.5 && x < 7 && z > -213 && z < -192) return; if (x > 27 && x < 36 && z > -214 && z < -192) return; trees.push([x, z, s, pink]); };
+  const tryTree = (x, z, s, pink) => { if (Math.abs(x - cx) < 3.2 && z > -230) return; if (Math.abs(z + 203) < 3.0) return; if (Math.hypot(x - cx, z - fz) < 8) return; if (x > -10.5 && x < 7 && z > -213 && z < -192) return; if (x > 27 && x < 36 && z > -214 && z < -192) return; if (x < -3 && z < -224) return; trees.push([x, z, s, pink]); };
   for (let i = 0; i < 70; i++) { const side = Rg(); let x, z; if (side < 0.5) { x = R.x0 + 2 + Rg() * (R.x1 - R.x0 - 4); z = Rg() < 0.5 ? R.z0 + 2 + Rg() * 6 : R.z1 - 2 - Rg() * 5; } else { z = R.z0 + 2 + Rg() * (R.z1 - R.z0 - 4); x = Rg() < 0.5 ? R.x0 + 2 + Rg() * 7 : R.x1 - 2 - Rg() * 7; } tryTree(x, z, 0.8 + Rg() * 0.7, Rg() < 0.3); }
   for (const [x, z] of [[8, -190], [24, -190], [8, -216], [24, -216], [-6, -224], [38, -224], [-6, -182], [38, -182]]) tryTree(x, z, 1.25, true);
   const trunk = new THREE2.InstancedMesh(new THREE2.CylinderGeometry(0.18, 0.28, 2.6, 8), new THREE2.MeshStandardMaterial({ color: 0x6b4423, roughness: 0.9 }), trees.length);
@@ -9580,11 +9604,11 @@ function buildWelcomeWall() {
 function buildKuri() {
   buildKuriKB();
   makeCustomRobot("kuri", {
-    code: "OBE", name: "Dul", role: "Robot Kurikulum & Visi Misi Prodi TI", col: "#f59e0b", body: "#fff8eb", accent: "#f59e0b", eye: "#a855f7", icon: "📘",
+    code: "OBE", name: "Haris", role: "Robot Kurikulum & Visi Misi Prodi TI", col: "#f59e0b", body: "#fff8eb", accent: "#f59e0b", eye: "#a855f7", icon: "📘",
     x: 4.4, z: 16.6, room: "welcome",
     chips: ["Visi misi prodi", "Tujuan pendidikan", "Profil lulusan", "Mata kuliah semester 1", "Total SKS", "Mata kuliah pilihan", "Akreditasi", "Kuis"],
     roleNote: "menjawab dari buku Kurikulum OBE 2025",
-    knowText: `Dul hafal ${KURI_KB.length} catatan dari buku Kurikulum OBE Teknik Informatika 2025: visi, misi, tujuan, profil lulusan, CPL, bahan kajian, sebaran mata kuliah, dosen pengampu, tracer study, dan SWOT.`,
+    knowText: `Haris hafal ${KURI_KB.length} catatan dari buku Kurikulum OBE Teknik Informatika 2025: visi, misi, tujuan, profil lulusan, CPL, bahan kajian, sebaran mata kuliah, dosen pengampu, tracer study, dan SWOT.`,
     greetActs: () => [["📜 Visi & Misi", () => kuriCard("visi")], ["📚 Struktur Kurikulum", () => kuriCard("mk")]],
     answer: kuriAnswer, pitch: 1.0
   });
@@ -9606,6 +9630,8 @@ function buildKuri() {
 // ---------- interaksi ----------
 function xHandleAct(act, hit, e) {
   if (typeof capAct === "function" && capAct(act, hit, e)) return;
+  if (typeof cvAct === "function" && cvAct(act, hit, e)) return;
+  if (typeof ringAct === "function" && ringAct(act, hit, e)) return;
   switch (act.type) {
     case "x_riddle": openRiddle(act.i); break;
     case "x_kaprodi": showKaprodi(act.i); break;
@@ -9620,7 +9646,7 @@ function xHandleAct(act, hit, e) {
     case "x_l2up": l2Stairs(true); break;
     case "x_l2down": l2Stairs(false); break;
     case "x_l2gate": case "x_l2scan": openNpc("nan", "chat"); if (!L2.ok) askNpc("verifikasi kartu saya", "nan"); break;
-    case "x_cogdoor": if (L2.ok) cogConfirm(); else toast("Verifikasi Explorer Card ke Nan dulu."); break;
+    case "x_cogdoor": if (L2.ok) cogConfirm(); else toast("Verifikasi Explorer Card ke Ananda dulu."); break;
     case "x_l2soon": toast("🔒 Pintu ini untuk tantangan yang akan datang — segera hadir!"); break;
     case "x_l2back": if (L2.ok && L2.okName === S.name) xTeleport(59, 27.2, 0); else xTeleport(59, 22.6, 0); break;
     case "x_quran": if (renderer.xr.isPresenting) quranVR(true); else quranOpen(); break;
@@ -9722,6 +9748,8 @@ function buildExtras() {
     try { buildBuku(); } catch (err) { console.error("Rak buku gagal dibangun:", err); }
     try { buildLantai2(); } catch (err) { console.error("Lantai 2 gagal dibangun:", err); }
     try { buildCapaian(); } catch (err) { console.error("Capaian/tantangan tahap 2 gagal dibangun:", err); }
+    try { buildGua(); } catch (err) { console.error("Gua Pustaka gagal dibangun:", err); }
+    try { buildRing(); } catch (err) { console.error("Portal Ring 1 gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -10086,7 +10114,7 @@ function spAnswer(npcId, q) {
   }
   const tr = Qs.spTries[npcId] = (Qs.spTries[npcId] || 0) + 1;
   saveQ();
-  const hint = tr >= 3 ? (SP_Q[npcId].labs ? " Petunjuk: perhatikan papan nama di atas keempat pintu lab di Atrium." : " Petunjuk: robot Dul di Ruang Sambutan hafal visi universitas, fakultas, dan prodi.") : "";
+  const hint = tr >= 3 ? (SP_Q[npcId].labs ? " Petunjuk: perhatikan papan nama di atas keempat pintu lab di Atrium." : " Petunjuk: robot Haris di Ruang Sambutan hafal visi universitas, fakultas, dan prodi.") : "";
   return { text: `❌ Belum tepat. ${r.msg}${hint} Coba ketik lagi jawabanmu.` };
   void n;
 }
@@ -10852,7 +10880,7 @@ function hofDrawHeader() {
 // - Formulir di dalam galeri → POST /api/peminatan/daftar
 // - Layar pie chart persentase peminatan di belakang Kak Tias
 // - Papan Pengumuman hasil final (dinding timur Atrium)
-// Data dikelola admin di halaman /admin (login), termasuk unduh Excel,
+// Data dikelola admin di halaman /4adm1in (login), termasuk unduh Excel,
 // unggah hasil final, arsip, dan reset untuk tahun berikutnya.
 // =====================================================================
 var PEM = { stats: null, final: null, fv: -1, screen: null, board: null, page: 0, pageT: 0, offline: false };
@@ -11289,16 +11317,16 @@ function rahmanAnswer(q) {
     return { text: "Boleh! Tulis judul (atau rencana judul) skripsimu di kotak chat — aku cocokkan dengan keahlian para dosen TI. Contoh: “Klasifikasi penyakit daun padi menggunakan CNN” atau “Aplikasi mobile pemesanan kopi berbasis Flutter”. (ketik “batal” untuk berhenti)" };
   }
   // ---- lorong rahasia (petunjuk awal saja) ----
-  if (/kartu|card|explorer|\bnan\b|lantai ?2|lantai dua|verifikasi|tantangan/.test(ql) && !/kopi/.test(ql)) {
+  if (/kartu|card|explorer|\bnan\b|ananda|lantai ?2|lantai dua|verifikasi|tantangan/.test(ql) && !/kopi/.test(ql)) {
     const has = Q().card && Q().card.no;
-    return { text: has ? `Kamu sudah punya Explorer Card? Hebat! Naik tangga di sudut timur laut IT-Mart ke lantai 2 — Nan akan memverifikasi kartumu ke database lalu membuka gerbang tantangan.` : `Explorer Card? Itu bukan barang dagangan di sini 😄 Kartu itu hanya diberikan Kang Santo, penjaga sebuah taman yang konon berada di ujung lorong rahasia. Jalan masuknya tersembunyi di salah satu lab peminatan… mau dengar bisik-bisiknya?`, acts: has ? [["⬆ Naik ke lantai 2", () => l2Stairs(true)]] : [["🤫 Ceritakan lorong rahasia", () => askNpc("lorong rahasia itu apa?", "rahman")]] };
+    return { text: has ? `Kamu sudah punya Explorer Card? Hebat! Naik tangga di sudut timur laut IT-Mart ke lantai 2 — Ananda akan memverifikasi kartumu ke database lalu membuka gerbang tantangan.` : `Explorer Card? Itu bukan barang dagangan di sini 😄 Kartu itu hanya diberikan Kang Santo, penjaga sebuah taman yang konon berada di ujung lorong rahasia. Jalan masuknya tersembunyi di salah satu lab peminatan… mau dengar bisik-bisiknya?`, acts: has ? [["⬆ Naik ke lantai 2", () => l2Stairs(true)]] : [["🤫 Ceritakan lorong rahasia", () => askNpc("lorong rahasia itu apa?", "rahman")]] };
   }
   const moreHint = CAFE.spTier > 0 && /^(petunjuk|hint|clue|bocoran)|petunjuk (lagi|lain)|(kasih|minta|ada) (petunjuk|clue|hint)|lanjut(kan)? (cerita|bisik)/.test(ql);
   if (moreHint || /rahasia|secret|lorong|pintu tersembunyi|misteri|labirin|taman apresiasi|hall of fame|bisik/.test(ql)) {
     const more = moreHint || (/lagi|lanjut|lebih|detail|caranya|bagaimana|gimana|petunjuk/.test(ql) && CAFE.spTier > 0);
     CAFE.spTier++;
     if (!more) return { text: "🤫 Psst… pelanggan tetap di sini sering cerita: di salah satu lab peminatan ada pintu tersembunyi yang tidak tercatat di denah — tapi aku tidak tahu lab yang mana. Katanya kuncinya dipegang oleh keempat robot lab — Keri, Geo, Cody, dan Neta. Masing-masing menyimpan satu “pertanyaan rahasia”. Kalau mau petunjuk lagi, tanya aku “petunjuk lorong rahasia”.", acts: [["Petunjuk lagi", () => askNpc("petunjuk lagi soal lorong rahasia", "rahman")]] };
-    return { text: "Oke, satu petunjuk lagi, tapi jangan bilang siapa-siapa ya ☕ Coba ketik “secret passage” saat mengobrol dengan setiap robot lab. Pertanyaan mereka seputar visi kampus, fakultas, prodi, dan nama-nama lab — robot Dul di Ruang Sambutan hafal semua visi itu. Setelah keempatnya puas… rasakan saja getarannya. Di baliknya ada beberapa lorong yang menguji kesabaran, dan konon di ujungnya ada taman yang indah. Selebihnya, temukan sendiri! 😉", acts: [["Antar ke Dul", () => teleportSpot("welcome")], ["Antar ke Atrium", () => teleportSpot("atrium")]] };
+    return { text: "Oke, satu petunjuk lagi, tapi jangan bilang siapa-siapa ya ☕ Coba ketik “secret passage” saat mengobrol dengan setiap robot lab. Pertanyaan mereka seputar visi kampus, fakultas, prodi, dan nama-nama lab — robot Haris di Ruang Sambutan hafal semua visi itu. Setelah keempatnya puas… rasakan saja getarannya. Di baliknya ada beberapa lorong yang menguji kesabaran, dan konon di ujungnya ada taman yang indah. Selebihnya, temukan sendiri! 😉", acts: [["Antar ke Haris", () => teleportSpot("welcome")], ["Antar ke Atrium", () => teleportSpot("atrium")]] };
   }
   // ---- dosen ----
   if (/daftar dosen|semua dosen|dosen (ti|informatika)|siapa saja dosen|list dosen|keahlian dosen|dosen.*(ahli|keahlian|bidang)/.test(ql) && !dosenFind(ql)) {
@@ -11409,11 +11437,11 @@ function buildCafe() {
   world.colliders.push({ a: [15.1, 12.6], b: [20.9, 12.6], r: 0.42 });
   for (let i = 0; i < 4; i++) world.seats.push({ x: 15.9 + i * 1.4, z: 12.95, yaw: Math.PI });
   // rak buku (dinding barat bagian selatan)
-  { const bg = new THREE2.Group(); bg.position.set(9.4, 0, 24.5); scene.add(bg);
+  { const bg = new THREE2.Group(); bg.position.set(9.4, 0, 24.5); scene.add(bg); XT.bookcase = bg;
     xBox(0.4, 2.6, 4.0, wood, 0, 1.3, 0, 0, bg);
     const Rb = rndGen(88);
     // isi rak = Rak Buku Digital (src/ext_buku.js)
-    world.colliders.push({ a: [9.4, 22.5], b: [9.4, 26.5], r: 0.3 }); }
+    XT.bookcaseCol = { a: [9.4, 22.5], b: [9.4, 26.5], r: 0.3 }; world.colliders.push(XT.bookcaseCol); }
   // tanaman
   for (const [px, pz] of [[26.2, 29.0], [9.9, 29.2]]) {
     const pot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.3, 0.22, 0.55, 16), new THREE2.MeshStandardMaterial({ color: 0xd6c4a8, roughness: 0.6 })); pot.position.set(px, 0.275, pz); scene.add(pot);
@@ -11674,8 +11702,8 @@ setTimeout(() => { if (adzanBlockInfo()) adzanShowBlock(); }, 0);
 
 // =====================================================================
 // src/ext_eportal.js — RUANG E-PORTAL UIKA (selatan Ruang Sambutan) +
-// NPC Vir (akses ke eportal.uika-bogor.ac.id) + slide tiap aplikasi.
-// Juga: NPC Sit, waitress IT-Mart, pemandu ruangan-ruangan di denah.
+// NPC Virzha (akses ke eportal.uika-bogor.ac.id) + slide tiap aplikasi.
+// Juga: NPC Patimah, waitress IT-Mart, pemandu ruangan-ruangan di denah.
 // =====================================================================
 var EPORTAL_URL = "https://eportal.uika-bogor.ac.id";
 var EPORTAL_NOTE = "Sistem masih dalam pengembangan. Untuk informasi lebih lanjut akan tersedia pada update yang lain.";
@@ -11727,7 +11755,7 @@ function epSlideCanvas(i) {
   x.fillStyle = "#111827"; rr(x, -330, -38, 660, 76, 14); x.fill();
   x.fillStyle = "#facc15"; x.font = `800 46px ${FONT}`; x.textAlign = "center"; x.fillText("UNDER CONSTRUCTION", 0, 16);
   x.restore(); x.textAlign = "left";
-  x.fillStyle = "#94a3b8"; x.font = `400 24px ${FONT}`; x.fillText("Klik untuk detail · tanya Vir di gerbang portal untuk akses", 70, 690);
+  x.fillStyle = "#94a3b8"; x.font = `400 24px ${FONT}`; x.fillText("Klik untuk detail · tanya Virzha di gerbang portal untuk akses", 70, 690);
   return EP.slides[i] = c;
 }
 function epOpenPortal() {
@@ -11741,8 +11769,8 @@ function epOpenPortal() {
     showVRPanel(c); return;
   }
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🌐 Akses E-Portal UIKA</h2>
-  <p>Vir membukakan akses ke sistem <b>eportal.uika-bogor.ac.id</b> — Single Sign-On untuk CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, dan UCL.</p>
-  <div class="kbox"><b>CATATAN DARI VIR</b><p>🚧 ${EPORTAL_NOTE}</p></div>
+  <p>Virzha membukakan akses ke sistem <b>eportal.uika-bogor.ac.id</b> — Single Sign-On untuk CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, dan UCL.</p>
+  <div class="kbox"><b>CATATAN DARI VIRZHA</b><p>🚧 ${EPORTAL_NOTE}</p></div>
   <div class="rowf"><a class="btn" id="epGo" href="${EPORTAL_URL}" target="_blank" rel="noopener noreferrer">🌐 Buka eportal.uika-bogor.ac.id</a><button class="ghost" id="epSl">📑 Slide aplikasi</button></div>`);
   $("epGo").onclick = () => { toast("E-Portal dibuka di tab baru. Sistem masih dalam pengembangan 🚧", 4500); spawnSparkle(); };
   $("epSl").onclick = () => epSlides(0);
@@ -11766,7 +11794,7 @@ function virAnswer(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
   const acts = [["🌐 Akses E-Portal", () => epOpenPortal()], ["📑 Slide aplikasi", () => epSlides(0)]];
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql))
-    return { text: `Halo ${nm}! Aku Vir, penjaga gerbang E-Portal UIKA. Aku bisa memberimu akses menuju sistem eportal.uika-bogor.ac.id. ${EPORTAL_NOTE}`, acts };
+    return { text: `Halo ${nm}! Aku Virzha, penjaga gerbang E-Portal UIKA. Aku bisa memberimu akses menuju sistem eportal.uika-bogor.ac.id. ${EPORTAL_NOTE}`, acts };
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Pantau terus update berikutnya ya 🚧" };
   const ai = EP_APPS.findIndex((a) => a[6].test(ql));
   if (ai >= 0) return { text: `${EP_APPS[ai][1]} (${EP_APPS[ai][5].toLowerCase()}) — keterangan: under construction. ${EPORTAL_NOTE}`, acts: [["📑 Lihat slide " + EP_APPS[ai][1], () => epSlides(ai)], ["🌐 Akses E-Portal", () => epOpenPortal()]] };
@@ -11840,36 +11868,36 @@ function buildEportal() {
     const m = xPlane(c, 2.2, 0.42); m.position.set(-6.5, 3.75, 29.82); m.rotation.y = Math.PI; scene.add(m);
     const c2 = mkCanvas(900, 170), x2 = c2.getContext("2d"); x2.fillStyle = "#4c1d95"; rr(x2, 0, 0, 900, 170, 30); x2.fill(); x2.fillStyle = "#fff"; x2.font = `700 64px ${FONT}`; x2.textAlign = "center"; x2.fillText("↑ RUANG SAMBUTAN", 450, 108);
     const m2 = xPlane(c2, 2.2, 0.42); m2.position.set(-6.5, 3.75, 30.18); scene.add(m2); }
-  // NPC Vir
+  // NPC Virzha
   makeCustomRobot("vir", {
-    code: "SSO", name: "Vir", role: "Penjaga Gerbang E-Portal UIKA", col: "#10b981", body: "#f0fdf4", accent: "#10b981", eye: "#22d3ee", icon: "🔐",
+    code: "SSO", name: "Virzha", role: "Penjaga Gerbang E-Portal UIKA", col: "#10b981", body: "#f0fdf4", accent: "#10b981", eye: "#22d3ee", icon: "🔐",
     x: -5.5, z: 51.6, room: "eportal",
-    greet: "Halo! Aku Vir, penjaga gerbang E-Portal UIKA.",
+    greet: "Halo! Aku Virzha, penjaga gerbang E-Portal UIKA.",
     chips: ["Akses E-Portal", "Aplikasi apa saja?", "SIAKAD", "UCL Mobile", "Kapan selesai?"],
     roleNote: "akses eportal.uika-bogor.ac.id",
-    knowText: `Vir menjaga gerbang E-Portal SSO UIKA (${EP_APPS.length} aplikasi, semuanya berketerangan under construction) dan memberi akses ke ${EPORTAL_URL}.`,
+    knowText: `Virzha menjaga gerbang E-Portal SSO UIKA (${EP_APPS.length} aplikasi, semuanya berketerangan under construction) dan memberi akses ke ${EPORTAL_URL}.`,
     greetActs: () => [["🌐 Akses E-Portal", () => epOpenPortal()], ["📑 Slide aplikasi", () => epSlides(0)]],
     answer: virAnswer, pitch: 1.2
   });
   buildSit();
 }
-// ---------- Sit: waitress IT-Mart, pemandu ruangan di denah ----------
+// ---------- Patimah: waitress IT-Mart, pemandu ruangan di denah ----------
 var ROOM_INFO = {
-  welcome: ["Ruang Sambutan", "titik awal kamu tiba", "Ada layar besar video sambutan, slideshow “Kenali Lab Peminatan”, galeri Kepala Program Studi, logo TI 3D, denah, headset VR, dan robot Dul yang hafal kurikulum OBE serta visi-misi.", /sambutan|awal|video|kaprodi|kepala program|\bdul\b|kurikulum|obe/],
+  welcome: ["Ruang Sambutan", "titik awal kamu tiba", "Ada layar besar video sambutan, slideshow “Kenali Lab Peminatan”, galeri Kepala Program Studi, logo TI 3D, denah, headset VR, dan robot Haris yang hafal kurikulum OBE serta visi-misi.", /sambutan|awal|video|kaprodi|kepala program|\bdul\b|haris|kurikulum|obe/],
   atrium: ["Atrium Pendaftaran", "di utara Ruang Sambutan, pusat semua ruangan", "Sudut Al-Qur'an berkubah di sisi timur laut (baca 114 surah + terjemahan + murattal), meja resepsionis Kak Tias untuk mendaftar peminatan, layar persentase peminatan, papan pengumuman hasil final, kuis “Kasus ini cocok di lab mana?”, papan tulis, papan pesan, dan pita Hall of Fame.", /atrium|resepsionis|\btias\b|daftar|pendaftaran|pengumuman|kuis|papan tulis/],
   keris: ["Lab KERIS", "lewat pintu barat Atrium", "Lab AI, data mining, machine learning & computer vision — ada rak server berkedip, hologram jaringan saraf, video lab, dan robot Keri.", /keris|\bkeri\b|\bai\b|machine learning|kecerdasan/],
   git: ["Lab GIT", "lewat pintu utara-kiri Atrium", "Lab geospasial: lantai peta kota neon, globe hologram, drone terbang, video kegiatan lapangan, dan robot Geo.", /\bgit\b|\bgeo\b|geospa|\bgis\b|drone|satelit/],
   se: ["Lab Software Engineering", "lewat pintu utara-kanan Atrium", "Studio developer: meja laptop, beanbag, rak piala, kanban, slideshow prestasi & produk, dan robot Cody.", /\bse\b|software|\brpl\b|cody/],
   csn: ["Lab CSN", "lewat pintu timur Atrium", "Network Operation Center: layar monitoring, hologram topologi jaringan, rak server, dan robot Neta.", /\bcsn\b|neta|jaringan|network/],
-  cafe: ["IT-Mart", "di timur Ruang Sambutan, lewat pintu kayu di dinding timurnya (tempat aku bekerja)", "Meja bar barista Rahman (kopi, info dosen & saran pembimbing), tangga ke Lantai 2 (Nan memverifikasi Explorer Card), papan menu kopi, Rak Buku Digital berisi PDF yang bisa diunduh (dijaga Ivy), papan keahlian dosen TI, sofa, dan rak buku.", /cafe|kafe|kopi|rahman|it-?mart|\bmart\b|ivy|rak buku|perpus|lantai ?2|\bnan\b/],
-  eportal: ["Ruang E-Portal UIKA", "lewat pintu hijau di dinding selatan Ruang Sambutan", "Ruang luas berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, UCL, dan 2 aplikasi mobile) serta robot Vir yang memberi akses ke eportal.uika-bogor.ac.id.", /e-?portal|portal|\bvir\b|\bsso\b|siakad|simpeg|\bucl\b|\bcbt\b|library/]
+  cafe: ["IT-Mart", "di timur Ruang Sambutan, lewat pintu kayu di dinding timurnya (tempat aku bekerja)", "Meja bar barista Rahman (kopi, info dosen & saran pembimbing), tangga ke Lantai 2 (Ananda memverifikasi Explorer Card), papan menu kopi, Rak Buku Digital berisi PDF yang bisa diunduh (dijaga Silvia), papan keahlian dosen TI, sofa, dan rak buku.", /cafe|kafe|kopi|rahman|it-?mart|\bmart\b|ivy|rak buku|perpus|lantai ?2|\bnan\b|ananda|silvia|patimah|gua pustaka/],
+  eportal: ["Ruang E-Portal UIKA", "lewat pintu hijau di dinding selatan Ruang Sambutan", "Ruang luas berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, UCL, dan 2 aplikasi mobile) serta robot Virzha yang memberi akses ke eportal.uika-bogor.ac.id.", /e-?portal|portal|\bvir\b|virzha|\bsso\b|siakad|simpeg|\bucl\b|\bcbt\b|library/]
 };
 function sitAnswer(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
   const mapAct = ["🗺 Buka denah", () => toggleMap(true)];
   const roomActs = (ids) => ids.map((k) => [`Antar ke ${ROOM_INFO[k][0]}`, () => teleportSpot(SPOTS.some((s) => s.id === k) ? k : "atrium")]);
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|mbak|kak)\b/.test(ql) && ql.split(" ").length <= 3)
-    return { text: `Halo ${nm}, aku Sit, waitress di IT-Mart 😊 Selain mengantar pesanan, aku hafal semua ruangan di denah galeri ini. Mau tahu ruangan apa saja, atau mau kuantar ke suatu tempat?`, acts: [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], mapAct] };
+    return { text: `Halo ${nm}, aku Patimah, waitress di IT-Mart 😊 Selain mengantar pesanan, aku hafal semua ruangan di denah galeri ini. Mau tahu ruangan apa saja, atau mau kuantar ke suatu tempat?`, acts: [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], mapAct] };
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Selamat menjelajah ya 😊" };
   if (/saya di ?mana|aku di ?mana|posisi (saya|aku)|lokasi (saya|aku)|sekarang di/.test(ql)) {
     const r = roomAt(P.x, P.z), info = ROOM_INFO[r];
@@ -11889,12 +11917,12 @@ function sitAnswer(q) {
 }
 function buildSit() {
   makeCustomHuman("sit", {
-    code: "CAFE", name: "Sit", role: "Waitress IT-Mart · pemandu ruangan", col: "#be185d", icon: "🗺", hint: "🗺",
-    x: 25.3, z: 24.6, room: "cafe", tag: "SIT · WAITRESS",
+    code: "CAFE", name: "Patimah", role: "Waitress IT-Mart · pemandu ruangan", col: "#be185d", icon: "🗺", hint: "🗺",
+    x: 25.3, z: 24.6, room: "cafe", tag: "PATIMAH · WAITRESS",
     look: { shirt: "#fdf2f8", apron: "#7c2d12", hijab: "#be185d", glasses: false, badge: "🗺" },
     chips: ["Ruangan apa saja?", "Di mana Ruang E-Portal?", "Atrium itu apa?", "Saya di mana?", "Buka denah"],
     roleNote: "info ruangan-ruangan di denah",
-    knowText: `Sit hafal ${Object.keys(ROOM_INFO).length} ruangan di denah galeri beserta isi dan cara menuju ke sana.`,
+    knowText: `Patimah hafal ${Object.keys(ROOM_INFO).length} ruangan di denah galeri beserta isi dan cara menuju ke sana.`,
     greetActs: () => [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], ["🗺 Buka denah", () => toggleMap(true)]],
     answer: (q) => (/^buka denah$/i.test(String(q).trim()) ? (toggleMap(true), { text: "Ini denahnya 🗺 Klik titik mana saja untuk berpindah." }) : sitAnswer(q))
   });
@@ -12212,9 +12240,9 @@ function buildQuran() {
 }
 
 // =====================================================================
-// src/ext_buku.js — RAK BUKU DIGITAL IT-Mart + NPC Ivy (penjaga buku)
-// Koleksi PDF dikelola admin di /admin (tab "Rak Buku"). Pengunjung bisa
-// mengunduh; Ivy menjelaskan isi buku dari ringkasan admin + teks PDF yang
+// src/ext_buku.js — RAK BUKU DIGITAL IT-Mart + NPC Silvia (penjaga buku)
+// Koleksi PDF dikelola admin di /4adm1in (tab "Rak Buku"). Pengunjung bisa
+// mengunduh; Silvia menjelaskan isi buku dari ringkasan admin + teks PDF yang
 // diekstrak server (GET /api/buku/tanya).
 // =====================================================================
 var BUKU = { list: [], loaded: false, cur: null, shelf: null };
@@ -12263,7 +12291,7 @@ function drawShelf() {
     x.fillStyle = "rgba(0,0,0,.55)"; rr(x, 60, H / 2 - 70, W - 120, 140, 20); x.fill();
     x.fillStyle = "#fde68a"; x.font = `700 44px ${FONT}`; x.textAlign = "center";
     x.fillText(BUKU.loaded ? "Rak masih kosong" : "Rak buku belum terhubung ke server", W / 2, H / 2 - 4);
-    x.fillStyle = "#fff"; x.font = `400 28px ${FONT}`; x.fillText("Koleksi modul dan e-book PDF akan segera ditambahkan", W / 2, H / 2 + 42); x.textAlign = "left";
+    x.fillStyle = "#fff"; x.font = `400 28px ${FONT}`; x.fillText("Koleksi PDF ditambahkan admin lewat halaman /4adm1in", W / 2, H / 2 + 42); x.textAlign = "left";
   }
   S2.m.material.map.needsUpdate = true;
   if (S2.lbl) { const lx = S2.lbl.c.getContext("2d"); lx.clearRect(0, 0, 1024, 200); lx.fillStyle = "#14532d"; rr(lx, 0, 0, 1024, 200, 30); lx.fill(); lx.strokeStyle = "#fbbf24"; lx.lineWidth = 8; rr(lx, 6, 6, 1012, 188, 26); lx.stroke(); lx.fillStyle = "#fff"; lx.textAlign = "center"; lx.font = `800 64px ${FONT}`; lx.fillText("📚 RAK BUKU DIGITAL", 512, 92); lx.fillStyle = "#fde68a"; lx.font = `500 38px ${FONT}`; lx.fillText(`${list.length} buku PDF · klik untuk mengunduh`, 512, 158); S2.lbl.m.material.map.needsUpdate = true; }
@@ -12271,8 +12299,8 @@ function drawShelf() {
 function bukuCard(focusId) {
   hidePopups();
   BUKU.cardOpen = true;
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>📚 Rak Buku Digital IT-Mart</h2><p class="kk">Koleksi PDF yang dikelola admin. Klik <b>Unduh</b> untuk menyimpan, atau tanya Ivy tentang isi bukunya.</p>
-  <div class="rowf"><input type="search" id="bkQ" placeholder="Cari judul, penulis, kategori…" aria-label="Cari buku" style="flex:1"><button class="ghost" id="bkIvy">💬 Tanya Ivy</button></div>
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>📚 Rak Buku Digital IT-Mart</h2><p class="kk">Koleksi PDF yang dikelola admin. Klik <b>Unduh</b> untuk menyimpan, atau tanya Silvia tentang isi bukunya.</p>
+  <div class="rowf"><input type="search" id="bkQ" placeholder="Cari judul, penulis, kategori…" aria-label="Cari buku" style="flex:1"><button class="ghost" id="bkIvy">💬 Tanya Silvia</button></div>
   <div id="bkList" class="bk-list"></div>`);
   $("genCard").classList.add("wide");
   $("bkQ").oninput = bukuRenderList;
@@ -12288,7 +12316,7 @@ function bukuRenderList(focusId) {
   if (!list.length) { const p = document.createElement("p"); p.className = "kk"; p.textContent = BUKU.list.length ? "Tidak ada buku yang cocok." : (BUKU.loaded ? "Rak masih kosong. Admin dapat menambah buku PDF melalui halaman admin." : "Server rak buku tidak terhubung."); box.appendChild(p); return; }
   for (const b of list) {
     const d = document.createElement("div"); d.className = "bk-it" + (b.id === focusId ? " on" : "");
-    d.innerHTML = `<div class="bk-cv">PDF</div><div class="bk-tx"><b></b><small></small><p></p></div><div class="bk-ac"><a class="btn" download>⬇ Unduh</a><button class="ghost">Tanya Ivy</button></div>`;
+    d.innerHTML = `<div class="bk-cv">PDF</div><div class="bk-tx"><b></b><small></small><p></p></div><div class="bk-ac"><a class="btn" download>⬇ Unduh</a><button class="ghost">Tanya Silvia</button></div>`;
     d.querySelector("b").textContent = b.judul;
     d.querySelector("small").textContent = [b.penulis, b.kategori, b.hal ? b.hal + " halaman" : "", bukuSize(b.ukuran)].filter(Boolean).join(" · ");
     d.querySelector("p").textContent = b.ringkasan || (b.topik && b.topik.length ? "Topik: " + b.topik.slice(0, 8).join(", ") : "");
@@ -12298,7 +12326,7 @@ function bukuRenderList(focusId) {
     if (b.id === focusId) setTimeout(() => d.scrollIntoView({ block: "center" }), 50);
   }
 }
-// ---------- Ivy ----------
+// ---------- Silvia ----------
 var bkNorm = (s) => String(s || "").toLowerCase().normalize("NFKD").replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
 function bukuFind(q) {
   const qn = " " + bkNorm(q) + " ";
@@ -12338,7 +12366,7 @@ function ivyAnswer(q) {
   const rak = [["📚 Lihat rak buku", () => bukuCard()]];
   if (!BUKU.loaded) bukuLoad();
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|kak)\b/.test(ql) && ql.split(" ").length <= 3)
-    return { text: `Halo ${nm}! Aku Ivy, penjaga Rak Buku Digital IT-Mart 📚 ${BUKU.list.length ? `Saat ini ada ${BUKU.list.length} buku PDF yang bisa kamu unduh.` : "Raknya masih kosong — admin akan segera menambah koleksi."} Tanyakan isi buku mana saja, nanti kujelaskan.`, acts: rak };
+    return { text: `Halo ${nm}! Aku Silvia, penjaga Rak Buku Digital IT-Mart 📚 ${BUKU.list.length ? `Saat ini ada ${BUKU.list.length} buku PDF yang bisa kamu unduh.` : "Raknya masih kosong — admin akan segera menambah koleksi."} Tanyakan isi buku mana saja, nanti kujelaskan.`, acts: rak };
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Selamat membaca 📖" };
   if (/buku apa saja|daftar buku|koleksi|ada buku apa|judul apa|list buku|semua buku|rak/.test(ql) && !bukuFind(q)) {
     if (!BUKU.list.length) return { text: "Rak masih kosong. Koleksi PDF ditambahkan oleh admin melalui halaman admin galeri.", acts: rak };
@@ -12350,7 +12378,7 @@ function ivyAnswer(q) {
   if (b) {
     BUKU.cur = b;
     // sisa pertanyaan setelah judul dihapus → pertanyaan isi?
-    const rest = bkNorm(q).replace(bkNorm(b.judul), " ").replace(/\b(buku|isi|ceritakan|jelaskan|tentang|apa|ringkasan|rangkuman|dong|kak|ivy|di|dalam|yang|itu|ini)\b/g, " ").trim();
+    const rest = bkNorm(q).replace(bkNorm(b.judul), " ").replace(/\b(buku|isi|ceritakan|jelaskan|tentang|apa|ringkasan|rangkuman|dong|kak|ivy|silvia|di|dalam|yang|itu|ini)\b/g, " ").trim();
     if (rest.split(" ").filter((w) => w.length > 2).length >= 2 && b.status === "siap") return { text: `Sebentar, aku buka “${b.judul}”…`, later: bukuAsk(rest, [b.id]) };
     return { text: bukuSummary(b), acts: [dl(b), ["📚 Rak buku", () => bukuCard(b.id)]] };
   }
@@ -12375,14 +12403,14 @@ function buildBuku() {
   drawShelf();
   bukuLoad();
   makeCustomHuman("ivy", {
-    code: "BUKU", name: "Ivy", role: "Penjaga Rak Buku Digital IT-Mart", col: "#0f766e", icon: "📚", hint: "📚",
-    x: 10.7, z: 21.5, room: "cafe", tag: "IVY · PENJAGA BUKU",
+    code: "BUKU", name: "Silvia", role: "Penjaga Rak Buku Digital IT-Mart", col: "#0f766e", icon: "📚", hint: "📚",
+    x: 10.7, z: 21.5, room: "cafe", tag: "SILVIA · PENJAGA BUKU",
     look: { shirt: "#ecfeff", apron: "#134e4a", hijab: "#0f766e", glasses: true, badge: "📚" },
-    chips: ["Buku apa saja?", "Ringkasan buku ini", "Unduh PDF", "Lihat rak buku"],
+    chips: ["Buka Gua Pustaka", "Buku apa saja?", "Ringkasan buku ini", "Unduh PDF", "Lihat rak buku"],
     roleNote: "isi buku PDF di rak IT-Mart",
-    knowText: "Ivy membaca setiap PDF yang diunggah admin (teks diekstrak di server) dan menjawab dari ringkasan admin serta potongan halaman yang paling cocok dengan pertanyaanmu.",
-    greetActs: () => [["📚 Lihat rak buku", () => bukuCard()], ["Buku apa saja?", () => askNpc("Buku apa saja yang ada?", "ivy")]],
-    answer: (q) => (/^lihat rak buku$/i.test(String(q).trim()) ? (bukuCard(), { text: "Ini rak bukunya 📚" }) : ivyAnswer(q))
+    knowText: "Silvia membaca setiap PDF yang diunggah admin (teks diekstrak di server) dan menjawab dari ringkasan admin serta potongan halaman yang paling cocok dengan pertanyaanmu.",
+    greetActs: () => [["📚 Lihat rak buku", () => bukuCard()], ["Buku apa saja?", () => askNpc("Buku apa saja yang ada?", "ivy")], ["⛏ Gua Pustaka", () => askNpc("Buka Gua Pustaka", "ivy")]],
+    answer: (q) => (/^lihat rak buku$/i.test(String(q).trim()) ? (bukuCard(), { text: "Ini rak bukunya 📚" }) : /gua|pustaka|tahap ?3|tantangan|lencana umum|pengetahuan umum|balik rak|pintu rahasia|lorong/i.test(String(q)) && typeof silviaGate === "function" ? { text: "Sebentar, kuperiksa Lencana Pengetahuan Dasar-mu di database… 🔎", later: silviaGate() } : ivyAnswer(q))
   });
   NPCS.ivy.pitch = 1.2;
 }
@@ -12449,13 +12477,13 @@ async function openExplorerCard() {
   $("xcImg").src = c.toDataURL("image/png");
   $("xcDl").onclick = () => c.toBlob((b) => b && saveFile(`explorer-card-${(q.card.nama || "it").replace(/[^a-z0-9]/gi, "_")}.png`, b), "image/png");
   $("xcCert").onclick = () => openCertificate();
-  xcEnsureServer().then((r) => { if ($("xcSrv")) $("xcSrv").textContent = r.ok ? "✅ tersimpan di database server" : "⚠ " + (r.err || "belum tersimpan") + " — Nan akan mencoba lagi saat verifikasi."; });
+  xcEnsureServer().then((r) => { if ($("xcSrv")) $("xcSrv").textContent = r.ok ? "✅ tersimpan di database server" : "⚠ " + (r.err || "belum tersimpan") + " — Ananda akan mencoba lagi saat verifikasi."; });
   if (fresh) { if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx(); toast("🪪 Explorer Card diterima! Kartu ini akan membuka ruangan tantangan berikutnya.", 6000); }
 }
 
 
 // =====================================================================
-// src/ext_lantai2.js — LANTAI 2 IT-MART + NPC NAN (verifikasi Explorer Card)
+// src/ext_lantai2.js — LANTAI 2 IT-MART + NPC ANANDA (verifikasi Explorer Card)
 // + TANTANGAN 1: KOGNITIF (penjara bawah tanah, 20 soal / 60 detik)
 // + TANTANGAN 2: COMING SOON.
 // Catatan teknis: mesin galeri hanya punya satu ketinggian lantai, jadi
@@ -12499,7 +12527,7 @@ async function xcVerify() {
   try { return await xcPost("api/kartu/verifikasi", { no: q.card.no, tok: q.card.tok }); }
   catch { return { ok: false, alasan: "offline" }; }
 }
-// ---------- Nan ----------
+// ---------- Ananda ----------
 function nanOpenGate(nama) {
   L2.ok = true; L2.okName = S.name;
   if (L2.gate) L2.gate.setOpen(true);
@@ -12522,7 +12550,7 @@ function nanAnswer(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
   const v = [["🪪 Verifikasi kartu", () => askNpc("verifikasi kartu saya", "nan")]];
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql) && ql.split(" ").length <= 3)
-    return { text: `Halo ${nm}. Aku Nan, petugas verifikasi Explorer Card di Lantai 2 IT-Mart. Hanya pemegang kartu yang tercatat di database server yang boleh melewati gerbang menuju ruang-ruang tantangan.${L2.ok ? " Kartumu sudah terverifikasi — silakan lewat." : " Tunjukkan kartumu dulu ya."}`, acts: L2.ok ? [] : v };
+    return { text: `Halo ${nm}. Aku Ananda, petugas verifikasi Explorer Card di Lantai 2 IT-Mart. Hanya pemegang kartu yang tercatat di database server yang boleh melewati gerbang menuju ruang-ruang tantangan.${L2.ok ? " Kartumu sudah terverifikasi — silakan lewat." : " Tunjukkan kartumu dulu ya."}`, acts: L2.ok ? [] : v };
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama. Jaga kartumu baik-baik!" };
   if (/aturan|tantangan|kognitif|penjara|soal|matematika|waktu|cara|inggris|sahabat|coding|lencana|fety/.test(ql)) return { text: `Ada 4 ruang tantangan di balik gerbang: 1) Kognitif (matematika), 2) Bahasa Inggris, 3) Sahabat Rasulullah, 4) Dasar Coding. Di setiap ruang kamu dikurung dalam sel dan harus menjawab 20 soal pilihan ganda acak dalam 60 detik. Satu jawaban salah atau waktu habis → kembali ke sini. Tuntaskan keempatnya, lalu temui Teh Fety di Taman Apresiasi untuk Lencana Pengetahuan Dasar. Progresmu: ${chCount()}/4.`, acts: L2.ok ? [["🏅 Lihat capaian", openCapaian]] : v };
   if (/rahman|lantai 1|turun|kartu.*(dapat|ambil|cara)|cara.*kartu|belum punya/.test(ql)) return { text: "Explorer Card tidak dijual di IT-Mart 😄 Bicaralah dengan Rahman di meja bar lantai 1 — dia tahu jalan menuju orang yang memberikan kartu itu.", acts: [["⬇ Turun ke lantai 1", () => l2Stairs(false)]] };
@@ -12537,7 +12565,7 @@ function l2Stairs(up) {
   if (typeof SFX !== "undefined") SFX.step();
   xTeleport(to.x, to.z, to.yaw);
   setTimeout(() => { L2.busy = false; }, 900);
-  setTimeout(() => toast(up ? "⬆ Lantai 2 IT-Mart — Nan memverifikasi Explorer Card di sini." : "⬇ IT-Mart lantai 1", 3500), 300);
+  setTimeout(() => toast(up ? "⬆ Lantai 2 IT-Mart — Ananda memverifikasi Explorer Card di sini." : "⬇ IT-Mart lantai 1", 3500), 300);
 }
 // ---------- bangunan ----------
 function l2Canvas(w, h, fn) { const c = mkCanvas(w, h); fn(c.getContext("2d"), w, h); return c; }
@@ -12558,7 +12586,7 @@ function buildLantai2() {
   l2Stairs3D(24.9, 26.7, 12.3, 15.9, true, woodM);
   for (const rx of [24.85, 26.75]) { const rail = xBox(0.05, 0.05, 3.9, railM, rx, 2.6, 14.1); rail.rotation.x = Math.atan2(4.0, 3.6) * 0.98; }
   xWall(24.85, 12.3, 24.85, 15.9, 1.0, railM, 0.08); // sisi barat tangga (pagar)
-  const sign1 = xPlane(l2Canvas(900, 220, (x, w, h) => { x.fillStyle = "#4c1d95"; rr(x, 0, 0, w, h, 34); x.fill(); x.fillStyle = "#fde68a"; x.font = `800 72px ${FONT}`; x.textAlign = "center"; x.fillText("⬆ LANTAI 2", w / 2, 100); x.fillStyle = "#fff"; x.font = `500 40px ${FONT}`; x.fillText("Verifikasi Explorer Card · Nan", w / 2, 170); }), 1.7, 0.42);
+  const sign1 = xPlane(l2Canvas(900, 220, (x, w, h) => { x.fillStyle = "#4c1d95"; rr(x, 0, 0, w, h, 34); x.fill(); x.fillStyle = "#fde68a"; x.font = `800 72px ${FONT}`; x.textAlign = "center"; x.fillText("⬆ LANTAI 2", w / 2, 100); x.fillStyle = "#fff"; x.font = `500 40px ${FONT}`; x.fillText("Verifikasi Explorer Card · Ananda", w / 2, 170); }), 1.7, 0.42);
   sign1.position.set(25.8, 2.6, 16.15); scene.add(sign1); xAct(sign1, { type: "x_l2up" });
   const glow1 = world.glowSprite("#a78bfa", 1, 0.5); glow1.scale.set(2.4, 1.2, 1); glow1.position.set(25.8, 4.3, 12.6); scene.add(glow1);
 
@@ -12591,7 +12619,7 @@ function buildLantai2() {
   xBox(3.4, 0.45, 0.8, new THREE2.MeshStandardMaterial({ color: 0x5b21b6, roughness: 0.8 }), 52.6, 0.225, 20.5, Math.PI / 2);
   world.colliders.push({ a: [52.6, 18.8], b: [52.6, 22.2], r: 0.45 });
   for (let i = 0; i < 3; i++) world.seats.push({ x: 52.9, z: 19.4 + i * 1.1, yaw: -Math.PI / 2 });
-  // ===== gerbang kaca (z = 24.6) — hanya terbuka setelah verifikasi Nan =====
+  // ===== gerbang kaca (z = 24.6) — hanya terbuka setelah verifikasi Ananda =====
   const glassM = new THREE2.MeshStandardMaterial({ color: 0xa5b4fc, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0.2, depthWrite: false, side: THREE2.DoubleSide });
   const frameM = new THREE2.MeshStandardMaterial({ color: 0x312e81, metalness: 0.6, roughness: 0.3 });
   for (const [a, b] of [[50, 57.8], [60.2, 68]]) { const m = new THREE2.Mesh(new THREE2.BoxGeometry(b - a, 3.0, 0.06), glassM); m.position.set((a + b) / 2, 1.5, 24.6); scene.add(m); xBox(b - a, 0.08, 0.12, frameM, (a + b) / 2, 3.0, 24.6); xCol(a, 24.6, b, 24.6, 0.12); }
@@ -12626,14 +12654,14 @@ function buildLantai2() {
     return g;
   };
   for (const C of CH_LIST) chDoor(C.door, `${C.icon} TANTANGAN ${C.no}`, C.sub, C.col, "x_chdoor_" + C.id, false);
-  // ===== NPC Nan =====
+  // ===== NPC Ananda =====
   makeCustomRobot("nan", {
-    code: "XC", name: "Nan", role: "Petugas Verifikasi Explorer Card", col: "#7c3aed", body: "#ede9fe", accent: "#7c3aed", eye: "#22d3ee", icon: "🪪",
+    code: "XC", name: "Ananda", role: "Petugas Verifikasi Explorer Card", col: "#7c3aed", body: "#ede9fe", accent: "#7c3aed", eye: "#22d3ee", icon: "🪪",
     x: L2_NAN.x, z: L2_NAN.z, room: "it2", secret: true,
-    greet: "Halo! Aku Nan, petugas verifikasi Explorer Card.",
+    greet: "Halo! Aku Ananda, petugas verifikasi Explorer Card.",
     chips: ["Verifikasi kartu saya", "Aturan tantangan", "Belum punya kartu", "Turun ke lantai 1"],
     roleNote: "verifikasi Explorer Card ke database server",
-    knowText: "Nan memeriksa Explorer Card pemain ke database server. Kartu yang terdaftar membuka gerbang menuju ruang-ruang tantangan; tanpa kartu, pemain diarahkan ke Rahman di lantai 1.",
+    knowText: "Ananda memeriksa Explorer Card pemain ke database server. Kartu yang terdaftar membuka gerbang menuju ruang-ruang tantangan; tanpa kartu, pemain diarahkan ke Rahman di lantai 1.",
     greetActs: () => (L2.ok ? [["📜 Aturan tantangan", () => askNpc("aturan tantangan", "nan")]] : [["🪪 Verifikasi kartu", () => askNpc("verifikasi kartu saya", "nan")], ["📜 Aturan tantangan", () => askNpc("aturan tantangan", "nan")]]),
     answer: (q) => (/^turun ke lantai 1$/i.test(String(q).trim()) ? (setTimeout(() => l2Stairs(false), 600), { text: "Silakan, tangganya di sudut timur laut ruangan ini." }) : nanAnswer(q)),
     pitch: 0.95
@@ -12651,7 +12679,7 @@ function buildLantai2() {
       else if (xr === "it2" && L2.ok && !L2.cog && (L2.nearCh = CH_LIST.find((C) => Math.hypot(P.x - C.door, P.z - 29.2) < 0.9))) { L2.lastTrig = now; chConfirm(L2.nearCh.id); }
     }
     // penjaga: area balik gerbang hanya untuk yang terverifikasi (nama yang sama)
-    if (xr === "it2" && P.z > 24.75 && !(L2.ok && L2.okName === S.name)) { xTeleport(59, 22.6, 0); toast("Gerbang terkunci — verifikasi Explorer Card ke Nan dulu."); }
+    if (xr === "it2" && P.z > 24.75 && !(L2.ok && L2.okName === S.name)) { xTeleport(59, 22.6, 0); toast("Gerbang terkunci — verifikasi Explorer Card ke Ananda dulu."); }
     if (xr && XROOMS[xr].ch && !L2.cog && !L2.cogWin) { xTeleport(L2_NAN.x - 1.6, L2_NAN.z - 1.4, 0); }
     // animasi pintu kaca
     const G = L2.gate; if (G) { G.k += ((G.open ? 1 : 0) - G.k) * 0.08; door.position.x = 59 + G.k * 2.3; }
@@ -12710,7 +12738,7 @@ function buildSoon() {
   xRoomWalls(R, {}, R.h, wM);
   xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(wC, [6, 6]), roughness: 0.4, metalness: 0.3 }));
   xCeil(R, new THREE2.MeshStandardMaterial({ color: 0x060914, roughness: 1 }), R.h);
-  const c = l2Canvas(1600, 700, (x, w, h) => { x.fillStyle = "rgba(2,6,23,.95)"; rr(x, 0, 0, w, h, 40); x.fill(); x.strokeStyle = "#38bdf8"; x.lineWidth = 10; rr(x, 8, 8, w - 16, h - 16, 34); x.stroke(); x.textAlign = "center"; x.fillStyle = "#7dd3fc"; x.font = `700 64px ${FONT}`; x.fillText("TAHAP 3", w / 2, 150); x.shadowColor = "#38bdf8"; x.shadowBlur = 40; x.fillStyle = "#fff"; x.font = `900 200px ${FONT}`; x.fillText("COMING SOON", w / 2, 380); x.shadowBlur = 0; x.fillStyle = "#bae6fd"; x.font = `500 46px ${FONT}`; x.fillText("Selamat! Keempat ruang tantangan Lantai 2 telah kamu taklukkan.", w / 2, 500); x.fillText("Ambil Lencana Pengetahuan Dasar dari Teh Fety (portal biru) · tahap 3 segera hadir.", w / 2, 570); });
+  const c = l2Canvas(1600, 700, (x, w, h) => { x.fillStyle = "rgba(2,6,23,.95)"; rr(x, 0, 0, w, h, 40); x.fill(); x.strokeStyle = "#38bdf8"; x.lineWidth = 10; rr(x, 8, 8, w - 16, h - 16, 34); x.stroke(); x.textAlign = "center"; x.fillStyle = "#7dd3fc"; x.font = `700 64px ${FONT}`; x.fillText("TAHAP 3", w / 2, 150); x.shadowColor = "#38bdf8"; x.shadowBlur = 40; x.fillStyle = "#fff"; x.font = `900 200px ${FONT}`; x.fillText("GUA PUSTAKA", w / 2, 380); x.shadowBlur = 0; x.fillStyle = "#bae6fd"; x.font = `500 46px ${FONT}`; x.fillText("Selamat! Keempat ruang tantangan Lantai 2 telah kamu taklukkan.", w / 2, 500); x.fillText("Ambil Lencana Dasar dari Teh Fety (portal biru), lalu temui Silvia di Rak Buku IT-Mart.", w / 2, 570); });
   const m = xPlane(c, 9.6, 4.2); m.position.set(74, 2.6, 36.2); scene.add(m);
   const gl = world.glowSprite("#38bdf8", 1, 0.3); gl.scale.set(13, 6, 1); gl.position.set(74, 2.6, 36.1); scene.add(gl);
   // portal kembali ke lantai 2
@@ -12730,7 +12758,7 @@ function buildSoon() {
 //    acak / 60 detik): Kognitif, Bahasa Inggris, Sahabat Rasulullah, Dasar Coding.
 //  • Teh Fety (paviliun putih Taman Apresiasi) menyematkan Lencana
 //    Pengetahuan Dasar bila keempat tantangan tuntas.
-//  • Kode cepat tahap 2: ketik kode rahasia ke Sit (waitress IT-Mart).
+//  • Kode cepat tahap 2: ketik kode rahasia ke Patimah (waitress IT-Mart).
 //  • Menu CAPAIAN: sertifikat, Explorer Card & 7 slot lencana.
 //  • Klik pemain lain → profil capaiannya. Tombol "Pamerkan" menyiarkan
 //    capaian ke semua pemain (ikon melayang di atas avatar + pesan).
@@ -12738,13 +12766,13 @@ function buildSoon() {
 
 // ---------- 7 lencana (desain: segi enam bertingkat) ----------
 var BADGES = [
-  { id: "dasar", kat: "PENGETAHUAN", nama: "Dasar", c: ["#3b82f6", "#2563eb", "#1e3a8a"], kc: "#93c5fd", icon: "book", syarat: "Tuntaskan 4 ruang tantangan Lantai 2 IT-Mart, lalu temui Teh Fety di Taman Apresiasi." },
-  { id: "umum", kat: "PENGETAHUAN", nama: "Umum", c: ["#8b5cf6", "#7c3aed", "#3b0764"], kc: "#c4b5fd", icon: "bulb" },
-  { id: "alam", kat: "PENGETAHUAN", nama: "Alam", c: ["#65a30d", "#4d7c0f", "#1a2e05"], kc: "#bef264", icon: "leaf" },
+  { id: "dasar", kat: "PENGETAHUAN", nama: "Dasar", c: ["#3b82f6", "#2563eb", "#1e3a8a"], kc: "#93c5fd", icon: "book", syarat: "Tuntaskan 4 ruang tantangan Lantai 2 IT-Mart, lalu temui Teh Fety di Taman Apresiasi.", tahap: "tahap 2", desc: "atas keberhasilan menaklukkan 4 ruang tantangan Lantai 2 IT-Mart (Kognitif, Bahasa Inggris, Sahabat Rasulullah, Dasar Coding).", oleh: "Teh Fety" },
+  { id: "umum", kat: "PENGETAHUAN", nama: "Umum", c: ["#8b5cf6", "#7c3aed", "#3b0764"], kc: "#c4b5fd", icon: "bulb", syarat: "Taklukkan Gua Pustaka di balik rak buku Silvia (IT-Mart) — 3 babak, 3 nyawa — lalu temui Teh Puspa.", tahap: "tahap 3", desc: "atas keberhasilan menaklukkan Gua Pustaka: Lantai Benar/Salah, Lini Masa, dan Galeri Benda.", oleh: "Teh Puspa" },
+  { id: "iot", kat: "TEKNOLOGI", nama: "IoT & Drone", c: ["#65a30d", "#4d7c0f", "#1a2e05"], kc: "#bef264", icon: "drone", syarat: "Tantangan Internet of Things & Drone. Segera hadir." },
   { id: "jari", kat: "KETERAMPILAN", nama: "Jari", c: ["#f43f5e", "#e11d48", "#4c0519"], kc: "#fda4af", icon: "tap" },
   { id: "coding", kat: "PENGETAHUAN", nama: "Coding", c: ["#06b6d4", "#0891b2", "#083344"], kc: "#67e8f9", icon: "code" },
   { id: "islam", kat: "PENGETAHUAN", nama: "Agama Islam", c: ["#10b981", "#047857", "#022c22"], kc: "#fcd34d", icon: "mosque" },
-  { id: "geografi", kat: "PENGETAHUAN", nama: "Geografi", c: ["#f97316", "#c2410c", "#431407"], kc: "#fcd34d", icon: "compass" }
+  { id: "tim", kat: "KETERAMPILAN", nama: "Kerjasama Tim", c: ["#f97316", "#c2410c", "#431407"], kc: "#fdba74", icon: "team", syarat: "Tantangan kerjasama tim — dimainkan bersama pemain lain. Segera hadir." }
 ];
 var badgeById = (id) => BADGES.find((b) => b.id === id);
 function hexPath(x, cx, cy, r) { x.beginPath(); for (let k = 0; k < 6; k++) { const a = -Math.PI / 2 + k * Math.PI / 3; x[k ? "lineTo" : "moveTo"](cx + Math.cos(a) * r, cy + Math.sin(a) * r); } x.closePath(); }
@@ -12774,6 +12802,18 @@ function badgeIcon(x, icon, cx, cy, s, col) {
     x.beginPath(); x.moveTo(-0.2 * s, 0.75 * s); x.lineTo(-0.2 * s, 0.35 * s); x.arc(0, 0.35 * s, 0.2 * s, Math.PI, 0); x.lineTo(0.2 * s, 0.75 * s); x.stroke();
     x.fillStyle = "#fcd34d"; x.beginPath(); x.arc(0.1 * s, -1.08 * s, 0.24 * s, 0, 7); x.fill();
     x.globalCompositeOperation = "destination-out"; x.beginPath(); x.arc(0.2 * s, -1.15 * s, 0.2 * s, 0, 7); x.fill(); x.globalCompositeOperation = "source-over";
+  } else if (icon === "drone") {
+    // drone quadcopter + sinyal nirkabel
+    x.beginPath(); x.moveTo(-0.6 * s, -0.05 * s); x.lineTo(0.6 * s, 0.55 * s); x.moveTo(0.6 * s, -0.05 * s); x.lineTo(-0.6 * s, 0.55 * s); x.stroke();
+    for (const [px, py] of [[-0.62, -0.08], [0.62, -0.08], [-0.62, 0.58], [0.62, 0.58]]) { x.beginPath(); x.ellipse(px * s, py * s, 0.26 * s, 0.09 * s, 0, 0, 7); x.stroke(); }
+    x.fillStyle = col; rr(x, -0.2 * s, 0.1 * s, 0.4 * s, 0.3 * s, 0.08 * s); x.fill();
+    for (const r of [0.28, 0.5]) { x.beginPath(); x.arc(0, -0.25 * s, r * s, Math.PI * 1.25, Math.PI * 1.75); x.stroke(); }
+    x.beginPath(); x.arc(0, -0.3 * s, 0.05 * s, 0, 7); x.fill();
+  } else if (icon === "team") {
+    // tiga orang bergandengan: dua di belakang, satu di depan-tengah
+    const person = (px, py, k) => { x.beginPath(); x.arc(px * s, (py - 0.42 * k) * s, 0.19 * k * s, 0, 7); x.stroke(); x.beginPath(); x.arc(px * s, (py + 0.32 * k) * s, 0.36 * k * s, Math.PI * 1.05, Math.PI * 1.95); x.stroke(); };
+    person(-0.55, -0.1, 0.8); person(0.55, -0.1, 0.8); person(0, 0.32, 1);
+    x.beginPath(); x.moveTo(-0.95 * s, 0.78 * s); x.lineTo(0.95 * s, 0.78 * s); x.stroke();
   } else if (icon === "compass") {
     x.beginPath(); x.arc(0, 0, 0.85 * s, 0, 7); x.stroke();
     x.beginPath(); x.moveTo(0, -0.62 * s); x.lineTo(0.2 * s, 0); x.lineTo(-0.2 * s, 0); x.closePath(); x.fillStyle = "#fcd34d"; x.fill(); x.stroke();
@@ -12914,7 +12954,7 @@ async function capSync() {
   if (!q.card || !q.card.no) return;
   if (!q.card.tok) { const r = await xcEnsureServer(); if (!r.ok) return; }
   try {
-    for (const C of CH_LIST) if (q.chal[C.id] && !q.chal[C.id].srv) {
+    for (const C of CH_LIST.concat([{ id: "pustaka" }])) if (q.chal[C.id] && !q.chal[C.id].srv) {
       const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id: C.id, dt: q.chal[C.id].best || 0, jalur: q.chal[C.id].kode ? "kode" : "main" });
       if (j.ok) { q.chal[C.id].srv = true; saveQ(); }
     }
@@ -12929,14 +12969,14 @@ function cogConfirm() { chConfirm("kognitif"); }
 function chConfirm(id) {
   const C = chById(id);
   if (L2.cog || !C) return;
-  if (!(L2.ok && L2.okName === S.name)) { toast("Verifikasi Explorer Card ke Nan dulu."); return; }
+  if (!(L2.ok && L2.okName === S.name)) { toast("Verifikasi Explorer Card ke Ananda dulu."); return; }
   if (renderer.xr.isPresenting) { showVRText(`Tantangan ${C.nama} membutuhkan layar biasa. Keluar dari mode VR sebentar, lalu dekati pintu lagi.`); return; }
   const done = chMigrate().chal[id];
   const desc = id === "kognitif" ? "<b>20 soal matematika</b>" : id === "inggris" ? "<b>20 soal Bahasa Inggris</b> (grammar & kosakata)" : id === "sahabat" ? "<b>20 soal tentang sahabat Rasulullah ﷺ</b>" : "<b>20 soal dasar-dasar coding</b>";
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>${C.icon} Tantangan ${C.no} · ${C.nama}</h2>
   <p>Begitu masuk, kamu akan <b>dikurung di ruang tantangan</b>. Untuk membuka sel, jawab ${desc} pilihan ganda dalam <b>60 detik</b>. Soal & pilihan jawaban diacak setiap percobaan.</p>
   ${done ? `<p class="kk">✅ Sudah kamu tuntaskan${done.best ? ` (rekor ${done.best} detik)` : ""}. Boleh dicoba lagi untuk memperbaiki rekor.</p>` : ""}
-  <div class="kbox"><b>ATURAN</b><ol><li>Satu jawaban salah → gagal, kembali ke Nan.</li><li>Waktu habis → gagal, kembali ke Nan.</li><li>20 benar sebelum waktu habis → sel terbuka, tantangan tuntas.</li><li>Tuntaskan keempat tantangan untuk Lencana Pengetahuan Dasar dari Teh Fety.</li></ol><p style="font-size:12px;color:var(--mut)">Tip: tombol angka 1–4 di keyboard memilih jawaban.</p></div>
+  <div class="kbox"><b>ATURAN</b><ol><li>Satu jawaban salah → gagal, kembali ke Ananda.</li><li>Waktu habis → gagal, kembali ke Ananda.</li><li>20 benar sebelum waktu habis → sel terbuka, tantangan tuntas.</li><li>Tuntaskan keempat tantangan untuk Lencana Pengetahuan Dasar dari Teh Fety.</li></ol><p style="font-size:12px;color:var(--mut)">Tip: tombol angka 1–4 di keyboard memilih jawaban.</p></div>
   <div class="rowf"><button class="btn" id="cogGo">⛓ Masuk ruang tantangan</button><button class="ghost" id="cogNo">Nanti saja</button></div>`);
   $("cogGo").onclick = () => { closeGen(); chStart(id); };
   $("cogNo").onclick = () => { closeGen(); xTeleport(C.door, 27.4, Math.PI); };
@@ -13009,7 +13049,7 @@ function cogEnd(win, why) {
   const n = chCount(), all = chAllDone();
   if (card) card.innerHTML = win
     ? `<div class="cog-res win"><div style="font-size:54px">🔓</div><h2>Sel terbuka!</h2><p>20 soal ${pemEsc(C.nama)} benar dalam ${used.toFixed(1)} detik. Progres tahap 2: <b>${n}/4</b> tantangan.</p><p>${all ? "🎉 Keempat tantangan tuntas! Temui <b>Teh Fety</b> di paviliun Taman Apresiasi untuk Lencana Pengetahuan Dasar." : "Lanjutkan ke pintu tantangan berikutnya di Lantai 2."}</p></div>`
-    : `<div class="cog-res"><div style="font-size:54px">⛓</div><h2>Gagal</h2><p>${pemEsc(why || "")} Kamu dikembalikan ke Nan. Coba lagi kapan saja!</p></div>`;
+    : `<div class="cog-res"><div style="font-size:54px">⛓</div><h2>Gagal</h2><p>${pemEsc(why || "")} Kamu dikembalikan ke Ananda. Coba lagi kapan saja!</p></div>`;
   if (win) {
     L2.cogWin = true;
     const bars = C.room === "dungeon" ? DG.bars : CHR[C.id];
@@ -13098,12 +13138,12 @@ function fetyAnswer(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers", qs = chMigrate();
   const capA = ["🏅 Lihat capaian", openCapaian];
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Masih ada 6 lencana lain yang menunggu — sampai jumpa di tahap berikutnya 😊" };
-  if (/lencana apa|daftar lencana|7 lencana|tujuh|semua lencana|koleksi/.test(ql)) return { text: "Ada 7 lencana yang kelak bisa kamu kumpulkan:\n" + BADGES.map((b, i) => `${i + 1}. ${b.kat === "KETERAMPILAN" ? "Keterampilan" : "Pengetahuan"} ${b.nama}${i ? " — segera hadir" : " — dari tahap 2 (Lantai 2 IT-Mart)"}`).join("\n"), acts: [capA] };
-  if (/syarat|cara|bagaimana|gimana|tantangan|lantai/.test(ql) && !/minta|ambil|beri|kasih/.test(ql)) return { text: `Lencana Pengetahuan Dasar untuk penjelajah yang menaklukkan empat ruang tantangan di Lantai 2 IT-Mart (pintunya dijaga Nan):\n${fetyStatus()}`, acts: [capA] };
+  if (/lencana apa|daftar lencana|7 lencana|tujuh|semua lencana|koleksi/.test(ql)) return { text: "Ada 7 lencana yang kelak bisa kamu kumpulkan:\n" + BADGES.map((b, i) => `${i + 1}. ${b.kat[0] + b.kat.slice(1).toLowerCase()} ${b.nama}${i === 0 ? " — tahap 2 (Lantai 2 IT-Mart, dariku)" : i === 1 ? " — tahap 3 (Gua Pustaka, dari Teh Puspa)" : " — segera hadir"}`).join("\n"), acts: [capA] };
+  if (/syarat|cara|bagaimana|gimana|tantangan|lantai/.test(ql) && !/minta|ambil|beri|kasih/.test(ql)) return { text: `Lencana Pengetahuan Dasar untuk penjelajah yang menaklukkan empat ruang tantangan di Lantai 2 IT-Mart (pintunya dijaga Ananda):\n${fetyStatus()}`, acts: [capA] };
   const ask = !ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|teh|teteh)\b/.test(ql) || /lencana|badge|minta|ambil|beri|kasih|hadiah|reward/.test(ql);
   if (!ask) return { text: "Aku Teh Fety, penjaga lencana di Taman Apresiasi. Aku bisa menjelaskan syarat lencana, daftar 7 lencana, atau menyematkan lencanamu kalau tantangannya sudah tuntas.", acts: [["🔷 Minta lencana", () => askNpc("Minta lencana", "fety")], capA] };
   if (qs.badges.dasar) return { text: `Halo ${nm}! Lencana Pengetahuan Dasar sudah tersemat di profilmu 🔷 Pamerkan ke teman-temanmu, dan nantikan 6 lencana lainnya di tahap berikutnya.`, acts: [["🔷 Lihat lencana", () => badgeReveal("dasar", false)], ["📣 Pamerkan", () => capPamer("b:dasar")], capA] };
-  if (!chAllDone()) return { text: `Halo ${nm}, aku Teh Fety 😊 Aku menyematkan Lencana Pengetahuan Dasar bagi penjelajah yang menuntaskan keempat ruang tantangan di Lantai 2 IT-Mart. Progresmu (${chCount()}/4):\n${fetyStatus()}\nNaik tangga di sudut timur laut IT-Mart, lalu tunjukkan Explorer Card ke Nan.`, acts: [capA] };
+  if (!chAllDone()) return { text: `Halo ${nm}, aku Teh Fety 😊 Aku menyematkan Lencana Pengetahuan Dasar bagi penjelajah yang menuntaskan keempat ruang tantangan di Lantai 2 IT-Mart. Progresmu (${chCount()}/4):\n${fetyStatus()}\nNaik tangga di sudut timur laut IT-Mart, lalu tunjukkan Explorer Card ke Ananda.`, acts: [capA] };
   if (!qs.card || !qs.card.no) return { text: `Masyaallah, keempat tantangan sudah tuntas! Tapi lencana disematkan pada Explorer Card. Ambil dulu kartumu dari Kang Santo di dekat air mancur, lalu kembali padaku ya.`, acts: [["🪪 Ambil Explorer Card", openExplorerCard]] };
   return { text: `Masyaallah, ${nm}! Keempat tantangan Lantai 2 sudah kamu taklukkan. Sini, Teteh sematkan lencananya… ✨`, later: fetyAward() };
 }
@@ -13111,7 +13151,7 @@ function badgeReveal(id, fresh) {
   const b = badgeById(id), q = chMigrate(), own = q.badges[id];
   if (renderer.xr.isPresenting) { const c = mkCanvas(800, 800), x = c.getContext("2d"); x.fillStyle = "#0b1020"; x.fillRect(0, 0, 800, 800); drawLencana(x, b, 400, 340, 230, !own); x.fillStyle = "#fff"; x.font = `800 56px ${FONT}`; x.textAlign = "center"; x.fillText(`${b.kat} ${b.nama.toUpperCase()}`, 400, 680); showVRPanel(c); return; }
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bd-rev${fresh ? " fresh" : ""}"><img id="bdImg" alt=""><p class="bd-kat" style="color:${b.kc}">${b.kat}</p><h2>${pemEsc(b.nama)}</h2>
-  <p>${own ? `Disematkan oleh <b>Teh Fety</b> kepada <b id="bdNm"></b> pada ${new Date(own.t).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} — atas keberhasilan menaklukkan 4 ruang tantangan Lantai 2 IT-Mart (Kognitif, Bahasa Inggris, Sahabat Rasulullah, Dasar Coding).` : pemEsc(b.syarat || "Segera hadir di tahap berikutnya.")}</p>
+  <p>${own ? `Disematkan oleh <b>${b.oleh || "penjaga lencana"}</b> kepada <b id="bdNm"></b> pada ${new Date(own.t).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} — ${b.desc || ""}` : pemEsc(b.syarat || "Segera hadir di tahap berikutnya.")}</p>
   <div class="rowf" style="justify-content:center">${own ? `<button class="btn" id="bdPam">📣 Pamerkan</button><button class="ghost" id="bdDl">⬇ Unduh PNG</button>` : ""}<button class="ghost" id="bdCap">🏅 Capaian</button></div></div>`);
   $("bdImg").src = badgeURL(id, !own, 360);
   if ($("bdNm")) $("bdNm").textContent = S.name;
@@ -13144,7 +13184,7 @@ function buildFety() {
   XT.anim.push(() => { bm.rotation.y = t * 0.8; bm.position.y = 1.5 + Math.sin(t * 1.6) * 0.05; });
 }
 
-// ---------- kode cepat tahap 2 (ke Sit) ----------
+// ---------- kode cepat tahap 2 (ke Patimah) ----------
 var SIT_CODE = "pmj9qu";
 function sitCheat(npcId, q) {
   if (npcId !== "sit") return null;
@@ -13262,7 +13302,7 @@ var capThumb = (c, w) => { const h = Math.round(c.height * w / c.width), o = mkC
 
 // ---------- menu CAPAIAN (milik sendiri) ----------
 function capBadgeGrid(owned, mine) {
-  return `<div class="cap-badges">${BADGES.map((b, i) => `<button class="cap-bd${owned.includes(b.id) ? " on" : ""}" data-b="${b.id}" title="${b.kat} ${pemEsc(b.nama)}"><img src="${badgeURL(b.id, !owned.includes(b.id), 160)}" alt=""><small style="color:${owned.includes(b.id) ? b.kc : "#71717a"}">${b.kat}</small><b>${pemEsc(b.nama)}</b><em>${owned.includes(b.id) ? (mine ? "📣 pamerkan" : "✅ dimiliki") : i === 0 ? "tahap 2" : "segera hadir"}</em></button>`).join("")}</div>`;
+  return `<div class="cap-badges">${BADGES.map((b, i) => `<button class="cap-bd${owned.includes(b.id) ? " on" : ""}" data-b="${b.id}" title="${b.kat} ${pemEsc(b.nama)}"><img src="${badgeURL(b.id, !owned.includes(b.id), 160)}" alt=""><small style="color:${owned.includes(b.id) ? b.kc : "#71717a"}">${b.kat}</small><b>${pemEsc(b.nama)}</b><em>${owned.includes(b.id) ? (mine ? "📣 pamerkan" : "✅ dimiliki") : b.tahap || "segera hadir"}</em></button>`).join("")}</div>`;
 }
 async function openCapaian() {
   hidePopups();
@@ -13276,7 +13316,7 @@ async function openCapaian() {
   </div>
   <h3 class="cap-h">Lencana <span class="pill">${owned.length}/7</span></h3>
   ${capBadgeGrid(owned, true)}
-  <div class="kbox"><b>TAHAP 2 · LANTAI 2 IT-MART (${a.ch}/4)</b><ul class="qlist">${CH_LIST.map((C) => `<li>${chDone(C.id) ? "✅" : "⬜"} Tantangan ${C.no} · ${C.nama}${q.chal[C.id] && q.chal[C.id].best ? ` <span style="color:var(--mut)">(rekor ${q.chal[C.id].best} dtk)</span>` : ""}</li>`).join("")}<li>${q.badges.dasar ? "✅" : "⬜"} Lencana Pengetahuan Dasar dari Teh Fety</li></ul></div>
+  <div class="kbox"><b>TAHAP 2 · LANTAI 2 IT-MART (${a.ch}/4)</b><ul class="qlist">${CH_LIST.map((C) => `<li>${chDone(C.id) ? "✅" : "⬜"} Tantangan ${C.no} · ${C.nama}${q.chal[C.id] && q.chal[C.id].best ? ` <span style="color:var(--mut)">(rekor ${q.chal[C.id].best} dtk)</span>` : ""}</li>`).join("")}<li>${q.badges.dasar ? "✅" : "⬜"} Lencana Pengetahuan Dasar dari Teh Fety</li></ul><b style="display:block;margin-top:8px">TAHAP 3 · GUA PUSTAKA</b><ul class="qlist"><li>${q.chal.pustaka ? "✅" : "⬜"} Lolos 3 babak Gua Pustaka${q.chal.pustaka && q.chal.pustaka.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.pustaka.best / 60)}:${String(q.chal.pustaka.best % 60).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.umum ? "✅" : "⬜"} Lencana Pengetahuan Umum dari Teh Puspa</li></ul></div>
   <label class="cap-sw"><input type="checkbox" id="capPub"${a.p ? " checked" : ""}> Tampilkan ikon capaian di atas kepalaku untuk semua pemain</label>`);
   $("genCard").classList.add("wide");
   $("capNm").textContent = S.name;
@@ -13320,7 +13360,7 @@ async function openProfile(id, focus) {
   document.querySelectorAll("#genCard .cap-bd").forEach((b) => { b.onclick = () => { const bb = badgeById(b.dataset.b); toast(`${bb.kat} ${bb.nama} — ${owned.includes(bb.id) ? `dimiliki ${r.name}` : "belum dimiliki"}`); }; });
 }
 // ---------- PAMER ----------
-function capLabel(k) { if (k === "cert") return "🏅 Sertifikat Penjelajah"; if (k === "card") return "🪪 Explorer Card"; const b = badgeById(k.slice(2)); return b ? `🔷 Lencana ${b.kat === "KETERAMPILAN" ? "Keterampilan" : "Pengetahuan"} ${b.nama}` : ""; }
+function capLabel(k) { if (k === "cert") return "🏅 Sertifikat Penjelajah"; if (k === "card") return "🪪 Explorer Card"; const b = badgeById(k.slice(2)); return b ? `🔷 Lencana ${b.kat[0] + b.kat.slice(1).toLowerCase()} ${b.nama}` : ""; }
 function capOwns(k) { const a = capMine(); return k === "cert" ? !!a.c : k === "card" ? !!a.k : (a.b || []).includes(k.slice(2)); }
 function capPamer(k) {
   if (!capOwns(k)) { toast("Kamu belum memiliki capaian itu."); return; }
@@ -13378,7 +13418,7 @@ function capTick() {
 function capAct(act) {
   const ty = act.type;
   if (ty === "x_player") { openProfile(act.id); return true; }
-  if (ty.startsWith("x_chdoor_")) { const C = chById(ty.slice(9)); if (L2.ok && L2.okName === S.name) chConfirm(C.id); else toast("Verifikasi Explorer Card ke Nan dulu."); return true; }
+  if (ty.startsWith("x_chdoor_")) { const C = chById(ty.slice(9)); if (L2.ok && L2.okName === S.name) chConfirm(C.id); else toast("Verifikasi Explorer Card ke Ananda dulu."); return true; }
   if (ty === "x_fetybadge") { openNpc("fety", "chat"); return true; }
   if (ty === "x_tofety") { if (chAllDone() && gardenUnlocked()) fetyGo(); else toast("Portal ke Teh Fety aktif setelah keempat tantangan tuntas."); return true; }
   return false;
@@ -13404,6 +13444,767 @@ function buildCapaian() {
   const b = $("btnCap"); if (b) b.onclick = openCapaian;
   setTimeout(capMineRow, 1500);
   setTimeout(capSync, 4000);
+}
+
+
+
+// =====================================================================
+// src/ext_tahap3.js — TAHAP 3 · GUA PUSTAKA (Lencana Pengetahuan Umum)
+//  • Pintu: rak buku Silvia di IT-Mart bergeser bila Lencana Pengetahuan
+//    Dasar pemain tercatat di database server.
+//  • Gua gelap (kabut pekat, ±5 m terlihat), dimainkan SOLO: pemain lain
+//    tidak terlihat/terdengar selama di dalam gua.
+//  • 3 nyawa untuk 3 babak: 1) Lantai Benar/Salah, 2) Lini Masa,
+//    3) Galeri Benda (harus didekati ±2 m, 35 dtk per petunjuk).
+//  • Teh Puspa (tersembunyi) muncul di balik pintu ujung gua dan
+//    menyematkan Lencana Pengetahuan Umum.
+//  • Kode cepat: "butnavudivoxyziz3" ke Kang Santo (butuh Lencana Dasar).
+// =====================================================================
+var CV = { on: false, won: false, babak: 0, lives: 3, t0: 0, big: false, fogged: false, bc: 0, bcOpen: false, bcT: 0, gates: [], tiles: {}, objs: [], bs: null, lm: null, gl: null, busy: false };
+var CV_START = { x: 78, z: -3.5 };
+var CV_LIVES = 3, CV_BS_TIME = 9, CV_GL_TIME = 35;
+XROOMS.cave = { x0: 60, x1: 96, z0: -45, z1: -1, h: 5, name: "Gua Pustaka (tantangan solo)", short: "Gua Pustaka" };
+var inCave = (x, z) => x > 60 && x < 96 && z > -45 && z < -1;
+function caveSolo(r) { return inCave(P.x, P.z) || (r && r.cur && inCave(r.cur.x, r.cur.z)); }
+
+// ---------- bank soal ----------
+// Babak 1: [pernyataan, benar?, penjelasan singkat, kaprodi?]
+var CV_BS = [
+  ["Sumpah Pemuda diikrarkan pada tahun 1928.", true, "28 Oktober 1928."],
+  ["Naskah Proklamasi diketik oleh Sayuti Melik.", true, "Sayuti Melik mengetik naskah tulisan tangan Bung Karno."],
+  ["Bendera Pusaka Merah Putih dijahit oleh Ibu Fatmawati.", true, "Dijahit Ibu Fatmawati menjelang 17 Agustus 1945."],
+  ["Lagu “Indonesia Raya” diciptakan oleh W.R. Supratman.", true, "Wage Rudolf Supratman."],
+  ["Batik ditetapkan UNESCO sebagai Warisan Budaya Takbenda pada tahun 2009.", true, "2 Oktober 2009 — kini Hari Batik Nasional."],
+  ["Konferensi Asia Afrika 1955 diselenggarakan di Bandung.", true, "Gedung Merdeka, Bandung."],
+  ["Thomas Alva Edison dikenal sebagai penemu lampu pijar yang praktis.", true, "Dipatenkan tahun 1879/1880."],
+  ["Medali emas Olimpiade pertama Indonesia diraih dari cabang bulu tangkis.", true, "Susi Susanti & Alan Budikusuma, Barcelona 1992."],
+  ["Pancasila terdiri atas lima sila.", true, "Lima sila."],
+  ["Semboyan “Bhinneka Tunggal Ika” tertulis pada lambang Garuda Pancasila.", true, "Tertulis pada pita yang dicengkeram Garuda."],
+  ["Kebun Raya Bogor didirikan pada tahun 1817.", true, "18 Mei 1817."],
+  ["Prasasti Batutulis berada di Kota Bogor.", true, "Di Batutulis, Bogor Selatan."],
+  ["Wright bersaudara menerbangkan pesawat bermotor pertama pada tahun 1903.", true, "17 Desember 1903."],
+  ["Proklamasi Kemerdekaan Indonesia dibacakan pada 17 Agustus 1949.", false, "Yang benar 17 Agustus 1945."],
+  ["Lagu “Indonesia Raya” diciptakan oleh Ismail Marzuki.", false, "Penciptanya W.R. Supratman."],
+  ["Telepon ditemukan oleh Thomas Alva Edison.", false, "Telepon dipatenkan Alexander Graham Bell (1876)."],
+  ["Teks Proklamasi dibacakan di Yogyakarta.", false, "Dibacakan di Jl. Pegangsaan Timur 56, Jakarta."],
+  ["Angklung berasal dari Sumatera Barat.", false, "Angklung berasal dari Jawa Barat."],
+  ["Bendera Pusaka dijahit oleh R.A. Kartini.", false, "Dijahit oleh Ibu Fatmawati."],
+  ["Konferensi Asia Afrika 1955 diselenggarakan di Jakarta.", false, "Diselenggarakan di Bandung."],
+  ["Pancasila terdiri atas enam sila.", false, "Pancasila terdiri atas lima sila."]
+];
+var CV_BS_KP = [
+  ["Kaprodi TI UIKA pertama adalah Oke Hendrady, S.Kom (2004–2009).", true, "Benar — Kaprodi pertama 2004–2009."],
+  ["Hersanto Fajri menjabat Kaprodi TI sejak tahun 2024.", true, "2024 – sekarang."],
+  ["Fitrah Satrya Fajar Kusumah menjabat Kaprodi TI dua periode berturut-turut (2019–2020 dan 2020–2024).", true, "Benar."],
+  ["Safaruddin Hidayat Al Ikhsan menjabat Kaprodi TI pada 2015–2016.", true, "Benar."],
+  ["Kaprodi TI UIKA pertama adalah Yanti, M.Kom.", false, "Kaprodi pertama Oke Hendrady (2004–2009); Yanti menjabat 2009–2010."],
+  ["Ade Hendri Hendrawan menjabat Kaprodi TI pada periode 2019–2020.", false, "Ade Hendri Hendrawan menjabat 2016–2018."],
+  ["Dr. Ir. Budi Susetyo hanya pernah satu kali menjabat Kaprodi TI.", false, "Dua kali: 2011–2015 dan 2018–2019."],
+  ["Novita Br Ginting menjabat Kaprodi TI sebelum Yanti, M.Kom.", false, "Yanti (2009–2010) lalu Novita Br Ginting (2010–2011)."]
+];
+// Babak 2: lini masa — [label, tahun urut]
+var CV_LM = {
+  kaprodi: { judul: "Urutkan Kaprodi TI UIKA berdasarkan masa jabatan PERTAMA mereka (paling awal di atas)", items: [["Oke Hendrady, S.Kom", 2004], ["Yanti, M.Kom", 2009], ["Novita Br Ginting, M.Kom", 2010], ["Dr. Ir. Budi Susetyo, M.Sc", 2011], ["Safaruddin Hidayat Al Ikhsan, M.Kom", 2015], ["Ade Hendri Hendrawan, M.Kom", 2016], ["Fitrah Satrya Fajar Kusumah, M.Kom", 2019], ["Hersanto Fajri, S.Ds., M.MD", 2024]] },
+  sejarah: { judul: "Urutkan peristiwa sejarah Indonesia dari yang PALING AWAL", items: [["Berdirinya Budi Utomo", 1908], ["Sumpah Pemuda", 1928], ["Proklamasi Kemerdekaan RI", 1945], ["Konferensi Asia Afrika di Bandung", 1955], ["Dekrit Presiden 5 Juli", 1959], ["Asian Games IV di Jakarta", 1962], ["Berdirinya ASEAN", 1967], ["Reformasi 1998", 1998], ["Asian Games Jakarta–Palembang", 2018]] },
+  penemuan: { judul: "Urutkan penemuan berikut dari yang PALING AWAL", items: [["Mesin cetak Gutenberg", 1440], ["Mesin uap James Watt", 1769], ["Telepon (Alexander Graham Bell)", 1876], ["Lampu pijar (Thomas Edison)", 1879], ["Pesawat bermotor (Wright bersaudara)", 1903], ["Penisilin (Alexander Fleming)", 1928], ["Komputer ENIAC", 1946], ["World Wide Web (Tim Berners-Lee)", 1989], ["iPhone pertama", 2007]] }
+};
+// Babak 3: benda (12) + potret Kaprodi (8)
+var CV_OBJ = [
+  ["lampu", "Penemuan yang dipatenkan Thomas Alva Edison dan menerangi malam dunia"],
+  ["angklung", "Alat musik bambu dari Jawa Barat yang diakui UNESCO pada 2010"],
+  ["gunungan", "Benda yang ditancapkan dalang di tengah kelir sebagai pembuka pertunjukan wayang kulit"],
+  ["mesinketik", "Alat yang dipakai Sayuti Melik untuk mengetik naskah Proklamasi"],
+  ["kok", "Benda yang dipukul dalam olahraga peraih emas Olimpiade pertama Indonesia (1992)"],
+  ["bendera", "Pusaka yang dijahit Ibu Fatmawati dan dikibarkan 17 Agustus 1945"],
+  ["telepon", "Alat komunikasi yang dipatenkan Alexander Graham Bell pada 1876"],
+  ["keris", "Senjata tradisional berbilah luk yang diakui UNESCO sebagai warisan budaya"],
+  ["batik", "Kain bermotif yang diakui UNESCO pada 2 Oktober 2009"],
+  ["piala", "Lambang juara — Indonesia paling sering merebut Piala Thomas bulu tangkis"],
+  ["pesawat", "Karya teknologi yang identik dengan B.J. Habibie (N250 Gatotkaca)"],
+  ["gong", "Alat musik pukul berbentuk bundar besar dalam perangkat gamelan"]
+];
+var CV_KP = [
+  [1, "Oke Hendrady, S.Kom", "Kaprodi TI PERTAMA (2004–2009)"],
+  [2, "Yanti, M.Kom", "Kaprodi TI periode 2009–2010"],
+  [3, "Novita Br Ginting, M.Kom", "Kaprodi TI periode 2010–2011"],
+  [4, "Dr. Ir. Budi Susetyo, M.Sc", "Kaprodi TI yang menjabat dua periode: 2011–2015 dan 2018–2019"],
+  [5, "Safaruddin Hidayat Al Ikhsan, M.Kom", "Kaprodi TI periode 2015–2016"],
+  [6, "Ade Hendri Hendrawan, M.Kom", "Kaprodi TI periode 2016–2018"],
+  [8, "Fitrah Satrya Fajar Kusumah, M.Kom", "Kaprodi TI periode 2019–2024 (dua masa jabatan berturut-turut)"],
+  [10, "Hersanto Fajri, S.Ds., M.MD", "Kaprodi TI saat ini (2024 – sekarang)"]
+];
+
+// ---------- model benda (low-poly, prosedural) ----------
+function cvModel(id) {
+  const g = new THREE2.Group(), M = (c, o = {}) => new THREE2.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.55 }, o));
+  const add = (geo, mat, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) => { const m = new THREE2.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); g.add(m); return m; };
+  const gold = M(0xd4a017, { metalness: 0.8, roughness: 0.3 }), wood = M(0x7a4a24), dark = M(0x1f2937, { metalness: 0.4 }), bamboo = M(0xd9b26f, { roughness: 0.7 });
+  if (id === "lampu") {
+    add(new THREE2.SphereGeometry(0.17, 24, 16), M(0xfff7cc, { transparent: true, opacity: 0.75, emissive: 0xffd36b, emissiveIntensity: 0.9 }), 0, 0.42);
+    add(new THREE2.CylinderGeometry(0.07, 0.09, 0.1, 16), M(0xfff7cc, { transparent: true, opacity: 0.7 }), 0, 0.26);
+    for (let i = 0; i < 4; i++) add(new THREE2.CylinderGeometry(0.075, 0.075, 0.03, 16), M(0x9ca3af, { metalness: 0.9, roughness: 0.3 }), 0, 0.2 - i * 0.035);
+    add(new THREE2.CylinderGeometry(0.04, 0.05, 0.04, 12), dark, 0, 0.06);
+    add(new THREE2.TorusGeometry(0.05, 0.008, 6, 16), M(0xffb020, { emissive: 0xff9900, emissiveIntensity: 1.5 }), 0, 0.42, 0, 0, Math.PI / 2);
+  } else if (id === "angklung") {
+    for (const sx of [-0.22, 0.22]) add(new THREE2.CylinderGeometry(0.02, 0.02, 0.75, 8), bamboo, sx, 0.38);
+    for (const y of [0.06, 0.4, 0.72]) add(new THREE2.CylinderGeometry(0.015, 0.015, 0.48, 8), bamboo, 0, y, 0, 0, 0, Math.PI / 2);
+    [[-0.1, 0.5], [0.04, 0.38], [0.14, 0.3]].forEach(([x, h]) => { add(new THREE2.CylinderGeometry(0.035, 0.035, h, 10), bamboo, x, 0.08 + h / 2); });
+  } else if (id === "gunungan") {
+    const s = new THREE2.Shape(); s.moveTo(-0.28, 0); s.quadraticCurveTo(-0.36, 0.42, 0, 0.82); s.quadraticCurveTo(0.36, 0.42, 0.28, 0); s.lineTo(-0.28, 0);
+    const c = mkCanvas(256, 256), x = c.getContext("2d");
+    x.fillStyle = "#7f1d1d"; x.fillRect(0, 0, 256, 256); x.strokeStyle = "#fbbf24"; x.lineWidth = 5;
+    for (let i = 0; i < 9; i++) { x.beginPath(); x.moveTo(128, 250); x.quadraticCurveTo(128 + (i - 4) * 40, 150, 128 + (i - 4) * 18, 20 + Math.abs(i - 4) * 14); x.stroke(); }
+    x.fillStyle = "#fde68a"; x.fillRect(96, 190, 64, 50); x.fillStyle = "#1c1917"; x.fillRect(116, 205, 24, 35);
+    const geo = new THREE2.ShapeGeometry(s); const pos = geo.attributes.position, uv = geo.attributes.uv; for (let i = 0; i < pos.count; i++) uv.setXY(i, (pos.getX(i) + 0.36) / 0.72, pos.getY(i) / 0.82);
+    add(geo, new THREE2.MeshStandardMaterial({ map: xTex(c), side: THREE2.DoubleSide, roughness: 0.7 }), 0, 0.12);
+    add(new THREE2.CylinderGeometry(0.012, 0.012, 0.95, 6), wood, 0, 0.47, -0.01);
+  } else if (id === "mesinketik") {
+    add(new THREE2.BoxGeometry(0.62, 0.14, 0.42), dark, 0, 0.07);
+    const kb = add(new THREE2.BoxGeometry(0.56, 0.06, 0.24), M(0x111827), 0, 0.15, 0.08, -0.35);
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) add(new THREE2.CylinderGeometry(0.018, 0.018, 0.02, 10), M(0xf5f5f4), -0.22 + c * 0.055, 0.19 - r * 0.02, 0.15 - r * 0.055);
+    add(new THREE2.CylinderGeometry(0.045, 0.045, 0.62, 16), M(0x0b0b0b), 0, 0.22, -0.14, 0, 0, Math.PI / 2);
+    add(new THREE2.PlaneGeometry(0.34, 0.3), M(0xfafaf9, { side: THREE2.DoubleSide }), 0, 0.38, -0.16, -0.2);
+    void kb;
+  } else if (id === "kok") {
+    add(new THREE2.SphereGeometry(0.07, 16, 10, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), M(0xfafaf9), 0, 0.12);
+    add(new THREE2.CylinderGeometry(0.17, 0.07, 0.28, 16, 1, true), M(0xffffff, { side: THREE2.DoubleSide, transparent: true, opacity: 0.92 }), 0, 0.26);
+    add(new THREE2.TorusGeometry(0.11, 0.006, 6, 24), M(0xdc2626), 0, 0.24, 0, Math.PI / 2);
+  } else if (id === "bendera") {
+    add(new THREE2.CylinderGeometry(0.012, 0.012, 0.95, 8), M(0xe5e7eb, { metalness: 0.7 }), -0.2, 0.47);
+    add(new THREE2.SphereGeometry(0.025, 10, 8), gold, -0.2, 0.96);
+    add(new THREE2.PlaneGeometry(0.42, 0.14), M(0xdc2626, { side: THREE2.DoubleSide }), 0.01, 0.82);
+    add(new THREE2.PlaneGeometry(0.42, 0.14), M(0xfafafa, { side: THREE2.DoubleSide }), 0.01, 0.68);
+  } else if (id === "telepon") {
+    add(new THREE2.BoxGeometry(0.34, 0.16, 0.28), M(0x111111, { roughness: 0.3 }), 0, 0.08);
+    add(new THREE2.CylinderGeometry(0.09, 0.09, 0.02, 24), M(0xd1d5db, { metalness: 0.6 }), 0, 0.17, 0.05, 0.4);
+    add(new THREE2.CylinderGeometry(0.03, 0.03, 0.36, 10), M(0x111111), 0, 0.26, -0.04, 0, 0, Math.PI / 2);
+    for (const sx of [-0.17, 0.17]) add(new THREE2.SphereGeometry(0.055, 12, 10), M(0x111111), sx, 0.24, -0.04);
+  } else if (id === "keris") {
+    const s = new THREE2.Shape(); const L = 0.62, N = 7;
+    s.moveTo(-0.03, 0); for (let i = 0; i <= N * 4; i++) { const y = i / (N * 4) * L; s.lineTo(-0.03 + Math.sin(i / 4 * Math.PI) * 0.025 - (y / L) * 0.02, y); }
+    s.lineTo(0, L + 0.05); for (let i = N * 4; i >= 0; i--) { const y = i / (N * 4) * L; s.lineTo(0.03 + Math.sin(i / 4 * Math.PI) * 0.025 + (y / L) * -0.02, y); }
+    add(new THREE2.ExtrudeGeometry(s, { depth: 0.008, bevelEnabled: false }), M(0x9ca3af, { metalness: 0.85, roughness: 0.35 }), 0, 0.3, -0.004);
+    add(new THREE2.BoxGeometry(0.16, 0.035, 0.05), gold, 0, 0.3);
+    const h = add(new THREE2.CylinderGeometry(0.028, 0.035, 0.2, 10), wood, 0.02, 0.19, 0, 0, 0, 0.25);
+    add(new THREE2.BoxGeometry(0.24, 0.05, 0.12), wood, 0, 0.025); void h;
+  } else if (id === "batik") {
+    const c = mkCanvas(256, 256), x = c.getContext("2d");
+    x.fillStyle = "#78350f"; x.fillRect(0, 0, 256, 256); x.strokeStyle = "#fbbf24"; x.lineWidth = 9;
+    for (let k = -6; k < 10; k++) { x.beginPath(); for (let i = 0; i <= 20; i++) { const tt = i / 20; const px = k * 34 + tt * 220, py = tt * 256; x.lineTo(px + Math.sin(tt * 18) * 10, py); } x.stroke(); }
+    x.fillStyle = "#1c1917"; for (let k = -6; k < 10; k++) for (let i = 1; i < 6; i++) { x.beginPath(); x.arc(k * 34 + i * 40 + 16, i * 48, 5, 0, 7); x.fill(); }
+    for (const sx of [-0.27, 0.27]) add(new THREE2.CylinderGeometry(0.015, 0.015, 0.8, 8), wood, sx, 0.4);
+    add(new THREE2.CylinderGeometry(0.015, 0.015, 0.6, 8), wood, 0, 0.78, 0, 0, 0, Math.PI / 2);
+    add(new THREE2.PlaneGeometry(0.5, 0.62), new THREE2.MeshStandardMaterial({ map: xTex(c), side: THREE2.DoubleSide, roughness: 0.8 }), 0, 0.46);
+  } else if (id === "piala") {
+    const pts = []; [[0.12, 0], [0.12, 0.03], [0.04, 0.06], [0.03, 0.18], [0.06, 0.22], [0.17, 0.32], [0.19, 0.5], [0.17, 0.52]].forEach(([r, y]) => pts.push(new THREE2.Vector2(r, y)));
+    add(new THREE2.LatheGeometry(pts, 28), Object.assign(gold.clone(), { side: THREE2.DoubleSide }), 0, 0);
+    for (const sx of [-1, 1]) add(new THREE2.TorusGeometry(0.07, 0.012, 6, 16, Math.PI), gold, sx * 0.19, 0.42, 0, 0, 0, -sx * Math.PI / 2);
+  } else if (id === "pesawat") {
+    add(new THREE2.CylinderGeometry(0.012, 0.012, 0.3, 6), dark, 0, 0.15);
+    const f = new THREE2.Group(); f.position.y = 0.36; f.rotation.y = 0.6; g.add(f);
+    const pm = M(0xf8fafc, { metalness: 0.3 });
+    const body = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.05, 0.5, 6, 12), pm); body.rotation.z = Math.PI / 2; f.add(body);
+    const wing = new THREE2.Mesh(new THREE2.BoxGeometry(0.16, 0.012, 0.66), pm); f.add(wing);
+    const tail = new THREE2.Mesh(new THREE2.BoxGeometry(0.08, 0.012, 0.24), pm); tail.position.x = -0.26; f.add(tail);
+    const fin = new THREE2.Mesh(new THREE2.BoxGeometry(0.08, 0.13, 0.012), M(0x1d4ed8)); fin.position.set(-0.27, 0.07, 0); f.add(fin);
+    for (const sz of [-0.18, 0.18]) { const en = new THREE2.Mesh(new THREE2.CylinderGeometry(0.025, 0.025, 0.08, 10), M(0x64748b)); en.rotation.z = Math.PI / 2; en.position.set(0.03, -0.03, sz); f.add(en); }
+  } else if (id === "gong") {
+    for (const sx of [-0.3, 0.3]) add(new THREE2.BoxGeometry(0.05, 0.85, 0.05), M(0x7f1d1d), sx, 0.42);
+    add(new THREE2.BoxGeometry(0.72, 0.06, 0.06), M(0x7f1d1d), 0, 0.84);
+    add(new THREE2.CylinderGeometry(0.24, 0.24, 0.04, 32), M(0xb45309, { metalness: 0.85, roughness: 0.35 }), 0, 0.5, 0, Math.PI / 2);
+    add(new THREE2.SphereGeometry(0.06, 16, 10), M(0xd97706, { metalness: 0.9, roughness: 0.25 }), 0, 0.5, 0.03);
+  }
+  return g;
+}
+
+// ---------- pembangunan gua ----------
+function cvRockTex(seed, base, rep) {
+  const c = mkCanvas(256, 256), x = c.getContext("2d"), R = rndGen(seed);
+  x.fillStyle = base; x.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 260; i++) { x.fillStyle = `rgba(${R() < 0.5 ? "0,0,0" : "255,235,200"},${0.04 + R() * 0.1})`; x.beginPath(); x.ellipse(R() * 256, R() * 256, 4 + R() * 26, 3 + R() * 14, R() * 3, 0, 7); x.fill(); }
+  x.strokeStyle = "rgba(0,0,0,.35)"; x.lineWidth = 2; for (let i = 0; i < 14; i++) { x.beginPath(); let px = R() * 256, py = R() * 256; x.moveTo(px, py); for (let k = 0; k < 5; k++) { px += (R() - 0.5) * 50; py += (R() - 0.5) * 50; x.lineTo(px, py); } x.stroke(); }
+  return xTex(c, rep);
+}
+function cvGlowMat(col, op = 1) { return new THREE2.MeshBasicMaterial({ color: col, transparent: op < 1, opacity: op, toneMapped: false, fog: false }); }
+function cvGate(cx, z, w) {
+  const m = new THREE2.Mesh(new THREE2.BoxGeometry(w, 4.2, 0.7), new THREE2.MeshStandardMaterial({ map: cvRockTex(901 + cx | 0, "#3b2f2a", [1, 1]), roughness: 0.95 }));
+  m.position.set(cx, 2.1, z); scene.add(m);
+  const rune = new THREE2.Mesh(new THREE2.PlaneGeometry(1.2, 1.2), new THREE2.MeshBasicMaterial({ map: xTex(l2Canvas(256, 256, (x) => { x.strokeStyle = "#22d3ee"; x.lineWidth = 10; x.beginPath(); x.arc(128, 128, 100, 0, 7); x.stroke(); x.font = `800 120px ${FONT}`; x.fillStyle = "#67e8f9"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("🔒", 128, 136); })), transparent: true, toneMapped: false, fog: false }));
+  rune.position.set(0, 0.3, 0.36); m.add(rune);
+  const col = xCol(cx - w / 2, z, cx + w / 2, z, 0.38);
+  const G = { m, col, open: false, k: 0, setOpen(v) { G.open = v; col.off = v; } };
+  CV.gates.push(G);
+  return G;
+}
+function cvScreen(w, h, px, py) { const c = mkCanvas(px, py); const m = new THREE2.Mesh(new THREE2.PlaneGeometry(w, h), new THREE2.MeshBasicMaterial({ map: xTex(c), toneMapped: false, fog: false, transparent: true })); return { c, m, draw(fn) { const x = c.getContext("2d"); x.clearRect(0, 0, px, py); fn(x, px, py); m.material.map.needsUpdate = true; } }; }
+function buildGua() {
+  const R = XROOMS.cave;
+  const rockM = new THREE2.MeshStandardMaterial({ map: cvRockTex(7, "#4a3b32", [6, 1]), roughness: 0.95, color: 0xb8a89a });
+  const rockM2 = new THREE2.MeshStandardMaterial({ map: cvRockTex(11, "#3f332c", [3, 1]), roughness: 0.95, color: 0xb8a89a });
+  xRoomWalls(R, {}, R.h, rockM);
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: cvRockTex(3, "#2e2520", [14, 14]), roughness: 1, color: 0x9a8c80 }));
+  xCeil(R, new THREE2.MeshStandardMaterial({ map: cvRockTex(5, "#1c1714", [8, 8]), roughness: 1 }), R.h);
+  const W = (ax, az, bx, bz) => xWall(ax, az, bx, bz, R.h, rockM2, 0.6);
+  // ceruk awal
+  W(74, -1, 74, -6); W(82, -1, 82, -6); W(66, -6, 74, -6); W(82, -6, 90, -6);
+  // kamar 1 & 2
+  W(66, -6, 66, -27); W(90, -6, 90, -27);
+  W(66, -20, 76, -20); W(80, -20, 90, -20);
+  W(60, -27, 76, -27); W(80, -27, 96, -27);
+  // kamar 3 → pintu ujung & ceruk Teh Puspa
+  W(60, -40, 76.5, -40); W(79.5, -40, 96, -40); W(75, -40, 75, -45); W(81, -40, 81, -45);
+  // stalaktit & stalagmit (instanced)
+  const Rg = rndGen(4242), spots = [];
+  for (let i = 0; i < 140; i++) { const x = 60.5 + Rg() * 35, z = -44.5 + Rg() * 43; if (!(inCave(x, z))) continue; spots.push([x, z, Rg()]); }
+  const st = new THREE2.InstancedMesh(new THREE2.ConeGeometry(0.22, 1, 7), new THREE2.MeshStandardMaterial({ color: 0x5b4a3f, roughness: 0.9 }), spots.length);
+  const o = new THREE2.Object3D();
+  spots.forEach(([x, z, r], i) => { const h = 0.5 + r * 1.3; o.position.set(x, R.h - h / 2, z); o.rotation.set(Math.PI, r * 3, 0); o.scale.set(0.6 + r, h, 0.6 + r); o.updateMatrix(); st.setMatrixAt(i, o.matrix); });
+  scene.add(st);
+  // kristal berpendar di dinding (penunjuk arah redup)
+  const crys = new THREE2.InstancedMesh(new THREE2.OctahedronGeometry(0.12), cvGlowMat(0x67e8f9, 0.85), 40);
+  for (let i = 0; i < 40; i++) { const side = i % 4; let x, z; if (side === 0) { x = 66.3; z = -7 - Rg() * 19; } else if (side === 1) { x = 89.7; z = -7 - Rg() * 19; } else if (side === 2) { x = 60.3; z = -28 - Rg() * 11; } else { x = 95.7; z = -28 - Rg() * 11; } o.position.set(x, 0.2 + Rg() * 0.5, z); o.rotation.set(Rg() * 3, Rg() * 3, Rg()); o.scale.set(1, 1.8, 1); o.updateMatrix(); crys.setMatrixAt(i, o.matrix); }
+  scene.add(crys);
+  XT.anim.push(() => { crys.material.opacity = 0.55 + Math.sin(t * 1.3) * 0.25; });
+  // ===== ceruk awal: papan judul + portal keluar =====
+  const ttl = cvScreen(5, 1.2, 1200, 290); ttl.m.position.set(78, 3.6, -5.62); scene.add(ttl.m); xAct(ttl.m, { type: "x_cvintro" });
+  ttl.draw((x, w, h) => { x.fillStyle = "rgba(20,12,6,.88)"; rr(x, 0, 0, w, h, 30); x.fill(); x.strokeStyle = "#f59e0b"; x.lineWidth = 6; rr(x, 6, 6, w - 12, h - 12, 26); x.stroke(); x.textAlign = "center"; x.fillStyle = "#fde68a"; x.font = `800 92px ${FONT}`; x.fillText("⛏ GUA PUSTAKA", w / 2, 120); x.fillStyle = "#fed7aa"; x.font = `500 42px ${FONT}`; x.fillText("Tahap 3 · Pengetahuan Umum · 3 nyawa · 3 babak", w / 2, 210); });
+  const pg = new THREE2.Group(); pg.position.set(78, 0, -1.35); pg.rotation.y = Math.PI; scene.add(pg);
+  const pr = new THREE2.Mesh(new THREE2.TorusGeometry(0.9, 0.08, 10, 40), cvGlowMat(0xa78bfa)); pr.position.y = 1.35; pg.add(pr);
+  const pd = new THREE2.Mesh(new THREE2.CircleGeometry(0.85, 32), cvGlowMat(0x5b21b6, 0.45)); pd.position.y = 1.35; pg.add(pd);
+  xAct(pd, { type: "x_cvexit" });
+  XT.anim.push((dt) => { pr.rotation.z += dt * 0.7; });
+  // ===== KAMAR 1: Lantai Benar/Salah =====
+  const tile = (x0, x1, col, txt) => {
+    const c = l2Canvas(512, 512, (x, w, h) => { x.fillStyle = col; x.globalAlpha = 0.35; x.fillRect(0, 0, w, h); x.globalAlpha = 1; x.strokeStyle = col; x.lineWidth = 18; x.strokeRect(9, 9, w - 18, h - 18); x.fillStyle = "#fff"; x.font = `900 120px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(txt, w / 2, h / 2); });
+    const m = new THREE2.Mesh(new THREE2.PlaneGeometry(x1 - x0, 8), new THREE2.MeshBasicMaterial({ map: xTex(c), transparent: true, toneMapped: false, fog: false, depthWrite: false }));
+    m.rotation.x = -Math.PI / 2; m.position.set((x0 + x1) / 2, 0.03, -13); scene.add(m);
+    return { m, x0, x1, z0: -17, z1: -9, drop: 0 };
+  };
+  CV.tiles.B = tile(68, 76, "#22c55e", "BENAR");
+  CV.tiles.S = tile(80, 88, "#ef4444", "SALAH");
+  const strip = new THREE2.Mesh(new THREE2.PlaneGeometry(0.25, 8), cvGlowMat(0xfbbf24, 0.6)); strip.rotation.x = -Math.PI / 2; strip.position.set(78, 0.03, -13); scene.add(strip);
+  CV.scr = cvScreen(10, 2.6, 1600, 416); CV.scr.m.position.set(78, 3.35, -19.62); scene.add(CV.scr.m);
+  cvDrawScreen("Berdirilah di petak yang benar", "Pernyataan muncul di sini — pilih BENAR atau SALAH dalam 9 detik");
+  CV.gates[0] = cvGate(78, -20, 4.1);
+  // ===== KAMAR 2: prasasti Lini Masa + rak buku batu =====
+  const tab = new THREE2.Group(); tab.position.set(78, 0, -24.6); scene.add(tab);
+  xBox(2.6, 2.2, 0.45, rockM2, 0, 1.1, 0, 0, tab);
+  const rc = cvScreen(2.3, 1.8, 600, 470); rc.m.position.set(0, 1.25, 0.24); tab.add(rc.m);
+  rc.draw((x, w, h) => { x.fillStyle = "rgba(10,20,30,.6)"; rr(x, 0, 0, w, h, 20); x.fill(); x.strokeStyle = "#22d3ee"; x.lineWidth = 6; rr(x, 6, 6, w - 12, h - 12, 18); x.stroke(); x.textAlign = "center"; x.fillStyle = "#a5f3fc"; x.font = `800 64px ${FONT}`; x.fillText("⏳ LINI MASA", w / 2, 110); x.font = `500 32px ${FONT}`; x.fillStyle = "#e0f2fe"; wrap(x, "Dekati prasasti ini untuk mengurutkan peristiwa", 40, 200, w - 80, 44, 3, "center"); x.font = `900 120px ${FONT}`; x.fillStyle = "#67e8f9"; x.fillText("1 → 5", w / 2, 400); });
+  xAct(rc.m, { type: "x_cvtablet" }); world.colliders.push({ a: [76.7, -24.6], b: [79.3, -24.6], r: 0.35 });
+  const books = new THREE2.InstancedMesh(new THREE2.BoxGeometry(0.1, 0.36, 0.26), new THREE2.MeshStandardMaterial({ roughness: 0.8 }), 160), bc = new THREE2.Color();
+  let bi = 0;
+  for (const [sx, face] of [[66.45, 1], [89.55, -1]]) for (let row = 0; row < 4; row++) for (let k = 0; k < 20 && bi < 160; k++) { o.position.set(sx + face * 0.05, 0.5 + row * 0.6, -21 - k * 0.27); o.rotation.set(0, 0, (Rg() - 0.5) * 0.15); o.scale.set(1, 0.8 + Rg() * 0.4, 1); o.updateMatrix(); books.setMatrixAt(bi, o.matrix); books.setColorAt(bi, bc.setHSL(Rg(), 0.45, 0.25 + Rg() * 0.15)); bi++; }
+  scene.add(books);
+  for (const sx of [66.5, 89.5]) for (let row = 0; row < 4; row++) xBox(0.4, 0.05, 6, rockM2, sx, 0.3 + row * 0.6, -23.6);
+  CV.gates[1] = cvGate(78, -27, 4.1);
+  // ===== KAMAR 3: Galeri Benda + potret Kaprodi =====
+  const podM = new THREE2.MeshStandardMaterial({ map: cvRockTex(21, "#57534e", [1, 1]), roughness: 0.8 });
+  const pods = [[64, -30.5], [69, -30.5], [87, -30.5], [92, -30.5], [64, -34.5], [69, -34.5], [87, -34.5], [92, -34.5], [64, -38], [70, -38], [86, -38], [92, -38]];
+  const order = cogShuffle(CV_OBJ.map((o2) => o2[0]));
+  pods.forEach(([px, pz], i) => {
+    const id = order[i], gp = new THREE2.Group(); gp.position.set(px, 0, pz); scene.add(gp);
+    const p = new THREE2.Mesh(new THREE2.CylinderGeometry(0.45, 0.55, 1.0, 10), podM); p.position.y = 0.5; gp.add(p);
+    world.circles.push({ x: px, z: pz, r: 0.6 });
+    const md = cvModel(id); md.position.y = 1.0; gp.add(md);
+    const cr = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.07), cvGlowMat(0x67e8f9, 0.9)); cr.position.set(0, 0.15, 0.6); cr.scale.y = 1.6; gp.add(cr);
+    const hit = new THREE2.Mesh(new THREE2.CylinderGeometry(0.55, 0.55, 2.0, 10), new THREE2.MeshBasicMaterial({ visible: false })); hit.position.y = 1.0; gp.add(hit);
+    xAct(hit, { type: "x_cvobj", id: "o:" + id });
+    const ph = i * 1.7;
+    XT.anim.push(() => { cr.material.opacity = 0.35 + (Math.sin(t * 2.2 + ph) * 0.5 + 0.5) * 0.6; md.rotation.y = Math.sin(t * 0.4 + ph) * 0.5; });
+    CV.objs.push({ key: "o:" + id, x: px, z: pz, g: gp, md, cr });
+  });
+  const kpSpots = [[60.25, -30.5, Math.PI / 2], [60.25, -34.5, Math.PI / 2], [60.25, -38, Math.PI / 2], [95.75, -30.5, -Math.PI / 2], [95.75, -34.5, -Math.PI / 2], [95.75, -38, -Math.PI / 2], [66, -27.35, Math.PI], [90, -27.35, Math.PI]];
+  const kpOrder = cogShuffle(CV_KP.slice());
+  kpSpots.forEach(([px, pz, ry], i) => {
+    const [img, nama] = kpOrder[i], gp = new THREE2.Group(); gp.position.set(px, 0, pz); gp.rotation.y = ry; scene.add(gp);
+    xBox(1.25, 1.6, 0.08, new THREE2.MeshStandardMaterial({ color: 0x8a6a2a, metalness: 0.7, roughness: 0.35 }), 0, 2.0, 0.04, 0, gp);
+    const ph = new THREE2.Mesh(new THREE2.PlaneGeometry(1.05, 1.35), new THREE2.MeshStandardMaterial({ color: 0x2a1f3d, roughness: 0.6 })); ph.position.set(0, 2.0, 0.09); gp.add(ph);
+    new THREE2.TextureLoader().load(`assets/ext/k${img}.webp`, (tx) => { tx.colorSpace = THREE2.SRGBColorSpace; ph.material.map = tx; ph.material.color.set(0xffffff); ph.material.needsUpdate = true; });
+    const pl = xPlane(l2Canvas(512, 96, (x, w, h) => { x.fillStyle = "#1c1410"; rr(x, 0, 0, w, h, 14); x.fill(); x.strokeStyle = "#b8862b"; x.lineWidth = 4; rr(x, 3, 3, w - 6, h - 6, 12); x.stroke(); x.fillStyle = "#fde68a"; x.font = `600 30px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(nama, w / 2, h / 2 + 2); }), 1.2, 0.225); pl.position.set(0, 1.0, 0.09); gp.add(pl);
+    const candle = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.06), cvGlowMat(0xfbbf24, 0.9)); candle.position.set(0, 0.6, 0.25); candle.scale.y = 1.6; gp.add(candle);
+    const hit = new THREE2.Mesh(new THREE2.BoxGeometry(1.4, 2.6, 0.6), new THREE2.MeshBasicMaterial({ visible: false })); hit.position.set(0, 1.6, 0.3); gp.add(hit);
+    xAct(hit, { type: "x_cvobj", id: "k:" + img });
+    const ff = i * 2.1; XT.anim.push(() => { candle.material.opacity = 0.5 + Math.sin(t * 7 + ff) * 0.2 + Math.sin(t * 13 + ff) * 0.1; });
+    const fx = px + Math.sin(ry) * 0.8, fz = pz + Math.cos(ry) * 0.8;
+    CV.objs.push({ key: "k:" + img, x: fx, z: fz, g: gp, md: ph, cr: candle });
+  });
+  // pintu ujung (dua daun kayu berukir)
+  const door = new THREE2.Group(); door.position.set(78, 0, -40); scene.add(door);
+  const dM = new THREE2.MeshStandardMaterial({ map: xTex(l2Canvas(256, 512, (x, w, h) => { x.fillStyle = "#5b3416"; x.fillRect(0, 0, w, h); x.strokeStyle = "#d4a017"; x.lineWidth = 8; x.strokeRect(20, 20, w - 40, h - 40); x.strokeRect(50, 60, w - 100, h - 120); x.beginPath(); x.arc(w / 2, h / 2, 50, 0, 7); x.stroke(); })), roughness: 0.6 });
+  const leaves = [];
+  for (const sx of [-1, 1]) { const piv = new THREE2.Group(); piv.position.set(sx * 1.5, 0, 0); door.add(piv); const lf = new THREE2.Mesh(new THREE2.BoxGeometry(1.5, 3.4, 0.12), dM); lf.position.set(-sx * 0.75, 1.7, 0); piv.add(lf); leaves.push([piv, sx]); }
+  const arch = new THREE2.Mesh(new THREE2.TorusGeometry(1.7, 0.09, 8, 40, Math.PI), cvGlowMat(0xfbbf24, 0.9)); arch.position.set(0, 3.4, 0.1); door.add(arch);
+  const dcol = xCol(76.5, -40, 79.5, -40, 0.2);
+  CV.door = { open: false, k: 0, setOpen(v) { this.open = v; dcol.off = v; } };
+  XT.anim.push((dt) => { const D = CV.door; D.k += ((D.open ? 1 : 0) - D.k) * Math.min(1, dt * 1.4); for (const [piv, sx] of leaves) piv.rotation.y = sx * D.k * 1.6; });
+  // ceruk Teh Puspa: hangat & terang (tidak terkena kabut)
+  const alc = new THREE2.Mesh(new THREE2.PlaneGeometry(6, 5), new THREE2.MeshBasicMaterial({ map: xTex(l2Canvas(512, 420, (x, w, h) => { const gr = x.createRadialGradient(w / 2, h * 0.55, 20, w / 2, h * 0.55, w * 0.6); gr.addColorStop(0, "#fde7c7"); gr.addColorStop(1, "#7c3a12"); x.fillStyle = gr; x.fillRect(0, 0, w, h); x.strokeStyle = "rgba(251,191,36,.6)"; x.lineWidth = 4; for (let i = 0; i < 6; i++) { x.beginPath(); x.arc(w / 2, h + 40, 120 + i * 45, Math.PI, 0); x.stroke(); } })), toneMapped: false, fog: false }));
+  alc.position.set(78, 2.5, -44.65); scene.add(alc);
+  const sh = cvScreen(4.2, 0.75, 1000, 180); sh.m.position.set(78, 4.25, -44.6); scene.add(sh.m);
+  sh.draw((x, w, h) => { x.textAlign = "center"; x.fillStyle = "#7c2d12"; x.font = `800 84px ${FONT}`; x.fillText("💡 PENGETAHUAN UMUM", w / 2, 120); });
+  const xp = new THREE2.Group(); xp.position.set(80.2, 0, -43.9); xp.rotation.y = -0.6; scene.add(xp);
+  const xr2 = new THREE2.Mesh(new THREE2.TorusGeometry(0.55, 0.06, 8, 32), cvGlowMat(0xa78bfa)); xr2.position.y = 1.0; xp.add(xr2);
+  const xd = new THREE2.Mesh(new THREE2.CircleGeometry(0.5, 28), cvGlowMat(0x5b21b6, 0.5)); xd.position.y = 1.0; xp.add(xd); xAct(xd, { type: "x_cvexit" });
+  // ===== Teh Puspa (tersembunyi dari daftar NPC) =====
+  makeCustomHuman("puspa", {
+    code: "GUA", name: "Teh Puspa", role: "Penjaga Gua Pustaka · Lencana Pengetahuan Umum", col: "#db2777", icon: "💡", hint: "💡",
+    x: 78, z: -43, room: "cave", secret: true, hidden: true, tag: "TEH PUSPA · LENCANA",
+    look: { shirt: "#f5ebe0", apron: "#f5ebe0", hijab: "#ec4899", glasses: false, badge: "💡", noApron: true, skirt: "#6b4426" },
+    chips: ["Minta lencana", "Apa isi gua ini?", "Lihat capaian"],
+    roleNote: "lencana tahap 3 (Pengetahuan Umum)",
+    knowText: "Teh Puspa menunggu di ujung Gua Pustaka dan menyematkan Lencana Pengetahuan Umum bagi penjelajah yang lolos ketiga babak.",
+    greetActs: () => [["💡 Minta lencana", () => askNpc("Minta lencana", "puspa")], ["🏅 Lihat capaian", openCapaian]],
+    answer: (q) => (/^lihat capaian$/i.test(String(q).trim()) ? (setTimeout(openCapaian, 500), { text: "Ini koleksi capaianmu 🏅" }) : puspaAnswer(q))
+  });
+  NPCS.puspa.pitch = 1.22;
+  NPCS.puspa.g.visible = false;
+  // ===== pintu rahasia di rak buku Silvia (IT-Mart) =====
+  const dw = new THREE2.Group(); dw.position.set(9.32, 0, 25.15); dw.rotation.y = Math.PI / 2; scene.add(dw);
+  const hole = new THREE2.Mesh(new THREE2.PlaneGeometry(2.2, 2.7), new THREE2.MeshBasicMaterial({ map: xTex(l2Canvas(256, 320, (x, w, h) => { const gr = x.createRadialGradient(w / 2, h * 0.6, 10, w / 2, h * 0.6, w * 0.7); gr.addColorStop(0, "#3a2614"); gr.addColorStop(0.5, "#120a05"); gr.addColorStop(1, "#000"); x.fillStyle = gr; x.fillRect(0, 0, w, h); x.fillStyle = "#6b4a2f"; for (let i = 0; i < 6; i++) x.fillRect(w / 2 - 70 + i * 6, h - 40 - i * 22, 140 - i * 12, 14); })), toneMapped: false }));
+  hole.position.y = 1.35; dw.add(hole);
+  const harch = new THREE2.Mesh(new THREE2.TorusGeometry(1.15, 0.07, 8, 32, Math.PI), cvGlowMat(0xf59e0b, 0.9)); harch.position.y = 2.7; dw.add(harch);
+  dw.visible = false; CV.hole = dw;
+  XT.anim.push((dt) => cvTick(dt));
+}
+function cvDrawScreen(big, small, col) {
+  if (!CV.scr) return;
+  CV.scr.draw((x, w, h) => {
+    x.fillStyle = "rgba(8,6,4,.9)"; rr(x, 0, 0, w, h, 30); x.fill(); x.strokeStyle = col || "#f59e0b"; x.lineWidth = 8; rr(x, 6, 6, w - 12, h - 12, 26); x.stroke();
+    x.textAlign = "center"; x.fillStyle = "#fff"; x.font = `800 58px ${FONT}`; wrap(x, big, 50, 130, w - 100, 70, 3, "center");
+    x.fillStyle = col || "#fde68a"; x.font = `500 34px ${FONT}`; x.fillText(small || "", w / 2, h - 36);
+  });
+}
+
+// ---------- HUD ----------
+function cvHud(show) {
+  let el = $("cvHud");
+  if (!show) { el?.remove(); $("cvVig")?.remove(); return; }
+  if (!el) {
+    el = document.createElement("div"); el.id = "cvHud";
+    el.innerHTML = `<div class="cvh-top"><b id="cvB"></b><span id="cvL"></span></div><div id="cvT" class="cvh-txt"></div><div class="cvh-bar"><i id="cvBar"></i></div><div class="cvh-btn"><button class="ghost" id="cvLamp" title="Perbesar cahaya lentera">🔦 Lentera</button><button class="ghost" id="cvOut">Keluar gua</button></div>`;
+    document.body.appendChild(el);
+    $("cvLamp").onclick = () => { CV.big = !CV.big; $("cvLamp").classList.toggle("on", CV.big); toast(CV.big ? "🔦 Lentera diperbesar." : "🔦 Lentera normal."); };
+    $("cvOut").onclick = () => { if (CV.on && !CV.won && CV.babak > 0) { if (!confirm("Keluar dari gua? Progres tantangan akan hilang.")) return; } cvExit(); };
+    const v = document.createElement("div"); v.id = "cvVig"; document.body.appendChild(v);
+  }
+  cvHudUpd();
+}
+function cvHudUpd(txt, frac) {
+  if (!$("cvHud")) return;
+  const names = ["Persiapan", "Babak 1/3 · Lantai Benar/Salah", "Babak 2/3 · Lini Masa", "Babak 3/3 · Galeri Benda", "Tuntas!"];
+  $("cvB").textContent = "⛏ GUA PUSTAKA · " + names[Math.min(4, CV.babak)];
+  $("cvL").textContent = "❤".repeat(Math.max(0, CV.lives)) + "🖤".repeat(Math.max(0, CV_LIVES - CV.lives));
+  if (txt !== undefined) $("cvT").textContent = txt;
+  $("cvBar").parentElement.style.visibility = frac === undefined || frac === null ? "hidden" : "";
+  if (frac !== undefined && frac !== null) { $("cvBar").style.width = Math.max(0, Math.min(1, frac)) * 100 + "%"; $("cvBar").classList.toggle("warn", frac < 0.3); }
+}
+function cvFlash(col) { const f = document.createElement("div"); f.className = "cv-flash"; f.style.background = col; document.body.appendChild(f); setTimeout(() => f.remove(), 700); }
+
+// ---------- alur ----------
+function cvReset() {
+  CV.babak = 0; CV.lives = CV_LIVES; CV.bs = null; CV.lm = null; CV.gl = null; CV.t0 = 0;
+  for (const G of CV.gates) if (G) { G.setOpen(false); G.k = 0; }
+  if (CV.door) { CV.door.setOpen(false); }
+  if (NPCS.puspa) NPCS.puspa.g.visible = false;
+  for (const o of CV.objs) { o.done = false; if (o.cr) o.cr.material.color.set(o.key[0] === "k" ? 0xfbbf24 : 0x67e8f9); }
+  for (const k of ["B", "S"]) if (CV.tiles[k]) { CV.tiles[k].drop = 0; CV.tiles[k].m.position.y = 0.03; }
+  cvDrawScreen("Berdirilah di petak yang benar", "Pernyataan muncul di sini — pilih BENAR atau SALAH dalam 9 detik");
+  $("cvLm")?.remove();
+}
+function cvSetWon() { for (const G of CV.gates) if (G) G.setOpen(true); CV.door.setOpen(true); NPCS.puspa.g.visible = true; CV.babak = 4; }
+async function silviaGate() {
+  const q = chMigrate();
+  if (!q.badges.dasar) return { text: `Buku-buku di balik rak ini hanya untuk pemegang Lencana Pengetahuan Dasar, ${S.name}. Taklukkan keempat ruang tantangan di Lantai 2 (temui Ananda), lalu ambil lencananya dari Teh Fety di Taman Apresiasi.`, acts: [["🏅 Lihat capaian", openCapaian]] };
+  if (!q.card || !q.card.no) return { text: "Lencanamu harus tersemat di Explorer Card. Ambil kartumu dulu dari Kang Santo di Taman Apresiasi." };
+  let ok = false;
+  try {
+    await capSync();
+    const j = await (await fetch("api/kartu/cek?no=" + encodeURIComponent(q.card.no), { credentials: "same-origin" })).json();
+    ok = !!(j.ok && j.ada && !j.cabut && j.lencana && j.lencana.dasar);
+    if (j.cabut) return { text: "Explorer Card-mu dicabut admin, jadi aku tidak bisa membuka rak ini." };
+  } catch { return { text: "Aku tidak bisa menghubungi database kartu sekarang. Coba lagi sebentar lagi ya.", acts: [["🔄 Coba lagi", () => askNpc("Buka Gua Pustaka", "ivy")]] }; }
+  if (!ok) return { text: "Lencana Pengetahuan Dasar-mu belum tercatat di database server. Temui Teh Fety lagi agar lencananya disinkronkan, lalu kembali ke sini." };
+  cvOpenBookcase();
+  return { text: `🔷 Lencana Pengetahuan Dasar terverifikasi. Ssst… dorong pelan rak di sebelah kiriku. Di baliknya ada lorong menuju GUA PUSTAKA. Di sana kamu bermain sendirian: 3 babak, 3 nyawa. Bawa lentera, ya!` };
+}
+function cvOpenBookcase() {
+  CV.bcOpen = true; CV.bcT = performance.now();
+  if (CV.hole) CV.hole.visible = true;
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  if (typeof xShake === "function") xShake(0.5, 0.03);
+  toast("📚 Rak buku bergeser… masuki lorong di baliknya.", 5000);
+}
+function cvEnter() {
+  CV.bcOpen = false;
+  const q = chMigrate();
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  setTimeout(() => {
+    CV.on = true; CV.won = false; cvReset(); CV.grace = performance.now() + 3000;
+    xTeleport(CV_START.x, CV_START.z, 0);
+    cvHud(true); cvHudUpd("Kamu memasuki Gua Pustaka. Jalan sedikit ke depan…", null);
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => cvIntro(!!q.chal.pustaka), 900);
+  }, 650);
+}
+function cvIntro(done) {
+  if (renderer.xr.isPresenting) { showVRText("Gua Pustaka membutuhkan layar biasa. Keluar dari mode VR sebentar."); return; }
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>⛏ Gua Pustaka · Tahap 3</h2>
+  <p>Gua ini gelap — lenteramu hanya menerangi sekitar <b>5 langkah</b>. Kamu bermain <b>sendirian</b>: pemain lain tidak terlihat dan tidak terdengar di sini.</p>
+  <div class="kbox"><b>3 NYAWA · 3 BABAK</b><ol>
+  <li><b>Lantai Benar/Salah</b> — 10 pernyataan. Berdirilah di petak BENAR atau SALAH sebelum 9 detik habis. Salah → lantai runtuh, nyawa −1.</li>
+  <li><b>Lini Masa</b> — dekati prasasti, urutkan 2 set kartu (salah satunya urutan Kaprodi TI). Urutan salah → nyawa −1.</li>
+  <li><b>Galeri Benda</b> — 5 petunjuk. Cari benda atau potret Kaprodi yang tepat, <b>dekati (±2 m)</b> lalu klik. Salah pilih atau 35 detik habis → nyawa −1.</li></ol>
+  <p style="font-size:12px;color:var(--mut)">Nyawa habis → kembali ke Silvia. Lolos ketiga babak → pintu ujung gua terbuka dan Teh Puspa menunggumu.</p></div>
+  <div class="rowf"><button class="btn" id="cvGo">▶ Mulai Babak 1</button>${done ? `<button class="ghost" id="cvSkip">💡 Langsung ke Teh Puspa</button>` : ""}<button class="ghost" id="cvNo">Keluar gua</button></div>`);
+  $("cvGo").onclick = () => { closeGen(); cvB1Start(); };
+  $("cvNo").onclick = () => { closeGen(); cvExit(); };
+  $("gx").onclick = () => { closeGen(); if (CV.babak === 0) cvHudUpd("Klik papan ⛏ GUA PUSTAKA di depanmu untuk membuka aturan & memulai.", null); };
+  if ($("cvSkip")) $("cvSkip").onclick = () => { closeGen(); CV.won = true; cvSetWon(); cvHudUpd("Temui Teh Puspa di balik pintu ujung gua.", null); xTeleport(78, -41.2, 0); setTimeout(() => openNpc("puspa", "chat"), 900); };
+}
+function cvLoseLife(why) {
+  CV.lives--;
+  cvFlash("rgba(220,38,38,.45)");
+  if (typeof xShake === "function") xShake(0.6, 0.07);
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  toast(`💔 ${why}`, 3500);
+  cvHudUpd();
+  if (CV.lives <= 0) { cvFail(why); return true; }
+  return false;
+}
+function cvFail(why) {
+  CV.busy = true;
+  $("cvLm")?.remove();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🕯</div><h2>Lenteramu padam…</h2><p id="cvWhy"></p><p>Nyawamu habis. Kamu dikembalikan ke Silvia di IT-Mart — coba lagi kapan saja!</p></div>`);
+  $("cvWhy").textContent = why || "";
+  setTimeout(() => { closeGen(); CV.busy = false; cvExit(true); setTimeout(() => sayBubble("Tidak apa-apa, gua itu memang sulit. Coba lagi kalau sudah siap 📚", "npc_ivy"), 900); }, 3600);
+}
+function cvExit(silent) {
+  const wasWon = CV.won;
+  CV.on = false; CV.won = false; CV.bs = null; CV.gl = null; CV.grace = performance.now() + 3000;
+  cvHud(false); $("cvLm")?.remove();
+  xTeleport(10.9, 24.4, -Math.PI / 2);
+  if (!silent) toast(wasWon ? "📚 Kembali ke IT-Mart." : "📚 Kamu keluar dari Gua Pustaka.", 3500);
+  setTimeout(cvReset, 500);
+}
+// ----- Babak 1 -----
+function cvB1Start() {
+  CV.babak = 1; CV.t0 = performance.now();
+  const list = cogShuffle(CV_BS).slice(0, 7).concat(cogShuffle(CV_BS_KP).slice(0, 3));
+  CV.bs = { list: cogShuffle(list), i: -1, until: 0, phase: "", side: "" };
+  xTeleport(78, -13, 0);
+  cvHudUpd("Babak 1 dimulai! Berdirilah di petak BENAR (kiri, hijau) atau SALAH (kanan, merah).", null);
+  setTimeout(cvB1Next, 2200);
+}
+function cvB1Next() {
+  const B = CV.bs; if (!B || !CV.on) return;
+  B.i++;
+  if (B.i >= B.list.length) {
+    CV.bs = null; CV.babak = 2; CV.gates[0].setOpen(true);
+    cvDrawScreen("✅ Babak 1 tuntas!", "Gerbang batu terbuka — temukan prasasti LINI MASA di ruang berikutnya", "#22c55e");
+    cvHudUpd("✅ Babak 1 tuntas! Masuki gerbang batu dan dekati prasasti Lini Masa.", null);
+    if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle();
+    return;
+  }
+  const [s] = B.list[B.i];
+  B.until = performance.now() + CV_BS_TIME * 1000; B.phase = "ask";
+  cvDrawScreen(s, `Pernyataan ${B.i + 1}/${B.list.length} · berdiri di BENAR atau SALAH`);
+  if (typeof SFX !== "undefined") SFX.bloop(1.1);
+}
+function cvSideAt() {
+  for (const k of ["B", "S"]) { const T = CV.tiles[k]; if (P.x > T.x0 && P.x < T.x1 && P.z > T.z0 && P.z < T.z1) return k; }
+  return "";
+}
+function cvB1Judge() {
+  const B = CV.bs; if (!B) return;
+  B.phase = "fb";
+  const [s, truth, expl] = B.list[B.i], side = cvSideAt(), ok = side === (truth ? "B" : "S");
+  if (ok) {
+    cvFlash("rgba(34,197,94,.3)"); if (typeof SFX !== "undefined") SFX.chime();
+    cvDrawScreen(`✅ ${truth ? "BENAR" : "SALAH"} — ${expl}`, `Pernyataan ${B.i + 1}/${B.list.length}`, "#22c55e");
+    setTimeout(cvB1Next, 2200);
+  } else {
+    if (side) CV.tiles[side].drop = 1;
+    cvDrawScreen(`❌ Jawabannya ${truth ? "BENAR" : "SALAH"} — ${expl}`, side ? "Lantai runtuh!" : "Kamu tidak berdiri di petak mana pun!", "#ef4444");
+    const dead = cvLoseLife(side ? "Lantai runtuh! Jawaban salah." : "Kamu tidak berdiri di petak mana pun.");
+    if (!dead) setTimeout(() => { xTeleport(78, -13, 0); setTimeout(cvB1Next, 900); }, 1700);
+  }
+  void s;
+}
+// ----- Babak 2 -----
+function cvB2Open() {
+  if ($("cvLm") || CV.busy) return;
+  if (!CV.lm) {
+    const pick = (key) => { const S2 = CV_LM[key]; return { key, judul: S2.judul, items: cogShuffle(S2.items).slice(0, 5) }; };
+    CV.lm = { sets: [pick("kaprodi"), pick(Math.random() < 0.5 ? "sejarah" : "penemuan")], i: 0 };
+    CV.lm.sets = cogShuffle(CV.lm.sets);
+  }
+  const L = CV.lm, set = L.sets[L.i];
+  let cur = cogShuffle(set.items.slice());
+  // hindari urutan acak yang kebetulan sudah benar
+  const sorted = set.items.slice().sort((a, b) => a[1] - b[1]);
+  if (cur.every((v, i) => v === sorted[i])) cur.reverse();
+  const ov = document.createElement("div"); ov.id = "cvLm";
+  ov.innerHTML = `<div class="lm-card"><div class="cog-top"><b>⏳ LINI MASA · SET ${L.i + 1}/2</b><span class="lm-h"></span></div><p class="lm-j"></p><ol class="lm-list"></ol><p class="lm-msg" role="status"></p><div class="rowf"><button class="btn" id="lmCek">✔ Periksa urutan</button><button class="ghost" id="lmTutup">Tutup</button></div><p class="lm-tip">Seret kartu, atau gunakan ▲ ▼. Paling atas = paling awal.</p></div>`;
+  document.body.appendChild(ov);
+  ov.querySelector(".lm-j").textContent = set.judul;
+  ov.querySelector(".lm-h").textContent = "❤".repeat(CV.lives);
+  const ol = ov.querySelector(".lm-list");
+  const render = () => {
+    ol.textContent = "";
+    cur.forEach((it, i) => {
+      const li = document.createElement("li"); li.draggable = true; li.dataset.i = i;
+      li.innerHTML = `<span class="lm-n">${i + 1}</span><span class="lm-t"></span><button class="lm-u" aria-label="Naik">▲</button><button class="lm-d" aria-label="Turun">▼</button>`;
+      li.querySelector(".lm-t").textContent = it[0];
+      li.querySelector(".lm-u").onclick = () => { if (i > 0) { [cur[i - 1], cur[i]] = [cur[i], cur[i - 1]]; render(); } };
+      li.querySelector(".lm-d").onclick = () => { if (i < cur.length - 1) { [cur[i + 1], cur[i]] = [cur[i], cur[i + 1]]; render(); } };
+      li.ondragstart = (e) => { e.dataTransfer.setData("text/plain", String(i)); li.classList.add("drag"); };
+      li.ondragend = () => li.classList.remove("drag");
+      li.ondragover = (e) => e.preventDefault();
+      li.ondrop = (e) => { e.preventDefault(); const from = +e.dataTransfer.getData("text/plain"); if (Number.isInteger(from) && from !== i) { const [m] = cur.splice(from, 1); cur.splice(i, 0, m); render(); } };
+      ol.appendChild(li);
+    });
+  };
+  render();
+  ov.querySelector("#lmTutup").onclick = () => { ov.remove(); CV.lmCool = performance.now() + 4000; };
+  ov.querySelector("#lmCek").onclick = () => {
+    const right = cur.filter((v, i) => v === sorted[i]).length;
+    if (right === cur.length) {
+      if (typeof SFX !== "undefined") SFX.chime(); cvFlash("rgba(34,197,94,.3)");
+      ov.querySelector(".lm-msg").textContent = "✅ Urutan benar! " + sorted.map((v) => `${v[0]} (${v[1]})`).join(" → ");
+      ov.querySelector("#lmCek").disabled = true;
+      setTimeout(() => {
+        ov.remove(); L.i++;
+        if (L.i >= L.sets.length) { CV.babak = 3; CV.gates[1].setOpen(true); cvHudUpd("✅ Babak 2 tuntas! Masuki galeri di balik gerbang batu.", null); spawnSparkle(); }
+        else { cvHudUpd(`Set 1 benar! Dekati prasasti lagi untuk set 2.`, null); setTimeout(cvB2Open, 400); }
+      }, 2600);
+    } else {
+      ov.querySelector(".lm-msg").textContent = `❌ Belum tepat — ${right}/${cur.length} kartu di posisi yang benar. Kartu diacak ulang.`;
+      const dead = cvLoseLife(`Urutan lini masa salah (${right}/${cur.length} tepat).`);
+      if (dead) { ov.remove(); return; }
+      ov.querySelector(".lm-h").textContent = "❤".repeat(CV.lives);
+      cur = cogShuffle(cur); if (cur.every((v, i) => v === sorted[i])) cur.reverse(); setTimeout(render, 900);
+    }
+  };
+}
+// ----- Babak 3 -----
+function cvB3Start() {
+  const objs = cogShuffle(CV.objs.filter((o) => o.key[0] === "o")).slice(0, 3), kps = cogShuffle(CV.objs.filter((o) => o.key[0] === "k")).slice(0, 2);
+  CV.gl = { list: cogShuffle(objs.concat(kps)), i: -1, until: 0 };
+  toast("🗿 Babak 3 · Galeri Benda — baca petunjuk di atas layar, cari bendanya dalam gelap.", 5000);
+  cvB3Next();
+}
+function cvClue(o) {
+  if (o.key[0] === "o") return (CV_OBJ.find((c) => "o:" + c[0] === o.key) || [])[1];
+  const k = CV_KP.find((c) => "k:" + c[0] === o.key); return k ? `Temukan potret ${k[2]}` : "";
+}
+function cvB3Next() {
+  const G = CV.gl; if (!G || !CV.on) return;
+  G.i++;
+  if (G.i >= G.list.length) { cvWin(); return; }
+  G.until = performance.now() + CV_GL_TIME * 1000;
+  cvHudUpd(`🔎 Petunjuk ${G.i + 1}/5: ${cvClue(G.list[G.i])}`, 1);
+  if (typeof SFX !== "undefined") SFX.bloop(1.2);
+}
+function cvPick(key) {
+  if (!CV.on) return;
+  if (CV.babak !== 3 || !CV.gl) { toast("🕯 Benda-benda ini bagian dari Babak 3 · Galeri Benda."); return; }
+  const o = CV.objs.find((x) => x.key === key); if (!o) return;
+  if (Math.hypot(P.x - o.x, P.z - o.z) > 2.4) { toast("🔦 Dekati bendanya dulu (±2 langkah) baru bisa dipilih."); return; }
+  const G = CV.gl, want = G.list[G.i];
+  if (o.done) { toast("Benda ini sudah kamu temukan sebelumnya."); return; }
+  if (o === want) {
+    o.done = true; o.cr.material.color.set(0x22c55e);
+    if (typeof SFX !== "undefined") SFX.chime(); cvFlash("rgba(34,197,94,.28)"); spawnSparkle({ x: o.x, y: 0.4, z: o.z });
+    toast(`✅ Tepat! ${o.key[0] === "k" ? "Potret " + (CV_KP.find((c) => "k:" + c[0] === key) || [])[1] : ""}`.trim(), 2500);
+    G.until = 0; setTimeout(cvB3Next, 1200);
+  } else {
+    const m0 = o.g.position.x; let n = 0; const sh = setInterval(() => { o.g.position.x = m0 + Math.sin(n++ * 2.2) * 0.06; if (n > 12) { clearInterval(sh); o.g.position.x = m0; } }, 30);
+    o.cr.material.color.set(0xef4444); setTimeout(() => { if (!o.done) o.cr.material.color.set(key[0] === "k" ? 0xfbbf24 : 0x67e8f9); }, 1200);
+    cvLoseLife("Bukan itu! Petunjuk masih sama — cari lagi.");
+  }
+}
+function cvWin() {
+  CV.gl = null; CV.babak = 4; CV.won = true;
+  const used = Math.round((performance.now() - CV.t0) / 1000);
+  const q = chMigrate(), prev = q.chal.pustaka;
+  q.chal.pustaka = { t: (prev && prev.t) || Date.now(), best: Math.min(prev && prev.best ? prev.best : 1e9, used), lives: CV.lives };
+  saveQ(); capSync(); capPresDirty();
+  CV.door.setOpen(true); NPCS.puspa.g.visible = true;
+  if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+  if (typeof xShake === "function") xShake(0.8, 0.04);
+  cvFlash("rgba(251,191,36,.35)");
+  cvHudUpd(`🎉 Ketiga babak tuntas dalam ${Math.floor(used / 60)} mnt ${used % 60} dtk dengan ${CV.lives} nyawa tersisa! Pintu ujung gua terbuka — temui Teh Puspa.`, null);
+  setTimeout(() => sayBubble(`Masyaallah, ${S.name}! Kemarilah, ke balik pintu ini 💡`, "npc_puspa"), 1500);
+}
+// ---------- Teh Puspa ----------
+async function puspaAward() {
+  const q = chMigrate(), fresh = !q.badges.umum;
+  if (fresh) { q.badges.umum = { t: Date.now() }; saveQ(); capPresDirty(); }
+  await capSync();
+  setTimeout(() => badgeReveal("umum", fresh), 700);
+  return { text: fresh ? `💡 Lencana Pengetahuan Umum resmi tersemat di profilmu, ${S.name}! Pamerkan ke teman-temanmu lewat menu CAPAIAN.` : "Lencanamu sudah tercatat. Pamerkan ke teman-temanmu ya!", acts: [["🏅 Buka Capaian", openCapaian], ["📣 Pamerkan lencana", () => capPamer("b:umum")], ["⟲ Keluar gua", () => cvExit()]] };
+}
+function puspaAnswer(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), qs = chMigrate();
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Lima lencana lagi menunggumu di tahap-tahap berikutnya 💡", acts: [["⟲ Keluar gua", () => cvExit()]] };
+  if (/isi gua|gua ini|apa ini|tentang/.test(ql)) return { text: "Gua Pustaka menyimpan pengetahuan umum: sejarah Indonesia, penemuan dunia, budaya Nusantara, dan sejarah Prodi TI UIKA — termasuk para Kaprodi dari masa ke masa." };
+  if (qs.badges.umum) return { text: `Lencana Pengetahuan Umum sudah tersemat di profilmu, ${S.name} 💡`, acts: [["💡 Lihat lencana", () => badgeReveal("umum", false)], ["📣 Pamerkan", () => capPamer("b:umum")], ["⟲ Keluar gua", () => cvExit()]] };
+  if (!qs.chal.pustaka) return { text: "Lencana ini hanya untuk yang lolos ketiga babak Gua Pustaka. Kembalilah ke awal gua dan mulai tantangannya ya." };
+  if (!qs.badges.dasar) return { text: "Lencana Pengetahuan Umum disematkan setelah Lencana Pengetahuan Dasar. Temui Teh Fety di Taman Apresiasi dulu." };
+  return { text: `Masyaallah, ${S.name}! Lantai yang runtuh, lini masa, galeri dalam gelap — semua kamu taklukkan. Teteh sematkan lencananya… ✨`, later: puspaAward() };
+}
+// ---------- kode cepat tahap 3 (ke Kang Santo) ----------
+var SANTO_CODE = "1kja3x2";
+function santoCheat(npcId, q) {
+  if (npcId !== "tama") return null;
+  const w = String(q || "").trim().toLowerCase();
+  if (!w || w.length > 40 || /\s/.test(w)) return null;
+  let h = 2166136261; for (const ch of "itlab3|" + w) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  if (h.toString(36) !== SANTO_CODE) return null;
+  const qs = chMigrate();
+  if (!qs.badges.dasar) return { text: `Kode itu memang ada, ${S.name}… tapi hanya berlaku bagi pemegang Lencana Pengetahuan Dasar. Taklukkan dulu tantangan Lantai 2 IT-Mart dan temui Teh Fety.` };
+  if (!qs.chal.pustaka) qs.chal.pustaka = { t: Date.now(), best: 0, kode: true };
+  saveQ(); capSync(); capPresDirty();
+  if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle();
+  setTimeout(() => {
+    const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+    setTimeout(() => {
+      CV.on = true; cvReset(); CV.won = true; cvSetWon(); CV.grace = performance.now() + 3000;
+      xTeleport(78, -41.2, 0); cvHud(true); cvHudUpd("Kode Kang Santo: Gua Pustaka dinyatakan tuntas. Temui Teh Puspa!", null);
+      setTimeout(() => f.remove(), 900);
+      setTimeout(() => openNpc("puspa", "chat"), 1500);
+    }, 650);
+  }, 1600);
+  return { text: `🔓 Kode tahap 3 diterima, ${S.name}! Gua Pustaka dinyatakan tuntas. Pegangan… aku antar kamu ke Teh Puspa di ujung gua untuk Lencana Pengetahuan Umum!` };
+}
+
+// ---------- tick ----------
+function cvTick(dt) {
+  const now = performance.now(), here = inCave(P.x, P.z);
+  // kabut gua: ±5 m jelas, selebihnya remang lalu gelap
+  if (here) {
+    scene.fog.color.setHex(0x050307);
+    const want = CV.big ? 0.075 : 0.14;
+    scene.fog.density += (want - scene.fog.density) * Math.min(1, dt * 3);
+    CV.fogged = true;
+  } else if (CV.fogged && typeof xFogBase !== "undefined" && xFogBase) {
+    scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; CV.fogged = false;
+  }
+  // mode solo: sembunyikan pemain lain selama salah satu berada di gua
+  for (const r of remotes.values()) { const hide = here || inCave(r.cur.x, r.cur.z); if (r.av.visible === hide) r.av.visible = !hide; }
+  // rak buku Silvia
+  const tgt = CV.bcOpen ? 1 : 0; CV.bc += (tgt - CV.bc) * Math.min(1, dt * 2);
+  if (XT.bookcase) XT.bookcase.position.z = 24.5 - CV.bc * 2.7;
+  if (typeof BUKU !== "undefined" && BUKU.shelf) { BUKU.shelf.m.position.z = 24.5 - CV.bc * 2.7; BUKU.shelf.lbl.m.position.z = 24.5 - CV.bc * 2.7; }
+  if (CV.hole) CV.hole.visible = CV.bc > 0.02;
+  if (XT.bookcaseCol) { const sh = CV.bc * 2.7; XT.bookcaseCol.a[1] = 22.5 - sh; XT.bookcaseCol.b[1] = 26.5 - sh; }
+  if (CV.bcOpen) {
+    if (CV.bc > 0.8 && P.x < 10.3 && P.z > 24.0 && P.z < 26.4 && roomAt(P.x, P.z) === "cafe") cvEnter();
+    else if (now - CV.bcT > 25000) CV.bcOpen = false;
+  }
+  // penjaga: masuk gua tanpa izin → keluar
+  const grace = now < (CV.grace || 0);
+  if (here && !CV.on && !CV.won && !grace) { xTeleport(10.9, 24.4, -Math.PI / 2); toast("Gua Pustaka hanya bisa dimasuki lewat rak buku Silvia."); }
+  if (!here && CV.on && !CV.busy && !grace && roomAt(P.x, P.z) && roomAt(P.x, P.z) !== "cave") { CV.on = false; CV.won = false; cvHud(false); setTimeout(cvReset, 300); }
+  // gerbang batu
+  for (const G of CV.gates) if (G) { G.k += ((G.open ? 1 : 0) - G.k) * Math.min(1, dt * 1.2); G.m.position.y = 2.1 - G.k * 4.3; }
+  // lantai runtuh
+  for (const k of ["B", "S"]) { const T = CV.tiles[k]; if (!T) continue; if (T.drop > 0) { T.drop -= dt * 0.6; T.m.position.y = 0.03 - (1 - Math.max(0, T.drop)) * 0 - Math.sin(Math.max(0, T.drop) * Math.PI) * 1.2; T.m.material.opacity = 0.3 + (1 - Math.sin(Math.max(0, T.drop) * Math.PI)) * 0.7; if (T.drop <= 0) { T.drop = 0; T.m.position.y = 0.03; T.m.material.opacity = 1; } } }
+  if (!CV.on || CV.busy) return;
+  // babak 1: timer
+  const B = CV.bs;
+  if (B && B.phase === "ask") {
+    const left = (B.until - now) / 1000, side = cvSideAt();
+    cvHudUpd(`⏱ ${Math.max(0, left).toFixed(1)} dtk · ${B.list[B.i][0]}  →  kamu di: ${side === "B" ? "✅ BENAR" : side === "S" ? "❌ SALAH" : "— (belum di petak)"}`, left / CV_BS_TIME);
+    if (left <= 0) cvB1Judge();
+  }
+  // babak 2: prasasti
+  if (CV.babak === 2 && !$("cvLm") && Math.hypot(P.x - 78, P.z + 24.2) < 2.3 && now > (CV.lmCool || 0)) cvB2Open();
+  // babak 3
+  if (CV.babak === 3 && !CV.gl && P.z < -27.8) cvB3Start();
+  const G = CV.gl;
+  if (G && G.until) {
+    const left = (G.until - now) / 1000;
+    $("cvBar") && cvHudUpd(undefined, left / CV_GL_TIME);
+    if (left <= 0) { G.until = 0; if (!cvLoseLife("Waktu petunjuk habis!")) setTimeout(cvB3Next, 900); }
+  }
+}
+function cvAct(act) {
+  if (act.type === "x_cvobj") { cvPick(act.id); return true; }
+  if (act.type === "x_cvtablet") { if (CV.babak === 2) cvB2Open(); else toast(CV.babak < 2 ? "Prasasti ini aktif setelah Babak 1 tuntas." : "Babak Lini Masa sudah kamu tuntaskan."); return true; }
+  if (act.type === "x_cvintro") { if (CV.on && CV.babak === 0) cvIntro(!!chMigrate().chal.pustaka); else if (CV.on) toast("Tantangan sedang berjalan — semangat!"); return true; }
+  if (act.type === "x_cvexit") { if (CV.on && !CV.won && CV.babak > 0 && !confirm("Keluar dari gua? Progres tantangan akan hilang.")) return true; cvExit(); return true; }
+  return false;
+}
+
+// =====================================================================
+// PORTAL RING 1 (sudut barat laut Taman Apresiasi) + penjaga Kang Ritzkal
+// Kelak terbuka bagi pemegang BLACK CARD (diberikan setelah 7 lencana).
+// Kang Ritzkal tidak bisa diajak chatting — hanya satu kalimat peringatan.
+// =====================================================================
+var RING = { x: -10.5, z: -231.2, guard: { x: -7.4, z: -229.6 } };
+var RITZKAL_LINE = "Anda hanya dapat mengakses portal ini jika memiliki Black Card";
+var hasBlackCard = () => !!chMigrate().blackCard;
+function ritzkalSay() {
+  sayBubble(RITZKAL_LINE, "npc_ritzkal");
+  toast("⛔ Kang Ritzkal: “" + RITZKAL_LINE + "”", 4500);
+  if (typeof SFX !== "undefined") SFX.bloop(0.7);
+}
+function buildRing() {
+  const g = new THREE2.Group(); g.position.set(RING.x, 0, RING.z); g.rotation.y = Math.atan2(16.2 - RING.x, -203 - RING.z); scene.add(g);
+  // alas batu hitam bertingkat
+  const baseM = new THREE2.MeshStandardMaterial({ color: 0x0a0a0f, roughness: 0.35, metalness: 0.6 });
+  for (const [r, h, y] of [[2.6, 0.18, 0.09], [2.2, 0.16, 0.26]]) { const m = new THREE2.Mesh(new THREE2.CylinderGeometry(r, r + 0.1, h, 40), baseM); m.position.y = y; g.add(m); }
+  // bingkai cincin hitam berpendar ungu tua
+  const ringM = new THREE2.MeshStandardMaterial({ color: 0x050507, metalness: 0.9, roughness: 0.25, emissive: 0x2e1065, emissiveIntensity: 0.6 });
+  const ring = new THREE2.Mesh(new THREE2.TorusGeometry(1.75, 0.22, 16, 64), ringM); ring.position.y = 2.3; g.add(ring);
+  for (const sx of [-1, 1]) { const p = new THREE2.Mesh(new THREE2.BoxGeometry(0.35, 2.2, 0.5), baseM); p.position.set(sx * 1.85, 1.2, 0); g.add(p); }
+  // pusaran hitam
+  const vc = mkCanvas(512, 512), vx = vc.getContext("2d");
+  const gr = vx.createRadialGradient(256, 256, 10, 256, 256, 256); gr.addColorStop(0, "#000"); gr.addColorStop(0.55, "#07020f"); gr.addColorStop(0.85, "#2e1065"); gr.addColorStop(1, "rgba(76,29,149,0)");
+  vx.fillStyle = gr; vx.fillRect(0, 0, 512, 512);
+  vx.strokeStyle = "rgba(167,139,250,.35)"; vx.lineWidth = 3;
+  for (let i = 0; i < 9; i++) { vx.beginPath(); for (let a = 0; a < 14; a += 0.1) { const r = 20 + a * 16; vx.lineTo(256 + Math.cos(a + i * 0.7) * r, 256 + Math.sin(a + i * 0.7) * r); } vx.stroke(); }
+  const vtex = xTex(vc);
+  const vortex = new THREE2.Mesh(new THREE2.CircleGeometry(1.6, 48), new THREE2.MeshBasicMaterial({ map: vtex, transparent: true, toneMapped: false, side: THREE2.DoubleSide })); vortex.position.y = 2.3; g.add(vortex);
+  const glow = world.glowSprite("#4c1d95", 1, 0.55); glow.scale.set(5.5, 5.5, 1); glow.position.y = 2.3; g.add(glow);
+  // tulisan
+  const sc = l2Canvas(1100, 230, (x, w, h) => { x.fillStyle = "rgba(0,0,0,.92)"; rr(x, 0, 0, w, h, 36); x.fill(); x.strokeStyle = "#7c3aed"; x.lineWidth = 7; rr(x, 5, 5, w - 10, h - 10, 32); x.stroke(); x.textAlign = "center"; x.fillStyle = "#f5f3ff"; x.font = `900 104px ${FONT}`; x.fillText("PORTAL RING 1", w / 2, 128); x.fillStyle = "#a78bfa"; x.font = `600 40px ${FONT}`; x.fillText("◆ khusus pemegang BLACK CARD ◆", w / 2, 196); });
+  const sign = xPlane(sc, 3.4, 0.71); sign.position.set(0, 4.55, 0); g.add(sign);
+  // partikel melayang
+  const N = 60, pg = new THREE2.BufferGeometry(), pp = new Float32Array(N * 3), ph = [];
+  for (let i = 0; i < N; i++) { ph.push(Math.random() * 6.28, 0.6 + Math.random() * 1.3, Math.random() * 3); }
+  pg.setAttribute("position", new THREE2.BufferAttribute(pp, 3));
+  const pts = new THREE2.Points(pg, new THREE2.PointsMaterial({ color: 0xa78bfa, size: 0.06, transparent: true, opacity: 0.8, depthWrite: false })); g.add(pts);
+  XT.anim.push((dt) => {
+    vortex.rotation.z -= dt * 0.9; ring.rotation.z += dt * 0.15;
+    ringM.emissiveIntensity = 0.45 + Math.sin(t * 1.8) * 0.25;
+    for (let i = 0; i < N; i++) { const a = ph[i * 3] + t * 0.6, r = ph[i * 3 + 1], y = (ph[i * 3 + 2] + t * 0.4) % 3; pp[i * 3] = Math.cos(a) * r; pp[i * 3 + 1] = 0.9 + y * 1.1; pp[i * 3 + 2] = Math.sin(a) * r * 0.3; }
+    pg.attributes.position.needsUpdate = true;
+  });
+  for (const m of [vortex, ring, sign]) xAct(m, { type: "x_ring" });
+  world.circles.push({ x: RING.x, z: RING.z, r: 2.4 });
+  // penjaga: Kang Ritzkal (tidak bisa diajak chatting)
+  makeCustomHuman("ritzkal", {
+    code: "RING", name: "Kang Ritzkal", role: "Penjaga Portal Ring 1", col: "#4c1d95", icon: "⛔", hint: "⛔",
+    x: RING.guard.x, z: RING.guard.z, room: "s_garden", secret: true, hidden: true, tag: "KANG RITZKAL · PENJAGA",
+    look: { shirt: "#111827", apron: "#111827", hair: "#0b0b0b", glasses: false, badge: "◆", noApron: true },
+    chips: [], roleNote: "penjaga Portal Ring 1", knowText: RITZKAL_LINE,
+    answer: () => ({ text: RITZKAL_LINE })
+  });
+  const R = NPCS.ritzkal;
+  R.g.traverse((o) => { if (o.userData && o.userData.act && o.userData.act.type === "npc") o.userData.act = { type: "x_ritzkal" }; });
+}
+function ringAct(act) {
+  if (act.type === "x_ritzkal") { ritzkalSay(); return true; }
+  if (act.type === "x_ring") {
+    if (hasBlackCard()) { toast("◆ Portal Ring 1 sedang disiapkan — segera hadir.", 4000); return true; }
+    const d = Math.hypot(P.x - RING.guard.x, P.z - RING.guard.z);
+    ritzkalSay(); if (d > 8) toast("⛔ Portal ini dijaga Kang Ritzkal: “" + RITZKAL_LINE + "”", 4500);
+    return true;
+  }
+  return false;
 }
 
 </script>

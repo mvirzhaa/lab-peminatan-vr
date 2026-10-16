@@ -23,8 +23,11 @@ function createKartu({ dataDir, pem }) {
   const cleanName = (v) => (typeof v === 'string' ? v : '').replace(/[\u0000-\u001f\u007f​-‏‪-‮⁦-⁩]/g, '').replace(/[^\p{L}\p{N} ._'’~-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 40);
   const noOK = (s) => typeof s === 'string' && /^[0-9A-Z]{6,12}$/.test(s);
   // tahap 2: empat ruang tantangan di Lantai 2 IT-Mart → lencana Pengetahuan Dasar (Teh Fety)
-  const TANTANGAN = ['kognitif', 'inggris', 'sahabat', 'coding'];
-  const LENCANA = { dasar: TANTANGAN }; // lencana lain (umum, alam, jari, coding, islam, geografi) menyusul
+  const TAHAP2 = ['kognitif', 'inggris', 'sahabat', 'coding'];
+  // tahap 3: Gua Pustaka di balik rak buku Silvia → lencana Pengetahuan Umum (Teh Puspa)
+  const TANTANGAN = TAHAP2.concat(['pustaka']);
+  // syarat tiap lencana: tantangan yang harus tercatat + lencana sebelumnya
+  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' } }; // iot (IoT & Drone), jari, coding, islam, tim (kerjasama tim) menyusul
   const SEC = { 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' };
   const json = (res, code, o) => { res.writeHead(code, { ...SEC, 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(o)); };
   const readJson = (req) => new Promise((resolve) => { let b = ''; req.on('data', (c) => { b += c; if (b.length > 4096) req.destroy(); }); req.on('end', () => { try { const o = JSON.parse(b || '{}'); resolve(o && typeof o === 'object' ? o : {}); } catch { resolve({}); } }); req.on('error', () => resolve({})); });
@@ -87,8 +90,9 @@ function createKartu({ dataDir, pem }) {
         k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= 600 ? Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? 'kode' : (prev && prev.jalur) || 'main' };
       } else {
         if (!LENCANA[id]) return json(res, 400, { ok: false, err: 'Lencana tidak dikenal.' });
-        // syarat lencana Pengetahuan Dasar: keempat tantangan Lantai 2 tercatat
-        if (!LENCANA[id].every((c) => k.ch && k.ch[c])) return json(res, 403, { ok: false, err: 'Syarat lencana belum terpenuhi.' });
+        // syarat lencana: tantangan tercatat (+ lencana sebelumnya)
+        const L = LENCANA[id];
+        if (!L.ch.every((c) => k.ch && k.ch[c]) || (L.pre && !(k.lb && k.lb[L.pre]))) return json(res, 403, { ok: false, err: 'Syarat lencana belum terpenuhi.' });
         k.lb = k.lb || {};
         if (!k.lb[id]) k.lb[id] = Date.now();
       }
