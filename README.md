@@ -9,16 +9,17 @@ kuis, zoom/unduh/tautan panel, denah + minimap, joystick ponsel, dan mode VR Web
 | Ruang | Isi |
 |---|---|
 | **Ruang Sambutan** (titik awal) | Layar besar dengan video YouTube sambutan di dalam dunia 3D (klik layar = putar/jeda, tombol SUARA & PERBESAR), slideshow "Kenali Lab Peminatan", papan bantuan, denah, headset VR |
-| **Atrium Pendaftaran** (tengah) | Resepsionis **Kak Tias** + meja pendaftaran, QR & tautan Google Form, hologram 4 lab, kuis "Kasus ini cocok di lab mana?", papan tulis, papan pesan, 4 pintu lab |
+| **Atrium Pendaftaran** (tengah) | Resepsionis **Kak Tias** + meja & formulir pendaftaran internal, layar **pie chart persentase peminatan** di belakang Kak Tias, **Papan Pengumuman** hasil final (dinding timur), hologram 4 lab, kuis "Kasus ini cocok di lab mana?", papan tulis, papan pesan, 4 pintu lab |
 | **Lab KERIS** (barat) | Tema pusat data: rak server berkedip, hologram jaringan saraf, workstation HPC, 11 slide + slideshow dokumentasi, layar 3 video Google Drive, robot **KERI** |
 | **Lab GIT** (utara-kiri) | Tema geospasial: lantai peta kota neon, globe hologram + satelit, drone terbang, tumpukan layer peta, 13 slide + slideshow kegiatan/drone, video kegiatan lapangan, robot **GEO** |
 | **Lab SE** (utara-kanan) | Tema studio developer: meja laptop berisi kode, beanbag, rak piala, kanban, neon motto, 16 slide + 3 slideshow (prestasi, produk, kegiatan), robot **CODY** |
+| **Cafe Rahman** (timur Ruang Sambutan) | Kafe kayu dengan meja bar, papan menu kopi, papan keahlian dosen TI, barista **Rahman** (info kopi, petunjuk awal lorong rahasia, keahlian dosen, saran dosen pembimbing) |
 | **Lab CSN** (timur) | Tema Network Operation Center: 3 layar monitoring animasi, hologram topologi dengan paket data mengalir, rak server, 8 slide, robot **NETA** |
 
 - Nama karakter default: **IT'ers** (bisa diganti di Pengaturan).
 - Setiap robot menjawab dari isi presentasi lab-nya sendiri (deskripsi slide + catatan FAQ di `content`), bisa memberi kuis, mengantar ke panel/lab, dan membacakan jawaban (suara browser). Bila ditanya hal lab lain, robot merujuk ke temannya.
 - Musik **piano santai** dibangkitkan langsung di browser (WebAudio), berbeda nuansa untuk tiap lab dan memudar saat keluar lab. Tombol ♪ di toolbar untuk nyala/mati, volume di Pengaturan.
-- Formulir pendaftaran: `https://forms.gle/fJfi9qn8QgmJCUdPA` (tombol di kartu resepsionis, kios "Daftar" di tiap lab, poster QR).
+- Formulir pendaftaran **internal** (menggantikan Google Form): meja Kak Tias, kios "Daftar" di tiap lab, dan chat NPC. Data tersimpan di server (`data/peminatan.json`).
 
 ## Menjalankan
 ```bash
@@ -80,3 +81,40 @@ Tambahkan `?room=nama-kelas` di URL untuk memisahkan kelompok, mis. `https://dom
 - Wewenang kick diverifikasi **di server** dengan kunci (perbandingan hash waktu-konstan, maks. 5 percobaan per koneksi); nama saja tidak cukup
 - Hall of Fame: nama dibersihkan, foto diverifikasi tanda tangan JPEG & ukurannya, disajikan dengan `Content-Security-Policy: default-src 'none'`; satu nama hanya bisa diperbarui pemilik token-nya; batas 5 kiriman/koneksi & 30/menit
 - Skin & progres misi bersifat kosmetik di sisi klien; nilai skin dari pemain lain divalidasi terhadap daftar putih
+
+## Pembaruan v4
+### 1. Kode rahasia Cody
+Ketik `butnavudivoxyziz` di chat **Cody** (Lab SE). Pemain langsung dinyatakan menuntaskan Labirin dan seluruh lorong rahasia
+(pintu rahasia, Rumah Kaca, 10 teka-teki, Ular Tangga), lalu diteleport ke **Taman Apresiasi** tepat di depan **Kang Santo**.
+Kode disimpan sebagai hash di sumber (seperti jawaban teka-teki) dan tidak disebut oleh NPC mana pun.
+
+### 2. Sistem pendaftaran peminatan (pengganti Google Form)
+- **Formulir di galeri**: nama, NIM, angkatan, WhatsApp/email, pilihan 1, pilihan 2, alasan. Satu NIM = satu pendaftaran; perubahan hanya dari browser yang sama (token) atau lewat admin.
+- **Layar pie chart** di belakang Kak Tias: persentase pilihan 1 per lab, diperbarui langsung lewat WebSocket.
+- **Papan Pengumuman** (dinding timur Atrium): menampilkan hasil final yang diumumkan admin; daftar nama berganti halaman otomatis, klik untuk mencari nama atau cek NIM. NIM di papan disamarkan.
+- **Halaman admin**: `https://domain-anda/admin` (di luar VR), login username + password.
+  - Unduh **Excel** (.xlsx: lembar Pendaftar, Rekap, Hasil Final)
+  - Buka/tutup pendaftaran, hapus data pendaftar, ubah label periode
+  - **Unggah hasil final** (.xlsx/.csv, kolom `NIM`, `Nama`, `Lab`) → pratinjau → **Umumkan** / tarik pengumuman. Template berisi semua pendaftar (lab = pilihan 1) bisa diunduh sebagai draf.
+  - **Arsipkan & reset**: data periode berjalan disimpan ke `data/arsip-peminatan/` (bisa diunduh sebagai Excel kapan saja), lalu data aktif dikosongkan dengan label periode baru.
+
+| Variabel | Default | Fungsi |
+|---|---|---|
+| `PEMINATAN_USER` | `admin` | Username halaman admin |
+| `PEMINATAN_PASS` | (acak tiap start) | Password admin. Bila kosong, server membuat password acak dan menampilkannya sekali di konsol — **wajib diatur** untuk produksi |
+
+Keamanan: password di-hash (scrypt) dan dibandingkan waktu-konstan; maks. 8 login gagal per 15 menit per IP; sesi cookie `HttpOnly; SameSite=Strict` (+`Secure` di HTTPS) 8 jam; header anti-CSRF pada semua permintaan yang mengubah data; CSP ketat di halaman admin; batas 12 pendaftaran/10 menit per IP.
+Dependensi baru: `exceljs` (jalankan `npm install` ulang).
+
+### 3. Cafe Rahman
+Ruangan baru di timur Ruang Sambutan (pintu kayu di dinding timur, dekat gerbang Atrium), tercantum di denah, minimap, dan menu GO TO.
+Barista **Rahman** menjawab: jenis-jenis kopi & rekomendasi, kopi Nusantara, petunjuk awal (bertahap) soal lorong rahasia, keahlian 19 dosen TI,
+dan **saran dosen pembimbing**: tulis judul skripsi (mis. “judul: Klasifikasi penyakit daun padi dengan CNN”), Rahman mencocokkan kata kunci
+judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendamping. Data dosen ada di `DOSEN_TI` (bagian `src/ext_cafe.js` di index.html).
+
+### 4. Jeda adzan (auto-kick)
+- Saat mengisi nama, pemain **wajib mengizinkan akses lokasi**. Bila ditolak atau tidak tersedia, galeri tidak bisa dimasuki.
+- Jadwal sholat dihitung di browser dari koordinat pemain (parameter Kemenag RI: Subuh 20°, Isya 18°, Ashar Syafi'i, ihtiyat 2 menit), jadi sesuai wilayah masing-masing tanpa API luar. Koordinat tidak dikirim ke server.
+- 5 menit sebelum adzan muncul peringatan. Saat adzan tiba (Subuh, Dzuhur, Ashar, Maghrib, Isya) pemain otomatis dikeluarkan ke layar awal dan tidak bisa masuk selama **15 menit** (`ADZAN_BLOCK_MIN`, ubah di `src/ext_adzan.js`). Mencabut izin lokasi saat bermain juga mengeluarkan pemain.
+- Geolocation hanya berjalan di **HTTPS** (atau `localhost`). Server mengirim `Permissions-Policy: geolocation=(self)`.
+- Pemeriksaan berjalan di sisi klien; pengguna yang sengaja mengutak-atik browser (devtools) secara teori bisa melewatinya.

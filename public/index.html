@@ -387,6 +387,33 @@ canvas {
 .hofCard .kickb{padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(239,68,68,.85);color:#fff;border:0;cursor:pointer}
 
 @media(max-width:640px){#snakeHud{right:auto;left:50%;transform:translateX(-50%)}}
+/* ===== pendaftaran peminatan / cafe / jeda adzan ===== */
+#ldGeo{max-width:340px;font-size:12px;line-height:1.5;color:#e9d5ff;text-align:center;background:rgba(124,58,237,.18);border:1px solid rgba(196,181,253,.35);border-radius:10px;padding:8px 12px}
+#ldGeo.bad{color:#fecaca;background:rgba(220,38,38,.18);border-color:rgba(248,113,113,.5)}
+#ldGo:disabled{opacity:.6;cursor:not-allowed}
+#adzanOv{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,rgba(22,101,52,.96),rgba(5,20,12,.98));color:#fff;text-align:center;padding:20px;animation:azIn .6s ease}
+#adzanOv>div{max-width:520px}
+#adzanOv .az-ic{font-size:72px;line-height:1}
+#adzanOv h2{font-size:26px;margin:14px 0 8px}
+#adzanOv p{font-size:15px;line-height:1.6;color:#dcfce7}
+#adzanOv small{color:#86efac}
+@keyframes azIn{from{opacity:0}to{opacity:1}}
+.pemf label{display:block;font-size:12px;color:var(--mut);margin-top:8px}
+.pemf label>input,.pemf label>select,.pemf label>textarea{margin-top:4px}
+.pem2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pemst{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.pemst canvas{width:200px;height:200px}
+#pemLeg{flex:1;min-width:200px}
+.pemrow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.pemrow i{width:14px;height:14px;border-radius:4px;flex:none}
+.pemrow b{width:56px}
+.pemrow span{font-size:13px;color:#d6d3e0}
+.pemrow em{color:var(--mut);font-style:normal}
+.pemchips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.pemchips span{color:#fff;font-weight:700;font-size:12px;padding:3px 10px;border-radius:8px}
+.pemtw{max-height:46vh;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:10px}
+.pemtw .ktab{margin:0}
+@media (max-width:560px){.pem2{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -403,6 +430,7 @@ canvas {
     <input type="text" id="ldName" maxlength="16" placeholder="Ketik nama atau panggilan..." autocomplete="nickname" spellcheck="false">
     <input type="password" id="ldKey" maxlength="200" placeholder="Kunci moderator" autocomplete="current-password" style="display:none">
     <button id="ldGo" type="button">MASUK KE GALERI ▶</button>
+    <div id="ldGeo" role="status" aria-live="polite">📍 Galeri ini mewajibkan izin <b>lokasi</b> untuk jadwal adzan di wilayahmu. Saat adzan tiba, semua pemain dikeluarkan sementara.</div>
   </div>
 </div>
 <div id="fade"></div>
@@ -487,9 +515,9 @@ import { CSS3DRenderer, CSS3DObject } from "three/addons/renderers/CSS3DRenderer
 import * as THREE from "three";
 // src/content.js — isi materi 4 lab peminatan Teknik Informatika UIKA Bogor
 var EMBED_OK = typeof __EMBED__ === "undefined" ? true : __EMBED__;
-var FORM_URL = "https://forms.gle/fJfi9qn8QgmJCUdPA";
+var FORM_URL = "";  // Google Form diganti sistem pendaftaran internal (lihat src/ext_pem.js)
 var WELCOME_YT = "o3LwrgW86U8";
-var QR = ["11111110010110100101101111111","10000010100111000101101000001","10111010001110010000101011101","10111010011011000010001011101","10111010111011001001001011101","10000010000100111101001000001","11111110101010101010101111111","00000000001110010110100000000","10101010011110001100100010010","10110001001101011000101001001","11111110010100101100101110111","01001000101111110100001010010","00100110110110100111101001011","10100100101110111011111001001","00001111000001001010110001011","01011001101000011100111101010","10101010010010001000111101011","00011001101001001110111001101","10010010111100100010011100011","01110100111111111110101011010","10011110000000100101111110000","00000000110010111101100010111","11111110001111000101101011011","10000010010110000111100011001","10111010110000001100111110001","10111010010011011000000110111","10111010101101101001100111001","10000010010011100111101110010","11111110100000111001101110011"];
+var QR = []; // (dulu: QR Google Form — tidak dipakai lagi)
 var PRODI = "Teknik Informatika · Fakultas Teknik dan Sains · UIKA Bogor";
 var drive = (id) => ({ embed: `https://drive.google.com/file/d/${id}/preview`, open: `https://drive.google.com/file/d/${id}/view` });
 var ytv = (id) => ({ embed: `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&playsinline=1`, open: `https://www.youtube.com/watch?v=${id}` });
@@ -709,7 +737,7 @@ var ORIENT_SLIDES = [
     { i: "code", t: "SE", s: "Software Engineering", d: "Web, mobile, UI/UX, system analyst — Build Your Skill, Build Your Product — pintu utara-kanan" },
     { i: "net", t: "CSN", s: "Computing System Networking", d: "Jaringan, cloud, keamanan siber, IoT — pintu timur atrium" }
   ], foot: "Ruang Sambutan" },
-  { type: "steps", title: "CARA MEMILIH PEMINATAN", steps: [["1", "Tonton", "Video sambutan di layar besar ruang ini"], ["2", "Jelajahi", "Masuk ke 4 ruang lab lewat Atrium"], ["3", "Tanya", "Ngobrol dengan robot Keri, Geo, Cody & Neta"], ["4", "Uji diri", "Kerjakan kuis “Kasus ini cocok di lab mana?”"], ["5", "Daftar", "Isi formulir peminatan di meja resepsionis"]], note: "Musik piano santai akan menemanimu di setiap ruang lab. Matikan/nyalakan lewat tombol ♪ di toolbar.", foot: "Ruang Sambutan" },
+  { type: "steps", title: "CARA MEMILIH PEMINATAN", steps: [["1", "Tonton", "Video sambutan di layar besar ruang ini"], ["2", "Jelajahi", "Masuk ke 4 ruang lab lewat Atrium"], ["3", "Tanya", "Ngobrol dengan robot Keri, Geo, Cody & Neta"], ["4", "Uji diri", "Kerjakan kuis “Kasus ini cocok di lab mana?”"], ["5", "Daftar", "Isi formulir peminatan langsung di meja Kak Tias"]], note: "Musik piano santai akan menemanimu di setiap ruang lab. Matikan/nyalakan lewat tombol ♪ di toolbar.", foot: "Ruang Sambutan" },
   { type: "list", title: "KONTROL SINGKAT", items: ["W A S D / panah untuk berjalan, Shift untuk lari", "Seret mouse untuk melihat sekeliling, gulir untuk zoom", "Klik panel untuk Zoom In, unduh, atau tanya robot", "M untuk denah & teleport, Enter untuk chat"], art: "globe", foot: "Ruang Sambutan" }
 ];
 
@@ -727,7 +755,10 @@ var QUIZ = {
 
 // Pengetahuan umum resepsionis
 var FAQ = [
-  ["daftar pendaftaran formulir form gform link cara mendaftar isi", "Untuk mendaftar peminatan, isi formulir di tautan https://forms.gle/fJfi9qn8QgmJCUdPA — klik tombol “Isi Formulir Peminatan” di kartu resepsionis, atau pindai QR di meja saya."],
+  ["daftar pendaftaran formulir form gform link cara mendaftar isi", "Pendaftaran peminatan sekarang langsung dari galeri ini: klik meja resepsionis saya (atau kios “Daftar” di tiap lab), isi NIM, nama, kontak, lalu pilih lab pilihan 1 dan 2. Persentase pendaftar tampil di layar di belakang saya, dan hasil final diumumkan di papan pengumuman dinding timur Atrium."],
+  ["hasil pengumuman final penetapan diterima lab saya", "Hasil final peminatan diumumkan di papan pengumuman dinding timur Atrium. Klik papannya untuk mencari namamu atau mengecek dengan NIM."],
+  ["statistik persentase jumlah pendaftar pie chart grafik", "Layar besar di belakang saya menampilkan persentase pendaftar tiap lab (berdasarkan pilihan 1) secara langsung. Klik layarnya untuk melihat angkanya."],
+  ["cafe kafe kopi ngopi rahman minum", "Ada Cafe Rahman di sebelah timur Ruang Sambutan (pintu di dinding timur dekat gerbang Atrium). Barista Rahman bisa cerita soal jenis-jenis kopi, dosen-dosen TI, dan memberi saran dosen pembimbing untuk judul skripsimu."],
   ["lab apa saja peminatan ada berapa pilihan empat", "Ada 4 lab peminatan di galeri ini: KERIS (AI & sistem cerdas) di pintu barat, GIT (geospasial) di pintu utara-kiri, SE (software engineering) di pintu utara-kanan, dan CSN (jaringan & keamanan) di pintu timur."],
   ["bingung pilih rekomendasi saran cocok mana", "Coba pikirkan masalah apa yang paling ingin kamu pecahkan: suka AI & data → KERIS; suka peta, satelit, drone → GIT; suka membangun aplikasi web/mobile → SE; suka jaringan, server, keamanan → CSN. Kerjakan juga kuis di atrium ini!"],
   ["robot npc tanya siapa pemandu", "Setiap lab punya robot pemandu: Keri di Lab KERIS, Geo di Lab GIT, Cody di Lab SE, dan Neta di Lab CSN. Klik robotnya untuk bertanya — mereka hafal isi presentasi lab masing-masing."],
@@ -2217,7 +2248,8 @@ var ROOMS = {
   keris: { x0: -40, x1: -12, z0: -12, z1: 12, h: 5.5, name: "Lab KERIS", short: "KERIS", col: "#8b5cf6", lab: "keris" },
   git: { x0: -24, x1: 0, z0: -38, z1: -12, h: 5.5, name: "Lab GIT", short: "GIT", col: "#d946ef", lab: "git" },
   se: { x0: 0, x1: 24, z0: -38, z1: -12, h: 5.5, name: "Lab Software Engineering", short: "SE", col: "#6366f1", lab: "se" },
-  csn: { x0: 12, x1: 40, z0: -12, z1: 12, h: 5.5, name: "Lab CSN", short: "CSN", col: "#0ea5e9", lab: "csn" }
+  csn: { x0: 12, x1: 40, z0: -12, z1: 12, h: 5.5, name: "Lab CSN", short: "CSN", col: "#0ea5e9", lab: "csn" },
+  cafe: { x0: 9, x1: 27, z0: 12, z1: 30, h: 4.6, name: "Cafe Rahman", short: "Cafe", col: "#c08457" }
 };
 var SPOTS = [
   { id: "welcome", name: "Ruang Sambutan (video)", x: 0, z: 18.5, yaw: Math.PI },
@@ -2226,7 +2258,8 @@ var SPOTS = [
   { id: "keris", name: "Lab KERIS", x: -15, z: 0, yaw: Math.PI / 2 },
   { id: "git", name: "Lab GIT", x: -5, z: -15, yaw: 0 },
   { id: "se", name: "Lab Software Engineering", x: 5, z: -15, yaw: 0 },
-  { id: "csn", name: "Lab CSN", x: 15, z: 0, yaw: -Math.PI / 2 }
+  { id: "csn", name: "Lab CSN", x: 15, z: 0, yaw: -Math.PI / 2 },
+  { id: "cafe", name: "☕ Cafe Rahman", x: 18, z: 22.5, yaw: Math.PI }
 ];
 var NPC_POS = {
   tia: { x: 0, z: -0.35, yaw: 0, room: "atrium" },
@@ -2239,9 +2272,13 @@ var T = 0.3;
 var DOOR_H = 3.4;
 var WALLS = [
   // Ruang Sambutan
-  { z: 12, x: [-12, 12], d: [[-2.5, 2.5, 4]], f: "welcome", b: "atrium", h: 7 },
+  { z: 12, x: [-12, 9], d: [[-2.5, 2.5, 4]], f: "welcome", b: "atrium", h: 7 },
+  { z: 12, x: [9, 12], f: "cafe", b: "atrium", h: 7 },
   { x: -9, z: [12, 30], f: "welcome", b: "welcome", h: 6 },
-  { x: 9, z: [12, 30], f: "welcome", b: "welcome", h: 6 },
+  { x: 9, z: [12, 30], d: [[12.75, 14.85, 3.1]], f: "welcome", b: "cafe", h: 6 }, // pintu ke Cafe Rahman
+  // Cafe Rahman (timur Ruang Sambutan)
+  { z: 30, x: [9, 27], f: "cafe", b: "cafe", h: 4.6 },
+  { x: 27, z: [12, 30], f: "cafe", b: "cafe", h: 4.6 },
   { z: 30, x: [-9, 9], f: "welcome", b: "welcome", h: 6 },
   // Atrium barat/timur
   { x: -12, z: [-12, 12], d: [[-2.5, 2.5, 4]], f: "keris", b: "atrium", h: 7 },
@@ -2257,7 +2294,8 @@ var WALLS = [
   { z: 12, x: [-40, -12], f: "keris", b: "keris", h: 5.5 },
   { x: -40, z: [-12, 12], f: "keris", b: "keris", h: 5.5 },
   // CSN
-  { z: 12, x: [12, 40], f: "csn", b: "csn", h: 5.5 },
+  { z: 12, x: [12, 27], f: "cafe", b: "csn", h: 5.5 },
+  { z: 12, x: [27, 40], f: "csn", b: "csn", h: 5.5 },
   { x: 40, z: [-12, 12], f: "csn", b: "csn", h: 5.5 },
   // GIT
   { x: -24, z: [-38, -12], f: "git", b: "git", h: 5.5 },
@@ -2364,6 +2402,23 @@ function wallCanvas(kind) {
     for (let i = 0; i < 6; i++)
       for (let j = 0; j < 6; j++)
         if (R() < 0.45) hex(i * 96 + (j % 2) * 48, j * 84, 40);
+  } else if (kind === "cafe") {
+    // panel kayu hangat + lis bata ekspos
+    x.fillStyle = "#5b3a24";
+    x.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 8; i++) {
+      const g = x.createLinearGradient(i * 64, 0, i * 64 + 64, 0);
+      g.addColorStop(0, "#6b4428");
+      g.addColorStop(0.5, "#7a4f2f");
+      g.addColorStop(1, "#5e3c24");
+      x.fillStyle = g;
+      x.fillRect(i * 64 + 2, 0, 60, 512);
+      x.strokeStyle = "rgba(40,22,10,.35)";
+      x.lineWidth = 2;
+      for (let k = 0; k < 6; k++) { x.beginPath(); x.moveTo(i * 64 + 8 + R() * 48, 0); x.bezierCurveTo(i * 64 + R() * 64, 170, i * 64 + R() * 64, 340, i * 64 + 8 + R() * 48, 512); x.stroke(); }
+    }
+    x.fillStyle = "#a0522d";
+    for (let r = 0; r < 4; r++) for (let c = 0; c < 5; c++) { x.fillStyle = `hsl(${14 + R() * 10},${45 + R() * 15}%,${34 + R() * 10}%)`; x.fillRect(c * 104 + (r % 2) * 52 - 52 + 3, 360 + r * 38 + 3, 98, 32); }
   } else if (kind === "csn") {
     x.fillStyle = "#06223a";
     x.fillRect(0, 0, 512, 512);
@@ -2465,6 +2520,23 @@ function floorCanvas(k, r) {
       x.fillStyle = { KERIS: "#7c3aed", CSN: "#0284c7", GIT: "#c026d3", SE: "#4f46e5" }[t2];
       x.fillText(t2, X(a), Z(b));
     }
+  } else if (k === "cafe") {
+    // lantai papan kayu
+    const pw = 0.22 * sx;
+    for (let i = 0, row = 0; i < c.height; i += pw, row++) {
+      let xx = -R() * 2 * sx;
+      while (xx < c.width) {
+        const len = (1.2 + R() * 1.6) * sx;
+        x.fillStyle = `hsl(${26 + R() * 8},${42 + R() * 12}%,${30 + R() * 12}%)`;
+        x.fillRect(xx + 1, i + 1, len - 2, pw - 2);
+        xx += len;
+      }
+    }
+    // karpet bundar di area meja
+    x.fillStyle = "rgba(120,53,15,.55)";
+    x.beginPath(); x.ellipse(X(18), Z(18.5), 6.5 * sx, 4.2 * sz, 0, 0, 7); x.fill();
+    x.strokeStyle = "rgba(253,230,138,.5)"; x.lineWidth = 0.08 * sx;
+    x.beginPath(); x.ellipse(X(18), Z(18.5), 6.1 * sx, 3.8 * sz, 0, 0, 7); x.stroke();
   } else if (k === "keris") {
     x.fillStyle = "#11163a";
     x.fillRect(0, 0, c.width, c.height);
@@ -2678,24 +2750,39 @@ function labCardCanvas(L) {
   x.textAlign = "left";
   return c;
 }
-function qrCanvas(px = 512, title = true) {
-  const n = QR.length, c = mkCanvas(px, px + (title ? 120 : 0)), x = c.getContext("2d"), q = 4, cell = Math.floor((px - 40) / (n + q * 2));
+// ikon pendaftaran (menggantikan QR Google Form)
+function regIconCanvas(px = 512, title = true) {
+  const c = mkCanvas(px, px + (title ? 120 : 0)), x = c.getContext("2d"), u = px / 512;
   x.fillStyle = "#fff";
-  rr(x, 0, 0, c.width, c.height, 26);
+  rr(x, 0, 0, c.width, c.height, 26 * u);
   x.fill();
-  const off = (px - cell * n) / 2;
-  x.fillStyle = "#1a1033";
-  for (let i = 0; i < n; i++)
-    for (let j = 0; j < n; j++)
-      if (QR[i][j] === "1") x.fillRect(off + j * cell, off + i * cell, cell, cell);
+  const g = x.createLinearGradient(0, 0, px, px);
+  g.addColorStop(0, "#7c3aed");
+  g.addColorStop(1, "#c026d3");
+  x.fillStyle = g;
+  rr(x, 40 * u, 40 * u, px - 80 * u, px - 80 * u, 60 * u);
+  x.fill();
+  // papan klip + kertas
+  x.fillStyle = "#fef3c7";
+  rr(x, 150 * u, 120 * u, 212 * u, 280 * u, 18 * u);
+  x.fill();
+  x.fillStyle = "#4c1d95";
+  rr(x, 205 * u, 100 * u, 102 * u, 46 * u, 12 * u);
+  x.fill();
+  x.fillStyle = "#a78bfa";
+  for (let i = 0; i < 4; i++) { rr(x, 180 * u, (185 + i * 50) * u, (i % 2 ? 110 : 150) * u, 16 * u, 8 * u); x.fill(); }
+  x.fillStyle = "#16a34a";
+  x.beginPath(); x.arc(330 * u, 360 * u, 52 * u, 0, 7); x.fill();
+  x.strokeStyle = "#fff"; x.lineWidth = 14 * u; x.lineCap = "round"; x.lineJoin = "round";
+  x.beginPath(); x.moveTo(305 * u, 360 * u); x.lineTo(325 * u, 380 * u); x.lineTo(357 * u, 340 * u); x.stroke();
   if (title) {
     x.fillStyle = "#6d28d9";
     x.font = f(700, 40);
     x.textAlign = "center";
-    x.fillText("PINDAI UNTUK DAFTAR", px / 2, px + 52);
+    x.fillText("KLIK UNTUK DAFTAR", px / 2, px + 52);
     x.fillStyle = "#4b5563";
     x.font = f(500, 26);
-    x.fillText("forms.gle/fJfi9qn8QgmJCUdPA", px / 2, px + 94);
+    x.fillText("formulir peminatan · Kak Tias", px / 2, px + 94);
     x.textAlign = "left";
   }
   return c;
@@ -2766,13 +2853,13 @@ function buildWorld(scene2, quality) {
   };
   api.texFrom = texFrom;
   const wallC = {};
-  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn"]) wallC[k] = wallCanvas(k);
+  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe"]) wallC[k] = wallCanvas(k);
   const wallMatCache = {};
   const wallMat = (k, len, h) => {
     const key = k + "|" + len.toFixed(1) + "|" + h;
     if (wallMatCache[key]) return wallMatCache[key];
     const t2 = texFrom(wallC[k], [Math.max(1, Math.round(len / 4)), Math.max(1, Math.round(h / 4))]);
-    const m = new THREE.MeshStandardMaterial({ map: t2, roughness: k === "atrium" ? 0.35 : 0.85, metalness: 0, emissive: k === "se" || k === "atrium" ? 0 : 16777215, emissiveMap: k === "se" || k === "atrium" ? null : t2, emissiveIntensity: k === "welcome" ? 0.15 : 0.35 });
+    const m = new THREE.MeshStandardMaterial({ map: t2, roughness: k === "atrium" ? 0.35 : 0.85, metalness: 0, emissive: k === "se" || k === "atrium" ? 0 : 16777215, emissiveMap: k === "se" || k === "atrium" ? null : t2, emissiveIntensity: k === "welcome" ? 0.15 : k === "cafe" ? 0.22 : 0.35 });
     return wallMatCache[key] = m;
   };
   const M = {
@@ -2824,7 +2911,7 @@ function buildWorld(scene2, quality) {
       api.walls.add(m);
     }
     // bingkai pintu bercahaya
-    const dcol = cz > 11 ? "#f5b400" : cx < -11 ? LABS.keris.col : cx > 11 ? LABS.csn.col : cx < 0 ? LABS.git.col : LABS.se.col;
+    const dcol = cx === 9 ? "#d97706" : cz > 11 ? "#f5b400" : cx < -11 ? LABS.keris.col : cx > 11 ? LABS.csn.col : cx < 0 ? LABS.git.col : LABS.se.col;
     const ring = new THREE.Mesh(new THREE.TorusGeometry(r + 0.05, 0.05, 8, 40, Math.PI), basicCol(dcol));
     ring.position.set(cx, hb, cz);
     ring.rotation.y = rotY;
@@ -2867,7 +2954,7 @@ function buildWorld(scene2, quality) {
     }
   }
   // lantai, plafon, lampu strip
-  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423" };
+  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528" };
   for (const [k, r] of Object.entries(ROOMS)) {
     const w = r.x1 - r.x0, d = r.z1 - r.z0;
     const fc = floorCanvas(k, r);
@@ -2899,7 +2986,7 @@ function buildWorld(scene2, quality) {
     ce.rotation.x = Math.PI / 2;
     ce.position.y = r.h;
     scene2.add(ce);
-    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : "#ffffff";
+    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : "#ffffff";
     const sm = basicCol(stripCol);
     for (const [ax, az, bx, bz] of [[r.x0 + 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z0 + 0.5], [r.x0 + 0.5, r.z1 - 0.5, r.x1 - 0.5, r.z1 - 0.5], [r.x0 + 0.5, r.z0 + 0.5, r.x0 + 0.5, r.z1 - 0.5], [r.x1 - 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z1 - 0.5]]) {
       const len = Math.hypot(bx - ax, bz - az), led = new THREE.Mesh(new THREE.BoxGeometry(ax === bx ? 0.08 : len, 0.03, ax === bx ? len : 0.08), sm);
@@ -3215,10 +3302,10 @@ function buildWorld(scene2, quality) {
     // slideshow orientasi (dinding timur)
     showPanel("orient", null, ORIENT_SLIDES.map((s) => ({ slide: s })), "Kenali Lab Peminatan", ORIENT_SLIDES.map(flatten).join(". "), "welcome", "E", 21, 5.2, 2.6);
     // denah (dinding timur, dekat pintu)
-    const mq = onWall("welcome", "E", 14.6, 2.4), g3 = group(mq);
+    const mq = onWall("welcome", "E", 16.95, 2.4), g3 = group(mq);
     const mc = mkCanvas(900, 640);
     api.mapBoardCanvas = mc;
-    const mm = plane(mc, 3.0, 2.13);
+    const mm = plane(mc, 2.8, 1.99);
     g3.add(mm);
     mm.userData.act = { type: "map" };
     api.interact.push(mm);
@@ -3249,7 +3336,6 @@ function buildWorld(scene2, quality) {
     // papan arah ke atrium
     sign("↑  ATRIUM PENDAFTARAN & 4 LAB PEMINATAN", "welcome", "N", 0, 4.6, { hgt: 0.36, bg: "#6d28d9" });
     plantPot(-8.2, 12.9);
-    plantPot(8.2, 12.9);
     plantPot(-8.2, 29.1, 1.2);
     plantPot(8.2, 29.1, 1.2);
   }
@@ -3282,7 +3368,7 @@ function buildWorld(scene2, quality) {
     sx.textAlign = "center";
     sx.fillText("PENDAFTARAN PEMINATAN", 512, 120);
     sx.font = f(500, 40);
-    sx.fillText("Klik resepsionis untuk mengisi formulir", 512, 196);
+    sx.fillText("Klik meja ini untuk mengisi formulir", 512, 196);
     const sgM = plane(sgC, 2.4, 0.6);
     sgM.position.set(0, 0.55, 2.06);
     scene2.add(sgM);
@@ -3293,7 +3379,7 @@ function buildWorld(scene2, quality) {
     qrG.position.set(1.15, 1.07, 1.42);
     qrG.rotation.y = -0.6;
     scene2.add(qrG);
-    const qrM = plane(qrCanvas(512), 0.5, 0.62);
+    const qrM = plane(regIconCanvas(512), 0.5, 0.62);
     qrM.position.y = 0.36;
     qrM.rotation.x = -0.2;
     qrG.add(qrM);
@@ -3344,7 +3430,7 @@ function buildWorld(scene2, quality) {
     const dl = new THREE.Group();
     dl.position.set(0, 3.05, 0);
     scene2.add(dl);
-    api.billboards.push(label("✍  DAFTAR PEMINATAN DI SINI", { size: 60, bg: "rgba(109,40,217,.92)", color: "#fff", weight: 700, padX: 26, padY: 10, radius: 30 }, 0.34, dl, 0, 0));
+    void dl; // judul "DAFTAR PEMINATAN" kini tampil di layar pie chart di belakang Kak Tias
     // neon di atas pintu (sisi atrium) + kartu lab di samping pintu
     const doorSign = [["keris", "W", 0], ["csn", "E", 0], ["git", "N", -5], ["se", "N", 5]];
     for (const [id, side, along] of doorSign) {
@@ -3414,11 +3500,7 @@ function buildWorld(scene2, quality) {
     }
     // poster QR besar (dinding timur) & denah (dinding barat)
     {
-      const p5 = onWall("atrium", "E", 7.2, 2.4), g5 = group(p5);
-      const qm = plane(qrCanvas(640), 1.9, 2.26);
-      g5.add(qm);
-      qm.userData.act = { type: "register" };
-      api.interact.push(qm);
+      // (poster QR Google Form diganti Papan Pengumuman Hasil Peminatan — dibangun di src/ext_pem.js)
       const p6 = onWall("atrium", "W", 7.2, 2.4), g6 = group(p6);
       const mc2 = mkCanvas(900, 640);
       api.mapBoardCanvas2 = mc2;
@@ -3477,12 +3559,12 @@ function buildWorld(scene2, quality) {
     x2.fillText("TERTARIK DENGAN", 192, 90);
     x2.font = f(700, L.code.length > 3 ? 90 : 110);
     x2.fillText(L.code + "?", 192, 210);
-    x2.drawImage(qrCanvas(300, false), 42, 270, 300, 300);
+    x2.drawImage(regIconCanvas(300, false), 42, 270, 300, 300);
     x2.font = f(600, 34);
     x2.fillText("DAFTAR", 192, 640);
     x2.fillText("SEKARANG →", 192, 690);
     x2.font = f(400, 22);
-    x2.fillText("klik / pindai QR", 192, 750);
+    x2.fillText("klik untuk mengisi", 192, 750);
     x2.textAlign = "left";
     const face = plane(c, 0.7, 1.5);
     face.position.set(0, 0.82, 0.095);
@@ -4180,6 +4262,7 @@ function wsNet(url, h) {
         if (Array.isArray(m.wb)) h.onWbInit && h.onWbInit(m.wb);
         if (Array.isArray(m.notes)) h.onNotesInit && h.onNotesInit(m.notes);
         if (Array.isArray(m.hof)) h.onHofInit && h.onHofInit(m.hof);
+        if (m.pem && typeof m.pem === "object") h.onPem && h.onPem(m.pem);
       } else if (m.type === "presence" && typeof m.id === "string" && m.id !== selfId) {
         peers.set(m.id, { id: m.id, presence: obj(m.data) });
         emitPeers();
@@ -4210,6 +4293,8 @@ function wsNet(url, h) {
         h.onHofAdd && h.onHofAdd(m.e);
       } else if (m.type === "hof_del" && typeof m.id === "string") {
         h.onHofDel && h.onHofDel(m.id);
+      } else if (m.type === "pem" && m.s && typeof m.s === "object") {
+        h.onPem && h.onPem(m.s);
       } else if (m.type === "hof_res") {
         if (api.hofCb) { api.hofCb(m); api.hofCb = null; }
       }
@@ -4391,7 +4476,8 @@ const roomLights = [
   { x: -25, y: 5.0, z: 0, col: 0x06b6d4, intensity: 3.2, dist: 32 }, // KERIS
   { x: -14, y: 5.0, z: -24, col: 0x10b981, intensity: 3.0, dist: 32 },// GIT
   { x: 14, y: 5.0, z: -24, col: 0xa855f7, intensity: 3.0, dist: 32 }, // SE
-  { x: 25, y: 5.0, z: 0, col: 0xf59e0b, intensity: 3.0, dist: 32 }   // CSN
+  { x: 25, y: 5.0, z: 0, col: 0xf59e0b, intensity: 3.0, dist: 32 },  // CSN
+  { x: 18, y: 4.2, z: 20, col: 0xffb36b, intensity: 2.4, dist: 22 }   // Cafe Rahman
 ];
 roomLights.forEach(l => {
   const pl = new THREE2.PointLight(l.col, l.intensity, l.dist);
@@ -5921,7 +6007,7 @@ function closeAll() {
   if (drawMode)
     setDrawMode(false);
 }
-var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn"];
+var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe"];
 function drawMap(c, opt = {}) {
   const x = c.getContext("2d"), W = c.width, H = c.height;
   const bx0 = -42, bx1 = 42, bz0 = -40, bz1 = 32;
@@ -6020,7 +6106,7 @@ function drawMap(c, opt = {}) {
     x.fillText(opt.title, 20, 40);
     x.font = `400 ${Math.round(W / 60)}px ${FONT}`;
     x.fillStyle = "#5b6070";
-    x.fillText("Utara \u2191  \xB7  \u2726 robot pemandu  \xB7  \u270E resepsionis", 20, 40 + W / 40);
+    x.fillText("Utara \u2191  \xB7  \u2726 robot pemandu  \xB7  \u270E resepsionis & barista", 20, 40 + W / 40);
   }
 }
 function toggleMap(force) {
@@ -6526,6 +6612,7 @@ async function startNet() {
         toast("Server multi-user tidak ditemukan \u2014 galeri berjalan dalam mode sendiri.");
     },
     onHofInit: (list) => hofInit(list),
+    onPem: (st) => pemOnStats(st),
     onHofAdd: (e) => hofUpsert(e),
     onHofDel: (id) => hofDelete(id),
     onWbInit: (strokes) => {
@@ -7005,6 +7092,8 @@ async function boot() {
       }
       return;
     }
+    // wajib izin lokasi (jadwal adzan per wilayah) & tidak sedang dalam jeda adzan
+    if (!adzanGate(enter)) return;
     if (isModName(nm) && !enter.ok) {
       const key = $("ldKey").value;
       if (!key) { $("ldKey").style.display = "block"; $("ldKey").focus(); return; }
@@ -7032,6 +7121,7 @@ async function boot() {
     if (curRoom === "welcome" && EMBED_OK)
       setTimeout(() => ytCmd("play"), 400);
     setTimeout(() => toast(`Selamat datang, ${S.name}! Tonton video sambutan, lalu jalan ke utara menuju Atrium & 4 lab.`, 6e3), 700);
+    adzanStart();
   };
   const go = $("ldGo");
   const form = $("ldForm");
@@ -7526,13 +7616,15 @@ function rel(res, top) {
   return [["Lihat juga: " + p.title.slice(0, 26), () => openZoom(p.id)]];
 }
 function npcAnswer(npcId, q) {
+  const cheat = typeof codyCheat === "function" ? codyCheat(npcId, q) : null;
+  if (cheat) return cheat;
   const spR = typeof spAnswer === "function" ? spAnswer(npcId, q) : null;
   if (spR) return spR;
   if (NPCS[npcId] && NPCS[npcId].custom) return NPCS[npcId].custom.answer(q);
   const n = NPCS[npcId] || NPCS.tia, lab = n.lab, L = lab ? LABS[lab] : null;
   const ql = norm(q).trim();
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql))
-    return { text: L ? L.greet.replace("IT'ers", S.name) : `Halo ${S.name}! Saya Kak Tias, resepsionis pendaftaran peminatan. Saya bisa membantu mendaftar, menjelaskan keempat lab, atau mengantar kamu ke lab mana pun. Ada yang bisa saya bantu?`, acts: L ? [] : [["✍ Isi formulir", openForm]] };
+    return { text: L ? L.greet.replace("IT'ers", S.name) : `Halo ${S.name}! Saya Kak Tias, resepsionis pendaftaran peminatan. Saya bisa membantu mendaftar, menjelaskan keempat lab, atau mengantar kamu ke lab mana pun. Ada yang bisa saya bantu?`, acts: L ? [] : [["✍ Isi formulir", () => openRegister(null)], ["📊 Statistik", () => pemStatsCard()]] };
   if (/terima ?kasih|makasih|thanks|thank you/.test(ql)) return { text: L ? `Sama-sama, ${S.name}! Kalau tertarik dengan ${L.code}, jangan lupa daftar di resepsionis ya 😊` : "Sama-sama! Semoga lancar memilih peminatan 😊", acts: [["✍ Daftar sekarang", () => openRegister(lab)]] };
   if (/\bkuis|quiz|uji saya|tes saya|tebak/.test(ql)) {
     const pool = L ? L.quiz : LAB_IDS.flatMap((k) => LABS[k].quiz);
@@ -7540,7 +7632,10 @@ function npcAnswer(npcId, q) {
     return { text: "🎯 " + qq, quiz: { opts, a } };
   }
   if (/daftar|formulir|pendaftaran|gform|google form|\bform\b|registrasi|mendaftar/.test(ql))
-    return { text: `Pendaftaran peminatan dilakukan lewat formulir Google: ${FORM_URL}${L ? `. Pilih ${L.code} di formulirnya bila kamu yakin!` : ". Isi data dirimu lalu pilih lab peminatan yang kamu minati."}`, acts: [["✍ Isi formulir", openForm], ["Lihat QR", () => openRegister(lab)]] };
+    return { text: L ? `Pendaftaran peminatan langsung dari galeri ini — tidak perlu Google Form lagi. Klik tombol di bawah, isi NIM & kontak, lalu pilih ${L.code} sebagai pilihan 1 bila kamu yakin!` : `Pendaftaran peminatan kini langsung dari galeri ini. Isi NIM, nama, kontak, lalu pilih lab pilihan 1 dan pilihan 2.${typeof PEM !== "undefined" && PEM.stats ? ` Saat ini sudah ${PEM.stats.total} pendaftar${PEM.stats.open ? "" : " dan pendaftaran sedang DITUTUP"}.` : ""}`, acts: [["✍ Isi formulir", () => openRegister(lab)], ["📊 Statistik", () => pemStatsCard()], ["📢 Hasil final", () => pemFinalCard()]] };
+  if (!L && /\b(hasil|pengumuman|diterima|penetapan|final)\b/.test(ql)) return { text: typeof PEM !== "undefined" && PEM.final && PEM.final.published ? `Hasil final sudah diumumkan: ${PEM.final.title}. Klik tombol di bawah untuk mencari namamu, atau lihat papan pengumuman di dinding timur Atrium.` : "Hasil final peminatan belum diumumkan. Nanti akan tampil di papan pengumuman dinding timur Atrium — pantau terus ya!", acts: [["📢 Papan pengumuman", () => pemFinalCard()]] };
+  if (!L && /statistik|persentase|persen|berapa (orang|pendaftar|banyak)|jumlah pendaftar|grafik|pie/.test(ql)) return { text: pemStatsText(), acts: [["📊 Lihat diagram", () => pemStatsCard()]] };
+  if (/\b(cafe|kafe|kopi|ngopi|rahman)\b/.test(ql)) return { text: "Cafe Rahman ada di sebelah timur Ruang Sambutan — masuk lewat pintu kayu di dinding timur dekat gerbang Atrium. Rahman si barista bisa cerita soal kopi, para dosen TI, dan memberi saran dosen pembimbing untuk judulmu ☕", acts: [["Antar ke Cafe", () => teleportSpot("cafe")]] };
   const ml = mentionedLab(ql);
   if (/(lab|peminatan) apa saja|apa saja (lab|peminatan)|ada berapa (lab|peminatan)|pilihan (lab|peminatan)|daftar lab|semua lab/.test(ql))
     return { text: FAQ[1][1], acts: LAB_IDS.map((k) => [`Lab ${LABS[k].code}`, () => teleportSpot(k)]) };
@@ -7594,7 +7689,7 @@ function speak(t2, pitch = 1.1) {
   if (!speakOn || !("speechSynthesis" in window)) return;
   try {
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(t2.replace(/[✦🎯✅❌😊😄✍]/gu, "").replace(/https?:\/\/\S+/g, "tautan formulir"));
+    const u = new SpeechSynthesisUtterance(t2.replace(/[✦🎯✅❌😊😄✍]/gu, "").replace(/https?:\/\/\S+/g, "tautan"));
     u.lang = "id-ID";
     u.rate = 1.04;
     u.pitch = pitch;
@@ -7710,7 +7805,7 @@ function openNpc(id, tab) {
   $("sIn").placeholder = `Tanya ${n.name}… (mis. ${n.custom ? n.custom.chips[0] : n.lab ? LABS[n.lab].chips[0] : "bagaimana cara mendaftar?"})`;
   const ch = $("sChips");
   ch.textContent = "";
-  const chips = n.custom ? n.custom.chips : n.lab ? LABS[n.lab].chips.concat(["Cara daftar", "\u{1F510} Secret passage"]) : ["Cara daftar", "Lab apa saja?", "Bingung pilih lab", "Antar ke Lab GIT", "Kuis"];
+  const chips = n.custom ? n.custom.chips : n.lab ? LABS[n.lab].chips.concat(["Cara daftar", "\u{1F510} Secret passage"]) : ["Cara daftar", "Statistik peminatan", "Hasil peminatan", "Lab apa saja?", "Bingung pilih lab", "Kuis"];
   chips.forEach((t2) => {
     const b = document.createElement("button");
     b.textContent = t2;
@@ -7727,7 +7822,7 @@ function openNpc(id, tab) {
   $("kForm").style.display = k ? "block" : "none";
   if (k) renderKnow();
   else {
-    if (!(npcLogs[id] || []).length) sMsg(n.name, npcAnswer(id, "halo").text, false, n.custom ? n.custom.greetActs() : n.lab ? [["✍ Daftar " + LABS[n.lab].code, () => openRegister(n.lab)]] : [["✍ Isi formulir", openForm], ["Lihat QR", () => openRegister(null)]], null, id);
+    if (!(npcLogs[id] || []).length) sMsg(n.name, npcAnswer(id, "halo").text, false, n.custom ? n.custom.greetActs() : n.lab ? [["✍ Daftar " + LABS[n.lab].code, () => openRegister(n.lab)]] : [["✍ Isi formulir", () => openRegister(null)], ["📊 Statistik", () => pemStatsCard()], ["📢 Hasil final", () => pemFinalCard()]], null, id);
     setTimeout(() => $("sIn").focus(), 30);
   }
 }
@@ -7814,68 +7909,11 @@ function linkCard(title, text, items) {
   });
 }
 function openForm() {
-  if (!EMBED_OK) {
-    openRegister(null);
-    return;
-  }
-  let w = null;
-  try {
-    w = window.open(FORM_URL, "_blank", "noopener");
-  } catch {
-  }
-  toast(w === null ? "Formulir dibuka di tab baru. Bila tidak terbuka, salin tautan dari kartu pendaftaran." : "Formulir pendaftaran dibuka di tab baru ✍", 4500);
-  spawnSparkle();
-  mpFx();
+  openRegister(null);
 }
+// openRegister(lab): formulir pendaftaran peminatan internal — lihat src/ext_pem.js (pemRegister)
 function openRegister(lab) {
-  const L = lab ? LABS[lab] : null;
-  if (renderer.xr.isPresenting) {
-    const c = mkCanvas(1200, 900), x = c.getContext("2d");
-    x.fillStyle = "#fff";
-    rr(x, 0, 0, 1200, 900, 40);
-    x.fill();
-    x.drawImage(qrCanvas(560), 40, 120, 560, 680);
-    x.fillStyle = "#6d28d9";
-    x.font = `700 48px ${FONT}`;
-    x.fillText("Daftar Peminatan", 640, 200);
-    x.fillStyle = "#333";
-    x.font = `400 30px ${FONT}`;
-    wrap(x, "Pindai QR dengan ponsel, atau lepas headset dan buka: forms.gle/fJfi9qn8QgmJCUdPA", 640, 270, 520, 42, 8);
-    showVRPanel(c);
-    return;
-  }
-  const qr = qrCanvas(420, false).toDataURL("image/png");
-  genCard(`<button class="x" id="gx" aria-label="Tutup">\xD7</button>
-  <h2>✍ Pendaftaran Peminatan${L ? " — " + L.code : ""}</h2>
-  <p>${L ? `Tertarik dengan <b>Lab ${L.code}</b> (${L.name})? ` : "Halo IT'ers! "}Isi formulir Google berikut untuk mendaftar peminatan lab. Pastikan kamu sudah menjelajahi keempat lab dan bertanya pada robot pemandunya.</p>
-  <div class="reg"><img id="regQr" alt="Kode QR formulir pendaftaran"><div><ol><li>Klik tombol di bawah (atau pindai QR dengan ponsel)</li><li>Isi data diri sesuai petunjuk formulir</li><li>Pilih lab peminatan${L ? ` — misalnya <b>${L.code}</b>` : ""}</li><li>Kirim formulir, selesai!</li></ol>
-  <a class="btn big" id="regGo" href="${FORM_URL}" target="_blank" rel="noopener noreferrer">✍ Isi Formulir Peminatan</a>
-  <div class="lnk"><input type="text" id="regLink" readonly aria-label="Tautan formulir"><button class="btn sec" id="regCopy">Salin</button></div></div></div>
-  <div class="rowf" style="margin-top:12px">${LAB_IDS.map((k) => `<button class="ghost labgo" data-l="${k}" style="border-color:${LABS[k].col}">Lab ${LABS[k].code}</button>`).join("")}<button class="ghost" id="regAsk">Tanya Kak Tias</button></div>`);
-  $("regQr").src = qr;
-  $("regLink").value = FORM_URL;
-  $("regGo").onclick = () => {
-    toast("Formulir pendaftaran dibuka di tab baru ✍", 4e3);
-    spawnSparkle();
-    mpFx();
-    store.set("registered", true);
-  };
-  $("regCopy").onclick = async () => {
-    try {
-      await navigator.clipboard.writeText(FORM_URL);
-      toast("Tautan formulir disalin.");
-    } catch {
-      $("regLink").select();
-    }
-  };
-  $("regAsk").onclick = () => {
-    closeGen();
-    openNpc("tia", "chat");
-  };
-  document.querySelectorAll(".labgo").forEach((b) => b.onclick = () => {
-    closeGen();
-    teleportSpot(b.dataset.l);
-  });
+  pemRegister(lab);
 }
 
 // ---------- video (modal) ----------
@@ -8281,6 +8319,9 @@ function zoneTick(dt) {
       setTimeout(() => sayBubble(L.greet.replace("IT'ers", S.name), "npc_" + lab), 600);
       if (visitedLabs.size === 4) setTimeout(() => toast("🎉 Kamu sudah mengunjungi keempat lab! Saatnya mendaftar di meja resepsionis Atrium.", 6e3), 4e3);
     }
+  } else if (r === "cafe") {
+    toast("☕ Cafe Rahman — ngobrol dengan barista Rahman soal kopi, dosen TI, atau saran dosen pembimbing.", 4200);
+    if (!store.get("cafeHint", false)) { store.set("cafeHint", true); setTimeout(() => sayBubble(`Selamat datang di Cafe Rahman, ${S.name}! Mau kopi apa hari ini? ☕`, "npc_rahman"), 600); }
   } else if (r === "atrium" && prev && prev !== "welcome") {
     toast("Atrium Pendaftaran — temui Kak Tias di meja tengah untuk mendaftar.", 3e3);
   } else if (r === "atrium" && prev === "welcome" && !store.get("atriumHint", false)) {
@@ -9376,6 +9417,10 @@ function xHandleAct(act, hit, e) {
     case "x_hof": openHofGallery(); break;
     case "x_dice": snakeRoll(); break;
     case "x_snportal": if (Q().snake) xTeleport(16.2, -176, 0); else toast("Portal finis aktif setelah kamu tepat mencapai pijakan 40."); break;
+    case "x_pemstats": pemStatsCard(); break;
+    case "x_pemboard": pemFinalCard(); break;
+    case "x_cafemenu": cafeMenuCard(); break;
+    case "x_dosenboard": dosenCard(); break;
     case "x_door": toast(questUnlocked() ? "Pintu rahasia terbuka — masuklah ke lorong!" : "Dinding ini terasa… berbeda. Mungkin ada sesuatu di baliknya.", 3500); break;
   }
 }
@@ -9460,6 +9505,8 @@ function buildExtras() {
     buildGarden();
     buildSnake();
     buildHofRibbon();
+    try { buildPeminatan(); } catch (err) { console.error("Peminatan gagal dibangun:", err); }
+    try { buildCafe(); } catch (err) { console.error("Cafe gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -9876,7 +9923,8 @@ function makeCustomHuman(id, cfg) {
     bx.fillStyle = "#facc15"; for (const [dx, dy] of [[0, -14], [0, 14], [-14, 0], [14, 0]]) { bx.beginPath(); bx.ellipse(cx + dx, cy + dy, dx ? 11 : 6, dx ? 6 : 11, 0, 0, 7); bx.fill(); }
     bx.fillStyle = "#166534"; bx.beginPath(); bx.arc(cx, cy, 4, 0, 7); bx.fill();
   }
-  const batik = new THREE2.MeshStandardMaterial({ map: xTex(bc, [3, 2]), roughness: 0.75 });
+  const LK = cfg.look || null;
+  const batik = LK ? new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.shirt || "#f5f5f4"), roughness: 0.7 }) : new THREE2.MeshStandardMaterial({ map: xTex(bc, [3, 2]), roughness: 0.75 });
   const pants = new THREE2.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.7 });
   const shoe = new THREE2.MeshStandardMaterial({ color: 0x3f2a1d, roughness: 0.4 });
   const frameM = new THREE2.MeshStandardMaterial({ color: 0x111111, roughness: 0.25, metalness: 0.6 });
@@ -9904,11 +9952,25 @@ function makeCustomHuman(id, cfg) {
     const e = new THREE2.Mesh(new THREE2.SphereGeometry(0.016, 12, 8), eyeM); e.position.set(sx * 0.052, 0.03, 0.14); e.scale.set(1, 1, 0.6); headG.add(e); eyes.push(e);
     const brow = new THREE2.Mesh(new THREE2.BoxGeometry(0.05, 0.009, 0.01), new THREE2.MeshBasicMaterial({ color: 0x2b1d14 })); brow.position.set(sx * 0.052, 0.078, 0.145); brow.rotation.z = -sx * 0.12; headG.add(brow);
     // kacamata: bingkai bulat + lensa tipis
+    if (LK && !LK.glasses) continue;
     const rim = new THREE2.Mesh(new THREE2.TorusGeometry(0.036, 0.006, 8, 28), frameM); rim.position.set(sx * 0.054, 0.03, 0.158); headG.add(rim);
     const lens = new THREE2.Mesh(new THREE2.CircleGeometry(0.034, 24), new THREE2.MeshStandardMaterial({ color: 0xbfe3ff, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0.3 })); lens.position.set(sx * 0.054, 0.03, 0.159); headG.add(lens);
     const temple = new THREE2.Mesh(new THREE2.BoxGeometry(0.006, 0.006, 0.15), frameM); temple.position.set(sx * 0.092, 0.035, 0.085); temple.rotation.y = sx * 0.12; headG.add(temple);
   }
-  const bridge = new THREE2.Mesh(new THREE2.BoxGeometry(0.035, 0.006, 0.006), frameM); bridge.position.set(0, 0.04, 0.162); headG.add(bridge);
+  if (!LK || LK.glasses) { const bridge = new THREE2.Mesh(new THREE2.BoxGeometry(0.035, 0.006, 0.006), frameM); bridge.position.set(0, 0.04, 0.162); headG.add(bridge); }
+  if (LK) {
+    // rambut pendek, kumis tipis, celemek barista
+    const hairM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.hair || "#1c1410"), roughness: 0.9 });
+    const hair = new THREE2.Mesh(new THREE2.SphereGeometry(0.158, 28, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), hairM); hair.scale.set(0.92, 1.0, 1.0); hair.position.y = 0.035; headG.add(hair);
+    const back = new THREE2.Mesh(new THREE2.SphereGeometry(0.152, 20, 12, Math.PI * 0.6, Math.PI * 0.8, Math.PI * 0.35, Math.PI * 0.3), hairM); back.rotation.y = Math.PI; back.scale.set(0.95, 1.1, 1); headG.add(back);
+    const must = new THREE2.Mesh(new THREE2.BoxGeometry(0.06, 0.012, 0.012), hairM); must.position.set(0, -0.042, 0.15); headG.add(must);
+    shine.visible = false;
+    const apronM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.apron || "#3f2a1d"), roughness: 0.8, side: THREE2.DoubleSide });
+    const apron = new THREE2.Mesh(new THREE2.CylinderGeometry(0.168, 0.2, 0.86, 20, 1, true, -Math.PI * 0.42, Math.PI * 0.84), apronM); apron.position.y = 1.0; apron.scale.z = 0.86; rig.add(apron);
+    const bib = new THREE2.Mesh(new THREE2.PlaneGeometry(0.2, 0.2), apronM); bib.position.set(0, 1.33, 0.122); rig.add(bib);
+    const logoC = mkCanvas(128, 128), lx = logoC.getContext("2d"); lx.font = `90px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; lx.textAlign = "center"; lx.textBaseline = "middle"; lx.fillText("☕", 64, 70);
+    const lg = new THREE2.Mesh(new THREE2.PlaneGeometry(0.09, 0.09), new THREE2.MeshBasicMaterial({ map: xTex(logoC), transparent: true })); lg.position.set(0, 1.33, 0.124); rig.add(lg);
+  }
   const smile = new THREE2.Mesh(new THREE2.TorusGeometry(0.03, 0.006, 6, 18, Math.PI), new THREE2.MeshBasicMaterial({ color: 0x7c2d12 })); smile.position.set(0, -0.065, 0.142); smile.rotation.z = Math.PI; headG.add(smile);
   // lengan panjang ramping
   const arms = [];
@@ -9921,7 +9983,7 @@ function makeCustomHuman(id, cfg) {
     arms.push(sh);
   }
   const tag = npcLabel(cfg.tag || cfg.name.toUpperCase(), cfg.col); tag.position.y = 2.22; g.add(tag);
-  const hint = hintSprite("💬", cfg.col); hint.position.y = 2.52; g.add(hint);
+  const hint = hintSprite(cfg.hint || "💬", cfg.col); hint.position.y = 2.52; g.add(hint);
   g.traverse((o) => { if (o.isMesh) o.userData.act = { type: "npc", id }; });
   world.interact.push(body, head);
   world.circles.push({ x: cfg.x, z: cfg.z, r: 0.35 });
@@ -10530,6 +10592,827 @@ function hofDrawHeader() {
   x.textAlign = "left";
   HOF.header.m.material.map.needsUpdate = true;
 }
+
+
+// =====================================================================
+// src/ext_pem.js — SISTEM PENDAFTARAN PEMINATAN (pengganti Google Form)
+// - Formulir di dalam galeri → POST /api/peminatan/daftar
+// - Layar pie chart persentase peminatan di belakang Kak Tias
+// - Papan Pengumuman hasil final (dinding timur Atrium)
+// Data dikelola admin di halaman /admin (login), termasuk unduh Excel,
+// unggah hasil final, arsip, dan reset untuk tahun berikutnya.
+// =====================================================================
+var PEM = { stats: null, final: null, fv: -1, screen: null, board: null, page: 0, pageT: 0, offline: false };
+var PEM_LAB_COL = { keris: "#8b5cf6", git: "#d946ef", se: "#4f46e5", csn: "#0ea5e9" };
+async function pemFetch(path, opt = {}) {
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 12000);
+  try {
+    const r = await fetch(path, { ...opt, signal: ctl.signal, credentials: "same-origin", headers: { "X-Pem": "1", ...(opt.body ? { "Content-Type": "application/json" } : {}) } });
+    let j = {};
+    try { j = await r.json(); } catch { /* kosong */ }
+    if (!r.ok || j.ok === false) throw new Error(j.err || `Server menolak (${r.status}).`);
+    return j;
+  } catch (e) {
+    if (e.name === "AbortError" || e instanceof TypeError) throw new Error("Server pendaftaran tidak terhubung. Pastikan galeri dibuka lewat server (npm start).");
+    throw e;
+  } finally { clearTimeout(to); }
+}
+async function pemLoadStats() {
+  try { pemOnStats(await pemFetch("api/peminatan/stats")); PEM.offline = false; } catch { PEM.offline = true; drawPemScreen(); drawPemBoard(); }
+}
+function pemOnStats(s) {
+  if (!s || typeof s !== "object" || !s.counts) return;
+  PEM.stats = s;
+  PEM.offline = false;
+  drawPemScreen();
+  if (s.fv !== PEM.fv) { PEM.fv = s.fv; pemLoadFinal(); } else drawPemBoard();
+}
+async function pemLoadFinal() {
+  try { PEM.final = await pemFetch("api/peminatan/pengumuman"); } catch { /* biarkan */ }
+  PEM.page = 0;
+  drawPemBoard();
+}
+function pemStatsText() {
+  const s = PEM.stats;
+  if (!s) return "Data statistik belum tersedia — server pendaftaran belum terhubung.";
+  if (!s.total) return `Belum ada pendaftar untuk periode ${s.period}. Jadilah yang pertama!`;
+  return `Statistik peminatan ${s.period} (pilihan 1, ${s.total} pendaftar): ` + LAB_IDS.map((k) => `${LABS[k].code} ${s.counts[k]} (${(s.counts[k] / s.total * 100).toFixed(1)}%)`).join(", ") + `. Pendaftaran ${s.open ? "masih dibuka" : "sudah ditutup"}.`;
+}
+// ---------- gambar donat ----------
+function pemDonut(x, cx, cy, R, r, counts, total) {
+  let a = -Math.PI / 2;
+  if (!total) {
+    x.fillStyle = "rgba(255,255,255,.12)";
+    x.beginPath(); x.arc(cx, cy, R, 0, Math.PI * 2); x.moveTo(cx + r, cy); x.arc(cx, cy, r, 0, Math.PI * 2, true); x.fill();
+    return;
+  }
+  for (const k of LAB_IDS) {
+    const v = counts[k] || 0;
+    if (!v) continue;
+    const da = v / total * Math.PI * 2;
+    x.fillStyle = PEM_LAB_COL[k];
+    x.beginPath(); x.arc(cx, cy, R, a, a + da); x.arc(cx, cy, r, a + da, a, true); x.closePath(); x.fill();
+    // label persentase di irisan
+    if (da > 0.28) {
+      const m = a + da / 2, lr = (R + r) / 2;
+      x.fillStyle = "#fff"; x.font = `700 ${Math.round(R * 0.13)}px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle";
+      x.fillText(`${Math.round(v / total * 100)}%`, cx + Math.cos(m) * lr, cy + Math.sin(m) * lr);
+      x.textBaseline = "alphabetic";
+    }
+    a += da;
+  }
+  x.strokeStyle = "rgba(10,6,24,.9)"; x.lineWidth = 5;
+  a = -Math.PI / 2;
+  for (const k of LAB_IDS) { const v = counts[k] || 0; if (!v) continue; x.beginPath(); x.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r); x.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); x.stroke(); a += v / total * Math.PI * 2; }
+}
+// ---------- layar pie chart (di belakang Kak Tias) ----------
+function drawPemScreen() {
+  const S2 = PEM.screen;
+  if (!S2) return;
+  const c = S2.c, x = c.getContext("2d"), W = c.width, H = c.height, s = PEM.stats;
+  const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#1b0f38"); g.addColorStop(1, "#0b1530");
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.strokeStyle = "rgba(167,139,250,.08)"; x.lineWidth = 2;
+  for (let i = 0; i < W; i += 64) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, H); x.stroke(); }
+  // judul
+  const hg = x.createLinearGradient(0, 0, W, 0); hg.addColorStop(0, "#6d28d9"); hg.addColorStop(1, "#c026d3");
+  x.fillStyle = hg; x.fillRect(0, 0, W, 150);
+  x.fillStyle = "#fff"; x.font = `800 66px ${FONT}`; x.textAlign = "left"; x.fillText("✍ DAFTAR PEMINATAN", 50, 92);
+  x.font = `500 32px ${FONT}`; x.fillStyle = "#f5d0fe"; x.fillText(`Persentase pilihan 1 · periode ${s ? s.period : "-"}`, 54, 134);
+  // status
+  const open = s && s.open;
+  x.textAlign = "right"; x.font = `700 34px ${FONT}`;
+  const st = !s ? "OFFLINE" : open ? "● DIBUKA" : "● DITUTUP";
+  x.fillStyle = !s ? "#94a3b8" : open ? "#4ade80" : "#f87171"; x.fillText(st, W - 50, 90);
+  x.font = `400 26px ${FONT}`; x.fillStyle = "#e9d5ff"; x.fillText(s ? "data langsung (live)" : "server tidak terhubung", W - 50, 130);
+  x.textAlign = "left";
+  // donat
+  const tot = s ? s.total : 0, cx = 400, cy = 590, R = 330, r = 190;
+  pemDonut(x, cx, cy, R, r, s ? s.counts : {}, tot);
+  x.textAlign = "center"; x.fillStyle = "#fff"; x.font = `800 120px ${FONT}`; x.fillText(String(tot), cx, cy + 30);
+  x.font = `500 34px ${FONT}`; x.fillStyle = "#c4b5fd"; x.fillText("pendaftar", cx, cy + 80);
+  // legenda + batang
+  const lx = 820, ly = 250;
+  LAB_IDS.forEach((k, i) => {
+    const y = ly + i * 165, v = s ? s.counts[k] : 0, pc = tot ? v / tot : 0, L = LABS[k];
+    x.textAlign = "left";
+    x.fillStyle = PEM_LAB_COL[k]; rr(x, lx, y, 34, 34, 8); x.fill();
+    x.fillStyle = "#fff"; x.font = `800 48px ${FONT}`; x.fillText(L.code, lx + 54, y + 34);
+    x.textAlign = "right"; x.font = `700 48px ${FONT}`; x.fillText(`${(pc * 100).toFixed(1)}%`, W - 60, y + 34);
+    x.textAlign = "left"; x.font = `400 24px ${FONT}`; x.fillStyle = "#c4b5fd";
+    x.fillText(`${L.name.length > 46 ? L.name.slice(0, 45) + "…" : L.name} · ${v} orang`, lx + 54, y + 72);
+    x.fillStyle = "rgba(255,255,255,.1)"; rr(x, lx, y + 92, W - 60 - lx, 22, 11); x.fill();
+    if (pc > 0) { x.fillStyle = PEM_LAB_COL[k]; rr(x, lx, y + 92, Math.max(22, (W - 60 - lx) * pc), 22, 11); x.fill(); }
+  });
+  x.textAlign = "center"; x.font = `500 28px ${FONT}`; x.fillStyle = "#e9d5ff";
+  x.fillText(open ? "Klik meja Kak Tias untuk mengisi formulir · klik layar ini untuk detail" : s ? "Pendaftaran ditutup · pantau hasil final di papan pengumuman (dinding timur)" : "Buka galeri lewat server agar data pendaftaran tampil", W / 2, H - 34);
+  x.textAlign = "left";
+  S2.m.material.map.needsUpdate = true;
+}
+// ---------- papan pengumuman hasil final ----------
+var PEM_PER_PAGE = 30;
+function drawPemBoard() {
+  const B = PEM.board;
+  if (!B) return;
+  const c = B.c, x = c.getContext("2d"), W = c.width, H = c.height, F = PEM.final, s = PEM.stats;
+  // papan gabus berbingkai
+  x.fillStyle = "#3b2414"; x.fillRect(0, 0, W, H);
+  const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#fffaf0"); g.addColorStop(1, "#fdf2dc");
+  x.fillStyle = g; rr(x, 24, 24, W - 48, H - 48, 18); x.fill();
+  x.fillStyle = "#b91c1c"; rr(x, 24, 24, W - 48, 128, 18); x.fill(); x.fillRect(24, 100, W - 48, 52);
+  x.fillStyle = "#fff"; x.font = `800 60px ${FONT}`; x.textAlign = "left"; x.fillText("📢 PAPAN PENGUMUMAN", 60, 108);
+  x.textAlign = "right"; x.font = `600 30px ${FONT}`; x.fillStyle = "#fee2e2";
+  x.fillText(`Peminatan ${(F && F.period) || (s && s.period) || ""}`, W - 60, 102);
+  x.textAlign = "left";
+  if (!F || !F.published) {
+    x.textAlign = "center";
+    x.fillStyle = "#7c2d12"; x.font = `800 64px ${FONT}`; x.fillText("HASIL PEMINATAN", W / 2, 330);
+    x.fillText("BELUM DIUMUMKAN", W / 2, 410);
+    x.fillStyle = "#57534e"; x.font = `400 34px ${FONT}`;
+    x.fillText(s ? `Pendaftaran ${s.open ? "masih DIBUKA" : "sudah DITUTUP"} · ${s.total} pendaftar saat ini` : "Server pendaftaran belum terhubung", W / 2, 510);
+    x.fillText("Hasil final akan ditempel di papan ini oleh admin peminatan.", W / 2, 566);
+    x.fillStyle = "#6d28d9"; rr(x, W / 2 - 330, 640, 660, 90, 45); x.fill();
+    x.fillStyle = "#fff"; x.font = `700 36px ${FONT}`; x.fillText(s && !s.open ? "Klik untuk info lebih lanjut" : "✍ Klik untuk mendaftar", W / 2, 698);
+    // pin
+    for (const [px, py] of [[120, 220], [W - 120, 220], [120, H - 110], [W - 120, H - 110]]) { x.fillStyle = "#dc2626"; x.beginPath(); x.arc(px, py, 14, 0, 7); x.fill(); }
+    x.textAlign = "left";
+    B.m.material.map.needsUpdate = true;
+    return;
+  }
+  // judul + tanggal
+  x.fillStyle = "#1c1917"; x.font = `800 44px ${FONT}`;
+  const tt = F.title || "Hasil Penetapan Peminatan";
+  x.fillText(tt.length > 52 ? tt.slice(0, 51) + "…" : tt, 60, 214);
+  x.fillStyle = "#78716c"; x.font = `400 26px ${FONT}`;
+  x.fillText(`Diumumkan ${new Date(F.at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} · ${F.total} mahasiswa${F.note ? " · " + (F.note.length > 60 ? F.note.slice(0, 59) + "…" : F.note) : ""}`, 60, 254);
+  // ringkasan per lab
+  LAB_IDS.forEach((k, i) => {
+    const bx = 60 + i * 380, by = 280;
+    x.fillStyle = PEM_LAB_COL[k]; rr(x, bx, by, 360, 84, 14); x.fill();
+    x.fillStyle = "#fff"; x.font = `800 40px ${FONT}`; x.fillText(LABS[k].code, bx + 22, by + 56);
+    x.textAlign = "right"; x.font = `700 40px ${FONT}`; x.fillText(String(F.counts[k] || 0), bx + 338, by + 56); x.textAlign = "left";
+  });
+  // daftar nama (berhalaman, berganti otomatis)
+  const rows = F.rows || [], pages = Math.max(1, Math.ceil(rows.length / PEM_PER_PAGE)), pg = PEM.page % pages;
+  const list = rows.slice(pg * PEM_PER_PAGE, pg * PEM_PER_PAGE + PEM_PER_PAGE);
+  x.font = `500 27px ${FONT}`;
+  list.forEach((r, i) => {
+    const col = Math.floor(i / 10), row = i % 10, bx = 60 + col * 505, by = 412 + row * 52;
+    x.fillStyle = PEM_LAB_COL[r.l] || "#999"; rr(x, bx, by - 26, 76, 34, 8); x.fill();
+    x.fillStyle = "#fff"; x.font = `700 20px ${FONT}`; x.textAlign = "center"; x.fillText(LABS[r.l] ? LABS[r.l].code : "?", bx + 38, by - 3); x.textAlign = "left";
+    x.fillStyle = "#1c1917"; x.font = `600 26px ${FONT}`;
+    const nm = r.n.length > 22 ? r.n.slice(0, 21) + "…" : r.n;
+    x.fillText(nm, bx + 90, by - 1);
+    x.fillStyle = "#a8a29e"; x.font = `400 20px ${FONT}`; x.fillText(r.m, bx + 90 + Math.min(300, x.measureText(nm).width * 1.3) + 12, by - 1);
+  });
+  x.fillStyle = "#57534e"; x.font = `500 26px ${FONT}`;
+  x.fillText(`Halaman ${pg + 1}/${pages} · klik papan untuk mencari nama / cek NIM-mu`, 60, H - 56);
+  B.m.material.map.needsUpdate = true;
+}
+function buildPeminatan() {
+  // layar pie chart berdiri di belakang Kak Tias (menghadap selatan)
+  {
+    const g = new THREE2.Group(); g.position.set(0, 0, -3.7); scene.add(g);
+    const w = 3.6, h = 2.25, y0 = 2.45;
+    const c = mkCanvas(1600, 1000);
+    const m = xPlane(c, w, h); m.material.transparent = false; m.position.set(0, y0 + h / 2, 0.04); g.add(m);
+    xBox(w + 0.16, h + 0.16, 0.1, new THREE2.MeshStandardMaterial({ color: 0x140d26, roughness: 0.4, metalness: 0.5 }), 0, y0 + h / 2, -0.02, 0, g);
+    const edge = new THREE2.MeshBasicMaterial({ color: 0xa855f7, toneMapped: false });
+    xBox(w + 0.2, 0.03, 0.12, edge, 0, y0 - 0.06, 0, 0, g); xBox(w + 0.2, 0.03, 0.12, edge, 0, y0 + h + 0.06, 0, 0, g);
+    for (const sx of [-1.35, 1.35]) { xBox(0.12, y0, 0.12, new THREE2.MeshStandardMaterial({ color: 0xe5e7eb, metalness: 0.7, roughness: 0.3 }), sx, y0 / 2, -0.04, 0, g); xBox(0.6, 0.05, 0.5, new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.6, roughness: 0.3 }), sx, 0.025, -0.04, 0, g); world.circles.push({ x: sx, z: -3.74, r: 0.3 }); }
+    const glow = world.glowSprite("#a855f7", 1, 0.22); glow.scale.set(w * 1.5, h * 1.7, 1); glow.position.set(0, y0 + h / 2, -0.08); g.add(glow);
+    xAct(m, { type: "x_pemstats" });
+    PEM.screen = { c, m };
+    world.panels.pem_stats = { id: "pem_stats", kind: "pem", title: "Persentase Peminatan", data: { title: "Persentase peminatan", d: "Layar persentase pendaftar tiap lab peminatan berdasarkan pilihan 1, diperbarui langsung." }, mesh: m, x: 0, z: 1.6, yaw: 0, room: "atrium" };
+  }
+  // papan pengumuman — dinding timur Atrium (menggantikan poster QR Google Form)
+  {
+    const p = world.onWall("atrium", "E", 7.4, 2.45), g = world.group(p), w = 4.3, h = 2.69;
+    const c = mkCanvas(1600, 1000);
+    const m = xPlane(c, w, h); m.material.transparent = false; m.position.z = 0.03; g.add(m);
+    xBox(w + 0.2, h + 0.2, 0.06, new THREE2.MeshStandardMaterial({ color: 0x4a2c17, roughness: 0.7 }), 0, 0, -0.01, 0, g);
+    const hd = mkCanvas(1024, 160), hx = hd.getContext("2d");
+    hx.fillStyle = "#b91c1c"; rr(hx, 0, 0, 1024, 160, 30); hx.fill(); hx.fillStyle = "#fff"; hx.font = `800 64px ${FONT}`; hx.textAlign = "center"; hx.fillText("PENGUMUMAN HASIL PEMINATAN", 512, 102, 960);
+    const hm = xPlane(hd, 2.8, 0.44); hm.position.set(0, h / 2 + 0.38, 0.03); g.add(hm);
+    xAct(m, { type: "x_pemboard" }); xAct(hm, { type: "x_pemboard" });
+    PEM.board = { c, m };
+    world.panels.pem_board = { id: "pem_board", kind: "pem", title: "Papan Pengumuman Hasil Peminatan", data: { title: "Papan pengumuman hasil peminatan", d: "Hasil final peminatan diumumkan di papan ini oleh admin peminatan." }, mesh: m, x: p.x - 3.2, z: p.z, yaw: p.ry, room: "atrium" };
+  }
+  drawPemScreen(); drawPemBoard();
+  pemLoadStats(); pemLoadFinal();
+  // cadangan bila WebSocket tidak tersedia: muat ulang statistik tiap 45 dtk saat berada di Atrium
+  setInterval(() => { if (!document.hidden && (curRoom === "atrium" || !net || !net.connected || !net.connected())) pemLoadStats(); }, 45000);
+  XT.anim.push((dt) => {
+    if (curRoom !== "atrium" || !PEM.final || !PEM.final.published) return;
+    PEM.pageT += dt;
+    if (PEM.pageT > 7) { PEM.pageT = 0; const pages = Math.ceil((PEM.final.rows || []).length / PEM_PER_PAGE); if (pages > 1) { PEM.page = (PEM.page + 1) % pages; drawPemBoard(); } }
+  });
+}
+// ---------- kartu HTML ----------
+var pemEsc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+function pemStatsCard() {
+  hidePopups();
+  const s = PEM.stats;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>📊 Persentase Peminatan</h2><p class="kk">${s ? `Periode ${pemEsc(s.period)} · ${s.total} pendaftar · pendaftaran ${s.open ? "<b style='color:#4ade80'>dibuka</b>" : "<b style='color:#f87171'>ditutup</b>"}` : "Server pendaftaran belum terhubung."}</p>
+  <div class="pemst"><canvas id="pemPie" width="420" height="420" aria-label="Diagram lingkaran peminatan"></canvas><div id="pemLeg"></div></div>
+  <p style="font-size:12px;color:var(--mut)">Persentase dihitung dari pilihan 1. Angka di kurung: jumlah yang memilih lab tersebut sebagai pilihan 2.</p>
+  <div class="rowf"><button class="btn" id="pemGo">✍ Daftar sekarang</button><button class="ghost" id="pemFin">📢 Papan pengumuman</button></div>`);
+  const cv = $("pemPie"), x = cv.getContext("2d");
+  pemDonut(x, 210, 210, 200, 116, s ? s.counts : {}, s ? s.total : 0);
+  x.textAlign = "center"; x.fillStyle = "#fff"; x.font = `800 64px ${FONT}`; x.fillText(String(s ? s.total : 0), 210, 228); x.font = `500 20px ${FONT}`; x.fillStyle = "#c4b5fd"; x.fillText("pendaftar", 210, 258);
+  $("pemLeg").innerHTML = LAB_IDS.map((k) => `<div class="pemrow"><i style="background:${PEM_LAB_COL[k]}"></i><b>${LABS[k].code}</b><span>${s ? s.counts[k] : 0} orang · ${s && s.total ? (s.counts[k] / s.total * 100).toFixed(1) : "0.0"}% <em>(${s ? s.counts2[k] : 0})</em></span></div>`).join("");
+  $("pemGo").onclick = () => pemRegister(null);
+  $("pemFin").onclick = () => pemFinalCard();
+}
+function pemFinalCard() {
+  hidePopups();
+  const F = PEM.final;
+  if (!F || !F.published) {
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>📢 Papan Pengumuman</h2><p>Hasil final peminatan <b>belum diumumkan</b>. Admin peminatan akan menempelkan hasilnya di papan ini setelah proses seleksi selesai.</p><p class="kk">${PEM.stats ? `Saat ini ${PEM.stats.total} pendaftar · pendaftaran ${PEM.stats.open ? "dibuka" : "ditutup"}.` : ""}</p><div class="rowf"><button class="btn" id="pemGo">✍ Formulir pendaftaran</button><button class="ghost" id="pemSt">📊 Statistik</button></div>`);
+    $("pemGo").onclick = () => pemRegister(null); $("pemSt").onclick = () => pemStatsCard();
+    return;
+  }
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2 id="pfT"></h2><p class="kk" id="pfS"></p><p id="pfN" style="white-space:pre-line"></p>
+  <div class="pemchips">${LAB_IDS.map((k) => `<span style="background:${PEM_LAB_COL[k]}">${LABS[k].code} · ${F.counts[k] || 0}</span>`).join("")}</div>
+  <form id="pfCek" class="rowf" autocomplete="off" style="margin:10px 0"><input type="text" id="pfNim" maxlength="20" placeholder="Cek dengan NIM (lengkap)" aria-label="NIM" style="flex:1"><button class="btn" type="submit">Cek NIM</button></form><p id="pfRes" style="min-height:20px;font-size:13.5px"></p>
+  <input type="search" id="pfQ" placeholder="Cari nama…" aria-label="Cari nama"><div class="pemtw"><table class="ktab"><thead><tr><th>#</th><th>Nama</th><th>NIM</th><th>Lab</th></tr></thead><tbody id="pfRows"></tbody></table></div>`);
+  $("genCard").classList.add("wide");
+  $("pfT").textContent = "📢 " + (F.title || "Hasil Peminatan");
+  $("pfS").textContent = `Periode ${F.period} · diumumkan ${new Date(F.at).toLocaleString("id-ID", { dateStyle: "long", timeStyle: "short" })} · ${F.total} mahasiswa`;
+  $("pfN").textContent = F.note || "";
+  const render = () => {
+    const q = $("pfQ").value.trim().toLowerCase(), tb = $("pfRows"); tb.textContent = "";
+    F.rows.filter((r) => !q || r.n.toLowerCase().includes(q) || (LABS[r.l] && LABS[r.l].code.toLowerCase() === q)).slice(0, 600).forEach((r, i) => {
+      const tr = document.createElement("tr");
+      for (const v of [String(i + 1), r.n, r.m]) { const td = document.createElement("td"); td.textContent = v; tr.appendChild(td); }
+      const td = document.createElement("td"); const b = document.createElement("b"); b.textContent = LABS[r.l] ? LABS[r.l].code : r.l; b.style.color = PEM_LAB_COL[r.l] || "#fff"; td.appendChild(b); tr.appendChild(td);
+      tb.appendChild(tr);
+    });
+  };
+  render();
+  $("pfQ").oninput = render;
+  $("pfCek").onsubmit = async (e) => {
+    e.preventDefault();
+    const nim = $("pfNim").value.trim(); if (!nim) return;
+    $("pfRes").textContent = "Mengecek…";
+    try {
+      const r = await pemFetch("api/peminatan/cek?nim=" + encodeURIComponent(nim));
+      if (r.found) { $("pfRes").textContent = `🎉 ${r.nama} — ditetapkan di Lab ${LABS[r.lab] ? LABS[r.lab].code + " (" + LABS[r.lab].name + ")" : r.lab}.`; $("pfRes").style.color = "#4ade80"; spawnSparkle(); }
+      else { $("pfRes").textContent = "NIM tidak ditemukan di daftar hasil final. Hubungi admin peminatan bila ini keliru."; $("pfRes").style.color = "#fbbf24"; }
+    } catch (err) { $("pfRes").textContent = err.message; $("pfRes").style.color = "#f87171"; }
+  };
+}
+// ---------- formulir pendaftaran ----------
+function pemRegister(lab) {
+  if (renderer.xr.isPresenting) {
+    const c = mkCanvas(1200, 700), x = c.getContext("2d");
+    x.fillStyle = "#fff"; rr(x, 0, 0, 1200, 700, 40); x.fill();
+    x.drawImage(regIconCanvas(380, false), 50, 160, 380, 380);
+    x.fillStyle = "#6d28d9"; x.font = `700 52px ${FONT}`; x.fillText("Daftar Peminatan", 480, 220);
+    x.fillStyle = "#333"; x.font = `400 32px ${FONT}`;
+    wrap(x, "Formulir pendaftaran membutuhkan keyboard. Keluar sebentar dari mode VR, lalu klik meja Kak Tias untuk mengisi NIM, kontak, dan pilihan lab.", 480, 290, 660, 46, 8);
+    showVRPanel(c);
+    return;
+  }
+  hidePopups();
+  const me = store.get("pem.me", null), s = PEM.stats;
+  if (s && !s.open) {
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>✍ Pendaftaran Peminatan</h2><p>Pendaftaran peminatan periode <b>${pemEsc(s.period)}</b> sedang <b style="color:#f87171">ditutup</b>.</p>${me ? `<p class="kk">Data terakhirmu: ${pemEsc(me.nim)} · pilihan 1 ${LABS[me.p1] ? LABS[me.p1].code : "-"}, pilihan 2 ${LABS[me.p2] ? LABS[me.p2].code : "-"}.</p>` : ""}<div class="rowf"><button class="btn" id="pemFin">📢 Lihat papan pengumuman</button><button class="ghost" id="pemSt">📊 Statistik</button></div>`);
+    $("pemFin").onclick = () => pemFinalCard(); $("pemSt").onclick = () => pemStatsCard();
+    return;
+  }
+  if (me && me.nim && !pemRegister.edit) {
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>✅ Kamu sudah terdaftar</h2><p>Data pendaftaran peminatanmu tersimpan di server.</p>
+    <div class="kbox"><b>DATA PENDAFTARAN</b><table class="ktab" id="pemMe"></table></div>
+    <div class="rowf"><button class="btn" id="pemEdit">✎ Ubah pilihan</button><button class="ghost" id="pemSt">📊 Statistik</button><button class="ghost" id="pemFin">📢 Hasil final</button></div>`);
+    const t = $("pemMe");
+    for (const [k, v] of [["NIM", me.nim], ["Nama", me.nama], ["Angkatan", me.angkatan], ["Kontak", [me.hp, me.email].filter(Boolean).join(" · ")], ["Pilihan 1", LABS[me.p1] ? `${LABS[me.p1].code} — ${LABS[me.p1].name}` : "-"], ["Pilihan 2", LABS[me.p2] ? `${LABS[me.p2].code} — ${LABS[me.p2].name}` : "-"]]) {
+      const tr = document.createElement("tr"), a = document.createElement("td"), b = document.createElement("td"); a.textContent = k; b.textContent = v || "-"; tr.append(a, b); t.appendChild(tr);
+    }
+    $("pemEdit").onclick = () => { pemRegister.edit = true; pemRegister(lab); pemRegister.edit = false; };
+    $("pemSt").onclick = () => pemStatsCard(); $("pemFin").onclick = () => pemFinalCard();
+    return;
+  }
+  const L = lab ? LABS[lab] : null, yr = new Date().getFullYear();
+  const opts = (sel) => `<option value="">— pilih lab —</option>` + LAB_IDS.map((k) => `<option value="${k}"${sel === k ? " selected" : ""}>${LABS[k].code} — ${LABS[k].name}</option>`).join("");
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>✍ Formulir Pendaftaran Peminatan${L ? " — " + L.code : ""}</h2>
+  <p class="kk">Periode ${s ? pemEsc(s.period) : "-"} · Program Studi Teknik Informatika UIKA. ${me ? "Kamu sedang <b>mengubah</b> data pendaftaranmu." : "Pastikan kamu sudah menjelajahi keempat lab."}</p>
+  <form id="pemF" class="pemf" autocomplete="on" novalidate>
+    <label>Nama lengkap *<input type="text" id="pfNama" maxlength="80" autocomplete="name" required></label>
+    <div class="pem2"><label>NIM *<input type="text" id="pfNimR" maxlength="20" inputmode="numeric" required ${me ? "readonly" : ""}></label>
+    <label>Angkatan *<input type="text" id="pfAng" maxlength="4" inputmode="numeric" placeholder="${yr - 2}" required></label></div>
+    <div class="pem2"><label>No. WhatsApp<input type="text" id="pfHp" maxlength="20" inputmode="tel" autocomplete="tel" placeholder="08…"></label>
+    <label>Email<input type="text" id="pfEmail" maxlength="80" inputmode="email" autocomplete="email" placeholder="nama@…"></label></div>
+    <div class="pem2"><label>Pilihan 1 *<select id="pfP1">${opts(lab || (me && me.p1))}</select></label>
+    <label>Pilihan 2 *<select id="pfP2">${opts(me && me.p2)}</select></label></div>
+    <label>Alasan memilih (opsional)<textarea id="pfAl" maxlength="500" rows="3" placeholder="Mengapa kamu tertarik dengan lab pilihan 1?"></textarea></label>
+    <p id="pfMsg" role="alert" style="min-height:20px;font-size:13px;margin:6px 0"></p>
+    <div class="rowf"><button class="btn" type="submit" id="pfSend">${me ? "Simpan perubahan" : "Kirim pendaftaran"}</button><button class="ghost" type="button" id="pemSt">📊 Statistik</button><span style="font-size:11.5px;color:var(--mut)">* wajib · isi minimal salah satu kontak</span></div>
+  </form>`);
+  if (me) { $("pfNama").value = me.nama || ""; $("pfNimR").value = me.nim || ""; $("pfAng").value = me.angkatan || ""; $("pfHp").value = me.hp || ""; $("pfEmail").value = me.email || ""; $("pfAl").value = me.alasan || ""; }
+  else if (S.name && S.name !== "IT'ers") $("pfNama").value = "";
+  setTimeout(() => $("pfNama").focus(), 40);
+  $("pemSt").onclick = () => pemStatsCard();
+  $("pfP1").onchange = () => { if ($("pfP2").value === $("pfP1").value) $("pfP2").value = ""; };
+  $("pemF").onsubmit = async (e) => {
+    e.preventDefault();
+    const msg = $("pfMsg"), btn = $("pfSend");
+    const d = { nama: $("pfNama").value.trim(), nim: $("pfNimR").value.trim(), angkatan: $("pfAng").value.trim(), hp: $("pfHp").value.trim(), email: $("pfEmail").value.trim(), p1: $("pfP1").value, p2: $("pfP2").value, alasan: $("pfAl").value.trim(), vr: S.name || "", tok: me && me.nim === $("pfNimR").value.trim().toUpperCase() ? me.tok : "" };
+    const err = !d.nama || d.nama.length < 3 ? "Isi nama lengkap." : !/^[0-9A-Za-z.\-]{5,20}$/.test(d.nim) ? "NIM tidak valid." : !/^(19|20)\d\d$/.test(d.angkatan) ? "Angkatan harus tahun, mis. 2024." : !d.hp && !d.email ? "Isi minimal nomor WhatsApp atau email." : !d.p1 || !d.p2 ? "Pilih lab pilihan 1 dan pilihan 2." : d.p1 === d.p2 ? "Pilihan 1 dan 2 harus berbeda." : "";
+    if (err) { msg.textContent = err; msg.style.color = "#f87171"; return; }
+    btn.disabled = true; msg.style.color = "var(--mut)"; msg.textContent = "Mengirim…";
+    try {
+      const r = await pemFetch("api/peminatan/daftar", { method: "POST", body: JSON.stringify(d) });
+      store.set("pem.me", { ...r.e, tok: r.tok });
+      store.set("registered", true);
+      closeGen();
+      spawnSparkle(); if (typeof mpFx === "function") mpFx(); if (typeof SFX !== "undefined") SFX.chime();
+      toast(r.updated ? "✅ Perubahan pendaftaran tersimpan." : `✅ Pendaftaran berhasil! Pilihan 1: ${LABS[r.e.p1].code}, pilihan 2: ${LABS[r.e.p2].code}.`, 6000);
+      setTimeout(() => sayBubble(`Terima kasih, ${r.e.nama.split(" ")[0]}! Pendaftaranmu sudah kucatat. Pantau hasilnya di papan pengumuman ya 😊`, "npc_tia"), 500);
+      pemLoadStats();
+    } catch (er) { msg.textContent = "❌ " + er.message; msg.style.color = "#f87171"; btn.disabled = false; }
+  };
+}
+
+// =====================================================================
+// src/ext_cafe.js — CAFE RAHMAN (timur Ruang Sambutan, tercantum di denah)
+// Barista Rahman: info jenis kopi, petunjuk awal lorong rahasia, keahlian
+// dosen TI, dan saran dosen pembimbing berdasarkan judul skripsi.
+// Juga: kode rahasia Cody (Lab SE) untuk langsung ke Taman Apresiasi.
+// =====================================================================
+// [panggilan, nama lengkap, lab/rumpun, bidang keahlian, kata kunci [frasa, bobot]]
+var DOSEN_TI = [
+  ["Pak Safar", "Safaruddin Hidayat Al Ikhsan, S.Kom., M.Kom.", "SE", "mobile programming", [["mobile", 3], ["android", 3], ["ios", 3], ["flutter", 3], ["kotlin", 3], ["react native", 3], ["aplikasi mobile", 4], ["smartphone", 2], ["apk", 2], ["hybrid", 2], ["ponsel", 2], ["perangkat bergerak", 3], ["handphone", 2]]],
+  ["Pak Hersanto", "Hersanto Fajri, S.Ds., M.MD", "SE", "UI/UX serta desain", [["ui", 3], ["ux", 3], ["user interface", 4], ["user experience", 4], ["desain", 2], ["design", 2], ["antarmuka", 3], ["figma", 3], ["prototipe", 2], ["prototype", 2], ["usability", 3], ["design thinking", 4], ["multimedia", 2], ["grafis", 2], ["visual", 2], ["animasi", 2], ["branding", 2]]],
+  ["Pak Fitrah", "Fitrah Satrya Fajar Kusumah, S.Kom., M.Kom.", "SE", "rekayasa perangkat lunak, pengembangan sistem, dan game", [["rekayasa perangkat lunak", 3], ["software engineering", 3], ["pengembangan sistem", 4], ["game", 4], ["gim", 3], ["unity", 3], ["gamifikasi", 4], ["gamification", 4], ["edukasi", 1], ["agile", 2], ["scrum", 2], ["sdlc", 2], ["framework", 1], ["sistem", 1], ["website", 1], ["aplikasi", 1]]],
+  ["Bu Freza", "Freza Riana, S.Si., M.Si.", "SE", "statistika dan pengolahan data", [["statistik", 4], ["statistika", 4], ["regresi", 3], ["analisis data", 3], ["pengolahan data", 4], ["survei", 2], ["kuesioner", 2], ["probabilitas", 3], ["peramalan", 3], ["forecasting", 3], ["time series", 3], ["deret waktu", 3], ["matematika", 2], ["korelasi", 2], ["anova", 3], ["uji", 1], ["data", 1]]],
+  ["Bu Puspa", "Dr. Puspa Eosina, S.Si., M.Kom.", "KERIS", "machine learning dan AI", [["machine learning", 4], ["ai", 3], ["artificial intelligence", 4], ["kecerdasan buatan", 4], ["data mining", 4], ["klasifikasi", 2], ["clustering", 3], ["klasterisasi", 3], ["prediksi", 2], ["deep learning", 3], ["neural network", 3], ["jaringan saraf", 3], ["knowledge graph", 3], ["nlp", 2], ["sentimen", 2], ["chatbot", 2]]],
+  ["Pak Ritzkal", "Ritzkal, S.Kom., M.Kom.", "CSN", "machine learning dan jaringan, khususnya Cisco", [["cisco", 5], ["ccna", 4], ["jaringan", 2], ["network", 2], ["routing", 3], ["switching", 3], ["vlan", 3], ["keamanan jaringan", 3], ["ids", 3], ["intrusion", 3], ["machine learning", 2], ["deteksi serangan", 4], ["packet tracer", 4], ["anomali", 2]]],
+  ["Pak Yuggo", "Yuggo Afrianto, S.T., M.Kom.", "CSN", "jaringan dan komputasi jaringan", [["jaringan", 3], ["network", 3], ["komputasi jaringan", 5], ["cloud", 2], ["server", 2], ["virtualisasi", 3], ["qos", 3], ["bandwidth", 3], ["mikrotik", 3], ["load balancing", 3], ["terdistribusi", 3], ["distributed", 3], ["topologi", 2], ["vpn", 2], ["monitoring jaringan", 4]]],
+  ["Pak Hendri", "Ade Hendri Hendrawan, S.Kom., M.Kom.", "CSN", "IoT (Internet of Things)", [["iot", 5], ["internet of things", 5], ["sensor", 3], ["arduino", 3], ["esp32", 3], ["esp8266", 3], ["nodemcu", 3], ["raspberry", 3], ["smart home", 4], ["rumah pintar", 4], ["monitoring", 2], ["otomatis", 2], ["otomasi", 2], ["mqtt", 3], ["smart", 1]]],
+  ["Pak Erwin", "Dr. Erwin Hermawan, S.Si., M.Sc.", "GIT", "sistem geospasial", [["geospasial", 3], ["geospatial", 3], ["sig", 3], ["gis", 3], ["sistem informasi geografis", 4], ["spasial", 3], ["pemodelan spasial", 5], ["peta", 2], ["pemetaan", 2], ["dinamik", 3], ["simulasi", 2], ["banjir", 2], ["tata ruang", 3], ["lahan", 1]]],
+  ["Pak Iksal", "Iksal Yanuarsyah, S.Hut., M.Sc., Ph.D.", "GIT", "geospasial AI dan remote sensing", [["geoai", 5], ["geospatial ai", 5], ["geospasial ai", 5], ["remote sensing", 4], ["penginderaan jauh", 4], ["citra satelit", 4], ["satelit", 3], ["sentinel", 3], ["landsat", 3], ["tutupan lahan", 4], ["vegetasi", 3], ["hutan", 3], ["klasifikasi citra", 4], ["ndvi", 3]]],
+  ["Pak Sahid", "Sahid Agustian Hudjimartsu, S.T., M.Kom.", "GIT", "drone dan remote sensing", [["drone", 5], ["uav", 5], ["remote sensing", 3], ["penginderaan jauh", 3], ["foto udara", 4], ["fotogrametri", 4], ["pemetaan udara", 4], ["multispektral", 3], ["pertanian presisi", 3], ["sawah", 2], ["citra", 2], ["orthophoto", 3]]],
+  ["Bu Mila", "Bu Mila", "", "basis data", [["basis data", 5], ["database", 5], ["sql", 4], ["mysql", 3], ["postgresql", 3], ["nosql", 3], ["mongodb", 3], ["query", 3], ["normalisasi", 4], ["erd", 3], ["data warehouse", 4], ["gudang data", 4], ["olap", 3], ["optimasi query", 4]]],
+  ["Bu Fety", "Fety Fatimah, S.Kom., M.Kom.", "GIT", "sistem informasi", [["sistem informasi", 5], ["informasi", 2], ["erp", 3], ["e-government", 3], ["administrasi", 2], ["manajemen", 2], ["pelayanan", 2], ["inventori", 2], ["inventaris", 2], ["kepegawaian", 2], ["akademik", 2], ["evaluasi sistem", 3], ["tata kelola", 2], ["pendukung keputusan", 2]]],
+  ["Bu Dewi", "Dewi Primasari, S.Si., MM.", "", "rekayasa perangkat lunak dan e-commerce", [["e-commerce", 5], ["ecommerce", 5], ["toko online", 5], ["marketplace", 4], ["bisnis digital", 4], ["umkm", 3], ["penjualan", 3], ["pemasaran", 3], ["payment", 3], ["pembayaran", 2], ["startup", 2], ["rekayasa perangkat lunak", 2], ["kasir", 2], ["pos", 1]]],
+  ["Pak Bayu", "Bayu Adhi Prakosa, S.Kom., M.T., Ph.D.", "CSN", "jaringan dan komunikasi", [["komunikasi", 4], ["telekomunikasi", 4], ["komunikasi data", 5], ["jaringan", 2], ["wireless", 3], ["nirkabel", 3], ["5g", 3], ["4g", 2], ["lte", 3], ["sinyal", 3], ["protokol", 3], ["lora", 3], ["wifi", 2], ["manajemen jaringan", 3]]],
+  ["Pak Andik", "Andik Eko Kristus Pramuko, S.Si., M.T.", "KERIS", "embedded systems", [["embedded", 5], ["sistem tertanam", 5], ["sistem embedded", 5], ["mikrokontroler", 4], ["microcontroller", 4], ["fpga", 4], ["firmware", 4], ["rtos", 4], ["robot", 3], ["robotika", 3], ["hardware", 3], ["perangkat keras", 3], ["real time", 2], ["arduino", 2]]],
+  ["Bu Berlina", "Berlina Wulandari, S.T., M.Kom.", "SE", "rekayasa perangkat lunak", [["rekayasa perangkat lunak", 4], ["software engineering", 4], ["perangkat lunak", 3], ["software", 2], ["analisis sistem", 3], ["system analyst", 3], ["uml", 3], ["perancangan", 2], ["requirement", 3], ["kebutuhan", 1], ["pengujian", 3], ["testing", 3], ["black box", 3], ["web", 2], ["website", 2], ["berbasis web", 2]]],
+  ["Bu Gibtha", "Gibtha Fitri Laxmi, S.Kom., M.Kom.", "KERIS", "machine learning dan computer vision", [["computer vision", 5], ["visi komputer", 5], ["pengolahan citra", 4], ["image processing", 4], ["citra", 2], ["deteksi objek", 4], ["object detection", 4], ["cnn", 4], ["yolo", 4], ["pengenalan wajah", 4], ["face recognition", 4], ["pengenalan pola", 3], ["machine learning", 3], ["deep learning", 3], ["gambar", 2], ["kamera", 2]]],
+  ["Pak Aftaf", "Mohammad Aftaf Muhajir, S.Si., M.Kom.", "GIT", "geospatial information system and technology", [["sistem informasi geospasial", 5], ["teknologi geospasial", 5], ["geospatial information", 5], ["webgis", 5], ["web gis", 5], ["gis", 3], ["sig", 3], ["geospasial", 3], ["spasial", 2], ["peta", 2], ["pemetaan", 2], ["lokasi", 2], ["persebaran", 3], ["sebaran", 2]]]
+];
+var COFFEE = [
+  ["espresso", "Espresso", "Tembakan kopi pekat ±30 ml, diseduh air panas bertekanan tinggi (±9 bar) selama 25–30 detik. Ada lapisan krema keemasan di atasnya. Ini dasar hampir semua minuman kopi ala kafe.", "Rp 15.000"],
+  ["doppio", "Doppio", "Espresso ganda (double shot, ±60 ml). Untuk yang butuh tenaga ekstra sebelum sidang 😄", "Rp 20.000"],
+  ["ristretto", "Ristretto", "Espresso yang 'dipendekkan': air lebih sedikit, rasanya lebih manis dan pekat, pahitnya berkurang.", "Rp 17.000"],
+  ["lungo", "Lungo", "Kebalikan ristretto: espresso yang diseduh dengan air lebih banyak, rasa lebih ringan namun sedikit lebih pahit.", "Rp 17.000"],
+  ["americano", "Americano", "Espresso yang ditambah air panas. Rasanya mirip kopi seduh biasa, ringan tapi tetap beraroma.", "Rp 18.000"],
+  ["long black", "Long Black", "Mirip americano, tapi espresso dituang DI ATAS air panas sehingga krema tetap terjaga.", "Rp 18.000"],
+  ["cappuccino", "Cappuccino", "Sepertiga espresso, sepertiga susu panas, sepertiga busa susu tebal. Biasanya ditaburi bubuk cokelat atau kayu manis.", "Rp 25.000"],
+  ["latte", "Caffè Latte", "Espresso dengan banyak susu panas dan lapisan busa tipis. Lembut dan creamy — kanvas favorit untuk latte art.", "Rp 25.000"],
+  ["flat white", "Flat White", "Asal Australia/Selandia Baru: espresso (sering double/ristretto) dengan susu microfoam tipis. Rasa kopi lebih menonjol daripada latte.", "Rp 26.000"],
+  ["macchiato", "Macchiato", "Espresso yang 'ditandai' sesendok busa susu. Kalau caramel macchiato, itu versi manis berlapis sirup karamel.", "Rp 22.000"],
+  ["mocha", "Caffè Mocha", "Latte yang dicampur cokelat, kadang diberi krim kocok. Cocok untuk yang belum terlalu suka pahit.", "Rp 27.000"],
+  ["affogato", "Affogato", "Satu skup es krim vanila yang 'ditenggelamkan' dengan espresso panas. Setengah minuman, setengah hidangan penutup.", "Rp 28.000"],
+  ["cold brew", "Cold Brew", "Kopi direndam air dingin 12–24 jam lalu disaring. Hasilnya halus, rendah asam, dan menyegarkan.", "Rp 24.000"],
+  ["v60", "V60 / Pour Over", "Seduh manual: air panas dituang melingkar perlahan ke kopi di atas kertas saring. Menonjolkan karakter biji (fruity, floral). Varian lain: Kalita, Chemex.", "Rp 25.000"],
+  ["tubruk", "Kopi Tubruk", "Cara klasik Nusantara: bubuk kopi kasar diseduh langsung dengan air mendidih, ampasnya dibiarkan mengendap. Sederhana dan nendang!", "Rp 10.000"],
+  ["kopi susu", "Es Kopi Susu Gula Aren", "Espresso + susu segar + gula aren cair, disajikan dingin. Andalan kedai kopi kekinian di Indonesia.", "Rp 20.000"],
+  ["vietnam drip", "Vietnam Drip", "Kopi diseduh perlahan dengan saringan logam 'phin' di atas susu kental manis. Manis, pekat, dan sabar menunggu tetesannya.", "Rp 18.000"],
+  ["japanese", "Japanese Iced Coffee", "Pour over yang langsung diseduh di atas es batu, sehingga aroma terkunci dan rasanya segar-cerah.", "Rp 25.000"]
+];
+var CAFE = { wait: null, spTier: 0 };
+function dosenFind(ql) {
+  for (const d of DOSEN_TI) {
+    const nick = d[0].toLowerCase().replace(/^(pak|bu) /, ""), first = d[1].toLowerCase().split(/[ ,.]/).filter((w) => w.length > 2 && !/^dr$/.test(w));
+    if (new RegExp(`\\b${nick}\\b`).test(ql) || first.slice(0, 1).some((w) => new RegExp(`\\b${w}\\b`).test(ql))) return d;
+  }
+  return null;
+}
+function dosenLine(d) { return `${d[0]} (${d[1]}${d[2] ? ", " + d[2] : ""}) — ahli ${d[3]}`; }
+// skor kecocokan judul ↔ keahlian dosen
+function dosenRank(text) {
+  const t = " " + norm(text).replace(/\s+/g, " ") + " ";
+  return DOSEN_TI.map((d) => {
+    let s = 0; const hit = [];
+    for (const [k, w] of d[4]) {
+      const re = new RegExp(`(^|\\s)${k.replace(/[-]/g, "[- ]?").replace(/\s+/g, "\\s+")}(nya)?(\\s|$)`);
+      if (re.test(t)) { s += w; hit.push(k); }
+    }
+    return { d, s, hit };
+  }).filter((x) => x.s > 0).sort((a, b) => b.s - a.s);
+}
+function adviseSupervisor(title) {
+  const r = dosenRank(title);
+  if (!r.length) return { text: `Hmm, dari judul “${title}” aku belum menemukan bidang yang cocok. Coba tulis judul lebih lengkap (sebutkan metode/teknologinya, mis. “klasifikasi … menggunakan CNN”, “aplikasi mobile …”, “WebGIS …”, “IoT …”). Atau ketik “daftar dosen” untuk melihat keahlian semua dosen.`, acts: [["👥 Daftar dosen", () => dosenCard()]] };
+  const top = [r[0]].concat(r.slice(1).filter((x) => x.s >= 2)).slice(0, 3);
+  const lines = top.map((x, i) => `${i === 0 ? "⭐" : "•"} ${x.d[0]} — ${x.d[1]}\n   Ahli ${x.d[3]} (cocok: ${x.hit.slice(0, 4).join(", ")})`);
+  const second = top[1] ? ` Sebagai pembimbing kedua/pendamping bisa ${top[1].d[0]}.` : "";
+  return {
+    text: `☕ Untuk judul “${title.length > 120 ? title.slice(0, 118) + "…" : title}”, saranku:\n${lines.join("\n")}\n\nPembimbing utama yang paling pas: ${top[0].d[0]}.${second} Ini cuma saran dari obrolan kafe ya — penetapan pembimbing tetap oleh prodi, dan sebaiknya konsultasikan dulu dengan dosennya langsung.`,
+    acts: [["👥 Keahlian semua dosen", () => dosenCard()], ["Coba judul lain", () => { CAFE.wait = "judul"; sMsg("Rahman", "Silakan, tulis judul skripsimu:", false, null, null, "rahman"); }]]
+  };
+}
+function rahmanAnswer(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
+  const chipsA = [["☕ Menu kopi", () => cafeMenuCard()], ["👥 Dosen & keahlian", () => dosenCard()]];
+  if (CAFE.wait === "judul") {
+    if (/^(batal|cancel|nanti|ga jadi|gak jadi|tidak jadi)$/.test(ql)) { CAFE.wait = null; return { text: "Oke, kapan-kapan kita bahas lagi sambil ngopi ☕" }; }
+    if (ql.split(" ").length >= 3 && !/^(halo|hai|menu|kopi|daftar dosen)/.test(ql)) { CAFE.wait = null; return adviseSupervisor(q.trim()); }
+    if (ql.split(" ").length < 3) return { text: "Judulnya kependekan nih 😄 Tulis judul skripsimu lengkap (minimal beberapa kata), atau ketik “batal”." };
+    CAFE.wait = null;
+  }
+  if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|punten|bang|mas)\b/.test(ql))
+    return { text: `Halo ${nm}, selamat datang di Cafe Rahman ☕ Aku Rahman, barista di sini. Sambil nunggu kopimu, aku bisa cerita soal jenis-jenis kopi, siapa ahli apa di antara dosen-dosen TI, bahkan kasih saran dosen pembimbing buat judul skripsimu. Oh iya… aku juga sering dengar bisik-bisik soal lorong rahasia 🤫`, acts: chipsA.concat([["🎓 Saran pembimbing", () => askNpc("Saran dosen pembimbing", "rahman")]]) };
+  if (/terima ?kasih|makasih|thanks|nuhun/.test(ql)) return { text: "Sama-sama! Jangan lupa mampir lagi, kopi pertama selalu terasa paling hangat ☕" };
+  // ---- dosen pembimbing ----
+  if (/pembimbing|dospem|bimbing|judul|skripsi|tugas akhir|\bta\b/.test(ql)) {
+    const m = q.match(/judul(?:nya| saya| ku| skripsi(?:ku| saya)?)?\s*(?:adalah|yaitu|:|-)?\s*["“']?([^"”']{8,})["”']?/i);
+    let title = m ? m[1].trim() : "";
+    if (!title) { const r = dosenRank(q); if (r.length && r[0].s >= 3 && ql.split(" ").length >= 6) title = q.trim(); }
+    if (title) return adviseSupervisor(title);
+    CAFE.wait = "judul";
+    return { text: "Boleh! Tulis judul (atau rencana judul) skripsimu di kotak chat — aku cocokkan dengan keahlian para dosen TI. Contoh: “Klasifikasi penyakit daun padi menggunakan CNN” atau “Aplikasi mobile pemesanan kopi berbasis Flutter”. (ketik “batal” untuk berhenti)" };
+  }
+  // ---- lorong rahasia (petunjuk awal saja) ----
+  const moreHint = CAFE.spTier > 0 && /^(petunjuk|hint|clue|bocoran)|petunjuk (lagi|lain)|(kasih|minta|ada) (petunjuk|clue|hint)|lanjut(kan)? (cerita|bisik)/.test(ql);
+  if (moreHint || /rahasia|secret|lorong|pintu tersembunyi|misteri|labirin|taman apresiasi|hall of fame|bisik/.test(ql)) {
+    const more = moreHint || (/lagi|lanjut|lebih|detail|caranya|bagaimana|gimana|petunjuk/.test(ql) && CAFE.spTier > 0);
+    CAFE.spTier++;
+    if (!more) return { text: "🤫 Psst… pelanggan tetap di sini sering cerita: di salah satu dinding Lab Software Engineering ada pintu yang tidak tercatat di denah. Katanya kuncinya dipegang oleh keempat robot lab — Keri, Geo, Cody, dan Neta. Masing-masing menyimpan satu “pertanyaan rahasia”. Kalau mau petunjuk lagi, tanya aku “petunjuk lorong rahasia”.", acts: [["Petunjuk lagi", () => askNpc("petunjuk lagi soal lorong rahasia", "rahman")]] };
+    return { text: "Oke, satu petunjuk lagi, tapi jangan bilang siapa-siapa ya ☕ Coba ketik “secret passage” saat mengobrol dengan setiap robot lab. Pertanyaan mereka seputar visi kampus, fakultas, prodi, dan nama-nama lab — robot KURI di Ruang Sambutan hafal semua visi itu. Setelah keempatnya puas… rasakan saja getarannya. Di baliknya ada beberapa lorong yang menguji kesabaran, dan konon di ujungnya ada taman yang indah. Selebihnya, temukan sendiri! 😉", acts: [["Antar ke Lab SE", () => teleportSpot("se")], ["Antar ke KURI", () => teleportSpot("welcome")]] };
+  }
+  // ---- dosen ----
+  if (/daftar dosen|semua dosen|dosen (ti|informatika)|siapa saja dosen|list dosen|keahlian dosen|dosen.*(ahli|keahlian|bidang)/.test(ql) && !dosenFind(ql)) {
+    if (!/siapa .*(ahli|pakar|jago)/.test(ql)) return { text: "Dosen-dosen TI yang sering ngopi di sini:\n" + DOSEN_TI.map((d) => `• ${d[0]} — ${d[3]}`).join("\n"), acts: [["👥 Kartu keahlian dosen", () => dosenCard()], ["🎓 Saran pembimbing", () => askNpc("Saran dosen pembimbing", "rahman")]] };
+  }
+  const df = dosenFind(ql);
+  if (df && !/kopi|minum/.test(ql)) return { text: `${dosenLine(df)}. ${df[0]} sering jadi tempat bertanya mahasiswa yang mengambil topik ${df[3]}.`, acts: [["🎓 Saran pembimbing", () => askNpc("Saran dosen pembimbing", "rahman")], ["👥 Semua dosen", () => dosenCard()]] };
+  if (/siapa|ahli|pakar|jago|expert|dosen|bidang/.test(ql)) {
+    const r = dosenRank(q);
+    if (r.length) return { text: `Untuk topik itu, dosen yang paling ahli: ` + r.slice(0, 3).map((x) => `${x.d[0]} (${x.d[3]})`).join("; ") + ".", acts: [["👥 Semua dosen", () => dosenCard()]] };
+  }
+  // ---- kopi ----
+  const c = COFFEE.find(([k]) => new RegExp(`\\b${k}\\b`).test(ql)) || (/capucino|kapucino|cappucino/.test(ql) ? COFFEE[6] : /\blate\b|caffe latte/.test(ql) ? COFFEE[7] : null);
+  if (c) return { text: `${c[1]}: ${c[2]} Di sini harganya ${c[3]} — tapi karena ini kafe virtual, gratis buat IT'ers 😄`, acts: [["☕ Menu lengkap", () => cafeMenuCard()]] };
+  if (/arabika|arabica|robusta|liberika|excelsa/.test(ql)) return { text: "Empat spesies kopi yang dikenal: Arabika (rasa kompleks, asam buah, kafein lebih rendah, tumbuh di dataran tinggi), Robusta (pahit tebal, kafein hampir dua kali Arabika, tahan penyakit — banyak di Lampung & Sumatera Selatan), Liberika (aroma nangka/smoky, pohon tinggi, ada di Jambi & Riau), dan Excelsa (kerabat Liberika, rasa tart). Kafe biasanya memakai Arabika, atau campuran Arabika–Robusta untuk espresso." };
+  if (/nusantara|indonesia|gayo|toraja|kintamani|flores|bajawa|wamena|java|preanger|lokal|daerah/.test(ql)) return { text: "Kopi Nusantara itu juara! Beberapa yang terkenal: Gayo (Aceh, body tebal & earthy), Mandailing & Sidikalang (Sumatera Utara), Kerinci (Jambi), Java Preanger (Jawa Barat — termasuk lereng-lereng di sekitar Bogor), Kintamani (Bali, segar citrus), Toraja (Sulawesi, rempah & cokelat), Flores Bajawa (manis cokelat), dan Wamena (Papua, lembut). Mau kuseduhkan V60 salah satunya?" };
+  if (/rekomendasi|saran|enak|cocok|pilih|bingung|mau (pesan|kopi|minum)|pesan/.test(ql)) {
+    const pick = /dingin|seger|segar|panas banget|gerah|es\b/.test(ql) ? [COFFEE[15], COFFEE[12]] : /manis|gak suka pahit|tidak suka pahit|ga suka pahit|pemula/.test(ql) ? [COFFEE[10], COFFEE[7]] : /pahit|kuat|strong|melek|ngantuk|begadang|lembur/.test(ql) ? [COFFEE[1], COFFEE[4]] : [COFFEE[6], COFFEE[15]];
+    return { text: `Rekomendasiku: ${pick[0][1]} — ${pick[0][2]} Atau ${pick[1][1]} kalau mau alternatif. Mau yang dingin, manis, atau yang bikin melek? Bilang saja!`, acts: [["☕ Menu lengkap", () => cafeMenuCard()]] };
+  }
+  if (/kopi|coffee|menu|minum|jenis|macam|seduh|barista|kafein|harga/.test(ql)) return { text: "Jenis kopi di Cafe Rahman, dari yang pekat sampai yang lembut:\n" + COFFEE.map((x) => `• ${x[1]} — ${x[3]}`).join("\n") + "\nTanya salah satunya untuk penjelasan, atau minta rekomendasi (mis. “rekomendasi kopi dingin yang manis”).", acts: [["☕ Kartu menu", () => cafeMenuCard()]] };
+  if (/kafe ini|cafe ini|tempat ini|siapa kamu|kamu siapa|rahman/.test(ql)) return { text: "Ini Cafe Rahman, tempat nongkrong IT'ers di sebelah timur Ruang Sambutan. Aku Rahman, baristanya. Di dinding timur ada papan keahlian dosen TI, dan di belakangku papan menu kopi — klik saja untuk melihat." };
+  // cadangan: mungkin topik penelitian
+  const r = dosenRank(q);
+  if (r.length && r[0].s >= 3) return { text: `Kedengarannya itu topik ${r[0].d[3]} — coba ngobrol dengan ${r[0].d[0]} (${r[0].d[1]}). Mau aku carikan dosen pembimbing untuk judulmu? Tulis saja “judul: …”.`, acts: [["🎓 Saran pembimbing", () => askNpc("Saran dosen pembimbing", "rahman")]] };
+  return { text: "Hmm, itu di luar menu obrolanku 😄 Aku bisa bantu soal: jenis-jenis kopi & rekomendasi, kopi Nusantara, keahlian dosen TI, saran dosen pembimbing untuk judul skripsimu, atau… bisik-bisik soal lorong rahasia.", acts: chipsA };
+}
+function cafeMenuCard() {
+  hidePopups();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>☕ Menu Cafe Rahman</h2><p class="kk">Kafe virtual · tanya Rahman tentang minuman mana pun</p><table class="ktab">${COFFEE.map((c) => `<tr><td><b>${c[1]}</b><br><span style="color:#a8a29e;font-size:12px">${c[3]}</span></td><td>${c[2]}</td></tr>`).join("")}</table><div class="rowf" style="margin-top:12px"><button class="btn" id="cfAsk">Ngobrol dengan Rahman</button></div>`);
+  $("genCard").classList.add("wide");
+  $("cfAsk").onclick = () => { closeGen(); openNpc("rahman", "chat"); };
+}
+function dosenCard() {
+  hidePopups();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👥 Dosen Teknik Informatika & Bidang Keahlian</h2><p class="kk">Versi Cafe Rahman · minta Rahman menyarankan dosen pembimbing untuk judulmu</p><table class="ktab">${DOSEN_TI.map((d) => `<tr><td><b>${d[0]}</b><br><span style="color:#a8a29e;font-size:12px">${d[1] === d[0] ? "" : d[1]}</span></td><td>${d[3]}${d[2] ? ` <span style="color:#fbbf77;font-size:11.5px">· ${d[2]}</span>` : ""}</td></tr>`).join("")}</table><div class="rowf" style="margin-top:12px"><button class="btn" id="dsAsk">🎓 Minta saran pembimbing</button></div>`);
+  $("genCard").classList.add("wide");
+  $("dsAsk").onclick = () => { closeGen(); openNpc("rahman", "chat"); askNpc("Saran dosen pembimbing", "rahman"); };
+}
+// ---------- bangunan cafe ----------
+function buildCafe() {
+  const wood = new THREE2.MeshStandardMaterial({ color: 0x6b3f22, roughness: 0.55 });
+  const dark = new THREE2.MeshStandardMaterial({ color: 0x2a1a10, roughness: 0.5 });
+  const marble = new THREE2.MeshStandardMaterial({ color: 0xf3efe9, roughness: 0.25 });
+  const chrome = new THREE2.MeshStandardMaterial({ color: 0xd7dde3, metalness: 0.9, roughness: 0.2 });
+  const cushion = new THREE2.MeshStandardMaterial({ color: 0x9a3412, roughness: 0.85 });
+  // meja bar / counter
+  xBox(10.6, 1.08, 0.75, wood, 18, 0.54, 26.5);
+  xBox(10.9, 0.06, 0.95, marble, 18, 1.11, 26.45);
+  const strip = new THREE2.Mesh(new THREE2.BoxGeometry(10.5, 0.03, 0.02), new THREE2.MeshBasicMaterial({ color: 0xfbbf77, toneMapped: false })); strip.position.set(18, 0.95, 26.11); scene.add(strip);
+  world.colliders.push({ a: [12.9, 26.5], b: [23.1, 26.5], r: 0.48 });
+  // panel depan counter bertuliskan nama
+  const fc = mkCanvas(1024, 160), fx = fc.getContext("2d");
+  fx.fillStyle = "#3b2414"; fx.fillRect(0, 0, 1024, 160); fx.fillStyle = "#fde68a"; fx.font = `700 76px ${FONT}`; fx.textAlign = "center"; fx.fillText("☕  CAFE RAHMAN  ☕", 512, 106);
+  const fm = xPlane(fc, 3.4, 0.53); fm.material.transparent = false; fm.position.set(18, 0.6, 26.11); fm.rotation.y = Math.PI; scene.add(fm);
+  // mesin espresso
+  const em = new THREE2.Group(); em.position.set(15.6, 1.14, 26.55); scene.add(em);
+  xBox(0.9, 0.55, 0.5, chrome, 0, 0.275, 0, 0, em); xBox(0.92, 0.08, 0.52, dark, 0, 0.58, 0, 0, em);
+  for (const sx of [-0.22, 0.22]) { xBox(0.12, 0.06, 0.12, dark, sx, 0.2, -0.3, 0, em); const cup = new THREE2.Mesh(new THREE2.CylinderGeometry(0.05, 0.04, 0.08, 14), marble); cup.position.set(sx, 0.04, -0.3); em.add(cup); }
+  const steam = []; for (let i = 0; i < 3; i++) { const s2 = world.glowSprite("#ffffff", 0.22, 0.35); scene.add(s2); steam.push(s2); }
+  XT.anim.push(() => { if (curRoom !== "cafe") return; steam.forEach((s2, i) => { const k = (t * 0.5 + i / 3) % 1; s2.position.set(15.6 + Math.sin(t * 2 + i) * 0.05, 1.45 + k * 0.6, 26.25); s2.material.opacity = 0.35 * (1 - k); }); });
+  // grinder & etalase kue
+  xBox(0.22, 0.5, 0.22, dark, 16.6, 1.39, 26.6); const hop = new THREE2.Mesh(new THREE2.ConeGeometry(0.16, 0.28, 16, 1, true), new THREE2.MeshStandardMaterial({ color: 0x92400e, transparent: true, opacity: 0.6 })); hop.rotation.x = Math.PI; hop.position.set(16.6, 1.78, 26.6); scene.add(hop);
+  const glass = new THREE2.Mesh(new THREE2.BoxGeometry(1.6, 0.5, 0.6), new THREE2.MeshStandardMaterial({ color: 0xdbeafe, transparent: true, opacity: 0.25, roughness: 0.05 })); glass.position.set(21.4, 1.4, 26.45); scene.add(glass);
+  for (let i = 0; i < 6; i++) { const cake = new THREE2.Mesh(new THREE2.CylinderGeometry(0.1, 0.1, 0.12, 16), new THREE2.MeshStandardMaterial({ color: [0x7c2d12, 0xfde68a, 0xf472b6][i % 3], roughness: 0.7 })); cake.position.set(20.8 + (i % 3) * 0.6, 1.22, 26.35 + Math.floor(i / 3) * 0.22); scene.add(cake); }
+  // rak cangkir di dinding belakang
+  for (const y of [1.7, 2.2]) { xBox(4.0, 0.05, 0.3, wood, 18, y, 29.7); for (let i = 0; i < 9; i++) { const cup = new THREE2.Mesh(new THREE2.CylinderGeometry(0.07, 0.06, 0.12, 12), new THREE2.MeshStandardMaterial({ color: [0xffffff, 0xfbbf24, 0x7c3aed][i % 3], roughness: 0.4 })); cup.position.set(16.3 + i * 0.42, y + 0.09, 29.7); scene.add(cup); } }
+  // papan menu (kapur) di dinding selatan, di atas rak
+  {
+    const c = mkCanvas(1400, 700), x = c.getContext("2d");
+    x.fillStyle = "#1f2a24"; x.fillRect(0, 0, 1400, 700);
+    x.strokeStyle = "#8b5a2b"; x.lineWidth = 28; x.strokeRect(14, 14, 1372, 672);
+    x.fillStyle = "#fef3c7"; x.font = `700 70px ${FONT}`; x.textAlign = "center"; x.fillText("— MENU KOPI —", 700, 105);
+    x.font = `500 34px ${FONT}`; x.textAlign = "left";
+    COFFEE.slice(0, 16).forEach((cf, i) => { const col = Math.floor(i / 8), row = i % 8; x.fillStyle = "#f8fafc"; x.fillText(cf[1], 80 + col * 660, 180 + row * 62); x.fillStyle = "#fcd34d"; x.textAlign = "right"; x.fillText(cf[3].replace("Rp ", ""), 640 + col * 660, 180 + row * 62); x.textAlign = "left"; });
+    x.fillStyle = "#a7f3d0"; x.font = `italic 400 28px ${FONT}`; x.textAlign = "center"; x.fillText("klik papan ini · tanya Rahman untuk rekomendasi", 700, 672);
+    const m = xPlane(c, 4.2, 2.1); m.material.transparent = false; m.position.set(18, 3.45, 29.82); m.rotation.y = Math.PI; scene.add(m);
+    xAct(m, { type: "x_cafemenu" });
+  }
+  // neon nama kafe
+  {
+    const c = mkCanvas(1024, 200), x = c.getContext("2d");
+    x.font = `700 110px ${FONT}`; x.textAlign = "center"; x.shadowColor = "#fb923c"; x.shadowBlur = 30; x.fillStyle = "#fff7ed"; x.fillText("Cafe Rahman", 512, 140);
+    const m = xPlane(c, 3.0, 0.59); m.position.set(13.2, 3.6, 29.82); m.rotation.y = Math.PI; scene.add(m);
+    const gl = world.glowSprite("#fb923c", 1, 0.35); gl.scale.set(3.8, 1.2, 1); gl.position.set(13.2, 3.6, 29.75); scene.add(gl);
+  }
+  // meja & kursi
+  const seat = (x, z, yaw) => {
+    const st = new THREE2.Mesh(new THREE2.CylinderGeometry(0.24, 0.22, 0.46, 18), dark); st.position.set(x, 0.23, z); scene.add(st);
+    const cu = new THREE2.Mesh(new THREE2.CylinderGeometry(0.25, 0.25, 0.07, 18), cushion); cu.position.set(x, 0.49, z); scene.add(cu);
+    world.seats.push({ x, z, yaw }); world.circles.push({ x, z, r: 0.2 });
+  };
+  for (const [tx, tz] of [[12.6, 16.2], [18, 16.6], [23.4, 16.2], [14.4, 21.3], [21.6, 21.3]]) {
+    const top = new THREE2.Mesh(new THREE2.CylinderGeometry(0.6, 0.6, 0.05, 28), wood); top.position.set(tx, 0.76, tz); scene.add(top);
+    const leg = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.06, 0.74, 10), dark); leg.position.set(tx, 0.37, tz); scene.add(leg);
+    const base = new THREE2.Mesh(new THREE2.CylinderGeometry(0.3, 0.3, 0.03, 18), dark); base.position.set(tx, 0.015, tz); scene.add(base);
+    const mug = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.05, 0.1, 12), marble); mug.position.set(tx + 0.15, 0.84, tz - 0.1); scene.add(mug);
+    world.circles.push({ x: tx, z: tz, r: 0.62 });
+    for (let k = 0; k < 3; k++) { const a = k / 3 * Math.PI * 2 + 0.4; seat(tx + Math.cos(a) * 1.0, tz + Math.sin(a) * 1.0, Math.atan2(Math.cos(a), Math.sin(a))); }
+    // lampu gantung
+    const cord = new THREE2.Mesh(new THREE2.CylinderGeometry(0.008, 0.008, 1.4, 6), dark); cord.position.set(tx, 3.9, tz); scene.add(cord);
+    const shade = new THREE2.Mesh(new THREE2.ConeGeometry(0.28, 0.26, 20, 1, true), new THREE2.MeshStandardMaterial({ color: 0x1f2937, side: THREE2.DoubleSide, roughness: 0.4, metalness: 0.4 })); shade.position.set(tx, 3.1, tz); scene.add(shade);
+    const bulb = new THREE2.Mesh(new THREE2.SphereGeometry(0.08, 12, 8), new THREE2.MeshBasicMaterial({ color: 0xffe0a3, toneMapped: false })); bulb.position.set(tx, 2.98, tz); scene.add(bulb);
+    const gl = world.glowSprite("#ffd58a", 1.4, 0.55); gl.position.set(tx, 2.95, tz); scene.add(gl);
+  }
+  // sofa panjang di dinding utara
+  xBox(6.0, 0.45, 0.8, cushion, 18, 0.225, 12.75); xBox(6.0, 0.7, 0.2, cushion, 18, 0.7, 12.3);
+  world.colliders.push({ a: [15.1, 12.6], b: [20.9, 12.6], r: 0.42 });
+  for (let i = 0; i < 4; i++) world.seats.push({ x: 15.9 + i * 1.4, z: 12.95, yaw: Math.PI });
+  // rak buku (dinding barat bagian selatan)
+  { const bg = new THREE2.Group(); bg.position.set(9.4, 0, 24.5); scene.add(bg);
+    xBox(0.4, 2.6, 4.0, wood, 0, 1.3, 0, 0, bg);
+    const Rb = rndGen(88);
+    for (let sh = 0; sh < 4; sh++) for (let i = 0; i < 14; i++) { const h = 0.32 + Rb() * 0.16; const b = new THREE2.Mesh(new THREE2.BoxGeometry(0.28, h, 0.09 + Rb() * 0.05), new THREE2.MeshStandardMaterial({ color: new THREE2.Color().setHSL(Rb(), 0.45, 0.4), roughness: 0.8 })); b.position.set(0.08, 0.35 + sh * 0.6 + h / 2, -1.75 + i * 0.25); bg.add(b); }
+    world.colliders.push({ a: [9.4, 22.5], b: [9.4, 26.5], r: 0.3 }); }
+  // tanaman
+  for (const [px, pz] of [[26.2, 12.8], [26.2, 29.0], [9.9, 21.6]]) {
+    const pot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.3, 0.22, 0.55, 16), new THREE2.MeshStandardMaterial({ color: 0xd6c4a8, roughness: 0.6 })); pot.position.set(px, 0.275, pz); scene.add(pot);
+    for (let i = 0; i < 6; i++) { const lf = new THREE2.Mesh(new THREE2.SphereGeometry(0.26, 10, 8), new THREE2.MeshStandardMaterial({ color: 0x2f7d32, roughness: 0.8 })); lf.scale.set(0.6, 1.5, 0.6); lf.position.set(px + Math.cos(i) * 0.15, 0.85 + (i % 2) * 0.22, pz + Math.sin(i) * 0.15); lf.rotation.z = Math.cos(i * 2) * 0.4; scene.add(lf); }
+    world.circles.push({ x: px, z: pz, r: 0.35 });
+  }
+  // papan keahlian dosen (dinding timur)
+  {
+    const c = mkCanvas(1600, 1000), x = c.getContext("2d");
+    x.fillStyle = "#fffaf0"; x.fillRect(0, 0, 1600, 1000);
+    x.fillStyle = "#7c2d12"; x.fillRect(0, 0, 1600, 130);
+    x.fillStyle = "#fff"; x.font = `800 58px ${FONT}`; x.textAlign = "center"; x.fillText("DOSEN TI & BIDANG KEAHLIAN", 800, 86);
+    x.textAlign = "left";
+    DOSEN_TI.forEach((d, i) => {
+      const col = i < 10 ? 0 : 1, row = i < 10 ? i : i - 10, bx = 50 + col * 780, by = 190 + row * 78;
+      x.fillStyle = "#c2410c"; x.font = `700 32px ${FONT}`; x.fillText(d[0], bx, by);
+      x.fillStyle = "#44403c"; x.font = `400 26px ${FONT}`; const t2 = d[3]; x.fillText(t2.length > 40 ? t2.slice(0, 39) + "…" : t2, bx + 230, by);
+    });
+    x.fillStyle = "#78716c"; x.font = `italic 400 26px ${FONT}`; x.textAlign = "center"; x.fillText("Bingung pilih dosen pembimbing? Ceritakan judulmu ke Rahman di meja bar ☕", 800, 975);
+    const m = xPlane(c, 4.6, 2.875); m.material.transparent = false; m.position.set(26.82, 2.35, 19.2); m.rotation.y = -Math.PI / 2; scene.add(m);
+    xBox(0.06, 3.0, 4.75, dark, 26.86, 2.35, 19.2);
+    xAct(m, { type: "x_dosenboard" });
+  }
+  // papan arah di Ruang Sambutan (di atas pintu cafe) & di sisi cafe
+  { const c = mkCanvas(900, 170), x = c.getContext("2d"); x.fillStyle = "#7c2d12"; rr(x, 0, 0, 900, 170, 30); x.fill(); x.fillStyle = "#fde68a"; x.font = `700 72px ${FONT}`; x.textAlign = "center"; x.fillText("☕ CAFE RAHMAN →", 450, 112);
+    const m = xPlane(c, 1.9, 0.36); m.position.set(8.82, 3.55, 13.8); m.rotation.y = -Math.PI / 2; scene.add(m);
+    const c2 = mkCanvas(900, 170), x2 = c2.getContext("2d"); x2.fillStyle = "#4c1d95"; rr(x2, 0, 0, 900, 170, 30); x2.fill(); x2.fillStyle = "#fff"; x2.font = `700 64px ${FONT}`; x2.textAlign = "center"; x2.fillText("← RUANG SAMBUTAN", 450, 108);
+    const m2 = xPlane(c2, 1.9, 0.36); m2.position.set(9.18, 3.55, 13.8); m2.rotation.y = Math.PI / 2; scene.add(m2); }
+  // NPC Rahman — barista di balik meja bar
+  makeCustomHuman("rahman", {
+    code: "CAFE", name: "Rahman", role: "Barista Cafe Rahman", col: "#b45309", icon: "☕", hint: "☕",
+    x: 18, z: 27.9, room: "cafe", tag: "RAHMAN · BARISTA",
+    look: { shirt: "#f5f5f4", apron: "#3f2a1d", hair: "#1c1410", glasses: false },
+    chips: ["Jenis-jenis kopi", "Rekomendasi kopi", "Kopi Nusantara", "Dosen & keahliannya", "Saran dosen pembimbing", "Lorong rahasia?"],
+    roleNote: "kopi, dosen TI & saran pembimbing",
+    knowText: `Rahman tahu ${COFFEE.length} jenis minuman kopi, kopi Nusantara, keahlian ${DOSEN_TI.length} dosen Teknik Informatika, dan bisik-bisik awal soal lorong rahasia.`,
+    greetActs: () => [["☕ Menu kopi", () => cafeMenuCard()], ["👥 Dosen & keahlian", () => dosenCard()], ["🎓 Saran pembimbing", () => askNpc("Saran dosen pembimbing", "rahman")]],
+    answer: rahmanAnswer
+  });
+  NPCS.rahman.pitch = 0.95;
+}
+// ---------- kode rahasia Cody: langsung tuntas lorong → Taman Apresiasi ----------
+// (kode disimpan sebagai hash, seperti jawaban teka-teki)
+var CODY_CODE = "17m5sm0";
+function codyCheat(npcId, q) {
+  if (npcId !== "se") return null;
+  const w = String(q || "").trim();
+  if (!w || w.length > 40 || /\s/.test(w.trim()) || riddleHash(w) !== CODY_CODE) return null;
+  const qs = Q(), now = Date.now();
+  for (const id of LAB_IDS) qs.sp[id] = true;
+  if (!qs.t0) qs.t0 = now - 60000;
+  qs.maze = true; qs.glass = true;
+  qs.riddles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  qs.sn = 40; qs.snake = true;
+  saveQ();
+  spWait.se = false;
+  if (XT.door) XT.door.setOpen(true);
+  refreshGates(true); updHud();
+  if (typeof snHud === "function") snHud();
+  if (!SPOTS.some((s) => s.id === "taman")) SPOTS.push({ id: "taman", name: "🌷 Taman Apresiasi", x: 16.2, z: -176, yaw: 0 });
+  if (typeof SFX !== "undefined") SFX.chime();
+  spawnSparkle();
+  setTimeout(() => {
+    $("sashaDr").classList.remove("show");
+    xShake(1.2, 0.06);
+    xTeleport(19.8, -181.6, 0);
+    setTimeout(() => { sayBubble(`Wah, ${S.name}! Cody bilang kamu lewat jalur khusus. Selamat datang di Taman Apresiasi 🏅`, "npc_tama"); }, 900);
+  }, 1400);
+  return { text: `🔓 Kode diterima, ${S.name}! Labirin dan seluruh lorong rahasia dinyatakan tuntas. Pegangan… aku teleport kamu langsung ke Taman Apresiasi untuk bertemu Kang Santo!` };
+}
+
+// =====================================================================
+// src/ext_adzan.js — JEDA ADZAN: setiap pemain otomatis dikeluarkan saat
+// waktu adzan tiba di wilayahnya masing-masing (berdasarkan lokasi GPS
+// perangkat), lalu tidak bisa masuk selama ADZAN_BLOCK_MIN menit.
+// Izin lokasi WAJIB saat mengisi nama; tanpa izin galeri tidak bisa dimainkan.
+// Jadwal dihitung di browser (tanpa server/API luar) dengan parameter
+// Kemenag RI: Subuh 20°, Isya 18°, Ashar madzhab Syafi'i, ihtiyat +2 menit.
+// Koordinat tidak dikirim ke server.
+// =====================================================================
+var ADZAN_BLOCK_MIN = 15;     // lama jeda setelah adzan (menit)
+var ADZAN_WARN_MIN = 5;       // peringatan sebelum adzan (menit)
+var ADZAN_IHTIYAT = 2;        // ihtiyat Kemenag (menit)
+var ADZ = { loc: null, timer: null, warned: {}, kicked: false };
+var ADZ_NAMES = { subuh: "Subuh", dzuhur: "Dzuhur", ashar: "Ashar", maghrib: "Maghrib", isya: "Isya" };
+// ---------- perhitungan jadwal sholat (astronomis) ----------
+function adzanTimes(date, lat, lng) {
+  const y = date.getFullYear(), mo = date.getMonth(), d = date.getDate();
+  const rad = Math.PI / 180, deg = 180 / Math.PI;
+  const fix = (a, b) => { a = a - b * Math.floor(a / b); return a < 0 ? a + b : a; };
+  const jd = Date.UTC(y, mo, d) / 86400000 + 2440587.5; // JD 00:00 UTC tanggal lokal
+  const sun = (jdx) => {
+    const D = jdx - 2451545.0;
+    const g = fix(357.529 + 0.98560028 * D, 360), q = fix(280.459 + 0.98564736 * D, 360);
+    const L = fix(q + 1.915 * Math.sin(g * rad) + 0.020 * Math.sin(2 * g * rad), 360);
+    const e = 23.439 - 0.00000036 * D;
+    const RA = fix(Math.atan2(Math.cos(e * rad) * Math.sin(L * rad), Math.cos(L * rad)) * deg / 15, 24);
+    return { decl: Math.asin(Math.sin(e * rad) * Math.sin(L * rad)) * deg, eqt: q / 15 - RA };
+  };
+  const eqtFix = (v) => (v > 12 ? v - 24 : v < -12 ? v + 24 : v);
+  const midDay = (h) => { const s = sun(jd + h / 24 - lng / 360); return 12 - eqtFix(s.eqt); };
+  const angleT = (ang, h, dir) => {
+    const s = sun(jd + h / 24 - lng / 360), D = s.decl * rad, la = lat * rad;
+    const v = (-Math.sin(ang * rad) - Math.sin(D) * Math.sin(la)) / (Math.cos(D) * Math.cos(la));
+    if (v < -1 || v > 1) return NaN;
+    return midDay(h) + dir * Math.acos(v) * deg / 15;
+  };
+  const asrT = (h) => {
+    const s = sun(jd + h / 24 - lng / 360), D = s.decl * rad, la = lat * rad;
+    const ang = -Math.atan(1 / (1 + Math.tan(Math.abs(la - D)))) * deg; // bayangan = 1× tinggi benda (Syafi'i)
+    const v = (-Math.sin(ang * rad) - Math.sin(D) * Math.sin(la)) / (Math.cos(D) * Math.cos(la));
+    if (v < -1 || v > 1) return NaN;
+    return midDay(h) + Math.acos(v) * deg / 15;
+  };
+  // dua iterasi untuk ketelitian (jam lokal matahari)
+  let t = { subuh: 5, dzuhur: 12, ashar: 15, maghrib: 18, isya: 19 };
+  for (let k = 0; k < 2; k++) {
+    t = { subuh: angleT(20, t.subuh, -1), dzuhur: midDay(t.dzuhur), ashar: asrT(t.ashar), maghrib: angleT(0.833, t.maghrib, 1), isya: angleT(18, t.isya, 1) };
+  }
+  const base = Date.UTC(y, mo, d), out = {};
+  for (const [k, h] of Object.entries(t)) {
+    if (!isFinite(h)) continue;
+    // jam di atas dalam "waktu matahari" UTC (karena bujur sudah dikoreksi): konversi → epoch
+    out[k] = base + (h - lng / 15) * 3600e3 + ADZAN_IHTIYAT * 60e3;
+  }
+  return out;
+}
+// daftar waktu adzan kemarin–lusa (epoch ms) yang diurutkan
+function adzanEvents(loc) {
+  const ev = [], now = new Date();
+  for (const off of [-1, 0, 1]) {
+    const dt = new Date(now.getFullYear(), now.getMonth(), now.getDate() + off, 12);
+    const tt = adzanTimes(dt, loc.lat, loc.lng);
+    for (const [k, v] of Object.entries(tt)) ev.push({ k, t: v });
+  }
+  return ev.sort((a, b) => a.t - b.t);
+}
+var adzanFmt = (ms) => new Date(ms).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+function adzanBlockInfo() {
+  const b = store.get("adzan.block", null);
+  return b && typeof b.until === "number" && Date.now() < b.until ? b : null;
+}
+// ---------- lokasi (wajib) ----------
+function adzanLocate() {
+  return new Promise((res, rej) => {
+    if (!("geolocation" in navigator)) return rej(new Error("Browser ini tidak mendukung pendeteksian lokasi."));
+    if (!window.isSecureContext) return rej(new Error("Pendeteksian lokasi hanya bisa lewat HTTPS (atau localhost). Buka galeri lewat alamat https://."));
+    navigator.geolocation.getCurrentPosition(
+      (p) => res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, t: Date.now() }),
+      (e) => rej(new Error(e.code === 1 ? "Izin lokasi DITOLAK. Galeri tidak dapat dimainkan tanpa izin lokasi — izinkan lokasi untuk situs ini di pengaturan browser (ikon gembok di bilah alamat), lalu coba lagi." : e.code === 3 ? "Lokasi tidak terdeteksi (waktu habis). Pastikan GPS/lokasi perangkat aktif, lalu coba lagi." : "Lokasi tidak dapat ditentukan. Aktifkan layanan lokasi perangkat, lalu coba lagi.")),
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 10 * 60e3 }
+    );
+  });
+}
+function adzanMsg(html, bad) {
+  const el = $("ldGeo");
+  if (!el) return;
+  el.innerHTML = html;
+  el.classList.toggle("bad", !!bad);
+}
+// dipanggil di awal enter(): true = boleh lanjut masuk
+function adzanGate(enterFn) {
+  const blk = adzanBlockInfo();
+  if (blk) { adzanShowBlock(); return false; }
+  if (ADZ.loc && Date.now() - ADZ.loc.t < 30 * 60e3) {
+    // tepat di dalam jendela adzan? tolak juga
+    const now = Date.now(), cur = adzanEvents(ADZ.loc).find((e) => now >= e.t && now < e.t + ADZAN_BLOCK_MIN * 60e3);
+    if (cur) { adzanSetBlock(cur); adzanShowBlock(); return false; }
+    return true;
+  }
+  if (ADZ.busy) return false;
+  ADZ.busy = true;
+  const go = $("ldGo"), prevTxt = go ? go.textContent : "";
+  if (go) { go.disabled = true; go.textContent = "MENDETEKSI LOKASI…"; }
+  adzanMsg("📍 Mohon <b>izinkan akses lokasi</b> pada jendela browser yang muncul…");
+  adzanLocate().then((loc) => {
+    ADZ.loc = loc;
+    ADZ.busy = false;
+    if (go) { go.disabled = false; go.textContent = prevTxt; }
+    const nx = adzanEvents(loc).find((e) => e.t > Date.now());
+    adzanMsg(`✅ Lokasi terdeteksi. Adzan berikutnya: <b>${nx ? ADZ_NAMES[nx.k] + " " + adzanFmt(nx.t) : "-"}</b> (galeri ditutup ${ADZAN_BLOCK_MIN} menit saat adzan).`);
+    enterFn();
+  }).catch((err) => {
+    ADZ.busy = false;
+    if (go) { go.disabled = false; go.textContent = "COBA IZINKAN LOKASI LAGI ▶"; }
+    adzanMsg("⛔ " + pemEsc(err.message), true);
+    toast("Izin lokasi wajib untuk bermain.", 4000);
+  });
+  return false;
+}
+function adzanSetBlock(ev) {
+  store.set("adzan.block", { until: ev.t + ADZAN_BLOCK_MIN * 60e3, k: ev.k, at: ev.t });
+}
+function adzanShowBlock() {
+  const b = adzanBlockInfo();
+  if (!b) return;
+  const go = $("ldGo");
+  const tick = () => {
+    const left = b.until - Date.now();
+    if (left <= 0) {
+      clearInterval(ADZ.blockT);
+      if (go) { go.disabled = false; go.textContent = S.name ? `MASUK SEBAGAI ${S.name} ▶` : "MASUK KE GALERI ▶"; }
+      adzanMsg("✅ Jeda adzan selesai. Silakan masuk kembali.");
+      return;
+    }
+    const m = Math.floor(left / 60000), s = Math.floor(left / 1000) % 60;
+    if (go) { go.disabled = true; go.textContent = `DIBUKA LAGI ${m}:${String(s).padStart(2, "0")}`; }
+    adzanMsg(`🕌 Waktu adzan <b>${ADZ_NAMES[b.k] || ""}</b> (${adzanFmt(b.at)}) telah tiba di wilayahmu. Galeri ditutup sementara — mari tunaikan sholat. Dibuka lagi pukul <b>${adzanFmt(b.until)}</b>.`, true);
+  };
+  clearInterval(ADZ.blockT);
+  ADZ.blockT = setInterval(tick, 1000);
+  tick();
+}
+// ---------- saat bermain: pantau jadwal ----------
+function adzanStart() {
+  clearInterval(ADZ.timer);
+  ADZ.timer = setInterval(adzanCheck, 10000);
+  adzanCheck();
+  // izin lokasi dicabut di tengah permainan → keluar
+  try {
+    navigator.permissions?.query({ name: "geolocation" }).then((st) => { st.onchange = () => { if (st.state === "denied") adzanKick(null, "Izin lokasi dicabut. Galeri tidak dapat dimainkan tanpa izin lokasi."); }; }).catch(() => {});
+  } catch { /* opsional */ }
+  // perbarui lokasi tiap 30 menit (pemain bisa berpindah wilayah)
+  setInterval(() => { adzanLocate().then((l) => { ADZ.loc = l; }).catch(() => {}); }, 30 * 60e3);
+  const nx = ADZ.loc && adzanEvents(ADZ.loc).find((e) => e.t > Date.now());
+  if (nx) setTimeout(() => toast(`🕌 Adzan ${ADZ_NAMES[nx.k]} berikutnya pukul ${adzanFmt(nx.t)} — galeri akan dijeda ${ADZAN_BLOCK_MIN} menit.`, 6000), 7500);
+}
+function adzanCheck() {
+  if (!ADZ.loc || ADZ.kicked) return;
+  const now = Date.now();
+  for (const e of adzanEvents(ADZ.loc)) {
+    if (now >= e.t && now < e.t + ADZAN_BLOCK_MIN * 60e3) { adzanKick(e); return; }
+    const pre = e.t - now;
+    if (pre > 0 && pre <= ADZAN_WARN_MIN * 60e3 && !ADZ.warned[e.t]) {
+      ADZ.warned[e.t] = true;
+      toast(`🕌 ${Math.ceil(pre / 60000)} menit lagi adzan ${ADZ_NAMES[e.k]} (${adzanFmt(e.t)}). Galeri akan dijeda sementara — selesaikan aktivitasmu ya.`, 9000);
+      if (typeof sayBubble === "function") sayBubble(`Sebentar lagi adzan ${ADZ_NAMES[e.k]} 🕌`, "me");
+    }
+  }
+}
+function adzanKick(ev, reason) {
+  if (ADZ.kicked) return;
+  ADZ.kicked = true;
+  if (ev) adzanSetBlock(ev);
+  try { renderer.xr.getSession()?.end(); } catch { /* abaikan */ }
+  try { Music.duck(true); } catch { /* abaikan */ }
+  const ov = document.createElement("div");
+  ov.id = "adzanOv";
+  ov.innerHTML = `<div><div class="az-ic">🕌</div><h2></h2><p></p><small>Kamu akan dikembalikan ke layar awal…</small></div>`;
+  ov.querySelector("h2").textContent = ev ? `Waktu Adzan ${ADZ_NAMES[ev.k]} Telah Tiba` : "Sesi Dihentikan";
+  ov.querySelector("p").textContent = ev ? `Pukul ${adzanFmt(ev.t)} di wilayahmu. Semua pemain dikeluarkan sementara selama ${ADZAN_BLOCK_MIN} menit. Mari tunaikan sholat — galeri bisa dimasuki lagi pukul ${adzanFmt(ev.t + ADZAN_BLOCK_MIN * 60e3)}.` : reason || "";
+  document.body.appendChild(ov);
+  setTimeout(() => location.reload(), 6000);
+}
+// tampilkan status jeda/izin di layar awal sejak halaman dimuat
+setTimeout(() => { if (adzanBlockInfo()) adzanShowBlock(); }, 0);
 
 </script>
 </body>

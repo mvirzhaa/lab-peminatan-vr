@@ -10,12 +10,16 @@ module.exports = {
       env: {
         PORT: 8080,
         NODE_ENV: 'production',
-        ADMIN_KEY: 'GANTI-DENGAN-KUNCI-RAHASIA'
+        ADMIN_KEY: 'GANTI-DENGAN-KUNCI-RAHASIA',
+        PEMINATAN_USER: 'admin',
+        PEMINATAN_PASS: 'GANTI-DENGAN-PASSWORD-ADMIN-PEMINATAN'
       },
       env_production: {
         PORT: 8080,
         NODE_ENV: 'production',
-        ADMIN_KEY: 'GANTI-DENGAN-KUNCI-RAHASIA'
+        ADMIN_KEY: 'GANTI-DENGAN-KUNCI-RAHASIA',
+        PEMINATAN_USER: 'admin',
+        PEMINATAN_PASS: 'GANTI-DENGAN-PASSWORD-ADMIN-PEMINATAN'
       }
     }
   ]

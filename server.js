@@ -10,8 +10,9 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
+const { createPeminatan } = require('./peminatan');
 
-// baca file .env otomatis jika ada (memudahkan konfigurasi ADMIN_KEY tanpa terhambat cache PM2)
+// baca file .env otomatis jika ada (memudahkan konfigurasi ADMIN_KEY, PEMINATAN_USER, dll tanpa terhambat cache PM2)
 try {
   const envFile = path.join(__dirname, '.env');
   if (fs.existsSync(envFile)) {
@@ -20,13 +21,14 @@ try {
       if (m) {
         const k = m[1].trim();
         const v = (m[2] || '').replace(/^['"]|['"]$/g, '').trim();
-        if (v && (!process.env[k] || process.env[k] === 'GANTI-DENGAN-KUNCI-RAHASIA')) {
+        if (v && (!process.env[k] || process.env[k] === 'GANTI-DENGAN-KUNCI-RAHASIA' || process.env[k] === 'GANTI-DENGAN-PASSWORD-ADMIN-PEMINATAN')) {
           process.env[k] = v;
         }
       }
     }
   }
 } catch {}
+
 
 const PORT = +process.env.PORT || 8080;
 const MAX_CLIENTS = +process.env.MAX_CLIENTS || 150;     // total koneksi
@@ -65,11 +67,28 @@ function decodePhoto(d) {
 }
 let hofGlobal = { t: 0, n: 0 };
 
+// ---- Pendaftaran peminatan (pengganti Google Form) + halaman admin ----
+const pem = createPeminatan({
+  dataDir: DATA_DIR,
+  // setiap perubahan data → kirim statistik terbaru ke semua pengunjung (pie chart & papan pengumuman)
+  onChange: (stats) => { for (const c of wss.clients) send(c, { type: 'pem', s: stats }); }
+});
+const ADMIN_PAGE = path.join(PUBLIC, 'admin', 'index.html');
+const ADMIN_CSP = "default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'";
+
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json' };
 const server = http.createServer((req, res) => {
-  const secHeaders = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'strict-origin-when-cross-origin', 'X-Frame-Options': 'SAMEORIGIN', 'Permissions-Policy': 'microphone=(self), xr-spatial-tracking=(self), autoplay=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com"), fullscreen=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com")' };
+  const secHeaders = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'strict-origin-when-cross-origin', 'X-Frame-Options': 'SAMEORIGIN', 'Permissions-Policy': 'geolocation=(self), microphone=(self), xr-spatial-tracking=(self), autoplay=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com"), fullscreen=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com")' };
+  let u, p; try { u = new URL(req.url, 'http://x'); p = decodeURIComponent(u.pathname); } catch { res.writeHead(400, secHeaders); return res.end(); }
+  if (p.startsWith('/api/')) return pem.handle(req, res, p, u);
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405, secHeaders); return res.end(); }
-  let p; try { p = decodeURIComponent(new URL(req.url, 'http://x').pathname); } catch { res.writeHead(400, secHeaders); return res.end(); }
+  if (p === '/admin' || p === '/admin/') {
+    return fs.readFile(ADMIN_PAGE, (err, buf) => {
+      if (err) { res.writeHead(404, secHeaders); return res.end('Not found'); }
+      res.writeHead(200, { ...secHeaders, 'X-Frame-Options': 'DENY', 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Security-Policy': ADMIN_CSP });
+      res.end(req.method === 'HEAD' ? undefined : buf);
+    });
+  }
   if (p === '/health') { res.writeHead(200, { ...secHeaders, 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ ok: true, clients: wss.clients.size })); }
   const hm = /^\/hof\/([a-f0-9]{16})\.jpg$/.exec(p);
   if (hm) {
@@ -150,7 +169,8 @@ wss.on('connection', (ws, room) => {
     peers: [...members].map(c => ({ id: c.id, data: c.presence })),
     wb: rData.wb,
     notes: rData.notes,
-    hof: HOF.map(hofPublic)
+    hof: HOF.map(hofPublic),
+    pem: pem.publicStats()
   });
   members.add(ws);
 
@@ -249,5 +269,7 @@ setInterval(() => { for (const ws of wss.clients) { if (!ws.alive) { ws.terminat
 
 server.listen(PORT, () => {
   console.log(`Galeri Media Imersif berjalan di http://localhost:${PORT}  (WebSocket: /ws)`);
+  console.log(`Halaman admin peminatan: http://localhost:${PORT}/admin  (username: ${pem.info.user})`);
+  if (pem.info.pass) console.log(`Password admin peminatan (sesi ini saja): ${pem.info.pass}  -> atur variabel PEMINATAN_PASS agar tetap`);
   if (!process.env.ADMIN_KEY) console.log(`Kunci moderator untuk "${ADMIN_NAME}" (sesi ini saja): ${ADMIN_KEY}  -> atur variabel ADMIN_KEY agar tetap`);
 });
