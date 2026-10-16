@@ -182,3 +182,15 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
   - *4 ruang tantangan Lantai 2*: tombol "🔁 Main ulang" / "✅ Biarkan tuntas"; gagal saat main ulang tidak menghapus status tuntas. Menang sungguhan mengubah catatan server dari "kode" menjadi "main".
   - *Gua Pustaka*: "🔁 Main ulang dari Babak 1" / "✅ Biarkan tuntas · ke Teh Puspa".
 - **Sinkron lencana lebih tangguh**: browser kini mencocokkan progres dengan database server dan mengirim ulang tantangan/lencana yang belum tercatat. Silvia menjelaskan penyebab bila tetap gagal (server belum versi terbaru / kartu tercatat di perangkat lain / kartu dicabut / server tidak terhubung).
+
+## Pembaruan v12 — Tahap 4 · Hanggar Drone (Lencana IoT & Drone)
+- **Akses**: **Haryani** (IT-Mart Lantai 2, di seberang Ananda) memeriksa Explorer Card + Lencana Pengetahuan Dasar + Lencana Pengetahuan Umum ke database server, lalu mengaktifkan **lift kaca di sisi timur laut Lab CSN**. Lift membawa pemain ke **Hanggar Drone** di atap (malam hari, langit berbintang, kota di kejauhan).
+- **3 nyawa · 3 babak (sulit)**:
+  1. *Rakit node sensor ESP32* — 6 komponen (DHT22, LDR, sensor tanah, PIR, relay, HC-SR04) dalam 4 menit. Jebakan: pin ADC2 tak bisa dipakai saat WiFi aktif, GPIO34–39 hanya input, ECHO 5 V butuh pembagi tegangan, DHT22 butuh pull-up, PIR butuh 5 V. Lalu 2 soal wawasan (MQTT, deep sleep).
+  2. *Program otomasi kebun* — aturan JIKA…DAN…MAKA untuk pompa, kipas, dan lampu tumbuh; simulasi 24 jam dengan cuaca acak dan anggaran listrik harian. Gagal bila satu petak rusak atau listrik melebihi anggaran.
+  3. *Misi drone* — daftar periksa pra-terbang, lalu terbang melewati 5 cincin yang makin sempit, menghindari menara antena, memindai petak yang node sensornya mati, menjatuhkan node pengganti (2 kesempatan), dan mendarat pelan di helipad. Ada angin berubah arah dan baterai terbatas. Lulus minimal **2⭐** (waktu ≤ 95 dtk, baterai ≥ 20%, mendarat ≤ 0,7 m dari tengah).
+- **Kontrol**: laptop — W/S maju-mundur, A/D geser, Spasi/↑ naik, C/↓ turun, Q/E/←/→ putar, F jatuhkan; HP — dua joystick sentuh + tombol 📦.
+- **Kang Hendri** (berkopiah) & **Kang Erwin** (rambut keriting) berdiri berdampingan di hanggar; bicara dengan salah satunya sama saja. Mereka memberi **Lencana Teknologi · IoT & Drone**.
+- **Papan rekor** waktu misi drone tercepat (jalur main) di hanggar, data dari `GET /api/kartu/rekor?id=iot`.
+- **Main ulang atau lewati** bagi yang sudah lulus. **Kode cepat**: `butnavudivoxyziz4` ke **Rahman** (hanya untuk pemegang Lencana Dasar & Umum).
+- Server: tantangan `iot` (+ bintang) & lencana `iot` (syarat `iot` + lencana `umum`).

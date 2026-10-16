@@ -25,9 +25,9 @@ function createKartu({ dataDir, pem }) {
   // tahap 2: empat ruang tantangan di Lantai 2 IT-Mart → lencana Pengetahuan Dasar (Teh Fety)
   const TAHAP2 = ['kognitif', 'inggris', 'sahabat', 'coding'];
   // tahap 3: Gua Pustaka di balik rak buku Silvia → lencana Pengetahuan Umum (Teh Puspa)
-  const TANTANGAN = TAHAP2.concat(['pustaka']);
+  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot']);
   // syarat tiap lencana: tantangan yang harus tercatat + lencana sebelumnya
-  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' } }; // iot (IoT & Drone), jari, coding, islam, tim (kerjasama tim) menyusul
+  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' }, iot: { ch: ['iot'], pre: 'umum' } }; // iot (IoT & Drone), jari, coding, islam, tim (kerjasama tim) menyusul
   const SEC = { 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' };
   const json = (res, code, o) => { res.writeHead(code, { ...SEC, 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(o)); };
   const readJson = (req) => new Promise((resolve) => { let b = ''; req.on('data', (c) => { b += c; if (b.length > 4096) req.destroy(); }); req.on('end', () => { try { const o = JSON.parse(b || '{}'); resolve(o && typeof o === 'object' ? o : {}); } catch { resolve({}); } }); req.on('error', () => resolve({})); });
@@ -75,6 +75,14 @@ function createKartu({ dataDir, pem }) {
       if (!k) return json(res, 200, { ok: true, ada: false });
       return json(res, 200, { ok: true, ada: true, no: k.no, nama: k.nama, t: k.t, cabut: !!k.cabut, lencana: k.lb || {}, tantangan: k.ch || {} });
     }
+    // papan rekor publik (mis. misi drone): 10 waktu tercepat jalur "main"
+    if (p === '/api/kartu/rekor' && req.method === 'GET') {
+      if (limited(req, 'k', 300)) return json(res, 429, { ok: false, err: 'Terlalu banyak permintaan.' });
+      const id = String(new URL(req.url, 'http://x').searchParams.get('id') || '');
+      if (!TANTANGAN.includes(id)) return json(res, 400, { ok: false, err: 'Tantangan tidak dikenal.' });
+      const list = K.filter((k) => !k.cabut && k.ch && k.ch[id] && k.ch[id].jalur === 'main' && k.ch[id].best > 0).map((k) => ({ nama: k.nama, best: k.ch[id].best, bintang: k.ch[id].bintang || 0 })).sort((a, b) => a.best - b.best).slice(0, 10);
+      return json(res, 200, { ok: true, list });
+    }
     // catat tantangan / lencana milik pemegang kartu (butuh token pemilik)
     if ((p === '/api/kartu/tantangan' || p === '/api/kartu/lencana') && req.method === 'POST') {
       if (!pem.sameOrigin(req)) return json(res, 403, { ok: false, err: 'Permintaan ditolak.' });
@@ -87,7 +95,7 @@ function createKartu({ dataDir, pem }) {
         if (!TANTANGAN.includes(id)) return json(res, 400, { ok: false, err: 'Tantangan tidak dikenal.' });
         k.ch = k.ch || {};
         const dt = Number(o.dt), prev = k.ch[id];
-        k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= 600 ? Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? ((prev && prev.jalur === 'main') ? 'main' : 'kode') : 'main' };
+        k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= 600 ? Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? ((prev && prev.jalur === 'main') ? 'main' : 'kode') : 'main', bintang: Math.max((prev && prev.bintang) || 0, Math.min(3, Math.max(0, Math.floor(Number(o.bintang) || 0)))) };
       } else {
         if (!LENCANA[id]) return json(res, 400, { ok: false, err: 'Lencana tidak dikenal.' });
         // syarat lencana: tantangan tercatat (+ lencana sebelumnya)

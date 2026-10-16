@@ -542,6 +542,31 @@ canvas {
 .lm-list li.drag{opacity:.4}.lm-n{width:24px;height:24px;border-radius:50%;background:#0e7490;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
 .lm-t{flex:1;font-size:15px}.lm-list button{background:#123a49;border:1px solid #1e6a80;color:#fff;border-radius:8px;width:30px;height:28px;cursor:pointer}
 .lm-msg{min-height:22px;font-size:13px;color:#a5f3fc;margin:10px 0 4px}.lm-tip{font-size:11.5px;color:#7dd3fc;opacity:.75;margin:8px 0 0}
+
+/* ===== v12: Hanggar Drone ===== */
+#ioHud{position:fixed;bottom:calc(76px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:30;width:min(680px,calc(100vw - 24px));background:rgba(4,14,28,.9);border:1px solid #0369a1;border-radius:14px;padding:10px 12px;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#ioHud .cvh-top{color:#7dd3fc}
+#ioOv{position:fixed;inset:0;z-index:8000;display:grid;place-items:center;background:radial-gradient(circle,rgba(3,20,40,.6),rgba(0,0,0,.86));padding:12px;overflow:auto}
+.io-card{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#06131f;border:2px solid #0369a1;border-radius:18px;padding:16px;color:#fff;box-shadow:0 20px 80px rgba(0,0,0,.7)}
+.io-card.wide{width:min(960px,97vw)}.io-card .cog-top{color:#7dd3fc}
+.io-p{font-size:13px;color:#cbd5e1;line-height:1.5;margin:8px 0}.io-q{font-weight:700;font-size:17px;line-height:1.45;margin:12px 0}
+.io-msg{min-height:20px;font-size:13.5px;color:#fde68a;margin:8px 0 0}
+.io-parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin:8px 0}
+.io-part{background:#0b1f33;border:1px solid #1e3a5f;border-radius:12px;padding:10px}.io-part b{display:block;font-size:13px;margin-bottom:6px;color:#e0f2fe}
+.io-pins label{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:12.5px}.io-pins span{width:44px;flex:none;font-weight:700;color:#7dd3fc;font-family:ui-monospace,monospace}
+.io-pins select,.io-rule select{flex:1;min-width:0;background:#0f2a44;color:#fff;border:1px solid #1e4b73;border-radius:8px;padding:6px;font:inherit;font-size:12.5px}
+.io-wx{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;line-height:1.5}.io-wx>div{background:#0b1f33;border:1px solid #1e3a5f;border-radius:12px;padding:10px}.io-big{font-size:24px;font-weight:800;color:#fde68a}
+.io-rules{display:flex;flex-direction:column;gap:8px;margin:8px 0}.io-rule{display:flex;flex-wrap:wrap;align-items:center;gap:6px;background:#0b1f33;border:1px solid #1e3a5f;border-radius:12px;padding:8px;font-size:12.5px}
+.io-an{flex:1 1 100%;font-weight:700;color:#e0f2fe}.io-rule>span:not(.io-an){color:#7dd3fc;font-weight:700;font-size:11.5px}
+#ioChart{width:100%;height:auto;border-radius:12px;margin:6px 0;background:#06121c}
+.io-pre{display:flex;flex-direction:column;gap:6px;margin:8px 0}.io-chk{display:flex;gap:8px;align-items:flex-start;background:#0b1f33;border:1px solid #1e3a5f;border-radius:10px;padding:8px 10px;font-size:13.5px;cursor:pointer}
+#ioJoy{position:fixed;left:0;right:0;bottom:calc(150px + env(safe-area-inset-bottom,0px));z-index:31;display:flex;justify-content:space-between;align-items:flex-end;padding:0 18px;pointer-events:none}
+.ioj{pointer-events:auto;width:132px;height:132px;border-radius:50%;background:rgba(14,165,233,.12);border:2px solid rgba(125,211,252,.5);position:relative;touch-action:none;display:grid;place-items:center}
+.ioj i{width:54px;height:54px;border-radius:50%;background:rgba(125,211,252,.55);display:block;transition:transform .04s}
+.ioj small{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10.5px;color:#bae6fd;text-shadow:0 1px 3px #000}
+#ioDrop{pointer-events:auto;height:58px;width:58px;border-radius:50%;font-size:26px;padding:0;margin-bottom:36px}
+@media (hover:hover) and (pointer:fine){#ioJoy .ioj{opacity:.55}}
+@media (max-width:560px){.io-wx{grid-template-columns:1fr}.ioj{width:116px;height:116px}}
 </style>
 
 </head>
@@ -5860,7 +5885,7 @@ $("btnPeople").onclick = () => dropdown($("btnPeople"), (d) => {
     if (IS_MOD) modKickBtn(b, r);
   }
   for (const n of Object.values(NPCS)) {
-    if (n.secret || (n.custom && (n.custom.secret || n.custom.hidden)) || n.id === "tama" || n.id === "fety" || n.id === "puspa" || n.id === "ritzkal") continue;
+    if (n.secret || (n.custom && (n.custom.secret || n.custom.hidden)) || n.id === "tama" || n.id === "fety" || n.id === "puspa" || n.id === "ritzkal" || n.id === "hendri" || n.id === "erwin") continue;
     const dot = document.createElement("span");
     dot.className = "dot";
     dot.style.background = n.col;
@@ -6670,7 +6695,7 @@ function applyPeers(list) {
     seen.add(pe.id);
     let r = remotes.get(pe.id);
     const name = cleanName(str(pr.n, 16)), color = /^#[0-9a-f]{6}$/i.test(pr.c) ? pr.c : "#888888";
-    const tgt = { x: num(pr.x, -60, 140), y: num(pr.y, -1, 2), z: num(pr.z, -245, 60) };
+    const tgt = { x: num(pr.x, -60, 200), y: num(pr.y, -1, 2), z: num(pr.z, -245, 60) };
     if (!r) {
       const av = makeAvatar(color, name);
       scene.add(av);
@@ -7118,6 +7143,7 @@ function update(dt) {
   }
   const sp = (run ? 6.4 : 3.4) * S.speed;
   if (typeof snakeLock === "function" && snakeLock()) { mx = mz = 0; P.walkTo = null; }
+  if (typeof IO !== "undefined" && IO.fly) { mx = mz = 0; P.walkTo = null; }
   if (mx || mz) {
     if (P.sit) {
       P.sit = false;
@@ -7164,6 +7190,7 @@ function update(dt) {
     camera.position.lerp(camPos, Math.min(1, dt * 14));
     camera.lookAt(camTarget.x, camTarget.y + 0.25, camTarget.z);
   }
+  if (typeof droneCam === "function") droneCam(dt);
   if (world.billboards)
     for (const b of world.billboards)
       b.lookAt(camera.position);
@@ -7341,7 +7368,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
 }
 boot().catch((err) => {
   console.error(err);
@@ -7803,7 +7830,7 @@ function rel(res, top) {
   return [["Lihat juga: " + p.title.slice(0, 26), () => openZoom(p.id)]];
 }
 function npcAnswer(npcId, q) {
-  const cheat = (typeof codyCheat === "function" ? codyCheat(npcId, q) : null) || (typeof sitCheat === "function" ? sitCheat(npcId, q) : null) || (typeof santoCheat === "function" ? santoCheat(npcId, q) : null) || (typeof replayIntent === "function" ? replayIntent(npcId, q) : null);
+  const cheat = (typeof codyCheat === "function" ? codyCheat(npcId, q) : null) || (typeof sitCheat === "function" ? sitCheat(npcId, q) : null) || (typeof santoCheat === "function" ? santoCheat(npcId, q) : null) || (typeof replayIntent === "function" ? replayIntent(npcId, q) : null) || (typeof rahmanCheat === "function" ? rahmanCheat(npcId, q) : null);
   if (cheat) return cheat;
   const spR = typeof spAnswer === "function" ? spAnswer(npcId, q) : null;
   if (spR) return spR;
@@ -9632,6 +9659,7 @@ function xHandleAct(act, hit, e) {
   if (typeof capAct === "function" && capAct(act, hit, e)) return;
   if (typeof cvAct === "function" && cvAct(act, hit, e)) return;
   if (typeof ringAct === "function" && ringAct(act, hit, e)) return;
+  if (typeof ioAct === "function" && ioAct(act, hit, e)) return;
   switch (act.type) {
     case "x_riddle": openRiddle(act.i); break;
     case "x_kaprodi": showKaprodi(act.i); break;
@@ -9750,6 +9778,7 @@ function buildExtras() {
     try { buildCapaian(); } catch (err) { console.error("Capaian/tantangan tahap 2 gagal dibangun:", err); }
     try { buildGua(); } catch (err) { console.error("Gua Pustaka gagal dibangun:", err); }
     try { buildRing(); } catch (err) { console.error("Portal Ring 1 gagal dibangun:", err); }
+    try { buildHanggar(); } catch (err) { console.error("Hanggar Drone gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -10179,8 +10208,9 @@ function makeCustomHuman(id, cfg) {
   NPC_POS[id] = { x: cfg.x, z: cfg.z, room: cfg.room };
   const g = new THREE2.Group(); g.position.set(cfg.x, 0, cfg.z);
   const rig = new THREE2.Group(); g.add(rig);
-  const skin = new THREE2.MeshStandardMaterial({ color: 0xc98d62, roughness: 0.5 });
-  const scalp = new THREE2.MeshStandardMaterial({ color: 0xc98d62, roughness: 0.28, metalness: 0.05 });
+  const skinCol = cfg.look && cfg.look.skin ? new THREE2.Color(cfg.look.skin) : 0xc98d62;
+  const skin = new THREE2.MeshStandardMaterial({ color: skinCol, roughness: 0.5 });
+  const scalp = new THREE2.MeshStandardMaterial({ color: skinCol, roughness: 0.28, metalness: 0.05 });
   // kemeja batik hijau (motif kawung sederhana)
   const bc = mkCanvas(256, 256), bx = bc.getContext("2d");
   bx.fillStyle = "#14532d"; bx.fillRect(0, 0, 256, 256);
@@ -10204,6 +10234,7 @@ function makeCustomHuman(id, cfg) {
   for (let i = 0; i <= 14; i++) { const k = i / 14, y = 0.86 + k * 0.62, r = 0.135 + Math.sin(k * Math.PI * 0.8) * 0.03 - (k > 0.88 ? (k - 0.88) * 0.8 : 0); pts.push(new THREE2.Vector2(r, y)); }
   pts.push(new THREE2.Vector2(0, 1.48));
   const body = new THREE2.Mesh(new THREE2.LatheGeometry(pts, 28), batik); body.scale.z = 0.78; body.castShadow = true; rig.add(body);
+  const WIDE = (LK && LK.wide) || 1; if (WIDE !== 1) { body.scale.x = WIDE; body.scale.z = 0.78 * WIDE; }
   const belt = new THREE2.Mesh(new THREE2.TorusGeometry(0.138, 0.016, 6, 24), new THREE2.MeshStandardMaterial({ color: 0x111827 })); belt.rotation.x = Math.PI / 2; belt.scale.y = 0.78; belt.position.y = 0.88; rig.add(belt);
   const neck = new THREE2.Mesh(new THREE2.CylinderGeometry(0.045, 0.05, 0.12, 12), skin); neck.position.y = 1.52; rig.add(neck);
   const collar = new THREE2.Mesh(new THREE2.TorusGeometry(0.065, 0.02, 6, 18), batik); collar.rotation.x = Math.PI / 2; collar.position.y = 1.47; rig.add(collar);
@@ -10239,8 +10270,10 @@ function makeCustomHuman(id, cfg) {
       const drape = new THREE2.Mesh(new THREE2.CylinderGeometry(0.18, 0.3, 0.3, 32, 1, true), hjM); drape.position.y = -0.22; headG.add(drape);
       for (const sx of [-1, 1]) { const bl = new THREE2.Mesh(new THREE2.CircleGeometry(0.024, 14), new THREE2.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.45 })); bl.position.set(sx * 0.08, -0.03, 0.142); bl.rotation.y = sx * 0.45; headG.add(bl); }
     }
+    if (LK.kopiah) { const kpM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.kopiah), roughness: 0.55 }); const kp = new THREE2.Mesh(new THREE2.CylinderGeometry(0.152, 0.158, 0.12, 30), kpM); kp.position.y = 0.105; kp.scale.z = 1.06; headG.add(kp); const kt = new THREE2.Mesh(new THREE2.CircleGeometry(0.152, 30), kpM); kt.rotation.x = -Math.PI / 2; kt.position.y = 0.166; kt.scale.y = 1.06; headG.add(kt); }
+    if (LK.curly) { for (let i = 0; i < 46; i++) { const a = i * 2.39996, ring = i % 4, yy = 0.03 + ring * 0.035, rr2 = 0.155 - ring * 0.022; const c = new THREE2.Mesh(new THREE2.SphereGeometry(0.036, 8, 6), hairM); c.position.set(Math.cos(a) * rr2, yy + 0.035, Math.sin(a) * rr2 - 0.012); if (c.position.z > 0.09 && c.position.y < 0.09) continue; headG.add(c); } }
     shine.visible = false;
-    if (LK.skirt) { const sk = new THREE2.Mesh(new THREE2.CylinderGeometry(0.15, 0.25, 0.9, 28), new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.skirt), roughness: 0.8 })); sk.position.y = 0.45; sk.scale.z = 0.85; sk.castShadow = true; rig.add(sk); }
+    if (LK.skirt) { const sk = new THREE2.Mesh(new THREE2.CylinderGeometry(0.15, 0.25, 0.9, 28), new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.skirt), roughness: 0.8 })); sk.position.y = 0.45; sk.scale.z = 0.85; if (WIDE !== 1) { sk.scale.x = WIDE; sk.scale.z = 0.85 * WIDE; } sk.castShadow = true; rig.add(sk); }
     if (!LK.noApron) {
     const apronM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.apron || "#3f2a1d"), roughness: 0.8, side: THREE2.DoubleSide });
     const apron = new THREE2.Mesh(new THREE2.CylinderGeometry(0.168, 0.2, 0.86, 20, 1, true, -Math.PI * 0.42, Math.PI * 0.84), apronM); apron.position.y = 1.0; apron.scale.z = 0.86; rig.add(apron);
@@ -10256,7 +10289,7 @@ function makeCustomHuman(id, cfg) {
   // lengan panjang ramping
   const arms = [];
   for (const sx of [-1, 1]) {
-    const sh = new THREE2.Group(); sh.position.set(sx * 0.175, 1.42, 0); rig.add(sh);
+    const sh = new THREE2.Group(); sh.position.set(sx * 0.175 * WIDE, 1.42, 0); rig.add(sh);
     const up = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.045, 0.24, 6, 12), batik); up.position.y = -0.15; up.castShadow = true; sh.add(up);
     const fo = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.036, 0.24, 6, 12), skin); fo.position.y = -0.43; sh.add(fo);
     const hnd = new THREE2.Mesh(new THREE2.SphereGeometry(0.042, 12, 10), skin); hnd.position.y = -0.6; sh.add(hnd);
@@ -11897,7 +11930,7 @@ var ROOM_INFO = {
   keris: ["Lab KERIS", "lewat pintu barat Atrium", "Lab AI, data mining, machine learning & computer vision — ada rak server berkedip, hologram jaringan saraf, video lab, dan robot Keri.", /keris|\bkeri\b|\bai\b|machine learning|kecerdasan/],
   git: ["Lab GIT", "lewat pintu utara-kiri Atrium", "Lab geospasial: lantai peta kota neon, globe hologram, drone terbang, video kegiatan lapangan, dan robot Geo.", /\bgit\b|\bgeo\b|geospa|\bgis\b|drone|satelit/],
   se: ["Lab Software Engineering", "lewat pintu utara-kanan Atrium", "Studio developer: meja laptop, beanbag, rak piala, kanban, slideshow prestasi & produk, dan robot Cody.", /\bse\b|software|\brpl\b|cody/],
-  csn: ["Lab CSN", "lewat pintu timur Atrium", "Network Operation Center: layar monitoring, hologram topologi jaringan, rak server, dan robot Neta.", /\bcsn\b|neta|jaringan|network/],
+  csn: ["Lab CSN", "lewat pintu timur Atrium", "Network Operation Center: layar monitoring, hologram topologi jaringan, rak server, robot Neta, dan lift menuju Hanggar Drone (diaktifkan Haryani di IT-Mart Lantai 2).", /\bcsn\b|neta|jaringan|network/],
   cafe: ["IT-Mart", "di timur Ruang Sambutan, lewat pintu kayu di dinding timurnya (tempat aku bekerja)", "Meja bar barista Rahman (kopi, info dosen & saran pembimbing), tangga ke Lantai 2 (Ananda memverifikasi Explorer Card), papan menu kopi, Rak Buku Digital berisi PDF yang bisa diunduh (dijaga Silvia), papan keahlian dosen TI, sofa, dan rak buku.", /cafe|kafe|kopi|rahman|it-?mart|\bmart\b|ivy|rak buku|perpus|lantai ?2|\bnan\b|ananda|silvia|patimah|gua pustaka/],
   eportal: ["Ruang E-Portal UIKA", "lewat pintu hijau di dinding selatan Ruang Sambutan", "Ruang luas berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, UCL, dan 2 aplikasi mobile) serta robot Virzha yang memberi akses ke eportal.uika-bogor.ac.id.", /e-?portal|portal|\bvir\b|virzha|\bsso\b|siakad|simpeg|\bucl\b|\bcbt\b|library/]
 };
@@ -12561,7 +12594,7 @@ function nanAnswer(q) {
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql) && ql.split(" ").length <= 3)
     return { text: `Halo ${nm}. Aku Ananda, petugas verifikasi Explorer Card di Lantai 2 IT-Mart. Hanya pemegang kartu yang tercatat di database server yang boleh melewati gerbang menuju ruang-ruang tantangan.${L2.ok ? " Kartumu sudah terverifikasi — silakan lewat." : " Tunjukkan kartumu dulu ya."}`, acts: L2.ok ? [] : v };
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama. Jaga kartumu baik-baik!" };
-  if (/aturan|tantangan|kognitif|penjara|soal|matematika|waktu|cara|inggris|sahabat|coding|lencana|fety/.test(ql)) return { text: `Ada 4 ruang tantangan di balik gerbang: 1) Kognitif (matematika), 2) Bahasa Inggris, 3) Sahabat Rasulullah, 4) Dasar Coding. Di setiap ruang kamu dikurung dalam sel dan harus menjawab 20 soal pilihan ganda acak dalam 60 detik. Satu jawaban salah atau waktu habis → kembali ke sini. Tuntaskan keempatnya, lalu temui Teh Fety di Taman Apresiasi untuk Lencana Pengetahuan Dasar. Progresmu: ${chCount()}/4.`, acts: L2.ok ? [["🏅 Lihat capaian", openCapaian]] : v };
+  if (/aturan|tantangan|kognitif|penjara|soal|matematika|waktu|cara|inggris|sahabat|coding|lencana|fety/.test(ql)) return { text: `Ada 4 ruang tantangan di balik gerbang: 1) Kognitif (matematika), 2) Bahasa Inggris, 3) Sahabat Rasulullah, 4) Dasar Coding. Di setiap ruang kamu dikurung dalam sel dan harus menjawab 20 soal pilihan ganda acak dalam 60 detik. Satu jawaban salah atau waktu habis → kembali ke sini. Tuntaskan keempatnya, lalu temui Teh Fety di Taman Apresiasi untuk Lencana Pengetahuan Dasar. Progresmu: ${chCount()}/4. Tahap berikutnya (Hanggar Drone) diaktifkan oleh Haryani di seberangku.`, acts: L2.ok ? [["🏅 Lihat capaian", openCapaian]] : v };
   if (/rahman|lantai 1|turun|kartu.*(dapat|ambil|cara)|cara.*kartu|belum punya/.test(ql)) return { text: "Explorer Card tidak dijual di IT-Mart 😄 Bicaralah dengan Rahman di meja bar lantai 1 — dia tahu jalan menuju orang yang memberikan kartu itu.", acts: [["⬇ Turun ke lantai 1", () => l2Stairs(false)]] };
   if (/verif|kartu|card|scan|pindai|cek|buka|gerbang|lewat|masuk|pintu|akses/.test(ql)) return { text: "Memindai Explorer Card-mu… 🔎", later: nanVerify() };
   return { text: "Tugasku hanya memverifikasi Explorer Card dan menjelaskan aturan tantangan. Mau kartumu kupindai sekarang?", acts: v };
@@ -12777,7 +12810,7 @@ function buildSoon() {
 var BADGES = [
   { id: "dasar", kat: "PENGETAHUAN", nama: "Dasar", c: ["#3b82f6", "#2563eb", "#1e3a8a"], kc: "#93c5fd", icon: "book", syarat: "Tuntaskan 4 ruang tantangan Lantai 2 IT-Mart, lalu temui Teh Fety di Taman Apresiasi.", tahap: "tahap 2", desc: "atas keberhasilan menaklukkan 4 ruang tantangan Lantai 2 IT-Mart (Kognitif, Bahasa Inggris, Sahabat Rasulullah, Dasar Coding).", oleh: "Teh Fety" },
   { id: "umum", kat: "PENGETAHUAN", nama: "Umum", c: ["#8b5cf6", "#7c3aed", "#3b0764"], kc: "#c4b5fd", icon: "bulb", syarat: "Taklukkan Gua Pustaka di balik rak buku Silvia (IT-Mart) — 3 babak, 3 nyawa — lalu temui Teh Puspa.", tahap: "tahap 3", desc: "atas keberhasilan menaklukkan Gua Pustaka: Lantai Benar/Salah, Lini Masa, dan Galeri Benda.", oleh: "Teh Puspa" },
-  { id: "iot", kat: "TEKNOLOGI", nama: "IoT & Drone", c: ["#65a30d", "#4d7c0f", "#1a2e05"], kc: "#bef264", icon: "drone", syarat: "Tantangan Internet of Things & Drone. Segera hadir." },
+  { id: "iot", kat: "TEKNOLOGI", nama: "IoT & Drone", c: ["#65a30d", "#4d7c0f", "#1a2e05"], kc: "#bef264", icon: "drone", syarat: "Minta Haryani (IT-Mart Lantai 2) mengaktifkan lift Lab CSN, lalu tuntaskan Misi Smart Farm di Hanggar Drone.", tahap: "tahap 4", desc: "atas keberhasilan menuntaskan Misi Smart Farm: merakit node sensor ESP32, memprogram otomasi kebun, dan menerbangkan drone dengan presisi.", oleh: "Kang Hendri & Kang Erwin" },
   { id: "jari", kat: "KETERAMPILAN", nama: "Jari", c: ["#f43f5e", "#e11d48", "#4c0519"], kc: "#fda4af", icon: "tap" },
   { id: "coding", kat: "PENGETAHUAN", nama: "Coding", c: ["#06b6d4", "#0891b2", "#083344"], kc: "#67e8f9", icon: "code" },
   { id: "islam", kat: "PENGETAHUAN", nama: "Agama Islam", c: ["#10b981", "#047857", "#022c22"], kc: "#fcd34d", icon: "mosque" },
@@ -12980,13 +13013,13 @@ async function capSync() {
     }
     const T = (S1 && S1.tantangan) || {}, L = (S1 && S1.lencana) || {};
     let err = "";
-    for (const id of ["kognitif", "inggris", "sahabat", "coding", "pustaka"]) {
+    for (const id of ["kognitif", "inggris", "sahabat", "coding", "pustaka", "iot"]) {
       const c = q.chal[id]; if (!c) continue;
       if (T[id] && c.srv) continue;
-      const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: c.kode ? "kode" : "main" });
+      const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: c.kode ? "kode" : "main", bintang: c.bintang || 0 });
       if (j.ok) c.srv = true; else err = j.err || "Server menolak data tantangan.";
     }
-    for (const id of ["dasar", "umum"]) {
+    for (const id of ["dasar", "umum", "iot"]) {
       const bd = q.badges[id]; if (!bd) continue;
       if (L[id]) { bd.srv = true; continue; }
       const j = await xcPost("api/kartu/lencana", { no: q.card.no, tok: q.card.tok, id });
@@ -13170,7 +13203,7 @@ function fetyAnswer(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers", qs = chMigrate();
   const capA = ["🏅 Lihat capaian", openCapaian];
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Masih ada 6 lencana lain yang menunggu — sampai jumpa di tahap berikutnya 😊" };
-  if (/lencana apa|daftar lencana|7 lencana|tujuh|semua lencana|koleksi/.test(ql)) return { text: "Ada 7 lencana yang kelak bisa kamu kumpulkan:\n" + BADGES.map((b, i) => `${i + 1}. ${b.kat[0] + b.kat.slice(1).toLowerCase()} ${b.nama}${i === 0 ? " — tahap 2 (Lantai 2 IT-Mart, dariku)" : i === 1 ? " — tahap 3 (Gua Pustaka, dari Teh Puspa)" : " — segera hadir"}`).join("\n"), acts: [capA] };
+  if (/lencana apa|daftar lencana|7 lencana|tujuh|semua lencana|koleksi/.test(ql)) return { text: "Ada 7 lencana yang kelak bisa kamu kumpulkan:\n" + BADGES.map((b, i) => `${i + 1}. ${b.kat[0] + b.kat.slice(1).toLowerCase()} ${b.nama}${i === 0 ? " — tahap 2 (Lantai 2 IT-Mart, dariku)" : i === 1 ? " — tahap 3 (Gua Pustaka, dari Teh Puspa)" : i === 2 ? " — tahap 4 (Hanggar Drone, dari Kang Hendri & Kang Erwin)" : " — segera hadir"}`).join("\n"), acts: [capA] };
   if (/syarat|cara|bagaimana|gimana|tantangan|lantai/.test(ql) && !/minta|ambil|beri|kasih/.test(ql)) return { text: `Lencana Pengetahuan Dasar untuk penjelajah yang menaklukkan empat ruang tantangan di Lantai 2 IT-Mart (pintunya dijaga Ananda):\n${fetyStatus()}`, acts: [capA] };
   const ask = !ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|teh|teteh)\b/.test(ql) || /lencana|badge|minta|ambil|beri|kasih|hadiah|reward/.test(ql);
   if (!ask) return { text: "Aku Teh Fety, penjaga lencana di Taman Apresiasi. Aku bisa menjelaskan syarat lencana, daftar 7 lencana, atau menyematkan lencanamu kalau tantangannya sudah tuntas.", acts: [["🔷 Minta lencana", () => askNpc("Minta lencana", "fety")], capA] };
@@ -13348,7 +13381,7 @@ async function openCapaian() {
   </div>
   <h3 class="cap-h">Lencana <span class="pill">${owned.length}/7</span></h3>
   ${capBadgeGrid(owned, true)}
-  <div class="kbox"><b>TAHAP 2 · LANTAI 2 IT-MART (${a.ch}/4)</b><ul class="qlist">${CH_LIST.map((C) => `<li>${chDone(C.id) ? "✅" : "⬜"} Tantangan ${C.no} · ${C.nama}${q.chal[C.id] && q.chal[C.id].best ? ` <span style="color:var(--mut)">(rekor ${q.chal[C.id].best} dtk)</span>` : ""}</li>`).join("")}<li>${q.badges.dasar ? "✅" : "⬜"} Lencana Pengetahuan Dasar dari Teh Fety</li></ul><b style="display:block;margin-top:8px">TAHAP 3 · GUA PUSTAKA</b><ul class="qlist"><li>${q.chal.pustaka ? "✅" : "⬜"} Lolos 3 babak Gua Pustaka${q.chal.pustaka && q.chal.pustaka.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.pustaka.best / 60)}:${String(q.chal.pustaka.best % 60).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.umum ? "✅" : "⬜"} Lencana Pengetahuan Umum dari Teh Puspa</li></ul></div>
+  <div class="kbox"><b>TAHAP 2 · LANTAI 2 IT-MART (${a.ch}/4)</b><ul class="qlist">${CH_LIST.map((C) => `<li>${chDone(C.id) ? "✅" : "⬜"} Tantangan ${C.no} · ${C.nama}${q.chal[C.id] && q.chal[C.id].best ? ` <span style="color:var(--mut)">(rekor ${q.chal[C.id].best} dtk)</span>` : ""}</li>`).join("")}<li>${q.badges.dasar ? "✅" : "⬜"} Lencana Pengetahuan Dasar dari Teh Fety</li></ul><b style="display:block;margin-top:8px">TAHAP 3 · GUA PUSTAKA</b><ul class="qlist"><li>${q.chal.pustaka ? "✅" : "⬜"} Lolos 3 babak Gua Pustaka${q.chal.pustaka && q.chal.pustaka.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.pustaka.best / 60)}:${String(q.chal.pustaka.best % 60).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.umum ? "✅" : "⬜"} Lencana Pengetahuan Umum dari Teh Puspa</li></ul><b style="display:block;margin-top:8px">TAHAP 4 · HANGGAR DRONE</b><ul class="qlist"><li>${q.chal.iot ? "✅" : "⬜"} Misi Smart Farm${q.chal.iot && q.chal.iot.best ? ` <span style="color:var(--mut)">(rekor ${q.chal.iot.best} dtk ${"⭐".repeat(q.chal.iot.bintang || 0)})</span>` : ""}</li><li>${q.badges.iot ? "✅" : "⬜"} Lencana IoT & Drone dari Kang Hendri & Kang Erwin</li></ul></div>
   <label class="cap-sw"><input type="checkbox" id="capPub"${a.p ? " checked" : ""}> Tampilkan ikon capaian di atas kepalaku untuk semua pemain</label>`);
   $("genCard").classList.add("wide");
   $("capNm").textContent = S.name;
@@ -14282,6 +14315,797 @@ function replayIntent(npcId, q) {
   if (!/main ulang|ulang|main lagi|ular tangga|replay/.test(ql)) return null;
   if (!Q().snake) return { text: "Ular Tangga ada di Lorong 4 — tuntaskan dulu lorong-lorong sebelumnya, ya." };
   return { text: "Tentu! Mau main ulang Ular Tangga? Progresmu tetap aman: sertifikat, Explorer Card, dan akses taman tidak akan hilang meski kamu tersedot Lubang Hitam.", acts: [["🎲 Main ulang Ular Tangga", snReplayGo], ["Tidak, biarkan tuntas", () => askNpc("terima kasih", "tama")]] };
+}
+
+
+
+// =====================================================================
+// src/ext_iot.js — TAHAP 4 · HANGGAR DRONE (IoT & Drone)
+// =====================================================================
+// Simulasi kebun pintar 24 jam (dipakai Babak 2 tantangan IoT & Drone).
+// Diekspor juga untuk pengujian di Node.
+function iotRng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+// skenario cuaca acak (tetap untuk satu percobaan)
+function iotWeather(seed) {
+  const R = iotRng(seed), hours = [];
+  // dua periode hujan acak, satu periode mendung
+  const rain1 = 1 + Math.floor(R() * 5), rainLen1 = 2 + Math.floor(R() * 2);
+  const rain2 = 13 + Math.floor(R() * 6), rainLen2 = 1 + Math.floor(R() * 2);
+  const cloud = 8 + Math.floor(R() * 4), cloudLen = 3;
+  const peak = 34.5 + R() * 3.5; // suhu puncak siang
+  for (let h = 0; h < 24; h++) {
+    const day = h >= 6 && h < 18;
+    const rain = (h >= rain1 && h < rain1 + rainLen1) || (h >= rain2 && h < rain2 + rainLen2);
+    const cloudy = rain || (h >= cloud && h < cloud + cloudLen);
+    const sunK = day ? Math.sin((h - 6) / 12 * Math.PI) : 0;
+    const temp = 24 + (peak - 24) * Math.max(0, Math.sin((h - 8) / 12 * Math.PI)) - (rain ? 3 : 0);
+    const lux = day ? (cloudy ? 120 + sunK * 60 : 300 + sunK * 700) : 5;
+    hours.push({ h, day, rain, cloudy, temp: +temp.toFixed(1), lux: Math.round(lux) });
+  }
+  return hours;
+}
+// kondisi yang bisa dipilih pemain
+var IOT_COND = {
+  "tanah<30": (s) => s.soil < 30, "tanah<50": (s) => s.soil < 50, "tanah>70": (s) => s.soil > 70,
+  "hujan": (s) => s.rain, "tidakhujan": (s) => !s.rain, "siang": (s) => s.day, "malam": (s) => !s.day,
+  "suhu>33": (s) => s.temp > 33, "suhu>32": (s) => s.temp > 32, "suhu>28": (s) => s.temp > 28, "cahaya<200": (s) => s.lux < 200, "selalu": () => true
+};
+// rules: { pompa: [c1, c2?], kipas: [...], lampu: [...] }  (kosong = tidak pernah menyala)
+var IOT_IDEAL = { pompa: ["tanah<30", "tidakhujan"], kipas: ["suhu>33"], lampu: ["cahaya<200", "siang"] };
+// anggaran listrik harian = energi strategi rujukan + 10% (bergantung cuaca hari itu)
+function iotBudget(seed) { return Math.ceil(iotSimulate(IOT_IDEAL, seed, 1e9).energy * 1.10 + 1); }
+function iotSimulate(rules, seed, budget) {
+  const W = iotWeather(seed), R = iotRng(seed * 7 + 3);
+  const evap = [1.0, 1.25, 0.85, 1.15, 1.35, 0.95]; // laju penguapan tiap petak (jenis tanah berbeda)
+  const plots = evap.map((e, i) => ({ i, e, soil: 50 + R() * 15, hp: 100, light: 0, dry: 0, wet: 0, heat: 0 }));
+  const offline = Math.floor(R() * 6); // node sensor petak ini mati di akhir simulasi → sasaran drone
+  let energy = 0, log = [], fail = null;
+  const on = (key, st) => { const r = rules[key]; if (!r || !r.length) return false; return r.every((c) => IOT_COND[c] && IOT_COND[c](st)); };
+  for (let step = 0; step < 24 * 6; step++) {
+    const w = W[Math.floor(step / 6)], hourFrac = 1 / 6;
+    let pumps = 0;
+    const fan = on("kipas", { ...w, soil: 50 }), lamp = on("lampu", { ...w, soil: 50 });
+    const temp = fan ? w.temp - 4 : w.temp;
+    for (const p of plots) {
+      const st = { ...w, soil: p.soil };
+      const pump = on("pompa", st);
+      if (pump) { pumps++; p.soil += 14 * hourFrac; }
+      if (w.rain) p.soil += 9 * hourFrac;
+      const loss = (w.day ? 1.6 + Math.max(0, temp - 26) * 0.35 : 0.5) * p.e * (w.cloudy ? 0.6 : 1);
+      p.soil = Math.max(0, Math.min(100, p.soil - loss * hourFrac * 2.2));
+      // cahaya: matahari (tidak mendung) atau lampu tumbuh di siang mendung
+      if (w.day && (!w.cloudy || lamp)) p.light += hourFrac;
+      if (p.soil < 20) { p.dry += hourFrac; p.hp -= 9 * hourFrac; }
+      else if (p.soil > 88) { p.wet += hourFrac; p.hp -= 7 * hourFrac; }
+      if (temp > 33.5) { p.heat += hourFrac; p.hp -= 14 * hourFrac; }
+    }
+    energy += (pumps * 2.0 + (fan ? 3 : 0) + (lamp ? 2.5 : 0)) * hourFrac;
+    if (step % 6 === 5) log.push({ h: w.h, temp, lux: w.lux, rain: w.rain, fan, lamp, pumps, soil: plots.map((p) => Math.round(p.soil)), hp: plots.map((p) => Math.round(p.hp)), energy: +energy.toFixed(1) });
+  }
+  // cahaya kurang dari 9 jam efektif → pertumbuhan terhambat
+  for (const p of plots) if (p.light < 10.5) p.hp -= (10.5 - p.light) * 25;
+  const BUDGET = budget || iotBudget(seed);
+  const worst = plots.reduce((a, b) => (b.hp < a.hp ? b : a));
+  if (worst.hp < 60) fail = { kind: worst.dry > worst.wet && worst.dry > worst.heat ? "layu" : worst.wet > worst.heat ? "busuk" : worst.heat > 0 ? "panas" : "cahaya", plot: worst.i };
+  else if (energy > BUDGET) fail = { kind: "energi" };
+  return { ok: !fail, fail, energy: +energy.toFixed(1), budget: BUDGET, plots: plots.map((p) => ({ hp: Math.round(p.hp), soil: Math.round(p.soil), light: +p.light.toFixed(1), dry: +p.dry.toFixed(1), wet: +p.wet.toFixed(1), heat: +p.heat.toFixed(1) })), offline, log, weather: W };
+}
+
+
+// ---------------------------------------------------------------------
+// TAHAP 4 · HANGGAR DRONE (Lencana Teknologi IoT & Drone)
+//  • Haryani (IT-Mart Lantai 2) memeriksa Explorer Card + Lencana Dasar +
+//    Lencana Umum di server, lalu mengaktifkan LIFT di Lab CSN.
+//  • Hanggar di atap (malam hari, kota di kejauhan). 3 nyawa · 3 babak:
+//    1) Rakit node sensor ESP32 (+2 soal wawasan), 2) Program otomasi +
+//    simulasi kebun 24 jam (anggaran listrik), 3) Pra-terbang + misi drone
+//    (5 cincin, pindai petak, jatuhkan node, mendarat presisi; ≥ 2 bintang).
+//  • Kang Hendri & Kang Erwin (berdampingan) menyematkan lencana.
+//  • Kode cepat: "butnavudivoxyziz4" ke Rahman (butuh 2 lencana sebelumnya).
+//  • Kontrol drone: keyboard laptop atau 2 joystick sentuh di HP.
+// ---------------------------------------------------------------------
+var IO = { on: false, won: false, babak: 0, lives: 3, liftOk: false, liftK: 0, fly: false, dr: null, sim: null, seed: 0, grace: 0, t0: 0, rekor: [] };
+var IO_LIVES = 3, IO_WIRE_TIME = 240;
+XROOMS.hangar = { x0: 100, x1: 170, z0: -76, z1: -4, h: 30, name: "Hanggar Drone (atap)", short: "Hanggar" };
+var inHangar = (x, z) => x > 100 && x < 170 && z > -76 && z < -4;
+var IO_LIFT_CSN = { x: 33.6, z: -7.6 };   // lift kaca berdiri bebas di sisi timur laut Lab CSN (pintu menghadap barat)
+var IO_ARRIVE = { x: 112, z: -8.2 };
+var IO_PAD = { x: 112, z: -40 };
+var IO_PILOT = { x: 112, z: -32.5 };
+var IO_PLOTS = [[134, -50], [142, -50], [150, -50], [134, -61], [142, -61], [150, -61]];
+var IO_RINGS = [[118, 4.2, -46, 2.0], [127, 6.0, -53, 1.8], [124, 5.0, -64, 1.6], [137, 7.5, -70, 1.45], [152, 6.0, -70, 1.35]];
+var IO_TOWER = { x: 131, z: -60, r: 0.9, h: 14 };
+
+// ---------- Babak 1: rakit node sensor ----------
+var IO_PINS_ANALOG = ["GPIO34 (ADC1)", "GPIO35 (ADC1)", "GPIO32 (ADC1)", "GPIO25 (ADC2)", "GPIO4 (ADC2)"];
+var IO_PARTS = [
+  { id: "dht", nama: "DHT22 · suhu & kelembapan udara (komponen lepas, bukan modul)", pins: [
+    ["VCC", ["3V3", "5V (VIN)", "GND"], "3V3", "DHT22 diberi 3,3 V agar level sinyal datanya aman untuk ESP32."],
+    ["DATA", ["GPIO16 langsung", "GPIO16 + resistor pull-up 10kΩ ke 3V3", "GPIO34 (ADC1)"], "GPIO16 + resistor pull-up 10kΩ ke 3V3", "Jalur data DHT22 (komponen lepas) butuh resistor pull-up ±10kΩ."],
+    ["GND", ["GND", "3V3"], "GND", "GND ke GND."]] },
+  { id: "ldr", nama: "Modul LDR · intensitas cahaya (keluaran analog AO)", pins: [
+    ["VCC", ["3V3", "5V (VIN)"], "3V3", "Modul analog diberi 3,3 V agar tegangan AO tidak melebihi batas ADC ESP32."],
+    ["AO", IO_PINS_ANALOG, ["GPIO34 (ADC1)", "GPIO35 (ADC1)", "GPIO32 (ADC1)"], "Sinyal analog harus masuk pin ADC1 — ADC2 tidak bisa dipakai saat WiFi ESP32 aktif."],
+    ["GND", ["GND", "3V3"], "GND", "GND ke GND."]] },
+  { id: "soil", nama: "Sensor kelembapan tanah kapasitif (keluaran analog AO)", pins: [
+    ["VCC", ["3V3", "5V (VIN)"], "3V3", "Diberi 3,3 V agar keluaran analognya aman untuk ADC ESP32."],
+    ["AO", IO_PINS_ANALOG, ["GPIO34 (ADC1)", "GPIO35 (ADC1)", "GPIO32 (ADC1)"], "Sinyal analog harus masuk pin ADC1 — ADC2 tidak bisa dipakai saat WiFi aktif."],
+    ["GND", ["GND", "3V3"], "GND", "GND ke GND."]] },
+  { id: "pir", nama: "PIR HC-SR501 · sensor gerak (catu daya 4,5–20 V)", pins: [
+    ["VCC", ["3V3", "5V (VIN)"], "5V (VIN)", "HC-SR501 butuh catu daya minimal ±4,5 V, jadi ambil dari 5V/VIN."],
+    ["OUT", ["GPIO27", "GPIO34 (ADC1)", "GPIO27 lewat pembagi tegangan"], ["GPIO27", "GPIO34 (ADC1)"], "Keluaran HC-SR501 sudah berlevel ±3,3 V, cukup masuk GPIO input biasa."],
+    ["GND", ["GND", "3V3"], "GND", "GND ke GND."]] },
+  { id: "relay", nama: "Modul relay 5V · penggerak pompa air", pins: [
+    ["VCC", ["3V3", "5V (VIN)"], "5V (VIN)", "Kumparan relay modul 5V perlu catu 5V."],
+    ["IN", ["GPIO26", "GPIO35 (ADC1)", "GPIO34 (ADC1)"], "GPIO26", "Relay dikendalikan pin OUTPUT. GPIO34–39 hanya bisa INPUT."],
+    ["GND", ["GND", "3V3"], "GND", "GND ke GND."]] },
+  { id: "sr04", nama: "Ultrasonik HC-SR04 · ketinggian air tandon (bekerja di 5 V)", pins: [
+    ["VCC", ["3V3", "5V (VIN)"], "5V (VIN)", "HC-SR04 dirancang untuk catu 5 V."],
+    ["TRIG", ["GPIO5", "GPIO39 (input saja)"], "GPIO5", "TRIG adalah keluaran dari ESP32, jadi butuh pin yang bisa OUTPUT."],
+    ["ECHO", ["GPIO18 langsung", "GPIO18 lewat pembagi tegangan 1kΩ/2kΩ"], "GPIO18 lewat pembagi tegangan 1kΩ/2kΩ", "ECHO mengeluarkan 5 V — harus diturunkan ke ±3,3 V lewat pembagi tegangan sebelum masuk ESP32."],
+    ["GND", ["GND", "3V3"], "GND", "GND ke GND."]] }
+];
+var IO_QUIZ = [
+  ["Protokol ringan berbasis publish/subscribe yang paling umum dipakai node IoT untuk mengirim data sensor ke broker adalah…", "MQTT", ["FTP", "SMTP", "Telnet"]],
+  ["Agar node ESP32 bertenaga baterai hemat daya di antara jadwal pengiriman data, cara yang tepat adalah…", "Memakai mode deep sleep lalu bangun dengan timer", ["Memakai delay() panjang di loop()", "Menurunkan tegangan catu ke 1,8 V", "Mencabut antena WiFi"]]
+];
+function ioWireOpen() {
+  if ($("ioOv")) return;
+  if (renderer.xr.isPresenting) { showVRText("Babak ini membutuhkan layar biasa. Keluar dari mode VR sebentar."); return; }
+  const st = IO.wire || (IO.wire = { t0: performance.now(), sel: {} });
+  const ov = document.createElement("div"); ov.id = "ioOv";
+  ov.innerHTML = `<div class="io-card"><div class="cog-top"><b>🔧 BABAK 1/3 · RAKIT NODE SENSOR ESP32</b><span id="ioL"></span></div><div class="cog-bar"><i id="ioBar"></i></div><div id="ioT" class="cog-time"></div>
+  <p class="io-p">Hubungkan setiap pin komponen ke papan <b>ESP32 (logika 3,3 V)</b>. Satu kesalahan → korsleting, nyawa −1. Satu GPIO hanya boleh dipakai satu komponen.</p>
+  <div id="ioParts" class="io-parts"></div>
+  <div class="rowf"><button class="btn" id="ioTest">⚡ Uji rangkaian</button><button class="ghost" id="ioClose">Tutup</button></div><p id="ioMsg" class="io-msg" role="status"></p></div>`;
+  document.body.appendChild(ov);
+  const box = $("ioParts");
+  for (const P2 of IO_PARTS) {
+    const d = document.createElement("div"); d.className = "io-part";
+    d.innerHTML = `<b></b><div class="io-pins"></div>`; d.querySelector("b").textContent = P2.nama;
+    for (const [pin, opts] of P2.pins) {
+      const lab = document.createElement("label"); lab.innerHTML = `<span>${pin}</span>`;
+      const s = document.createElement("select"); s.innerHTML = `<option value="">— pilih —</option>` + opts.map((o) => `<option>${o}</option>`).join("");
+      const k = P2.id + "." + pin; s.value = st.sel[k] || ""; s.onchange = () => { st.sel[k] = s.value; };
+      lab.appendChild(s); d.querySelector(".io-pins").appendChild(lab);
+    }
+    box.appendChild(d);
+  }
+  $("ioClose").onclick = () => { ov.remove(); IO.wireCool = performance.now() + 3000; };
+  $("ioTest").onclick = ioWireTest;
+  const tick = () => { if (!$("ioOv") || !$("ioT") || IO.babak !== 1) return; const left = IO_WIRE_TIME - (performance.now() - st.t0) / 1000; $("ioT").textContent = `⏱ ${Math.max(0, left).toFixed(0)} dtk`; $("ioBar").style.width = Math.max(0, left / IO_WIRE_TIME * 100) + "%"; $("ioL").textContent = ioHearts(); if (left <= 0) { st.t0 = performance.now(); if (!ioLose("Waktu merakit habis! Pengatur waktu diulang.")) $("ioMsg").textContent = "⏱ Waktu habis — nyawa −1. Waktu diulang, rangkaianmu tetap tersimpan."; } else requestAnimationFrame(tick); };
+  tick();
+}
+function ioWireTest() {
+  const st = IO.wire, sel = st.sel;
+  for (const P2 of IO_PARTS) for (const [pin] of P2.pins) if (!sel[P2.id + "." + pin]) { $("ioMsg").textContent = `Masih ada pin yang belum terhubung: ${P2.nama.split("·")[0].trim()} → ${pin}.`; return; }
+  // GPIO ganda
+  const used = {};
+  for (const [k, v] of Object.entries(sel)) { const g = (v.match(/GPIO\d+/) || [])[0]; if (g) { if (used[g]) { ioWireFail(`${g} dipakai dua komponen sekaligus. Satu GPIO hanya untuk satu sinyal.`); return; } used[g] = k; } }
+  for (const P2 of IO_PARTS) for (const [pin, , ok, why] of P2.pins) {
+    const v = sel[P2.id + "." + pin], good = Array.isArray(ok) ? ok.includes(v) : v === ok;
+    if (!good) { ioWireFail(`⚡ Korsleting di ${P2.nama.split("·")[0].trim()} pin ${pin}! ${why}`); return; }
+  }
+  // rangkaian benar → 2 soal wawasan
+  if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle();
+  ioQuiz(0);
+}
+function ioWireFail(msg) { cvFlash && cvFlash("rgba(250,204,21,.45)"); if (!ioLose(msg.replace(/^⚡ /, ""))) $("ioMsg").textContent = msg + " (nyawa −1 — perbaiki lalu uji lagi)"; }
+function ioQuiz(i) {
+  const card = document.querySelector("#ioOv .io-card"); if (!card) return;
+  if (i >= IO_QUIZ.length) {
+    card.innerHTML = `<div class="cog-res win"><div style="font-size:54px">💡</div><h2>Node sensor menyala!</h2><p>LED berkedip, data suhu, cahaya, tanah, gerak & tandon terkirim lewat MQTT. Lanjut ke <b>konsol otomasi</b> di sisi kanan hanggar.</p></div>`;
+    IO.babak = 2; ioHudUpd("✅ Babak 1 tuntas! Dekati konsol otomasi (sisi kanan hanggar).");
+    setTimeout(() => $("ioOv")?.remove(), 2600); return;
+  }
+  const [q, ok, wr] = IO_QUIZ[i], opts = cogShuffle([ok, ...wr]);
+  card.innerHTML = `<div class="cog-top"><b>🔧 WAWASAN IoT ${i + 1}/2</b><span>${ioHearts()}</span></div><p class="io-q"></p><div class="cog-o txt"></div><p class="io-msg" id="ioMsg"></p>`;
+  card.querySelector(".io-q").textContent = q;
+  const o = card.querySelector(".cog-o");
+  opts.forEach((v) => { const b = document.createElement("button"); b.textContent = v; b.onclick = () => { if (v === ok) { if (typeof SFX !== "undefined") SFX.bloop(1.4); ioQuiz(i + 1); } else { b.classList.add("bad"); if (!ioLose("Jawaban wawasan IoT keliru.")) $("ioMsg").textContent = "❌ Kurang tepat — nyawa −1. Coba lagi."; } }; o.appendChild(b); });
+}
+
+// ---------- Babak 2: program otomasi + simulasi ----------
+var IO_COND_LABEL = { "": "—", "tanah<30": "kelembapan tanah < 30%", "tanah<50": "kelembapan tanah < 50%", "tanah>70": "kelembapan tanah > 70%", "hujan": "sedang hujan", "tidakhujan": "tidak hujan", "siang": "siang hari", "malam": "malam hari", "suhu>33": "suhu > 33°C", "suhu>32": "suhu > 32°C", "suhu>28": "suhu > 28°C", "cahaya<200": "cahaya < 200 lux", "selalu": "selalu" };
+var IO_ACT = [["pompa", "💧 Pompa irigasi (per petak, pakai sensor tanah petak itu)"], ["kipas", "🌀 Kipas pendingin rumah kaca"], ["lampu", "💡 Lampu tumbuh (grow light)"]];
+function ioRuleOpen() {
+  if ($("ioOv")) return;
+  if (!IO.seed) IO.seed = 1 + Math.floor(Math.random() * 1e6);
+  const W = iotWeather(IO.seed), budget = iotBudget(IO.seed);
+  const rain = W.filter((w) => w.rain).map((w) => w.h), cloud = W.filter((w) => w.cloudy && !w.rain && w.day).map((w) => w.h), peak = Math.max(...W.map((w) => w.temp));
+  const rng = (a) => { if (!a.length) return "-"; const out = []; let s = a[0], p = a[0]; for (const h of a.slice(1).concat([99])) { if (h !== p + 1) { out.push(s === p ? `${String(s).padStart(2, "0")}.00` : `${String(s).padStart(2, "0")}–${String(p + 1).padStart(2, "0")}.00`); s = h; } p = h; } return out.join(", "); };
+  IO.rules = IO.rules || { pompa: ["", ""], kipas: ["", ""], lampu: ["", ""] };
+  const ov = document.createElement("div"); ov.id = "ioOv";
+  ov.innerHTML = `<div class="io-card wide"><div class="cog-top"><b>🧠 BABAK 2/3 · PROGRAM OTOMASI KEBUN</b><span>${ioHearts()}</span></div>
+  <div class="io-wx"><div>🌦 <b>Prakiraan hari ini</b><br>Hujan: ${rng(rain)}<br>Mendung (siang): ${rng(cloud)}<br>Suhu puncak: ${peak.toFixed(1)}°C · siang 06–18</div><div>⚡ <b>Anggaran listrik</b><br><span class="io-big">${budget} unit</span><br>Pompa 2/jam/petak · Kipas 3/jam · Lampu 2,5/jam</div></div>
+  <p class="io-p">Susun aturan: aktuator <b>NYALA</b> hanya bila <b>semua</b> kondisinya terpenuhi (DAN). Tanaman rusak bila tanah &lt; 20% (layu) atau &gt; 88% (busuk akar), suhu rumah kaca &gt; 33,5°C (kipas menurunkan 4°C), atau cahaya efektif &lt; 10,5 jam. Satu petak rusak atau listrik melebihi anggaran → gagal, nyawa −1.</p>
+  <div id="ioRules" class="io-rules"></div>
+  <canvas id="ioChart" width="900" height="260"></canvas>
+  <div class="rowf"><button class="btn" id="ioRun">▶ Jalankan simulasi 24 jam</button><button class="ghost" id="ioClose">Tutup</button></div><p id="ioMsg" class="io-msg" role="status"></p></div>`;
+  document.body.appendChild(ov);
+  const box = $("ioRules"), opts = Object.keys(IO_COND_LABEL).map((k) => `<option value="${k}">${IO_COND_LABEL[k]}</option>`).join("");
+  for (const [k, label] of IO_ACT) {
+    const row = document.createElement("div"); row.className = "io-rule";
+    row.innerHTML = `<span class="io-an"></span><span>JIKA</span><select></select><span>DAN</span><select></select><span>MAKA NYALA</span>`;
+    row.querySelector(".io-an").textContent = label;
+    row.querySelectorAll("select").forEach((s, i) => { s.innerHTML = opts; s.value = IO.rules[k][i] || ""; s.onchange = () => { IO.rules[k][i] = s.value; }; });
+    box.appendChild(row);
+  }
+  ioChart(null, 0);
+  $("ioClose").onclick = () => { ov.remove(); IO.ruleCool = performance.now() + 3000; };
+  $("ioRun").onclick = ioRuleRun;
+}
+function ioChart(res, upto) {
+  const c = $("ioChart"); if (!c) return; const x = c.getContext("2d"), W = c.width, H = c.height;
+  x.fillStyle = "#06121c"; x.fillRect(0, 0, W, H);
+  x.strokeStyle = "rgba(255,255,255,.08)"; for (let h = 0; h <= 24; h += 3) { const px = 40 + h / 24 * (W - 60); x.beginPath(); x.moveTo(px, 10); x.lineTo(px, H - 24); x.stroke(); x.fillStyle = "#64748b"; x.font = "12px sans-serif"; x.fillText(String(h).padStart(2, "0"), px - 7, H - 8); }
+  const yS = (v) => 10 + (1 - v / 100) * (H - 40);
+  x.fillStyle = "rgba(239,68,68,.12)"; x.fillRect(40, yS(20), W - 60, yS(0) - yS(20)); x.fillRect(40, yS(100), W - 60, yS(88) - yS(100));
+  if (!res) { x.fillStyle = "#94a3b8"; x.font = "15px sans-serif"; x.fillText("Grafik kelembapan tanah 6 petak, suhu, dan pemakaian listrik muncul di sini.", 60, H / 2); return; }
+  const cols = ["#22d3ee", "#a3e635", "#f472b6", "#facc15", "#fb923c", "#c084fc"];
+  for (let p = 0; p < 6; p++) { x.strokeStyle = cols[p]; x.lineWidth = 2; x.beginPath(); res.log.slice(0, upto).forEach((L, i) => { const px = 40 + (i + 1) / 24 * (W - 60), py = yS(L.soil[p]); i ? x.lineTo(px, py) : x.moveTo(px, py); }); x.stroke(); }
+  x.strokeStyle = "#f87171"; x.setLineDash([5, 4]); x.beginPath(); res.log.slice(0, upto).forEach((L, i) => { const px = 40 + (i + 1) / 24 * (W - 60), py = yS((L.temp - 15) * 4); i ? x.lineTo(px, py) : x.moveTo(px, py); }); x.stroke(); x.setLineDash([]);
+  const L = res.log[Math.max(0, upto - 1)];
+  x.fillStyle = "#e2e8f0"; x.font = "bold 14px sans-serif";
+  x.fillText(`Jam ${String(L.h + 1).padStart(2, "0")}.00 · ${L.rain ? "🌧" : L.lux > 200 ? "☀" : "☁"} ${L.temp.toFixed(1)}°C · kipas ${L.fan ? "ON" : "off"} · lampu ${L.lamp ? "ON" : "off"} · pompa ${L.pumps}/6`, 46, 26);
+  const frac = Math.min(1, L.energy / res.budget); x.fillStyle = "#1e293b"; x.fillRect(W - 230, 34, 200, 12); x.fillStyle = L.energy > res.budget ? "#ef4444" : "#22c55e"; x.fillRect(W - 230, 34, 200 * frac, 12); x.fillStyle = "#e2e8f0"; x.font = "12px sans-serif"; x.fillText(`listrik ${L.energy} / ${res.budget}`, W - 230, 62);
+}
+function ioRuleRun() {
+  const rules = {}; for (const [k] of IO_ACT) rules[k] = IO.rules[k].filter(Boolean);
+  const res = iotSimulate(rules, IO.seed);
+  $("ioRun").disabled = true; $("ioMsg").textContent = "Simulasi berjalan…";
+  let i = 0; const step = () => { if (!$("ioChart")) return; i++; ioChart(res, i); if (i < 24) setTimeout(step, 230); else done(); };
+  const done = () => {
+    $("ioRun").disabled = false;
+    if (res.ok) {
+      IO.sim = res; IO.babak = 3;
+      if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle();
+      const card = document.querySelector("#ioOv .io-card");
+      card.insertAdjacentHTML("beforeend", `<div class="cog-res win"><h2>🌱 Kebun selamat!</h2><p>Semua petak sehat dan listrik ${res.energy}/${res.budget} unit. Tapi… <b>node sensor Petak ${res.offline + 1} tiba-tiba berhenti mengirim data</b> (ditandai merah di kebun). Terbangkan drone untuk memindainya dan menjatuhkan node pengganti!</p><div class="rowf"><button class="btn" id="ioNext">🛸 Menuju helipad</button></div></div>`);
+      $("ioNext").onclick = () => { $("ioOv")?.remove(); ioMarkPlot(res.offline); ioHudUpd(`✅ Babak 2 tuntas! Berdirilah di panggung pilot dekat helipad untuk memulai misi drone.`); };
+      ioMarkPlot(res.offline);
+    } else {
+      const f = res.fail, why = f.kind === "energi" ? `Listrik terpakai ${res.energy} unit, melebihi anggaran ${res.budget}.` : f.kind === "layu" ? `Petak ${f.plot + 1} layu kekeringan.` : f.kind === "busuk" ? `Petak ${f.plot + 1} kelebihan air (busuk akar).` : f.kind === "panas" ? `Tanaman Petak ${f.plot + 1} kepanasan di rumah kaca.` : `Tanaman Petak ${f.plot + 1} kekurangan cahaya.`;
+      if (!ioLose("Simulasi gagal: " + why)) $("ioMsg").textContent = `❌ ${why} Nyawa −1 — ubah aturanmu lalu jalankan lagi.`;
+    }
+  };
+  step();
+}
+
+// ---------- Babak 3: pra-terbang + drone ----------
+var IO_PRE = [
+  ["Baterai drone & remote terisi penuh", true], ["Baling-baling terpasang kencang dan tidak retak", true], ["Kompas terkalibrasi & sinyal GPS terkunci", true],
+  ["Area lepas landas bebas orang dan rintangan", true], ["Drone selalu berada dalam jarak pandang pilot", true],
+  ["Terbang di atas kerumunan supaya foto lebih menarik", false], ["Tetap lepas landas walau baterai tinggal 20% karena misinya singkat", false], ["Matikan GPS agar drone lebih lincah", false]
+];
+function ioPreOpen() {
+  if ($("ioOv")) return;
+  if (renderer.xr.isPresenting) { showVRText("Misi drone membutuhkan layar biasa (keyboard atau layar sentuh). Keluar dari mode VR sebentar."); return; }
+  const ov = document.createElement("div"); ov.id = "ioOv";
+  ov.innerHTML = `<div class="io-card"><div class="cog-top"><b>🛸 BABAK 3/3 · DAFTAR PERIKSA PRA-TERBANG</b><span>${ioHearts()}</span></div>
+  <p class="io-p">Centang <b>semua</b> langkah yang benar dan <b>hanya</b> yang benar. Keliru → nyawa −1.</p><div class="io-pre"></div>
+  <div class="kbox"><b>KONTROL DRONE</b><p style="margin:4px 0 0;font-size:13px">⌨ Laptop: <b>W/S</b> maju-mundur · <b>A/D</b> geser kiri-kanan · <b>Spasi / ↑</b> naik · <b>C / ↓</b> turun · <b>Q/E / ← →</b> putar · <b>F</b> jatuhkan node.<br>📱 HP: joystick kiri = naik/turun & putar, joystick kanan = maju/mundur & geser, tombol 📦 = jatuhkan.</p></div>
+  <div class="kbox"><b>MISI (lulus ≥ 2⭐)</b><ol style="margin:4px 0 0 18px;font-size:13px"><li>Lewati 5 cincin berurutan (makin sempit).</li><li>Pindai Petak ${IO.sim ? IO.sim.offline + 1 : "?"} — melayang 3–8 m di atasnya selama 2,5 dtk.</li><li>Jatuhkan node pengganti tepat di penanda (2 kesempatan).</li><li>Mendarat pelan di helipad.</li></ol><p style="margin:4px 0 0;font-size:12px;color:var(--mut)">⭐ waktu ≤ 95 dtk · ⭐ sisa baterai ≥ 20% · ⭐ jarak mendarat ≤ 0,7 m dari tengah. Menabrak, mendarat keras, atau baterai habis → jatuh, nyawa −1.</p></div>
+  <div class="rowf"><button class="btn" id="ioGo">✅ Siap terbang</button><button class="ghost" id="ioClose">Tutup</button></div><p id="ioMsg" class="io-msg"></p></div>`;
+  document.body.appendChild(ov);
+  const box = ov.querySelector(".io-pre");
+  for (const [t2] of cogShuffle(IO_PRE)) { const l = document.createElement("label"); l.className = "io-chk"; l.innerHTML = `<input type="checkbox"> <span></span>`; l.querySelector("span").textContent = t2; l.dataset.t = t2; box.appendChild(l); }
+  $("ioClose").onclick = () => { ov.remove(); IO.preCool = performance.now() + 3000; };
+  $("ioGo").onclick = () => {
+    const chosen = new Set([...box.querySelectorAll("label")].filter((l) => l.querySelector("input").checked).map((l) => l.dataset.t));
+    const wrong = IO_PRE.find(([t2, ok]) => ok !== chosen.has(t2));
+    if (wrong) { const msg = wrong[1] ? `Ada langkah penting yang belum dicentang.` : `“${wrong[0]}” berbahaya — jangan dilakukan!`; if (!ioLose("Pra-terbang keliru: " + msg)) $("ioMsg").textContent = `❌ ${msg} Nyawa −1.`; return; }
+    ov.remove(); IO.preOk = true; ioFlyStart();
+  };
+}
+function ioMakeDrone() {
+  const g = new THREE2.Group();
+  const bodyM = new THREE2.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.35, metalness: 0.3 }), darkM = new THREE2.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.5 });
+  const b = new THREE2.Mesh(new THREE2.BoxGeometry(0.34, 0.11, 0.46), bodyM); g.add(b);
+  const cam = new THREE2.Mesh(new THREE2.SphereGeometry(0.06, 12, 10), darkM); cam.position.set(0, -0.07, -0.2); g.add(cam);
+  const rotors = [];
+  for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+    const arm = new THREE2.Mesh(new THREE2.BoxGeometry(0.04, 0.03, 0.42), darkM); arm.position.set(sx * 0.2, 0.02, sz * 0.2); arm.rotation.y = sx * sz * Math.PI / 4; g.add(arm);
+    const mot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.035, 0.035, 0.06, 10), darkM); mot.position.set(sx * 0.34, 0.05, sz * 0.34); g.add(mot);
+    const rot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.17, 0.17, 0.01, 18), new THREE2.MeshBasicMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.35 })); rot.position.set(sx * 0.34, 0.09, sz * 0.34); g.add(rot); rotors.push(rot);
+    const led = new THREE2.Mesh(new THREE2.SphereGeometry(0.025, 8, 6), new THREE2.MeshBasicMaterial({ color: sz < 0 ? 0x22c55e : 0xef4444, toneMapped: false, fog: false })); led.position.set(sx * 0.34, 0.0, sz * 0.34); g.add(led);
+  }
+  g.scale.setScalar(1.6);
+  g.userData.rotors = rotors;
+  return g;
+}
+function ioFlyStart() {
+  const D = IO.dr = { x: IO_PAD.x, y: 0.12, z: IO_PAD.z, vx: 0, vy: 0, vz: 0, yaw: 0, bat: 100, t0: performance.now(), ring: 0, scan: 0, scanned: false, drops: 2, dropped: false, pkg: null, landedT: 0, wind: { a: Math.random() * 6.28, s: 0, t: 0 }, done: false, airborne: false };
+  if (!IO.drone) { IO.drone = ioMakeDrone(); scene.add(IO.drone); }
+  IO.drone.visible = true;
+  IO.fly = true;
+  xTeleport(IO_PILOT.x, IO_PILOT.z, 0);
+  IO.camPos = null;
+  ioRingsReset(); ioJoy(true);
+  ioHudUpd("🛸 Lepas landas! Lewati cincin 1 (berpendar hijau).");
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  void D;
+}
+function ioRingsReset() { (IO.rings || []).forEach((r, i) => { r.passed = false; r.prev = undefined; r.m.material.color.set(i === 0 ? 0x22c55e : 0x64748b); }); }
+function ioCrash(why) {
+  const D = IO.dr; if (!D || D.done) return;
+  D.done = true; IO.fly = false; ioJoy(false);
+  if (typeof xShake === "function") xShake(0.6, 0.08);
+  cvFlash && cvFlash("rgba(239,68,68,.45)");
+  spawnSparkle({ x: D.x, y: D.y - 1, z: D.z });
+  const dead = ioLose(`💥 Drone jatuh: ${why}`);
+  if (!dead) setTimeout(() => { if (IO.drone) IO.drone.visible = false; ioHudUpd(`💥 ${why} Nyawa −1. Berdiri di panggung pilot untuk terbang lagi (daftar periksa tidak diulang).`); }, 1200);
+}
+function ioFinish() {
+  const D = IO.dr; D.done = true; IO.fly = false; ioJoy(false);
+  const secs = (performance.now() - D.t0) / 1000, off = Math.hypot(D.x - IO_PAD.x, D.z - IO_PAD.z);
+  const stars = (secs <= 95 ? 1 : 0) + (D.bat >= 20 ? 1 : 0) + (off <= 0.7 ? 1 : 0);
+  const detail = `⏱ ${secs.toFixed(1)} dtk ${secs <= 95 ? "⭐" : "✗"} · 🔋 ${D.bat.toFixed(0)}% ${D.bat >= 20 ? "⭐" : "✗"} · 🎯 ${off.toFixed(2)} m ${off <= 0.7 ? "⭐" : "✗"}`;
+  if (stars < 2) { const dead = ioLose(`Misi selesai dengan ${stars}⭐ (butuh ≥ 2⭐). ${detail}`); if (!dead) ioHudUpd(`Hanya ${stars}⭐ — butuh minimal 2⭐. ${detail}. Coba terbang lagi dari panggung pilot.`); return; }
+  IO.won = true; IO.babak = 4;
+  const q = chMigrate(), prev = q.chal.iot;
+  q.chal.iot = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, secs).toFixed(1), bintang: Math.max(stars, (prev && prev.bintang) || 0) };
+  saveQ(); capSync().then(ioRekorLoad); capPresDirty();
+  if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+  cvFlash && cvFlash("rgba(250,204,21,.35)");
+  ioHudUpd(`🏆 MISI SUKSES ${"⭐".repeat(stars)}${"☆".repeat(3 - stars)} — ${detail}. Temui Kang Hendri & Kang Erwin di hanggar untuk lencanamu!`);
+  setTimeout(() => sayBubble(`Mantap, ${S.name}! Kemari, lencanamu sudah siap 🛸`, "npc_hendri"), 1500);
+}
+// joystick sentuh (HP)
+var IOJ = { L: { x: 0, y: 0, id: null }, R: { x: 0, y: 0, id: null } };
+function ioJoy(show) {
+  let el = $("ioJoy");
+  if (!show) { el?.remove(); IOJ.L = { x: 0, y: 0, id: null }; IOJ.R = { x: 0, y: 0, id: null }; return; }
+  if (el) return;
+  el = document.createElement("div"); el.id = "ioJoy";
+  el.innerHTML = `<div class="ioj" data-s="L"><i></i><small>naik/turun · putar</small></div><button id="ioDrop" class="btn">📦</button><div class="ioj" data-s="R"><i></i><small>maju/mundur · geser</small></div>`;
+  document.body.appendChild(el);
+  el.querySelectorAll(".ioj").forEach((pad) => {
+    const S2 = pad.dataset.s, knob = pad.querySelector("i");
+    const mv = (e) => { const r = pad.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, R0 = r.width / 2; let dx = (e.clientX - cx) / R0, dy = (e.clientY - cy) / R0; const l = Math.hypot(dx, dy); if (l > 1) { dx /= l; dy /= l; } IOJ[S2].x = dx; IOJ[S2].y = dy; knob.style.transform = `translate(${dx * R0 * 0.6}px,${dy * R0 * 0.6}px)`; };
+    pad.onpointerdown = (e) => { IOJ[S2].id = e.pointerId; pad.setPointerCapture(e.pointerId); mv(e); e.preventDefault(); };
+    pad.onpointermove = (e) => { if (IOJ[S2].id === e.pointerId) mv(e); };
+    pad.onpointerup = pad.onpointercancel = () => { IOJ[S2] = { x: 0, y: 0, id: null }; knob.style.transform = ""; };
+  });
+  $("ioDrop").onclick = () => ioDrop();
+}
+function ioDrop() {
+  const D = IO.dr; if (!D || D.done || !IO.fly) return;
+  if (!D.scanned) { toast("📦 Pindai Petak " + (IO.sim.offline + 1) + " dulu sebelum menjatuhkan node."); return; }
+  if (D.pkg || D.dropped || D.drops <= 0) return;
+  D.drops--;
+  const m = new THREE2.Mesh(new THREE2.BoxGeometry(0.3, 0.22, 0.3), new THREE2.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0x7c2d12, emissiveIntensity: 0.4 }));
+  m.position.set(D.x, D.y - 0.3, D.z); scene.add(m);
+  D.pkg = { m, x: D.x, y: D.y - 0.3, z: D.z, vx: D.vx, vy: Math.min(0, D.vy), vz: D.vz };
+  if (typeof SFX !== "undefined") SFX.bloop(0.8);
+}
+function ioKey(...codes) { return codes.some((c) => keys[c]); }
+function ioFlyTick(dt) {
+  const D = IO.dr; if (!D || D.done) return;
+  const typing = document.activeElement && document.activeElement.closest && document.activeElement.closest("input,textarea,select");
+  let fwd = 0, side = 0, up = 0, rot = 0;
+  if (!typing) {
+    if (ioKey("KeyW")) fwd += 1; if (ioKey("KeyS")) fwd -= 1;
+    if (ioKey("KeyD")) side += 1; if (ioKey("KeyA")) side -= 1;
+    if (ioKey("Space", "ArrowUp")) up += 1; if (ioKey("KeyC", "ArrowDown")) up -= 1;
+    if (ioKey("KeyQ", "ArrowLeft")) rot += 1; if (ioKey("KeyE", "ArrowRight")) rot -= 1;
+    if (ioKey("KeyF") && !IO.fWas) ioDrop(); IO.fWas = ioKey("KeyF");
+  }
+  fwd += -IOJ.R.y; side += IOJ.R.x; up += -IOJ.L.y; rot += -IOJ.L.x;
+  fwd = clamp(fwd, -1, 1); side = clamp(side, -1, 1); up = clamp(up, -1, 1); rot = clamp(rot, -1, 1);
+  // angin berubah-ubah (makin kencang di ketinggian)
+  const Wd = D.wind; Wd.t -= dt; if (Wd.t <= 0) { Wd.t = 3 + Math.random() * 4; Wd.ta = Wd.a + (Math.random() - 0.5) * 2.4; Wd.ts = 0.6 + Math.random() * 1.8; }
+  Wd.a += ((Wd.ta || Wd.a) - Wd.a) * dt * 0.5; Wd.s += ((Wd.ts || 0) - Wd.s) * dt * 0.6;
+  const wk = D.airborne ? (0.5 + Math.min(1, D.y / 8) * 0.8) : 0, wx = Math.cos(Wd.a) * Wd.s * wk, wz = Math.sin(Wd.a) * Wd.s * wk;
+  D.yaw += rot * 1.7 * dt;
+  const sn = Math.sin(D.yaw), cs = Math.cos(D.yaw);
+  const ax = (-sn * fwd + cs * side) * 7.5, az = (-cs * fwd - sn * side) * 7.5;
+  if (D.airborne) { D.vx += (ax + wx * 1.1) * dt; D.vz += (az + wz * 1.1) * dt; }
+  const drag = Math.exp(-1.05 * dt); D.vx *= drag; D.vz *= drag;
+  D.vy += (up * 3.6 - D.vy) * Math.min(1, dt * 2.4);
+  D.x += D.vx * dt; D.y += D.vy * dt; D.z += D.vz * dt;
+  if (D.y > 0.35) D.airborne = true;
+  // baterai
+  const hs = Math.hypot(D.vx, D.vz);
+  D.bat -= (0.42 + 0.22 * Math.min(1, Math.hypot(fwd, side)) + 0.2 * Math.max(0, up) + (D.airborne ? Wd.s * 0.05 : 0)) * dt * (D.airborne || up > 0 ? 1 : 0.15);
+  if (D.bat <= 0) { D.bat = 0; ioCrash("baterai habis di udara."); return; }
+  // batas
+  if (D.y > 22) { ioCrash("melewati batas ketinggian misi (22 m) — sinyal hilang."); return; }
+  if (D.x < 101 || D.x > 169 || D.z < -75 || D.z > -5) { ioCrash("keluar dari area atap — sinyal hilang."); return; }
+  // tabrakan bangunan hanggar & menara
+  if (D.x > 99.5 && D.x < 124.5 && D.z > -26.5 && D.y < 6.6) { ioCrash("menabrak atap hanggar."); return; }
+  if (Math.hypot(D.x - IO_TOWER.x, D.z - IO_TOWER.z) < IO_TOWER.r + 0.45 && D.y < IO_TOWER.h) { ioCrash("menabrak menara antena."); return; }
+  // cincin
+  const R = IO.rings[D.ring];
+  if (R && !D.scanned) {
+    const n = R.n, rel = [D.x - R.x, D.y - R.y, D.z - R.z], dist = rel[0] * n[0] + rel[2] * n[2];
+    if (R.prev !== undefined && Math.sign(dist) !== Math.sign(R.prev) && Math.abs(dist) < 1.5) {
+      const lat = Math.hypot(rel[0] - n[0] * dist, rel[1], rel[2] - n[2] * dist);
+      if (lat < R.r - 0.22) { R.passed = true; R.m.material.color.set(0x38bdf8); D.ring++; if (typeof SFX !== "undefined") SFX.bloop(1.6); if (IO.rings[D.ring]) IO.rings[D.ring].m.material.color.set(0x22c55e); }
+      else if (lat < R.r + 0.45) { ioCrash(`menyerempet bingkai cincin ${D.ring + 1}.`); return; }
+    }
+    R.prev = dist;
+  }
+  // pindai petak
+  const T = IO_PLOTS[IO.sim.offline];
+  if (D.ring >= IO.rings.length && !D.scanned) {
+    const over = Math.hypot(D.x - T[0], D.z - T[1]) < 3 && D.y > 3 && D.y < 8;
+    D.scan = over ? D.scan + dt : Math.max(0, D.scan - dt * 2);
+    if (D.scan >= 2.5) { D.scanned = true; if (typeof SFX !== "undefined") SFX.chime(); toast(`📸 Petak ${IO.sim.offline + 1} terpindai! Sekarang jatuhkan node pengganti tepat di penanda (F / 📦).`, 4500); }
+  }
+  // paket jatuh
+  if (D.pkg) {
+    const p = D.pkg; p.vy -= 9.8 * dt; p.vx *= Math.exp(-0.4 * dt); p.vz *= Math.exp(-0.4 * dt); p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt; p.m.position.set(p.x, p.y, p.z); p.m.rotation.x += dt * 3;
+    if (p.y <= 0.12) {
+      const err = Math.hypot(p.x - T[0], p.z - T[1]);
+      if (err <= 1.6) { D.dropped = true; if (IO.mark) IO.mark.material.color.set(0x22c55e); toast(`✅ Node terpasang (meleset ${err.toFixed(2)} m)! Kembali & mendarat pelan di helipad.`, 4500); if (typeof SFX !== "undefined") SFX.chime(); }
+      else { toast(`📦 Meleset ${err.toFixed(1)} m dari penanda. ${D.drops > 0 ? "Sisa 1 node — coba lagi!" : ""}`, 3500); if (D.drops <= 0) { setTimeout(() => scene.remove(p.m), 2500); D.pkg = null; ioCrash("kedua node meleset dari sasaran."); return; } }
+      const pm = p.m; setTimeout(() => scene.remove(pm), D.dropped ? 60000 : 2500); D.pkg = null;
+    }
+  }
+  // tanah & pendaratan
+  if (D.y <= 0.12) {
+    D.y = 0.12;
+    const onPad = Math.hypot(D.x - IO_PAD.x, D.z - IO_PAD.z) < 3.2;
+    if (D.airborne && (D.vy < -2.0 || hs > 2.2)) { ioCrash(`mendarat terlalu keras (${Math.abs(D.vy).toFixed(1)} m/dtk).`); return; }
+    if (D.vy < 0) D.vy = 0; D.vx *= 0.8; D.vz *= 0.8;
+    if (D.airborne && onPad && D.dropped && hs < 0.5) { D.landedT += dt; if (D.landedT > 0.6) { ioFinish(); return; } } else D.landedT = 0;
+  }
+  // visual
+  const M = IO.drone; M.position.set(D.x, D.y, D.z); M.rotation.set(-fwd * 0.25 * (D.airborne ? 1 : 0), D.yaw, -side * 0.25 * (D.airborne ? 1 : 0), "YXZ");
+  for (const r of M.userData.rotors) r.rotation.y += dt * 40;
+  const secs = (performance.now() - D.t0) / 1000;
+  const goal = D.ring < IO.rings.length ? `Cincin ${D.ring + 1}/5` : !D.scanned ? `Pindai Petak ${IO.sim.offline + 1} (${(D.scan / 2.5 * 100).toFixed(0)}%) · tinggi 3–8 m` : !D.dropped ? `Jatuhkan node (F/📦) · sisa ${D.drops}` : "Mendarat pelan di helipad";
+  ioHudUpd(`⏱ ${secs.toFixed(1)} dtk · 🔋 ${D.bat.toFixed(0)}% · ⬆ ${D.y.toFixed(1)} m · 💨 ${Wd.s.toFixed(1)} m/s → ${goal}`, D.bat / 100);
+}
+function droneCam(dt) {
+  if (!IO.fly || !IO.dr) return;
+  const D = IO.dr, sn = Math.sin(D.yaw), cs = Math.cos(D.yaw);
+  const want = new THREE2.Vector3(D.x + sn * 6.2, D.y + 2.6, D.z + cs * 6.2);
+  if (!IO.camPos) IO.camPos = want.clone(); else IO.camPos.lerp(want, Math.min(1, dt * 4));
+  camera.position.copy(IO.camPos); camera.lookAt(D.x - sn * 2, D.y + 0.3, D.z - cs * 2);
+}
+
+// ---------- umum ----------
+function ioHearts() { return "❤".repeat(Math.max(0, IO.lives)) + "🖤".repeat(Math.max(0, IO_LIVES - IO.lives)); }
+function ioLose(why) {
+  IO.lives--;
+  if (typeof xShake === "function") xShake(0.5, 0.06);
+  cvFlash && cvFlash("rgba(220,38,38,.4)");
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  toast(`💔 ${why}`, 4500); ioHudUpd();
+  if (IO.lives <= 0) { ioFail(why); return true; }
+  return false;
+}
+function ioFail(why) {
+  $("ioOv")?.remove(); IO.fly = false; ioJoy(false); if (IO.drone) IO.drone.visible = false;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🪫</div><h2>Misi gagal</h2><p id="ioWhy"></p><p>Nyawamu habis. Lift membawamu kembali ke Lab CSN — coba lagi kapan saja!</p></div>`);
+  $("ioWhy").textContent = why || "";
+  IO.busy = true;
+  setTimeout(() => { closeGen(); IO.busy = false; ioExit(true); }, 3600);
+}
+function ioReset() {
+  IO.babak = 0; IO.lives = IO_LIVES; IO.wire = null; IO.rules = null; IO.sim = null; IO.seed = 0; IO.preOk = false; IO.fly = false; IO.dr = null;
+  $("ioOv")?.remove(); ioJoy(false); if (IO.drone) IO.drone.visible = false; ioMarkPlot(-1); ioRingsReset();
+}
+function ioHud(show) {
+  let el = $("ioHud");
+  if (!show) { el?.remove(); return; }
+  if (!el) {
+    el = document.createElement("div"); el.id = "ioHud";
+    el.innerHTML = `<div class="cvh-top"><b id="ioB"></b><span id="ioHL"></span></div><div id="ioHT" class="cvh-txt"></div><div class="cvh-bar"><i id="ioHB"></i></div><div class="cvh-btn"><button class="ghost" id="ioOut">⟲ Turun ke Lab CSN</button></div>`;
+    document.body.appendChild(el);
+    $("ioOut").onclick = () => { if (IO.on && !IO.won && IO.babak > 0 && !confirm("Turun ke Lab CSN? Progres misi akan hilang.")) return; ioExit(); };
+  }
+  ioHudUpd();
+}
+function ioHudUpd(txt, frac) {
+  if (!$("ioHud")) return;
+  const names = ["Persiapan", "Babak 1/3 · Rakit Node Sensor", "Babak 2/3 · Program Otomasi", "Babak 3/3 · Misi Drone", "Tuntas!"];
+  $("ioB").textContent = "🛸 HANGGAR DRONE · " + names[Math.min(4, IO.babak)];
+  $("ioHL").textContent = ioHearts();
+  if (txt !== undefined) $("ioHT").textContent = txt;
+  $("ioHB").parentElement.style.visibility = frac === undefined || frac === null ? "hidden" : "";
+  if (frac !== undefined && frac !== null) { $("ioHB").style.width = Math.max(0, Math.min(1, frac)) * 100 + "%"; $("ioHB").classList.toggle("warn", frac < 0.25); }
+}
+function ioEnter() {
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  setTimeout(() => {
+    IO.on = true; IO.won = false; ioReset(); IO.grace = performance.now() + 3000;
+    xTeleport(IO_ARRIVE.x, IO_ARRIVE.z, 0);
+    ioHud(true); ioHudUpd("Lift tiba di atap. Temui Kang Hendri & Kang Erwin di dalam hanggar.");
+    ioRekorLoad();
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => sayBubble(`Selamat datang di Hanggar Drone, ${S.name}! Sini, ngobrol dulu dengan kami 🛸`, "npc_hendri"), 1200);
+  }, 650);
+}
+function ioExit(silent) {
+  IO.on = false; IO.won = false; IO.fly = false; IO.grace = performance.now() + 3000;
+  ioHud(false); $("ioOv")?.remove(); ioJoy(false);
+  xTeleport(IO_LIFT_CSN.x - 3.4, IO_LIFT_CSN.z, Math.PI / 2);
+  if (!silent) toast("🛗 Lift turun ke Lab CSN.", 3000);
+  setTimeout(ioReset, 500);
+}
+function ioStart() {
+  const q = chMigrate();
+  if (q.chal.iot && IO.babak === 0) {
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🛸 Misi Smart Farm</h2><p>Kamu sudah menuntaskan misi ini${q.chal.iot.kode ? " (lewat kode Rahman)" : q.chal.iot.best ? ` — rekor ${q.chal.iot.best} dtk ${"⭐".repeat(q.chal.iot.bintang || 0)}` : ""}. Mau <b>main ulang</b> (status tuntas tetap aman meski gagal), atau <b>lewati saja</b>?</p>
+    <div class="rowf"><button class="btn" id="ioRe">🔁 Main ulang</button><button class="ghost" id="ioSk">✅ Lewati · tetap tuntas</button></div>`);
+    $("ioRe").onclick = () => { closeGen(); ioBegin(); };
+    $("ioSk").onclick = () => { closeGen(); IO.won = true; IO.babak = 4; ioHudUpd("✅ Misi tetap tuntas. Minta lencanamu ke Kang Hendri atau Kang Erwin."); askNpc("Minta lencana", "hendri"); };
+    return;
+  }
+  if (IO.babak === 0) ioBegin(); else toast("Misi sedang berjalan — ikuti petunjuk di bawah layar.");
+}
+function ioBegin() { IO.babak = 1; IO.lives = IO_LIVES; IO.t0 = performance.now(); ioHudUpd("Babak 1: dekati meja kerja elektronik di sisi kiri hanggar untuk merakit node sensor."); }
+function ioMarkPlot(i) {
+  if (!IO.plots) return;
+  IO.plots.forEach((p, k) => { p.post.material.color.set(k === i ? 0xef4444 : 0x22c55e); p.sig.visible = k !== i; });
+  if (IO.mark) { IO.mark.visible = i >= 0; if (i >= 0) { IO.mark.position.set(IO_PLOTS[i][0], 0.05, IO_PLOTS[i][1]); IO.mark.material.color.set(0xef4444); } }
+}
+async function ioRekorLoad() {
+  try { const j = await (await fetch("api/kartu/rekor?id=iot", { credentials: "same-origin" })).json(); if (j.ok) IO.rekor = j.list || []; } catch { /* */ }
+  ioDrawRekor();
+}
+function ioDrawRekor() {
+  if (!IO.board) return;
+  IO.board.draw((x, w, h) => {
+    x.fillStyle = "rgba(4,12,24,.95)"; rr(x, 0, 0, w, h, 26); x.fill(); x.strokeStyle = "#38bdf8"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 22); x.stroke();
+    x.textAlign = "center"; x.fillStyle = "#7dd3fc"; x.font = `800 54px ${FONT}`; x.fillText("🏆 REKOR MISI DRONE", w / 2, 80);
+    x.textAlign = "left"; x.font = `600 34px ${FONT}`;
+    const L = IO.rekor.slice(0, 8);
+    if (!L.length) { x.fillStyle = "#94a3b8"; x.textAlign = "center"; x.fillText("Belum ada pilot — jadilah yang pertama!", w / 2, 300); return; }
+    L.forEach((r, i) => { const y = 150 + i * 62; x.fillStyle = i === 0 ? "#fde68a" : "#e2e8f0"; x.fillText(`${i + 1}. ${String(r.nama).slice(0, 18)}`, 50, y); x.textAlign = "right"; x.fillText(`${r.best.toFixed(1)} dtk ${"⭐".repeat(r.bintang || 0)}`, w - 50, y); x.textAlign = "left"; });
+  });
+}
+// ---------- NPC ----------
+async function haryaniVerify() {
+  const q = chMigrate();
+  if (!q.card || !q.card.no) return { text: "Lift Hanggar Drone hanya untuk pemegang Explorer Card beserta Lencana Pengetahuan Dasar dan Pengetahuan Umum. Kamu belum punya Explorer Card — taklukkan lorong rahasia dulu, ya." };
+  const miss = [!q.badges.dasar && "Lencana Pengetahuan Dasar (Teh Fety)", !q.badges.umum && "Lencana Pengetahuan Umum (Teh Puspa)"].filter(Boolean);
+  if (miss.length) return { text: `Maaf, ${S.name}, aku belum bisa mengaktifkan lift. Kamu belum memiliki: ${miss.join(" dan ")}.`, acts: [["🏅 Lihat capaian", openCapaian]] };
+  const r = await capSync();
+  let ok = false;
+  if (r.ok) { try { const j = await capCek(q.card.no); ok = !!(j.ok && j.ada && !j.cabut && j.lencana && j.lencana.dasar && j.lencana.umum); } catch { /* */ } }
+  if (!ok) return { text: ({ old: "Server galeri belum memakai versi terbaru. Minta admin me-restart aplikasi lalu coba lagi.", device: "Explorer Card-mu tercatat atas perangkat/browser lain. Buka galeri dari perangkat tempat kamu menerima kartu.", cabut: "Explorer Card-mu dicabut admin.", offline: "Database kartu tidak terhubung. Coba lagi sebentar lagi." })[r.why] || "Lencanamu belum tercatat lengkap di database server. Coba lagi sebentar lagi.", acts: [["🔄 Coba lagi", () => askNpc("Aktifkan lift CSN", "haryani")]] };
+  IO.liftOk = true; IO.liftName = S.name;
+  if (typeof SFX !== "undefined") SFX.chime();
+  return { text: `✅ Explorer Card, Lencana Pengetahuan Dasar & Pengetahuan Umum terverifikasi. Lift kaca di sisi timur laut Lab CSN sudah kuaktifkan untukmu. Kang Hendri & Kang Erwin menunggu di Hanggar Drone. Hati-hati, misinya sulit!`, acts: [["🗺 Antar ke Lab CSN", () => teleportSpot("csn")]] };
+}
+function haryaniAnswer(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
+  const v = ["🛗 Aktifkan lift CSN", () => askNpc("Aktifkan lift CSN", "haryani")];
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Semoga dronemu mendarat mulus 🛸" };
+  if (/syarat|siapa (saja|yang) boleh|boleh masuk/.test(ql)) return { text: "Syaratnya: Explorer Card (Kang Santo), Lencana Pengetahuan Dasar (Teh Fety), dan Lencana Pengetahuan Umum (Teh Puspa). Semua kuperiksa ke database server.", acts: [v] };
+  if (/tantangan apa|isi|misi|drone|iot|hanggar|babak/.test(ql) && !/aktif|buka|lift/.test(ql)) return { text: "Tahap 4 · Misi Smart Farm di Hanggar Drone (atap): 1) rakit node sensor ESP32, 2) program otomasi kebun dengan anggaran listrik ketat, 3) terbangkan drone melewati 5 cincin, pindai petak, jatuhkan node pengganti, lalu mendarat presisi (minimal 2⭐). 3 nyawa untuk semuanya. Bisa dimainkan dengan keyboard laptop atau layar sentuh HP.", acts: [v] };
+  if (/lift|aktif|buka|verif|cek|naik|kartu|lencana|masuk/.test(ql)) return { text: "Kuperiksa Explorer Card dan lencanamu di database… 🔎", later: haryaniVerify() };
+  return { text: `Halo ${nm}! Aku Haryani, operator lift Hanggar Drone. Lift di Lab CSN hanya kuaktifkan bagi pemegang Explorer Card dengan Lencana Pengetahuan Dasar dan Pengetahuan Umum.${IO.liftOk && IO.liftName === S.name ? " Lift-mu sudah aktif — langsung ke Lab CSN ya." : ""}`, acts: [v, ["Tantangan apa ini?", () => askNpc("Tantangan apa ini?", "haryani")]] };
+}
+async function heAward() {
+  const q = chMigrate(), fresh = !q.badges.iot;
+  if (fresh) { q.badges.iot = { t: Date.now() }; saveQ(); capPresDirty(); }
+  await capSync();
+  setTimeout(() => badgeReveal("iot", fresh), 700);
+  return { text: fresh ? `🛸 Lencana Teknologi IoT & Drone resmi tersemat, ${S.name}! Kamu pilot dan perakit IoT yang tangguh.` : "Lencanamu sudah tercatat. Pamerkan, dong!", acts: [["🏅 Buka Capaian", openCapaian], ["📣 Pamerkan lencana", () => capPamer("b:iot")]] };
+}
+function heAnswer(q, who) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), qs = chMigrate(), other = who === "hendri" ? "Kang Erwin" : "Kang Hendri";
+  const start = ["▶ Mulai misi", () => { ioStart(); }];
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: `Sama-sama! Kata ${other} juga: terbanglah setinggi mungkin 😄` };
+  if (/aturan|cara|kontrol|babak|misi apa|tantangan/.test(ql)) return { text: "Misi Smart Farm, 3 nyawa: 1) Meja kerja (kiri) — rakit node sensor ESP32 + 2 soal wawasan. 2) Konsol otomasi (kanan) — susun aturan pompa/kipas/lampu, lalu simulasi 24 jam tanpa tanaman rusak & dalam anggaran listrik. 3) Panggung pilot dekat helipad — daftar periksa pra-terbang, lalu terbangkan drone: 5 cincin, pindai petak bermasalah, jatuhkan node, mendarat presisi (≥ 2⭐).", acts: [start] };
+  if (/kembali|turun|csn|pulang|keluar/.test(ql)) return { text: "Lift ada di dinding selatan hanggar, atau pakai tombol ⟲ di bawah layar.", acts: [["⟲ Turun ke Lab CSN", () => ioExit()]] };
+  if (/lencana|badge|hadiah|minta/.test(ql)) {
+    if (qs.badges.iot) return { text: `Lencana IoT & Drone sudah tersemat di profilmu, ${S.name} 🛸`, acts: [["🛸 Lihat lencana", () => badgeReveal("iot", false)], ["📣 Pamerkan", () => capPamer("b:iot")]] };
+    if (!qs.chal.iot) return { text: "Lencananya untuk pilot yang menuntaskan Misi Smart Farm. Ayo mulai misinya!", acts: [start] };
+    if (!qs.badges.umum) return { text: "Lencana ini disematkan setelah Lencana Pengetahuan Umum." };
+    return { text: `Mantap, ${S.name}! ${who === "hendri" ? "Aku dan Kang Erwin" : "Aku dan Kang Hendri"} sepakat — ini lencanamu… ✨`, later: heAward() };
+  }
+  if (/mulai|main|siap|start|ulang/.test(ql)) { setTimeout(ioStart, 400); return { text: qs.chal.iot ? "Kamu sudah pernah lulus — pilih mau main ulang atau lewati ya." : "Siap! Mulai dari meja kerja elektronik di sisi kiri hanggar." }; }
+  return { text: `Halo ${S.name}! Aku ${who === "hendri" ? "Kang Hendri" : "Kang Erwin"}, dan di sebelahku ${other}. Bicara dengan salah satu dari kami sama saja. Kami penguji Misi Smart Farm sekaligus pemberi Lencana IoT & Drone.${IO.won ? " Misimu sudah tuntas — minta lencanamu!" : ""}`, acts: IO.won || qs.chal.iot ? [["🛸 Minta lencana", () => askNpc("Minta lencana", who)], start] : [start, ["📜 Aturan misi", () => askNpc("Aturan misi", who)]] };
+}
+// kode cepat tahap 4 → Rahman
+var RAHMAN_CODE = "6zqa9m";
+function rahmanCheat(npcId, q) {
+  if (npcId !== "rahman") return null;
+  const w = String(q || "").trim().toLowerCase();
+  if (!w || w.length > 40 || /\s/.test(w)) return null;
+  let h = 2166136261; for (const ch of "itlab4|" + w) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  if (h.toString(36) !== RAHMAN_CODE) return null;
+  const qs = chMigrate();
+  if (!qs.badges.dasar || !qs.badges.umum) return { text: `Hmm, kode itu hanya berlaku bagi pemegang Lencana Pengetahuan Dasar dan Pengetahuan Umum, ${S.name}. Kumpulkan keduanya dulu ya ☕` };
+  if (!qs.chal.iot) qs.chal.iot = { t: Date.now(), best: 0, kode: true };
+  saveQ(); capSync(); capPresDirty();
+  if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle();
+  setTimeout(() => {
+    const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+    setTimeout(() => {
+      IO.liftOk = true; IO.liftName = S.name; IO.on = true; ioReset(); IO.won = true; IO.babak = 4; IO.grace = performance.now() + 3000;
+      xTeleport(112, -16.5, 0); ioHud(true); ioHudUpd("Kode Rahman: Misi Smart Farm dinyatakan tuntas. Minta lencanamu ke Kang Hendri atau Kang Erwin!", null); ioRekorLoad();
+      setTimeout(() => f.remove(), 900); setTimeout(() => openNpc("hendri", "chat"), 1500);
+    }, 650);
+  }, 1600);
+  return { text: `☕🔓 Kode tahap 4 diterima, ${S.name}! Misi Smart Farm dinyatakan tuntas. Kuantar kamu naik ke Hanggar Drone — Kang Hendri & Kang Erwin sudah menunggu dengan lencanamu!` };
+}
+
+// ---------- pembangunan ----------
+function ioCity() {
+  // kota malam di sekeliling atap
+  const wc = mkCanvas(64, 128), wx = wc.getContext("2d"); wx.fillStyle = "#0b1020"; wx.fillRect(0, 0, 64, 128);
+  const Rg = rndGen(515);
+  for (let r = 0; r < 16; r++) for (let c = 0; c < 4; c++) if (Rg() < 0.45) { wx.fillStyle = Rg() < 0.7 ? "#fde68a" : "#93c5fd"; wx.fillRect(4 + c * 15, 4 + r * 8, 9, 5); }
+  const tex = xTex(wc, [3, 4]);
+  const mat = new THREE2.MeshBasicMaterial({ map: tex, toneMapped: false, fog: false, color: 0xaaaaaa });
+  const N = 70, im = new THREE2.InstancedMesh(new THREE2.BoxGeometry(1, 1, 1), mat, N), o = new THREE2.Object3D();
+  for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2, d = 70 + Rg() * 50, h = 10 + Rg() * 45; o.position.set(135 + Math.cos(a) * d, h / 2 - 25, -40 + Math.sin(a) * d); o.scale.set(6 + Rg() * 8, h, 6 + Rg() * 8); o.rotation.y = Rg(); o.updateMatrix(); im.setMatrixAt(i, o.matrix); }
+  im.visible = false; scene.add(im); IO.city = im;
+  // langit malam berbintang (hanya tampak dari atap)
+  const sc = mkCanvas(1024, 512), sx = sc.getContext("2d"); const gr = sx.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, "#020617"); gr.addColorStop(0.55, "#0b1a3a"); gr.addColorStop(1, "#3b2a5c");
+  sx.fillStyle = gr; sx.fillRect(0, 0, 1024, 512); for (let i = 0; i < 500; i++) { sx.fillStyle = `rgba(255,255,255,${0.3 + Rg() * 0.7})`; sx.fillRect(Rg() * 1024, Rg() * 300, 1.5, 1.5); }
+  const dome = new THREE2.Mesh(new THREE2.SphereGeometry(190, 32, 16), new THREE2.MeshBasicMaterial({ map: xTex(sc), side: THREE2.BackSide, depthWrite: false, toneMapped: false, fog: false }));
+  dome.position.set(135, 0, -40); dome.visible = false; scene.add(dome); IO.dome = dome;
+  const moon = world.glowSprite("#fef9c3", 14, 0.9); moon.material.fog = false; moon.position.set(60, 70, -150); moon.visible = false; dome.add(moon); moon.position.set(-75, 70, -110);
+}
+function buildHanggar() {
+  const R = XROOMS.hangar;
+  const before = new Set(scene.children);
+  const flC = l2Canvas(512, 512, (x) => { x.fillStyle = "#3f4651"; x.fillRect(0, 0, 512, 512); const Rg = rndGen(9); for (let i = 0; i < 3000; i++) { x.fillStyle = `rgba(${Rg() < 0.5 ? "0,0,0" : "255,255,255"},${Rg() * 0.06})`; x.fillRect(Rg() * 512, Rg() * 512, 2, 2); } x.strokeStyle = "rgba(0,0,0,.35)"; x.lineWidth = 3; for (let i = 0; i <= 512; i += 128) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, 512); x.moveTo(0, i); x.lineTo(512, i); x.stroke(); } });
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(flC, [14, 14]), roughness: 0.9, emissive: 0xffffff, emissiveMap: xTex(flC, [14, 14]), emissiveIntensity: 0.25 }));
+  // pagar tepi atap
+  const parM = new THREE2.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.6, emissive: 0x1f2937 });
+  xRoomWalls(R, {}, 1.1, parM);
+  const railLed = new THREE2.MeshBasicMaterial({ color: 0x38bdf8, toneMapped: false, fog: false });
+  for (const [a, b, c2, d] of [[R.x0, R.z0, R.x1, R.z0], [R.x0, R.z1, R.x1, R.z1], [R.x0, R.z0, R.x0, R.z1], [R.x1, R.z0, R.x1, R.z1]]) { const len = Math.hypot(c2 - a, d - b), m = new THREE2.Mesh(new THREE2.BoxGeometry(len, 0.05, 0.05), railLed); m.position.set((a + c2) / 2, 1.15, (b + d) / 2); m.rotation.y = -Math.atan2(d - b, c2 - a); scene.add(m); }
+  ioCity();
+  // bangunan hanggar (x 100–124, z -26…-5), sisi utara terbuka
+  const shM = new THREE2.MeshStandardMaterial({ color: 0xcbd5e1, roughness: 0.5, metalness: 0.3, emissive: 0x334155, emissiveIntensity: 0.5 });
+  xWall(100.3, -26, 100.3, -4.5, 6.5, shM, 0.4); xWall(123.7, -26, 123.7, -4.5, 6.5, shM, 0.4); xWall(100.3, -4.7, 123.7, -4.7, 6.5, shM, 0.4);
+  const roof = new THREE2.Mesh(new THREE2.BoxGeometry(24.4, 0.4, 22), new THREE2.MeshStandardMaterial({ color: 0x475569, roughness: 0.6, emissive: 0x0f172a })); roof.position.set(112, 6.7, -15.5); scene.add(roof);
+  for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++) { const l = new THREE2.Mesh(new THREE2.BoxGeometry(2.4, 0.06, 0.3), new THREE2.MeshBasicMaterial({ color: 0xf1f5f9, toneMapped: false })); l.position.set(104 + i * 5.3, 6.45, -9 - j * 6); scene.add(l); }
+  const sign = xPlane(l2Canvas(1400, 260, (x, w, h) => { x.fillStyle = "#0b1220"; rr(x, 0, 0, w, h, 30); x.fill(); x.strokeStyle = "#38bdf8"; x.lineWidth = 8; rr(x, 6, 6, w - 12, h - 12, 26); x.stroke(); x.textAlign = "center"; x.fillStyle = "#e0f2fe"; x.font = `900 100px ${FONT}`; x.fillText("🛸 HANGGAR DRONE", w / 2, 128); x.fillStyle = "#7dd3fc"; x.font = `600 46px ${FONT}`; x.fillText("Misi Smart Farm · Tahap 4 · IoT & Drone", w / 2, 210); }), 7, 1.3);
+  sign.position.set(112, 7.6, -26.3); sign.rotation.y = Math.PI; scene.add(sign);
+  // meja kerja elektronik (Babak 1) — kiri
+  const bench = new THREE2.Group(); bench.position.set(104.2, 0, -14); bench.rotation.y = Math.PI / 2; scene.add(bench);
+  xBox(3.2, 0.08, 1.2, new THREE2.MeshStandardMaterial({ color: 0x334155 }), 0, 0.95, 0, 0, bench);
+  for (const sx of [-1.45, 1.45]) xBox(0.08, 0.95, 1.1, new THREE2.MeshStandardMaterial({ color: 0x1e293b }), sx, 0.475, 0, 0, bench);
+  const pcb = new THREE2.Mesh(new THREE2.BoxGeometry(0.9, 0.04, 0.5), new THREE2.MeshStandardMaterial({ color: 0x065f46, emissive: 0x064e3b, emissiveIntensity: 0.6 })); pcb.position.set(0, 1.01, 0); bench.add(pcb);
+  for (let i = 0; i < 6; i++) { const c = new THREE2.Mesh(new THREE2.BoxGeometry(0.18, 0.1, 0.14), new THREE2.MeshStandardMaterial({ color: [0x2563eb, 0xe5e7eb, 0x111827, 0xf8fafc, 0x1d4ed8, 0x0ea5e9][i] })); c.position.set(-1.2 + i * 0.48, 1.05, -0.35); bench.add(c); }
+  const bs = cvScreen(2.4, 0.6, 900, 220); bs.m.position.set(0, 2.0, -0.55); bench.add(bs.m);
+  bs.draw((x, w, h) => { x.fillStyle = "rgba(4,20,16,.9)"; rr(x, 0, 0, w, h, 24); x.fill(); x.strokeStyle = "#34d399"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 20); x.stroke(); x.textAlign = "center"; x.fillStyle = "#a7f3d0"; x.font = `800 64px ${FONT}`; x.fillText("🔧 1 · RAKIT NODE", w / 2, 92); x.font = `500 38px ${FONT}`; x.fillStyle = "#6ee7b7"; x.fillText("klik / dekati meja kerja", w / 2, 160); });
+  xAct(bs.m, { type: "x_iowire" }); xAct(pcb, { type: "x_iowire" });
+  world.colliders.push({ a: [104.2, -15.6], b: [104.2, -12.4], r: 0.65 });
+  // konsol otomasi (Babak 2) — kanan
+  const con = new THREE2.Group(); con.position.set(119.8, 0, -14); con.rotation.y = -Math.PI / 2; scene.add(con);
+  xBox(3.0, 1.0, 0.9, new THREE2.MeshStandardMaterial({ color: 0x1e293b }), 0, 0.5, 0, 0, con);
+  const cs = cvScreen(2.8, 1.2, 900, 380); cs.m.position.set(0, 1.9, -0.2); con.add(cs.m);
+  cs.draw((x, w, h) => { x.fillStyle = "rgba(6,12,28,.92)"; rr(x, 0, 0, w, h, 24); x.fill(); x.strokeStyle = "#818cf8"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 20); x.stroke(); x.textAlign = "center"; x.fillStyle = "#c7d2fe"; x.font = `800 64px ${FONT}`; x.fillText("🧠 2 · OTOMASI", w / 2, 100); x.font = `500 34px ${FONT}`; x.fillStyle = "#a5b4fc"; x.fillText("JIKA … DAN … MAKA NYALA", w / 2, 170); x.strokeStyle = "#22d3ee"; x.lineWidth = 4; x.beginPath(); for (let i = 0; i < 30; i++) x.lineTo(80 + i * 25, 300 - Math.sin(i / 3) * 50 - i * 2); x.stroke(); });
+  xAct(cs.m, { type: "x_iorule" });
+  world.colliders.push({ a: [119.8, -15.5], b: [119.8, -12.5], r: 0.55 });
+  // papan rekor
+  IO.board = cvScreen(3.6, 3.0, 900, 750); IO.board.m.position.set(100.55, 2.8, -20); IO.board.m.rotation.y = Math.PI / 2; scene.add(IO.board.m); ioDrawRekor();
+  // lift (dinding selatan hanggar)
+  const lf = new THREE2.Group(); lf.position.set(112, 0, -4.95); scene.add(lf);
+  xBox(2.8, 3.2, 0.2, new THREE2.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.3 }), 0, 1.6, 0, 0, lf);
+  const ld = new THREE2.Mesh(new THREE2.PlaneGeometry(2.0, 2.6), new THREE2.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.9, roughness: 0.25 })); ld.position.set(0, 1.3, -0.12); ld.rotation.y = Math.PI; lf.add(ld);
+  const ll = xPlane(l2Canvas(600, 140, (x, w, h) => { x.fillStyle = "#0b1220"; rr(x, 0, 0, w, h, 20); x.fill(); x.fillStyle = "#38bdf8"; x.font = `800 60px ${FONT}`; x.textAlign = "center"; x.fillText("🛗 ▼ LAB CSN", w / 2, 92); }), 1.4, 0.33); ll.position.set(0, 2.95, -0.12); ll.rotation.y = Math.PI; lf.add(ll);
+  xAct(ld, { type: "x_iolift_down" }); xAct(ll, { type: "x_iolift_down" });
+  // panggung pilot + helipad
+  const pad = new THREE2.Mesh(new THREE2.CylinderGeometry(3.2, 3.2, 0.06, 40), new THREE2.MeshStandardMaterial({ map: xTex(l2Canvas(512, 512, (x, w, h) => { x.fillStyle = "#1f2937"; x.fillRect(0, 0, w, h); x.strokeStyle = "#facc15"; x.lineWidth = 22; x.beginPath(); x.arc(256, 256, 220, 0, 7); x.stroke(); x.fillStyle = "#facc15"; x.font = `900 300px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("H", 256, 270); x.strokeStyle = "#ef4444"; x.lineWidth = 6; x.beginPath(); x.arc(256, 256, 30, 0, 7); x.stroke(); })), roughness: 0.7, emissive: 0xffffff, emissiveIntensity: 0.18 }));
+  pad.position.set(IO_PAD.x, 0.03, IO_PAD.z); scene.add(pad);
+  for (let i = 0; i < 12; i++) { const a = i / 12 * 6.283, l = new THREE2.Mesh(new THREE2.SphereGeometry(0.08, 8, 6), new THREE2.MeshBasicMaterial({ color: 0x22c55e, toneMapped: false, fog: false })); l.position.set(IO_PAD.x + Math.cos(a) * 3.35, 0.1, IO_PAD.z + Math.sin(a) * 3.35); scene.add(l); }
+  const st = new THREE2.Mesh(new THREE2.CylinderGeometry(1.0, 1.1, 0.25, 24), new THREE2.MeshStandardMaterial({ color: 0x0ea5e9, emissive: 0x075985, emissiveIntensity: 0.6 })); st.position.set(IO_PILOT.x, 0.12, IO_PILOT.z); scene.add(st);
+  const pl = xPlane(l2Canvas(800, 200, (x, w, h) => { x.fillStyle = "#082f49"; rr(x, 0, 0, w, h, 26); x.fill(); x.fillStyle = "#e0f2fe"; x.font = `800 70px ${FONT}`; x.textAlign = "center"; x.fillText("🎮 3 · PANGGUNG PILOT", w / 2, 128); }), 2.4, 0.6); pl.position.set(IO_PILOT.x, 2.2, IO_PILOT.z + 1.3); scene.add(pl); xAct(pl, { type: "x_iopilot" });
+  // kebun pintar (6 petak) + node sensor
+  IO.plots = [];
+  const crop = new THREE2.InstancedMesh(new THREE2.ConeGeometry(0.18, 0.55, 6), new THREE2.MeshStandardMaterial({ color: 0x4d7c0f, roughness: 0.8, emissive: 0x1a2e05 }), 6 * 30), o = new THREE2.Object3D(), Rg = rndGen(77);
+  IO_PLOTS.forEach(([px, pz], i) => {
+    const soil = new THREE2.Mesh(new THREE2.BoxGeometry(6.4, 0.3, 8.6), new THREE2.MeshStandardMaterial({ color: 0x5b3a1e, roughness: 1 })); soil.position.set(px, 0.15, pz); scene.add(soil);
+    for (let k = 0; k < 30; k++) { o.position.set(px - 2.6 + (k % 5) * 1.3, 0.55, pz - 3.6 + Math.floor(k / 5) * 1.45); o.scale.setScalar(0.8 + Rg() * 0.5); o.updateMatrix(); crop.setMatrixAt(i * 30 + k, o.matrix); }
+    const post = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.06, 1.4, 8), new THREE2.MeshBasicMaterial({ color: 0x22c55e, toneMapped: false, fog: false })); post.position.set(px + 2.9, 0.9, pz + 3.9); scene.add(post);
+    const sig = world.glowSprite("#22c55e", 0.6, 0.7); sig.position.set(px + 2.9, 1.7, pz + 3.9); scene.add(sig);
+    const lab = xPlane(l2Canvas(256, 128, (x, w, h) => { x.fillStyle = "#052e16"; rr(x, 0, 0, w, h, 20); x.fill(); x.fillStyle = "#bbf7d0"; x.font = `800 70px ${FONT}`; x.textAlign = "center"; x.fillText(`P${i + 1}`, w / 2, 90); }), 0.9, 0.45); lab.position.set(px, 0.32, pz + 4.35); lab.rotation.x = -Math.PI / 2; scene.add(lab);
+    IO.plots.push({ post, sig });
+  });
+  scene.add(crop);
+  IO.mark = new THREE2.Mesh(new THREE2.RingGeometry(1.2, 1.6, 40), new THREE2.MeshBasicMaterial({ color: 0xef4444, toneMapped: false, fog: false, side: THREE2.DoubleSide, transparent: true, opacity: 0.9 })); IO.mark.rotation.x = -Math.PI / 2; IO.mark.visible = false; scene.add(IO.mark);
+  // menara antena (rintangan)
+  const tw = new THREE2.Mesh(new THREE2.CylinderGeometry(0.35, 0.9, IO_TOWER.h, 8, 1, true), new THREE2.MeshStandardMaterial({ color: 0xb91c1c, wireframe: true })); tw.position.set(IO_TOWER.x, IO_TOWER.h / 2, IO_TOWER.z); scene.add(tw);
+  const tl = new THREE2.Mesh(new THREE2.SphereGeometry(0.25, 10, 8), new THREE2.MeshBasicMaterial({ color: 0xef4444, toneMapped: false, fog: false })); tl.position.set(IO_TOWER.x, IO_TOWER.h + 0.2, IO_TOWER.z); scene.add(tl);
+  XT.anim.push(() => { tl.visible = Math.sin(t * 4) > 0; });
+  world.circles.push({ x: IO_TOWER.x, z: IO_TOWER.z, r: 1.0 });
+  // cincin
+  IO.rings = IO_RINGS.map(([x, y, z, r], i) => {
+    const nx = i + 1 < IO_RINGS.length ? IO_RINGS[i + 1][0] - x : x - IO_RINGS[i - 1][0], nz = i + 1 < IO_RINGS.length ? IO_RINGS[i + 1][2] - z : z - IO_RINGS[i - 1][2];
+    const px2 = i ? x - IO_RINGS[i - 1][0] : x - IO_PAD.x, pz2 = i ? z - IO_RINGS[i - 1][2] : z - IO_PAD.z, L = Math.hypot(px2, pz2), n = [px2 / L, 0, pz2 / L];
+    void nx; void nz;
+    const m = new THREE2.Mesh(new THREE2.TorusGeometry(r, 0.09, 10, 48), new THREE2.MeshBasicMaterial({ color: 0x64748b, toneMapped: false, fog: false })); m.position.set(x, y, z); m.rotation.y = Math.atan2(n[0], n[2]); scene.add(m);
+    const num = spriteFrom(l2Canvas(128, 128, (x2) => { x2.fillStyle = "#0b1220"; x2.beginPath(); x2.arc(64, 64, 58, 0, 7); x2.fill(); x2.fillStyle = "#fff"; x2.font = `900 80px ${FONT}`; x2.textAlign = "center"; x2.textBaseline = "middle"; x2.fillText(String(i + 1), 64, 70); }), 0.6); num.position.set(x, y + r + 0.6, z); scene.add(num);
+    return { x, y, z, r, n, m };
+  });
+  ioRingsReset();
+  // ===== NPC =====
+  const lookM = (extra) => Object.assign({ shirt: "#ffffff", apron: "#ffffff", glasses: false, noApron: true, skin: "#8d5a3b" }, extra);
+  makeCustomHuman("hendri", { code: "IoT", name: "Kang Hendri", role: "Penguji Misi Smart Farm · Lencana IoT & Drone", col: "#0369a1", icon: "🛸", hint: "🛸", x: 110.7, z: -19.5, room: "hangar", secret: true, hidden: true, tag: "KANG HENDRI",
+    look: lookM({ hair: "#111111", kopiah: "#111111", badge: "🛸" }), chips: ["Mulai misi", "Aturan misi", "Minta lencana", "Turun ke CSN"], roleNote: "Misi Smart Farm & Lencana IoT & Drone",
+    knowText: "Kang Hendri dan Kang Erwin menguji Misi Smart Farm (rakit node sensor, program otomasi, misi drone) dan menyematkan Lencana Teknologi IoT & Drone.",
+    greetActs: () => heAnswer("halo", "hendri").acts, answer: (q) => heAnswer(q, "hendri") });
+  makeCustomHuman("erwin", { code: "IoT", name: "Kang Erwin", role: "Penguji Misi Smart Farm · Lencana IoT & Drone", col: "#0369a1", icon: "🛸", hint: "🛸", x: 113.3, z: -19.5, room: "hangar", secret: true, hidden: true, tag: "KANG ERWIN",
+    look: lookM({ hair: "#1a120b", curly: true, badge: "📡" }), chips: ["Mulai misi", "Aturan misi", "Minta lencana", "Turun ke CSN"], roleNote: "Misi Smart Farm & Lencana IoT & Drone",
+    knowText: "Kang Erwin dan Kang Hendri menguji Misi Smart Farm dan menyematkan Lencana Teknologi IoT & Drone.",
+    greetActs: () => heAnswer("halo", "erwin").acts, answer: (q) => heAnswer(q, "erwin") });
+  // Haryani — IT-Mart Lantai 2, berseberangan dengan Ananda
+  makeCustomHuman("haryani", { code: "LIFT", name: "Haryani", role: "Operator Lift Hanggar Drone · IT-Mart Lantai 2", col: "#15803d", icon: "🛗", hint: "🛗", x: 55.0, z: 21.2, room: "it2", tag: "HARYANI · LIFT HANGGAR",
+    look: { shirt: "#ffffff", apron: "#ffffff", hijab: "#15803d", glasses: false, noApron: true, wide: 1.28, skirt: "#14532d", badge: "🛗" },
+    chips: ["Aktifkan lift CSN", "Tantangan apa ini?", "Syaratnya apa?"], roleNote: "akses lift Hanggar Drone (Lab CSN)",
+    knowText: "Haryani memeriksa Explorer Card, Lencana Pengetahuan Dasar, dan Lencana Pengetahuan Umum di database server, lalu mengaktifkan lift Hanggar Drone di Lab CSN.",
+    greetActs: () => [["🛗 Aktifkan lift CSN", () => askNpc("Aktifkan lift CSN", "haryani")], ["Tantangan apa ini?", () => askNpc("Tantangan apa ini?", "haryani")]],
+    answer: haryaniAnswer });
+  NPCS.haryani.pitch = 1.08; NPCS.hendri.pitch = 0.85; NPCS.erwin.pitch = 0.9;
+  // ===== lift kaca di Lab CSN (berdiri bebas, sisi timur laut; pintu menghadap barat) =====
+  const lc = new THREE2.Group(); lc.position.set(IO_LIFT_CSN.x, 0, IO_LIFT_CSN.z); lc.rotation.y = -Math.PI / 2; scene.add(lc);
+  const frM = new THREE2.MeshStandardMaterial({ color: 0x334155, metalness: 0.85, roughness: 0.25 });
+  const glass = new THREE2.Mesh(new THREE2.CylinderGeometry(1.35, 1.35, 5.4, 32, 1, true, Math.PI * 0.22, Math.PI * 1.56), new THREE2.MeshStandardMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0.3, side: THREE2.DoubleSide, depthWrite: false }));
+  glass.position.y = 2.7; glass.rotation.y = Math.PI; lc.add(glass);
+  for (let k = 0; k < 6; k++) { const a = k / 6 * Math.PI * 2; xBox(0.1, 5.4, 0.1, frM, Math.sin(a) * 1.37, 2.7, Math.cos(a) * 1.37, 0, lc); }
+  for (const y of [0.05, 5.35]) { const ring = new THREE2.Mesh(new THREE2.TorusGeometry(1.37, 0.07, 8, 40), frM); ring.rotation.x = Math.PI / 2; ring.position.y = y; lc.add(ring); }
+  const cab = new THREE2.Mesh(new THREE2.CylinderGeometry(1.25, 1.25, 0.08, 32), new THREE2.MeshBasicMaterial({ color: 0x0ea5e9, toneMapped: false })); cab.position.y = 0.05; lc.add(cab);
+  const beam = world.glowSprite("#38bdf8", 1, 0.35); beam.scale.set(2.6, 5.2, 1); beam.position.y = 2.6; lc.add(beam);
+  const doorM = new THREE2.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.9, roughness: 0.22, transparent: true, opacity: 0.85 });
+  const dL = new THREE2.Mesh(new THREE2.BoxGeometry(0.62, 2.9, 0.05), doorM), dR = dL.clone(); dL.position.set(-0.31, 1.45, 1.36); dR.position.set(0.31, 1.45, 1.36); lc.add(dL, dR);
+  const ledC = l2Canvas(700, 170, () => {}), led = xPlane(ledC, 1.9, 0.46); led.position.set(0, 3.25, 1.42); lc.add(led);
+  const drawLed = (ok) => { const x = ledC.getContext("2d"); x.clearRect(0, 0, 700, 170); x.fillStyle = ok ? "#052e16" : "#111827"; rr(x, 0, 0, 700, 170, 26); x.fill(); x.textAlign = "center"; x.fillStyle = ok ? "#4ade80" : "#94a3b8"; x.font = `800 58px ${FONT}`; x.fillText(ok ? "🛗 ▲ HANGGAR · AKTIF" : "🛗 HANGGAR DRONE 🔒", 350, 100); x.font = `500 30px ${FONT}`; x.fillText(ok ? "masuklah ke lift" : "aktivasi oleh Haryani · IT-Mart Lt. 2", 350, 148); led.material.map.needsUpdate = true; };
+  drawLed(false); IO.drawLed = drawLed;
+  for (const m of [dL, dR, led, glass]) xAct(m, { type: "x_iolift" });
+  world.circles.push({ x: IO_LIFT_CSN.x, z: IO_LIFT_CSN.z, r: 1.45 });
+  IO.liftDoors = [dL, dR];
+  // semua objek milik atap (untuk menyembunyikan dunia lain saat berada di atap)
+  IO.own = new Set(scene.children.filter((o) => !before.has(o)));
+  XT.anim.push((dt) => ioTick(dt));
+}
+// saat di atap: sembunyikan seluruh dunia lain (tidak terlihat dari atap & lebih ringan di HP)
+function ioIsolate(on) {
+  if (on === !!IO.hidden) return;
+  if (on) {
+    const keep = new Set([avatar, IO.drone, camera].filter(Boolean));
+    for (const r of remotes.values()) keep.add(r.av);
+    IO.hidden = [];
+    for (const o of scene.children) if (o.visible && !IO.own.has(o) && !keep.has(o) && !o.isLight && !o.isCamera) { o.visible = false; IO.hidden.push(o); }
+  } else { for (const o of IO.hidden) o.visible = true; IO.hidden = null; }
+}
+function ioTick(dt) {
+  const now = performance.now(), here = inHangar(P.x, P.z), grace = now < (IO.grace || 0);
+  // lift CSN
+  const okMe = IO.liftOk && IO.liftName === S.name;
+  if (IO.drawLed && okMe !== IO.ledState) { IO.ledState = okMe; IO.drawLed(okMe); }
+  const nearLift = Math.hypot(P.x - (IO_LIFT_CSN.x - 1.8), P.z - IO_LIFT_CSN.z) < 1.9;
+  const tgt = okMe && nearLift ? 1 : 0; IO.liftK += (tgt - IO.liftK) * Math.min(1, dt * 3);
+  if (IO.liftDoors) { IO.liftDoors[0].position.x = -0.31 - IO.liftK * 0.6; IO.liftDoors[1].position.x = 0.31 + IO.liftK * 0.6; }
+  if (okMe && IO.liftK > 0.8 && Math.hypot(P.x - (IO_LIFT_CSN.x - 1.75), P.z - IO_LIFT_CSN.z) < 0.85 && roomAt(P.x, P.z) === "csn" && !IO.on && !grace) ioEnter();
+  // langit & kabut atap
+  if (IO.dome) IO.dome.visible = here;
+  if (IO.city) IO.city.visible = here;
+  ioIsolate(here);
+  if (here) { scene.fog.color.setHex(0x0b1530); scene.fog.density = 0.006; IO.fogged = true; }
+  else if (IO.fogged && typeof xFogBase !== "undefined" && xFogBase && !inCave(P.x, P.z)) { scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; IO.fogged = false; }
+  // penjaga
+  if (here && !IO.on && !grace) { xTeleport(IO_LIFT_CSN.x - 3.4, IO_LIFT_CSN.z, Math.PI / 2); toast("Hanggar Drone hanya bisa dicapai lewat lift Lab CSN yang diaktifkan Haryani."); }
+  if (!here && IO.on && !grace && !IO.busy && roomAt(P.x, P.z) && roomAt(P.x, P.z) !== "hangar") { IO.on = false; IO.won = false; ioHud(false); setTimeout(ioReset, 300); }
+  if (IO.mark && IO.mark.visible) IO.mark.material.opacity = 0.6 + Math.sin(t * 5) * 0.3;
+  if (!IO.on || IO.busy) return;
+  if (IO.fly) { ioFlyTick(dt); return; }
+  if ($("ioOv") || $("genOv")?.classList.contains("show")) return;
+  if (IO.babak === 1 && Math.hypot(P.x - 105.6, P.z + 14) < 1.6 && now > (IO.wireCool || 0)) ioWireOpen();
+  if (IO.babak === 2 && Math.hypot(P.x - 118.4, P.z + 14) < 1.6 && now > (IO.ruleCool || 0)) ioRuleOpen();
+  if (IO.babak === 3 && Math.hypot(P.x - IO_PILOT.x, P.z - IO_PILOT.z) < 1.3 && now > (IO.preCool || 0)) { if (IO.preOk) { IO.preCool = now + 4000; ioFlyStart(); } else ioPreOpen(); }
+}
+function ioAct(act) {
+  const ty = act.type;
+  if (ty === "x_iolift") { if (IO.liftOk && IO.liftName === S.name) { teleport(IO_LIFT_CSN.x - 2.6, IO_LIFT_CSN.z, -Math.PI / 2); toast("🛗 Melangkahlah ke pintu lift kaca."); } else toast("🛗 Lift Hanggar Drone terkunci. Minta Haryani di IT-Mart Lantai 2 mengaktifkannya (butuh Explorer Card + Lencana Dasar + Lencana Umum).", 6000); return true; }
+  if (ty === "x_iolift_down") { if (IO.on && !IO.won && IO.babak > 0 && !confirm("Turun ke Lab CSN? Progres misi akan hilang.")) return true; ioExit(); return true; }
+  if (ty === "x_iowire") { if (IO.babak === 1) ioWireOpen(); else toast(IO.babak === 0 ? "Bicara dulu dengan Kang Hendri / Kang Erwin untuk memulai misi." : "Babak 1 sudah tuntas."); return true; }
+  if (ty === "x_iorule") { if (IO.babak === 2) ioRuleOpen(); else toast(IO.babak < 2 ? "Konsol otomasi aktif setelah node sensor terpasang (Babak 1)." : "Babak 2 sudah tuntas."); return true; }
+  if (ty === "x_iopilot") { if (IO.babak === 3) { if (IO.preOk) ioFlyStart(); else ioPreOpen(); } else toast(IO.babak < 3 ? "Panggung pilot aktif di Babak 3." : "Misi drone sudah tuntas!"); return true; }
+  return false;
 }
 
 </script>
