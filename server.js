@@ -76,7 +76,7 @@ const pem = createPeminatan({
 const ADMIN_PAGE = path.join(PUBLIC, 'admin', 'index.html');
 const ADMIN_CSP = "default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'";
 
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json', '.mp4': 'video/mp4', '.webm': 'video/webm' };
 const server = http.createServer((req, res) => {
   const secHeaders = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'strict-origin-when-cross-origin', 'X-Frame-Options': 'SAMEORIGIN', 'Permissions-Policy': 'geolocation=(self), microphone=(self), xr-spatial-tracking=(self), autoplay=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com"), fullscreen=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com")' };
   let u, p; try { u = new URL(req.url, 'http://x'); p = decodeURIComponent(u.pathname); } catch { res.writeHead(400, secHeaders); return res.end(); }
@@ -104,7 +104,18 @@ const server = http.createServer((req, res) => {
   if (!file.startsWith(PUBLIC + path.sep)) { res.writeHead(403, secHeaders); return res.end(); } // cegah path traversal
   fs.stat(file, (err, st) => {
     if (err || !st.isFile()) { res.writeHead(404, secHeaders); return res.end('Not found'); }
-    res.writeHead(200, { ...secHeaders, 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream', 'Cache-Control': p.startsWith('/assets/') ? 'public, max-age=86400' : 'no-cache' });
+    const base = { ...secHeaders, 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream', 'Cache-Control': p.startsWith('/assets/') ? 'public, max-age=86400' : 'no-cache', 'Accept-Ranges': 'bytes' };
+    // dukungan Range (dibutuhkan pemutar video, terutama Safari/iOS)
+    const rm = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+    if (rm && (rm[1] || rm[2])) {
+      let a = rm[1] ? +rm[1] : st.size - +rm[2], b = rm[1] && rm[2] ? Math.min(+rm[2], st.size - 1) : st.size - 1;
+      if (a < 0) a = 0;
+      if (a > b || a >= st.size) { res.writeHead(416, { ...secHeaders, 'Content-Range': `bytes */${st.size}` }); return res.end(); }
+      res.writeHead(206, { ...base, 'Content-Range': `bytes ${a}-${b}/${st.size}`, 'Content-Length': b - a + 1 });
+      if (req.method === 'HEAD') return res.end();
+      return fs.createReadStream(file, { start: a, end: b }).pipe(res);
+    }
+    res.writeHead(200, { ...base, 'Content-Length': st.size });
     if (req.method === 'HEAD') return res.end();
     fs.createReadStream(file).pipe(res);
   });

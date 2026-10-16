@@ -46,7 +46,7 @@ WebSocket otomatis memakai `wss://` bila halaman dibuka lewat `https://`.
 Tambahkan `?room=nama-kelas` di URL untuk memisahkan kelompok, mis. `https://domainanda/?room=ti-2026`.
 
 ## Fitur tambahan (versi ini)
-- **Ruang Sambutan**: robot **KURI** (kurikulum OBE, visi-misi prodi/fakultas/universitas, profil lulusan, CPL, mata kuliah per semester) + kios; dinding **Kepala Program Studi** (10 Ka Prodi berurutan tahun jabatan); logo besar TI 3D di dinding utara Atrium.
+- **Ruang Sambutan**: robot **Dul** (kurikulum OBE, visi-misi prodi/fakultas/universitas, profil lulusan, CPL, mata kuliah per semester) + kios; dinding **Kepala Program Studi** (10 Ka Prodi berurutan tahun jabatan); logo besar TI 3D di dinding utara Atrium.
 - **Nama robot lab**: Keri, Geo, Cody, Neta.
 - **Pintu rahasia (Lab SE)**: tiap robot lab punya pertanyaan *secret passage* (chip **🔐 Secret passage** di jendela chat robot):
   Cody = visi Universitas, Geo = visi Fakultas Teknik dan Sains, Keri = visi Prodi TI, Neta = nama keempat lab (urutan bebas).
@@ -118,3 +118,9 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 - 5 menit sebelum adzan muncul peringatan. Saat adzan tiba (Subuh, Dzuhur, Ashar, Maghrib, Isya) pemain otomatis dikeluarkan ke layar awal dan tidak bisa masuk selama **15 menit** (`ADZAN_BLOCK_MIN`, ubah di `src/ext_adzan.js`). Mencabut izin lokasi saat bermain juga mengeluarkan pemain.
 - Geolocation hanya berjalan di **HTTPS** (atau `localhost`). Server mengirim `Permissions-Policy: geolocation=(self)`.
 - Pemeriksaan berjalan di sisi klien; pengguna yang sengaja mengutak-atik browser (devtools) secara teori bisa melewatinya.
+
+## Pembaruan v5
+- **Video gempa pintu rahasia**: setelah keempat robot lab menerima jawaban *secret passage*, terasa gempa kecil lalu video `assets/ext/lorong-rahasia.webm` / `.mp4` diputar layar penuh (bisa dilewati; tidak diputar saat mode headset VR). Server kini mendukung permintaan *Range* untuk video.
+- **Ruang E-Portal UIKA**: ruang luas (29 × 26 m) di selatan Ruang Sambutan, lewat pintu hijau di dinding selatannya. Tercantum di denah, minimap, dan GO TO. Berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library UIKA, Meeting, Short Course, SIAKAD, SIMPEG, UCL, UCL Mobile Android, Short Course Android) dengan keterangan *under construction*, papan selamat datang, dan gerbang portal. Robot **Vir** memberi akses ke `https://eportal.uika-bogor.ac.id` (tab baru) dan menyampaikan bahwa sistem masih dalam pengembangan.
+- **KURI** kini bernama **Dul**.
+- **Sit**, waitress Cafe Rahman: menjelaskan ke-8 ruangan di denah, posisi pemain, membuka denah, dan mengantar ke ruangan mana pun (tidak membocorkan ruang rahasia).

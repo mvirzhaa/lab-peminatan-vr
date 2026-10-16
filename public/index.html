@@ -414,6 +414,12 @@ canvas {
 .pemtw{max-height:46vh;overflow:auto;margin-top:8px;border:1px solid var(--line);border-radius:10px}
 .pemtw .ktab{margin:0}
 @media (max-width:560px){.pem2{grid-template-columns:1fr}}
+#quakeVid{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;background:rgba(0,0,0,.88);animation:qvIn .5s ease}
+#quakeVid video{width:min(92vw,1100px);max-height:80vh;border-radius:12px;box-shadow:0 20px 80px rgba(0,0,0,.6);animation:qvShake .45s 3}
+#quakeVid button{position:absolute;right:20px;bottom:20px}
+#quakeVid.out{opacity:0;transition:opacity .5s}
+@keyframes qvIn{from{opacity:0}to{opacity:1}}
+@keyframes qvShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(4px,4px)}}
 </style>
 
 </head>
@@ -758,7 +764,8 @@ var FAQ = [
   ["daftar pendaftaran formulir form gform link cara mendaftar isi", "Pendaftaran peminatan sekarang langsung dari galeri ini: klik meja resepsionis saya (atau kios “Daftar” di tiap lab), isi NIM, nama, kontak, lalu pilih lab pilihan 1 dan 2. Persentase pendaftar tampil di layar di belakang saya, dan hasil final diumumkan di papan pengumuman dinding timur Atrium."],
   ["hasil pengumuman final penetapan diterima lab saya", "Hasil final peminatan diumumkan di papan pengumuman dinding timur Atrium. Klik papannya untuk mencari namamu atau mengecek dengan NIM."],
   ["statistik persentase jumlah pendaftar pie chart grafik", "Layar besar di belakang saya menampilkan persentase pendaftar tiap lab (berdasarkan pilihan 1) secara langsung. Klik layarnya untuk melihat angkanya."],
-  ["cafe kafe kopi ngopi rahman minum", "Ada Cafe Rahman di sebelah timur Ruang Sambutan (pintu di dinding timur dekat gerbang Atrium). Barista Rahman bisa cerita soal jenis-jenis kopi, dosen-dosen TI, dan memberi saran dosen pembimbing untuk judul skripsimu."],
+  ["eportal e-portal sso portal siakad simpeg ucl cbt vir", "Ruang E-Portal UIKA ada di selatan Ruang Sambutan (pintu hijau di dinding selatan). Di sana robot Vir memberi akses ke eportal.uika-bogor.ac.id — sistemnya masih dalam pengembangan."],
+  ["cafe kafe kopi ngopi rahman minum sit waitress", "Ada Cafe Rahman di sebelah timur Ruang Sambutan (pintu di dinding timur dekat gerbang Atrium). Barista Rahman bisa cerita soal jenis-jenis kopi, dosen-dosen TI, dan memberi saran dosen pembimbing; waitress Sit bisa menjelaskan semua ruangan di denah."],
   ["lab apa saja peminatan ada berapa pilihan empat", "Ada 4 lab peminatan di galeri ini: KERIS (AI & sistem cerdas) di pintu barat, GIT (geospasial) di pintu utara-kiri, SE (software engineering) di pintu utara-kanan, dan CSN (jaringan & keamanan) di pintu timur."],
   ["bingung pilih rekomendasi saran cocok mana", "Coba pikirkan masalah apa yang paling ingin kamu pecahkan: suka AI & data → KERIS; suka peta, satelit, drone → GIT; suka membangun aplikasi web/mobile → SE; suka jaringan, server, keamanan → CSN. Kerjakan juga kuis di atrium ini!"],
   ["robot npc tanya siapa pemandu", "Setiap lab punya robot pemandu: Keri di Lab KERIS, Geo di Lab GIT, Cody di Lab SE, dan Neta di Lab CSN. Klik robotnya untuk bertanya — mereka hafal isi presentasi lab masing-masing."],
@@ -2249,7 +2256,8 @@ var ROOMS = {
   git: { x0: -24, x1: 0, z0: -38, z1: -12, h: 5.5, name: "Lab GIT", short: "GIT", col: "#d946ef", lab: "git" },
   se: { x0: 0, x1: 24, z0: -38, z1: -12, h: 5.5, name: "Lab Software Engineering", short: "SE", col: "#6366f1", lab: "se" },
   csn: { x0: 12, x1: 40, z0: -12, z1: 12, h: 5.5, name: "Lab CSN", short: "CSN", col: "#0ea5e9", lab: "csn" },
-  cafe: { x0: 9, x1: 27, z0: 12, z1: 30, h: 4.6, name: "Cafe Rahman", short: "Cafe", col: "#c08457" }
+  cafe: { x0: 9, x1: 27, z0: 12, z1: 30, h: 4.6, name: "Cafe Rahman", short: "Cafe", col: "#c08457" },
+  eportal: { x0: -20, x1: 9, z0: 30, z1: 56, h: 6, name: "Ruang E-Portal UIKA", short: "E-Portal", col: "#34d399" }
 };
 var SPOTS = [
   { id: "welcome", name: "Ruang Sambutan (video)", x: 0, z: 18.5, yaw: Math.PI },
@@ -2259,7 +2267,8 @@ var SPOTS = [
   { id: "git", name: "Lab GIT", x: -5, z: -15, yaw: 0 },
   { id: "se", name: "Lab Software Engineering", x: 5, z: -15, yaw: 0 },
   { id: "csn", name: "Lab CSN", x: 15, z: 0, yaw: -Math.PI / 2 },
-  { id: "cafe", name: "☕ Cafe Rahman", x: 18, z: 22.5, yaw: Math.PI }
+  { id: "cafe", name: "☕ Cafe Rahman", x: 18, z: 22.5, yaw: Math.PI },
+  { id: "eportal", name: "🌐 Ruang E-Portal UIKA", x: -5.5, z: 36.5, yaw: Math.PI }
 ];
 var NPC_POS = {
   tia: { x: 0, z: -0.35, yaw: 0, room: "atrium" },
@@ -2279,7 +2288,12 @@ var WALLS = [
   // Cafe Rahman (timur Ruang Sambutan)
   { z: 30, x: [9, 27], f: "cafe", b: "cafe", h: 4.6 },
   { x: 27, z: [12, 30], f: "cafe", b: "cafe", h: 4.6 },
-  { z: 30, x: [-9, 9], f: "welcome", b: "welcome", h: 6 },
+  { z: 30, x: [-9, 9], d: [[-7.7, -5.3, 3.3]], f: "eportal", b: "welcome", h: 6 }, // pintu ke Ruang E-Portal
+  // Ruang E-Portal UIKA (selatan Ruang Sambutan)
+  { z: 30, x: [-20, -9], f: "eportal", b: "eportal", h: 6 },
+  { x: -20, z: [30, 56], f: "eportal", b: "eportal", h: 6 },
+  { x: 9, z: [30, 56], f: "eportal", b: "eportal", h: 6 },
+  { z: 56, x: [-20, 9], f: "eportal", b: "eportal", h: 6 },
   // Atrium barat/timur
   { x: -12, z: [-12, 12], d: [[-2.5, 2.5, 4]], f: "keris", b: "atrium", h: 7 },
   { x: 12, z: [-12, 12], d: [[-2.5, 2.5, 4]], f: "atrium", b: "csn", h: 7 },
@@ -2402,6 +2416,18 @@ function wallCanvas(kind) {
     for (let i = 0; i < 6; i++)
       for (let j = 0; j < 6; j++)
         if (R() < 0.45) hex(i * 96 + (j % 2) * 48, j * 84, 40);
+  } else if (kind === "eportal") {
+    // gaya E-Portal SSO: mint lembut + lingkaran halus
+    const g = x.createLinearGradient(0, 0, 512, 512);
+    g.addColorStop(0, "#eafaf3");
+    g.addColorStop(1, "#f7fbff");
+    x.fillStyle = g;
+    x.fillRect(0, 0, 512, 512);
+    x.strokeStyle = "rgba(16,185,129,.10)";
+    x.lineWidth = 3;
+    for (let i = 0; i < 7; i++) { x.beginPath(); x.arc(110, 120, 30 + i * 46, 0, 7); x.stroke(); }
+    x.fillStyle = "rgba(16,185,129,.08)";
+    x.fillRect(0, 470, 512, 42);
   } else if (kind === "cafe") {
     // panel kayu hangat + lis bata ekspos
     x.fillStyle = "#5b3a24";
@@ -2520,6 +2546,21 @@ function floorCanvas(k, r) {
       x.fillStyle = { KERIS: "#7c3aed", CSN: "#0284c7", GIT: "#c026d3", SE: "#4f46e5" }[t2];
       x.fillText(t2, X(a), Z(b));
     }
+  } else if (k === "eportal") {
+    x.fillStyle = "#f3f6f8";
+    x.fillRect(0, 0, c.width, c.height);
+    const tl = 1.0 * sx;
+    for (let i = 0; i < c.width; i += tl)
+      for (let j = 0; j < c.height; j += tl) {
+        x.fillStyle = (Math.floor(i / tl) + Math.floor(j / tl)) % 2 ? "#eef3f6" : "#f8fafb";
+        x.fillRect(i + 1, j + 1, tl - 2, tl - 2);
+      }
+    // jalur hijau dari pintu ke gerbang portal
+    x.fillStyle = "rgba(16,185,129,.55)";
+    x.fillRect(X(-7.0), Z(30), 1.0 * sx, (54 - 30) * sz);
+    x.strokeStyle = "rgba(5,150,105,.6)";
+    x.lineWidth = 0.08 * sx;
+    for (const rad of [3, 4.6]) { x.beginPath(); x.arc(X(-5.5), Z(51), rad * sx, 0, 7); x.stroke(); }
   } else if (k === "cafe") {
     // lantai papan kayu
     const pw = 0.22 * sx;
@@ -2853,13 +2894,13 @@ function buildWorld(scene2, quality) {
   };
   api.texFrom = texFrom;
   const wallC = {};
-  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe"]) wallC[k] = wallCanvas(k);
+  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal"]) wallC[k] = wallCanvas(k);
   const wallMatCache = {};
   const wallMat = (k, len, h) => {
     const key = k + "|" + len.toFixed(1) + "|" + h;
     if (wallMatCache[key]) return wallMatCache[key];
     const t2 = texFrom(wallC[k], [Math.max(1, Math.round(len / 4)), Math.max(1, Math.round(h / 4))]);
-    const m = new THREE.MeshStandardMaterial({ map: t2, roughness: k === "atrium" ? 0.35 : 0.85, metalness: 0, emissive: k === "se" || k === "atrium" ? 0 : 16777215, emissiveMap: k === "se" || k === "atrium" ? null : t2, emissiveIntensity: k === "welcome" ? 0.15 : k === "cafe" ? 0.22 : 0.35 });
+    const m = new THREE.MeshStandardMaterial({ map: t2, roughness: k === "atrium" ? 0.35 : 0.85, metalness: 0, emissive: k === "se" || k === "atrium" || k === "eportal" ? 0 : 16777215, emissiveMap: k === "se" || k === "atrium" || k === "eportal" ? null : t2, emissiveIntensity: k === "welcome" ? 0.15 : k === "cafe" ? 0.22 : 0.35 });
     return wallMatCache[key] = m;
   };
   const M = {
@@ -2911,7 +2952,7 @@ function buildWorld(scene2, quality) {
       api.walls.add(m);
     }
     // bingkai pintu bercahaya
-    const dcol = cx === 9 ? "#d97706" : cz > 11 ? "#f5b400" : cx < -11 ? LABS.keris.col : cx > 11 ? LABS.csn.col : cx < 0 ? LABS.git.col : LABS.se.col;
+    const dcol = Math.abs(cz - 30) < 0.01 ? "#10b981" : cx === 9 ? "#d97706" : cz > 11 ? "#f5b400" : cx < -11 ? LABS.keris.col : cx > 11 ? LABS.csn.col : cx < 0 ? LABS.git.col : LABS.se.col;
     const ring = new THREE.Mesh(new THREE.TorusGeometry(r + 0.05, 0.05, 8, 40, Math.PI), basicCol(dcol));
     ring.position.set(cx, hb, cz);
     ring.rotation.y = rotY;
@@ -2954,7 +2995,7 @@ function buildWorld(scene2, quality) {
     }
   }
   // lantai, plafon, lampu strip
-  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528" };
+  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528", eportal: "#ffffff" };
   for (const [k, r] of Object.entries(ROOMS)) {
     const w = r.x1 - r.x0, d = r.z1 - r.z0;
     const fc = floorCanvas(k, r);
@@ -2986,7 +3027,7 @@ function buildWorld(scene2, quality) {
     ce.rotation.x = Math.PI / 2;
     ce.position.y = r.h;
     scene2.add(ce);
-    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : "#ffffff";
+    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : k === "eportal" ? "#10b981" : "#ffffff";
     const sm = basicCol(stripCol);
     for (const [ax, az, bx, bz] of [[r.x0 + 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z0 + 0.5], [r.x0 + 0.5, r.z1 - 0.5, r.x1 - 0.5, r.z1 - 0.5], [r.x0 + 0.5, r.z0 + 0.5, r.x0 + 0.5, r.z1 - 0.5], [r.x1 - 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z1 - 0.5]]) {
       const len = Math.hypot(bx - ax, bz - az), led = new THREE.Mesh(new THREE.BoxGeometry(ax === bx ? 0.08 : len, 0.03, ax === bx ? len : 0.08), sm);
@@ -3336,7 +3377,6 @@ function buildWorld(scene2, quality) {
     // papan arah ke atrium
     sign("↑  ATRIUM PENDAFTARAN & 4 LAB PEMINATAN", "welcome", "N", 0, 4.6, { hgt: 0.36, bg: "#6d28d9" });
     plantPot(-8.2, 12.9);
-    plantPot(-8.2, 29.1, 1.2);
     plantPot(8.2, 29.1, 1.2);
   }
 
@@ -4477,7 +4517,8 @@ const roomLights = [
   { x: -14, y: 5.0, z: -24, col: 0x10b981, intensity: 3.0, dist: 32 },// GIT
   { x: 14, y: 5.0, z: -24, col: 0xa855f7, intensity: 3.0, dist: 32 }, // SE
   { x: 25, y: 5.0, z: 0, col: 0xf59e0b, intensity: 3.0, dist: 32 },  // CSN
-  { x: 18, y: 4.2, z: 20, col: 0xffb36b, intensity: 2.4, dist: 22 }   // Cafe Rahman
+  { x: 18, y: 4.2, z: 20, col: 0xffb36b, intensity: 2.4, dist: 22 },  // Cafe Rahman
+  { x: -5.5, y: 5.6, z: 43, col: 0xecfdf5, intensity: 2.6, dist: 34 }  // Ruang E-Portal
 ];
 roomLights.forEach(l => {
   const pl = new THREE2.PointLight(l.col, l.intensity, l.dist);
@@ -6007,10 +6048,10 @@ function closeAll() {
   if (drawMode)
     setDrawMode(false);
 }
-var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe"];
+var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal"];
 function drawMap(c, opt = {}) {
   const x = c.getContext("2d"), W = c.width, H = c.height;
-  const bx0 = -42, bx1 = 42, bz0 = -40, bz1 = 32;
+  const bx0 = -42, bx1 = 42, bz0 = -40, bz1 = 58;
   const sc = Math.min((W - 40) / (bx1 - bx0), (H - 40) / (bz1 - bz0));
   const ox = (W - (bx1 - bx0) * sc) / 2 - bx0 * sc, oz = (H - (bz1 - bz0) * sc) / 2 - bz0 * sc;
   const X = (v) => ox + v * sc, Z = (v) => oz + v * sc;
@@ -8319,6 +8360,8 @@ function zoneTick(dt) {
       setTimeout(() => sayBubble(L.greet.replace("IT'ers", S.name), "npc_" + lab), 600);
       if (visitedLabs.size === 4) setTimeout(() => toast("🎉 Kamu sudah mengunjungi keempat lab! Saatnya mendaftar di meja resepsionis Atrium.", 6e3), 4e3);
     }
+  } else if (r === "eportal") {
+    toast("🌐 Ruang E-Portal UIKA — temui Vir di gerbang portal untuk akses eportal.uika-bogor.ac.id (masih dalam pengembangan).", 4500);
   } else if (r === "cafe") {
     toast("☕ Cafe Rahman — ngobrol dengan barista Rahman soal kopi, dosen TI, atau saran dosen pembimbing.", 4200);
     if (!store.get("cafeHint", false)) { store.set("cafeHint", true); setTimeout(() => sayBubble(`Selamat datang di Cafe Rahman, ${S.name}! Mau kopi apa hari ini? ☕`, "npc_rahman"), 600); }
@@ -8708,7 +8751,7 @@ function kuriAnswer(q) {
   const ql = norm(q).trim(), acts = [];
   const card = (k, label) => acts.push([label, () => kuriCard(k)]);
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql))
-    return { text: `Halo ${S.name || "IT'ers"}! Aku KURI, robot kurikulum Prodi Teknik Informatika UIKA. Aku hafal buku Kurikulum OBE 2025: visi-misi, tujuan, profil lulusan, CPL, sebaran mata kuliah per semester, mata kuliah pilihan, dosen pengampu, sampai hasil tracer study. Mau tanya apa?`, acts: [["📜 Visi & Misi", () => kuriCard("visi")], ["🎓 Profil Lulusan", () => kuriCard("profil")], ["📚 Struktur Kurikulum", () => kuriCard("mk")], ["🎯 CPL", () => kuriCard("cpl")]] };
+    return { text: `Halo ${S.name || "IT'ers"}! Aku Dul, robot kurikulum Prodi Teknik Informatika UIKA. Aku hafal buku Kurikulum OBE 2025: visi-misi, tujuan, profil lulusan, CPL, sebaran mata kuliah per semester, mata kuliah pilihan, dosen pengampu, sampai hasil tracer study. Mau tanya apa?`, acts: [["📜 Visi & Misi", () => kuriCard("visi")], ["🎓 Profil Lulusan", () => kuriCard("profil")], ["📚 Struktur Kurikulum", () => kuriCard("mk")], ["🎯 CPL", () => kuriCard("cpl")]] };
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Semoga studimu di Teknik Informatika lancar dan berkah 😊" };
   if (/\bkuis|quiz|tebak|uji saya\b/.test(ql)) {
     const pool = [["Visi Prodi TI menargetkan keunggulan di bidang riset…", ["Keruangan (spasial)", "Kedokteran", "Ekonomi syariah"], 0], ["Total SKS kurikulum OBE TI adalah…", ["120 SKS", "145 SKS", "160 SKS"], 1], ["Mata kuliah Kecerdasan Buatan ada di semester…", ["2", "4", "7"], 1], ["Akreditasi Prodi TI dari LAM-INFOKOM adalah…", ["Baik", "Baik Sekali", "Unggul"], 1], ["Prodi TI UIKA resmi dibuka pada tahun…", ["1961", "2003", "2015"], 1], ["Berapa jumlah CPL pada kurikulum OBE TI?", ["5", "10", "23"], 1]];
@@ -8773,7 +8816,7 @@ function kuriCard(k) {
     html += `<h2>Struktur Kurikulum OBE</h2><p class="kk">145 SKS · 8 semester · 133 SKS wajib + 12 SKS pilihan</p><div class="kgrid">${Object.entries(KUR.sem).map(([s, list]) => `<div class="kbox"><b>SEMESTER ${s} · ${list.reduce((a, b) => a + b[2], 0)} SKS</b><ul>${list.map(([kk, n, x]) => `<li>${esc(n)} <span>${x} sks</span></li>`).join("")}</ul></div>`).join("")}</div>
     <div class="kbox"><b>MATA KULIAH PILIHAN</b><ul class="kcols">${KUR.pilihan.map((m) => `<li>${esc(m)}</li>`).join("")}</ul></div>`;
   }
-  html += `<div class="rowf" style="margin-top:12px"><button class="ghost kc" data-k="visi">Visi & Misi</button><button class="ghost kc" data-k="profil">Profil Lulusan</button><button class="ghost kc" data-k="cpl">CPL</button><button class="ghost kc" data-k="mk">Struktur Kurikulum</button><button class="btn" id="kAsk">Tanya KURI</button></div>`;
+  html += `<div class="rowf" style="margin-top:12px"><button class="ghost kc" data-k="visi">Visi & Misi</button><button class="ghost kc" data-k="profil">Profil Lulusan</button><button class="ghost kc" data-k="cpl">CPL</button><button class="ghost kc" data-k="mk">Struktur Kurikulum</button><button class="btn" id="kAsk">Tanya Dul</button></div>`;
   genCard(html);
   $("genCard").classList.add("wide");
   document.querySelectorAll("#genCard .kc").forEach((b) => b.onclick = () => kuriCard(b.dataset.k));
@@ -9382,11 +9425,11 @@ function buildWelcomeWall() {
 function buildKuri() {
   buildKuriKB();
   makeCustomRobot("kuri", {
-    code: "OBE", name: "KURI", role: "Robot Kurikulum & Visi Misi Prodi TI", col: "#f59e0b", body: "#fff8eb", accent: "#f59e0b", eye: "#a855f7", icon: "📘",
+    code: "OBE", name: "Dul", role: "Robot Kurikulum & Visi Misi Prodi TI", col: "#f59e0b", body: "#fff8eb", accent: "#f59e0b", eye: "#a855f7", icon: "📘",
     x: 4.4, z: 16.6, room: "welcome",
     chips: ["Visi misi prodi", "Tujuan pendidikan", "Profil lulusan", "Mata kuliah semester 1", "Total SKS", "Mata kuliah pilihan", "Akreditasi", "Kuis"],
     roleNote: "menjawab dari buku Kurikulum OBE 2025",
-    knowText: `KURI hafal ${KURI_KB.length} catatan dari buku Kurikulum OBE Teknik Informatika 2025: visi, misi, tujuan, profil lulusan, CPL, bahan kajian, sebaran mata kuliah, dosen pengampu, tracer study, dan SWOT.`,
+    knowText: `Dul hafal ${KURI_KB.length} catatan dari buku Kurikulum OBE Teknik Informatika 2025: visi, misi, tujuan, profil lulusan, CPL, bahan kajian, sebaran mata kuliah, dosen pengampu, tracer study, dan SWOT.`,
     greetActs: () => [["📜 Visi & Misi", () => kuriCard("visi")], ["📚 Struktur Kurikulum", () => kuriCard("mk")]],
     answer: kuriAnswer, pitch: 1.0
   });
@@ -9418,6 +9461,9 @@ function xHandleAct(act, hit, e) {
     case "x_dice": snakeRoll(); break;
     case "x_snportal": if (Q().snake) xTeleport(16.2, -176, 0); else toast("Portal finis aktif setelah kamu tepat mencapai pijakan 40."); break;
     case "x_pemstats": pemStatsCard(); break;
+    case "x_epslide": epSlides(act.i); break;
+    case "x_epall": epSlides(0); break;
+    case "x_epgo": openNpc("vir", "chat"); epOpenPortal(); break;
     case "x_pemboard": pemFinalCard(); break;
     case "x_cafemenu": cafeMenuCard(); break;
     case "x_dosenboard": dosenCard(); break;
@@ -9507,6 +9553,7 @@ function buildExtras() {
     buildHofRibbon();
     try { buildPeminatan(); } catch (err) { console.error("Peminatan gagal dibangun:", err); }
     try { buildCafe(); } catch (err) { console.error("Cafe gagal dibangun:", err); }
+    try { buildEportal(); } catch (err) { console.error("Ruang E-Portal gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -9870,7 +9917,7 @@ function spAnswer(npcId, q) {
   }
   const tr = Qs.spTries[npcId] = (Qs.spTries[npcId] || 0) + 1;
   saveQ();
-  const hint = tr >= 3 ? (SP_Q[npcId].labs ? " Petunjuk: perhatikan papan nama di atas keempat pintu lab di Atrium." : " Petunjuk: robot KURI di Ruang Sambutan hafal visi universitas, fakultas, dan prodi.") : "";
+  const hint = tr >= 3 ? (SP_Q[npcId].labs ? " Petunjuk: perhatikan papan nama di atas keempat pintu lab di Atrium." : " Petunjuk: robot Dul di Ruang Sambutan hafal visi universitas, fakultas, dan prodi.") : "";
   return { text: `❌ Belum tepat. ${r.msg}${hint} Coba ketik lagi jawabanmu.` };
   void n;
 }
@@ -9878,6 +9925,28 @@ function spOpenDoor() {
   if (XT.door) XT.door.setOpen(true);
   updHud();
   xShake(1.8, 0.075);
+  setTimeout(spQuakeVideo, 500);
+}
+// video yang diputar saat gempa kecil (pintu rahasia terbuka)
+function spQuakeVideo() {
+  if (renderer.xr.isPresenting || $("quakeVid")) return;
+  const ov = document.createElement("div");
+  ov.id = "quakeVid";
+  ov.innerHTML = `<video playsinline preload="auto"></video><button class="ghost" type="button">Lewati ✕</button>`;
+  document.body.appendChild(ov);
+  const v = ov.querySelector("video");
+  let done = false;
+  const close = () => { if (done) return; done = true; try { v.pause(); } catch {} ov.classList.add("out"); try { Music.duck(false); } catch {} setTimeout(() => ov.remove(), 600); };
+  // WebM (VP9/Opus) untuk browser tanpa codec H.264, MP4 untuk Safari/iOS
+  for (const [src, type] of [["assets/ext/lorong-rahasia.webm", "video/webm"], ["assets/ext/lorong-rahasia.mp4", "video/mp4"]]) { const so = document.createElement("source"); so.src = src; so.type = type; v.appendChild(so); }
+  v.lastChild.onerror = close;
+  v.volume = Math.max(0.3, S.vol ?? 0.85);
+  v.onended = close;
+  ov.querySelector("button").onclick = close;
+  try { Music.duck(true); } catch {}
+  const pr = v.play();
+  if (pr && pr.catch) pr.catch(() => { v.muted = true; v.play().catch(close); });
+  setTimeout(close, 30000); // pengaman bila video macet
 }
 
 // ---------- guncangan kecil (kamera + gemuruh lirih + getar kontroler VR) ----------
@@ -9963,12 +10032,21 @@ function makeCustomHuman(id, cfg) {
     const hairM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.hair || "#1c1410"), roughness: 0.9 });
     const hair = new THREE2.Mesh(new THREE2.SphereGeometry(0.158, 28, 16, 0, Math.PI * 2, 0, Math.PI * 0.5), hairM); hair.scale.set(0.92, 1.0, 1.0); hair.position.y = 0.035; headG.add(hair);
     const back = new THREE2.Mesh(new THREE2.SphereGeometry(0.152, 20, 12, Math.PI * 0.6, Math.PI * 0.8, Math.PI * 0.35, Math.PI * 0.3), hairM); back.rotation.y = Math.PI; back.scale.set(0.95, 1.1, 1); headG.add(back);
-    const must = new THREE2.Mesh(new THREE2.BoxGeometry(0.06, 0.012, 0.012), hairM); must.position.set(0, -0.042, 0.15); headG.add(must);
+    if (!LK.hijab) { const must = new THREE2.Mesh(new THREE2.BoxGeometry(0.06, 0.012, 0.012), hairM); must.position.set(0, -0.042, 0.15); headG.add(must); }
+    else {
+      // hijab (seperti Kak Tias) menutupi rambut
+      hair.visible = back.visible = false;
+      const hjM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.hijab), roughness: 0.65 });
+      const shell = new THREE2.Mesh(new THREE2.SphereGeometry(0.182, 32, 24, Math.PI * 0.5 + 0.95, Math.PI * 2 - 1.9), hjM); shell.scale.set(0.95, 1.12, 1.02); headG.add(shell);
+      const capH = new THREE2.Mesh(new THREE2.SphereGeometry(0.184, 32, 12, 0, Math.PI * 2, 0, 0.72), hjM); capH.scale.set(0.95, 1.12, 1.02); headG.add(capH);
+      const drape = new THREE2.Mesh(new THREE2.CylinderGeometry(0.18, 0.3, 0.3, 32, 1, true), hjM); drape.position.y = -0.22; headG.add(drape);
+      for (const sx of [-1, 1]) { const bl = new THREE2.Mesh(new THREE2.CircleGeometry(0.024, 14), new THREE2.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.45 })); bl.position.set(sx * 0.08, -0.03, 0.142); bl.rotation.y = sx * 0.45; headG.add(bl); }
+    }
     shine.visible = false;
     const apronM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(LK.apron || "#3f2a1d"), roughness: 0.8, side: THREE2.DoubleSide });
     const apron = new THREE2.Mesh(new THREE2.CylinderGeometry(0.168, 0.2, 0.86, 20, 1, true, -Math.PI * 0.42, Math.PI * 0.84), apronM); apron.position.y = 1.0; apron.scale.z = 0.86; rig.add(apron);
     const bib = new THREE2.Mesh(new THREE2.PlaneGeometry(0.2, 0.2), apronM); bib.position.set(0, 1.33, 0.122); rig.add(bib);
-    const logoC = mkCanvas(128, 128), lx = logoC.getContext("2d"); lx.font = `90px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; lx.textAlign = "center"; lx.textBaseline = "middle"; lx.fillText("☕", 64, 70);
+    const logoC = mkCanvas(128, 128), lx = logoC.getContext("2d"); lx.font = `90px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; lx.textAlign = "center"; lx.textBaseline = "middle"; lx.fillText(LK.badge || "☕", 64, 70);
     const lg = new THREE2.Mesh(new THREE2.PlaneGeometry(0.09, 0.09), new THREE2.MeshBasicMaterial({ map: xTex(logoC), transparent: true })); lg.position.set(0, 1.33, 0.124); rig.add(lg);
   }
   const smile = new THREE2.Mesh(new THREE2.TorusGeometry(0.03, 0.006, 6, 18, Math.PI), new THREE2.MeshBasicMaterial({ color: 0x7c2d12 })); smile.position.set(0, -0.065, 0.142); smile.rotation.z = Math.PI; headG.add(smile);
@@ -11041,7 +11119,7 @@ function rahmanAnswer(q) {
     const more = moreHint || (/lagi|lanjut|lebih|detail|caranya|bagaimana|gimana|petunjuk/.test(ql) && CAFE.spTier > 0);
     CAFE.spTier++;
     if (!more) return { text: "🤫 Psst… pelanggan tetap di sini sering cerita: di salah satu dinding Lab Software Engineering ada pintu yang tidak tercatat di denah. Katanya kuncinya dipegang oleh keempat robot lab — Keri, Geo, Cody, dan Neta. Masing-masing menyimpan satu “pertanyaan rahasia”. Kalau mau petunjuk lagi, tanya aku “petunjuk lorong rahasia”.", acts: [["Petunjuk lagi", () => askNpc("petunjuk lagi soal lorong rahasia", "rahman")]] };
-    return { text: "Oke, satu petunjuk lagi, tapi jangan bilang siapa-siapa ya ☕ Coba ketik “secret passage” saat mengobrol dengan setiap robot lab. Pertanyaan mereka seputar visi kampus, fakultas, prodi, dan nama-nama lab — robot KURI di Ruang Sambutan hafal semua visi itu. Setelah keempatnya puas… rasakan saja getarannya. Di baliknya ada beberapa lorong yang menguji kesabaran, dan konon di ujungnya ada taman yang indah. Selebihnya, temukan sendiri! 😉", acts: [["Antar ke Lab SE", () => teleportSpot("se")], ["Antar ke KURI", () => teleportSpot("welcome")]] };
+    return { text: "Oke, satu petunjuk lagi, tapi jangan bilang siapa-siapa ya ☕ Coba ketik “secret passage” saat mengobrol dengan setiap robot lab. Pertanyaan mereka seputar visi kampus, fakultas, prodi, dan nama-nama lab — robot Dul di Ruang Sambutan hafal semua visi itu. Setelah keempatnya puas… rasakan saja getarannya. Di baliknya ada beberapa lorong yang menguji kesabaran, dan konon di ujungnya ada taman yang indah. Selebihnya, temukan sendiri! 😉", acts: [["Antar ke Lab SE", () => teleportSpot("se")], ["Antar ke Dul", () => teleportSpot("welcome")]] };
   }
   // ---- dosen ----
   if (/daftar dosen|semua dosen|dosen (ti|informatika)|siapa saja dosen|list dosen|keahlian dosen|dosen.*(ahli|keahlian|bidang)/.test(ql) && !dosenFind(ql)) {
@@ -11413,6 +11491,236 @@ function adzanKick(ev, reason) {
 }
 // tampilkan status jeda/izin di layar awal sejak halaman dimuat
 setTimeout(() => { if (adzanBlockInfo()) adzanShowBlock(); }, 0);
+
+
+// =====================================================================
+// src/ext_eportal.js — RUANG E-PORTAL UIKA (selatan Ruang Sambutan) +
+// NPC Vir (akses ke eportal.uika-bogor.ac.id) + slide tiap aplikasi.
+// Juga: NPC Sit, waitress Cafe Rahman, pemandu ruangan-ruangan di denah.
+// =====================================================================
+var EPORTAL_URL = "https://eportal.uika-bogor.ac.id";
+var EPORTAL_NOTE = "Sistem masih dalam pengembangan. Untuk informasi lebih lanjut akan tersedia pada update yang lain.";
+// [id, nama, huruf ikon, warna1, warna2, jenis, kata kunci]
+var EP_APPS = [
+  ["cbt", "CBT", "C", "#10b981", "#047857", "Aplikasi web", /\bcbt\b|computer based|ujian/],
+  ["elib", "E-Library UIKA", "EU", "#0ea5e9", "#0369a1", "Aplikasi web", /e-?library|perpus|pustaka|\belib/],
+  ["meet", "Meeting", "M", "#f97316", "#c2410c", "Aplikasi web", /meeting|rapat|pertemuan/],
+  ["sc", "Short Course", "SC", "#8b5cf6", "#6d28d9", "Aplikasi web", /short ?course(?! android)|kursus/],
+  ["siakad", "SIAKAD", "S", "#ec4899", "#be185d", "Aplikasi web", /siakad|akademik|krs|khs/],
+  ["simpeg", "SIMPEG", "S", "#f59e0b", "#b45309", "Aplikasi web", /simpeg|kepegawaian|pegawai/],
+  ["ucl", "UCL", "U", "#0891b2", "#155e75", "Aplikasi web", /\bucl\b(?! mobile)|presensi|absen/],
+  ["uclm", "UCL Mobile Android", "📱", "#059669", "#065f46", "Aplikasi mobile (APK Android)", /ucl mobile|ucl android|apk ucl/],
+  ["sca", "Short Course Android", "📱", "#0284c7", "#075985", "Aplikasi mobile (APK Android)", /short ?course (android|mobile|apk)/]
+];
+var EP = { slides: [] };
+function epSlideCanvas(i) {
+  if (EP.slides[i]) return EP.slides[i];
+  const [, name, ic, c1, c2, kind] = EP_APPS[i], c = mkCanvas(1280, 720), x = c.getContext("2d");
+  const bg = x.createLinearGradient(0, 0, 1280, 720); bg.addColorStop(0, "#ecfdf5"); bg.addColorStop(1, "#ffffff");
+  x.fillStyle = bg; x.fillRect(0, 0, 1280, 720);
+  x.strokeStyle = "rgba(16,185,129,.12)"; x.lineWidth = 4;
+  for (let k = 0; k < 6; k++) { x.beginPath(); x.arc(1180, 80, 60 + k * 70, 0, 7); x.stroke(); }
+  // kepala ala E-Portal SSO
+  x.fillStyle = "#047857"; x.font = `700 24px ${FONT}`; x.fillText("UNIVERSITAS IBN KHALDUN", 70, 76);
+  x.fillStyle = "#0f172a"; x.font = `800 40px ${FONT}`; x.fillText("E-PORTAL", 70, 122);
+  x.fillStyle = "#10b981"; x.fillText("SSO", 70 + x.measureText("E-PORTAL ").width, 122);
+  x.fillStyle = "#94a3b8"; x.font = `500 26px ${FONT}`; x.textAlign = "right"; x.fillText(`Aplikasi ${i + 1} / ${EP_APPS.length}`, 1210, 76); x.textAlign = "left";
+  // ikon aplikasi
+  const g = x.createLinearGradient(80, 200, 340, 460); g.addColorStop(0, c1); g.addColorStop(1, c2);
+  x.shadowColor = "rgba(0,0,0,.18)"; x.shadowBlur = 30; x.shadowOffsetY = 12;
+  x.fillStyle = g; rr(x, 80, 190, 260, 260, 56); x.fill();
+  x.shadowColor = "transparent";
+  x.fillStyle = "#fff"; x.textAlign = "center"; x.textBaseline = "middle";
+  x.font = ic.length > 2 ? `120px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif` : `800 ${ic.length > 1 ? 110 : 130}px ${FONT}`;
+  x.fillText(ic, 210, 325); x.textBaseline = "alphabetic"; x.textAlign = "left";
+  // nama & keterangan
+  x.fillStyle = "#0f172a"; x.font = `800 ${name.length > 16 ? 64 : 80}px ${FONT}`; x.fillText(name, 400, 270);
+  x.fillStyle = "#64748b"; x.font = `500 32px ${FONT}`; x.fillText(`${kind} · eportal.uika-bogor.ac.id`, 404, 322);
+  x.fillStyle = "#0f172a"; x.font = `700 30px ${FONT}`; x.fillText("Keterangan:", 404, 400);
+  x.fillStyle = "#b45309"; x.font = `italic 600 34px ${FONT}`; x.fillText("under construction", 404 + x.measureText("Keterangan: ").width + 8, 400);
+  // pita "UNDER CONSTRUCTION"
+  x.save(); x.translate(640, 560);
+  x.fillStyle = "#facc15"; x.fillRect(-640, -52, 1280, 104);
+  x.save(); x.beginPath(); x.rect(-640, -52, 1280, 104); x.clip();
+  x.fillStyle = "#111827";
+  for (let k = -700; k < 700; k += 80) { x.beginPath(); x.moveTo(k, -52); x.lineTo(k + 40, -52); x.lineTo(k - 10, 52); x.lineTo(k - 50, 52); x.closePath(); x.fill(); }
+  x.restore();
+  x.fillStyle = "#111827"; rr(x, -330, -38, 660, 76, 14); x.fill();
+  x.fillStyle = "#facc15"; x.font = `800 46px ${FONT}`; x.textAlign = "center"; x.fillText("UNDER CONSTRUCTION", 0, 16);
+  x.restore(); x.textAlign = "left";
+  x.fillStyle = "#94a3b8"; x.font = `400 24px ${FONT}`; x.fillText("Klik untuk detail · tanya Vir di gerbang portal untuk akses", 70, 690);
+  return EP.slides[i] = c;
+}
+function epOpenPortal() {
+  hidePopups();
+  if (renderer.xr.isPresenting) {
+    const c = mkCanvas(1200, 600), x = c.getContext("2d");
+    x.fillStyle = "#fff"; rr(x, 0, 0, 1200, 600, 40); x.fill();
+    x.fillStyle = "#047857"; x.font = `800 54px ${FONT}`; x.fillText("E-Portal UIKA", 60, 120);
+    x.fillStyle = "#334155"; x.font = `400 32px ${FONT}`;
+    wrap(x, `${EPORTAL_NOTE} Lepas headset untuk membuka ${EPORTAL_URL.replace("https://", "")} di browser.`, 60, 200, 1080, 46, 8);
+    showVRPanel(c); return;
+  }
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🌐 Akses E-Portal UIKA</h2>
+  <p>Vir membukakan akses ke sistem <b>eportal.uika-bogor.ac.id</b> — Single Sign-On untuk CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, dan UCL.</p>
+  <div class="kbox"><b>CATATAN DARI VIR</b><p>🚧 ${EPORTAL_NOTE}</p></div>
+  <div class="rowf"><a class="btn" id="epGo" href="${EPORTAL_URL}" target="_blank" rel="noopener noreferrer">🌐 Buka eportal.uika-bogor.ac.id</a><button class="ghost" id="epSl">📑 Slide aplikasi</button></div>`);
+  $("epGo").onclick = () => { toast("E-Portal dibuka di tab baru. Sistem masih dalam pengembangan 🚧", 4500); spawnSparkle(); };
+  $("epSl").onclick = () => epSlides(0);
+}
+function epSlides(i) {
+  hidePopups();
+  i = (i + EP_APPS.length) % EP_APPS.length;
+  const a = EP_APPS[i];
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2 id="epT"></h2><p class="kk">Aplikasi ${i + 1} dari ${EP_APPS.length} di E-Portal SSO UIKA · ${a[5]}</p>
+  <img id="epImg" alt="" style="width:100%;border-radius:12px">
+  <div class="kbox"><b>KETERANGAN</b><p>under construction</p></div>
+  <div class="rowf"><button class="ghost" id="epPrev">◀ Sebelumnya</button><button class="ghost" id="epNext">Berikutnya ▶</button><span style="flex:1"></span><button class="btn" id="epGo">🌐 Akses E-Portal</button></div>`);
+  $("genCard").classList.add("wide");
+  $("epT").textContent = "🚧 " + a[1];
+  $("epImg").src = epSlideCanvas(i).toDataURL("image/png"); $("epImg").alt = "Slide " + a[1];
+  $("epPrev").onclick = () => epSlides(i - 1);
+  $("epNext").onclick = () => epSlides(i + 1);
+  $("epGo").onclick = () => epOpenPortal();
+}
+function virAnswer(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
+  const acts = [["🌐 Akses E-Portal", () => epOpenPortal()], ["📑 Slide aplikasi", () => epSlides(0)]];
+  if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql))
+    return { text: `Halo ${nm}! Aku Vir, penjaga gerbang E-Portal UIKA. Aku bisa memberimu akses menuju sistem eportal.uika-bogor.ac.id. ${EPORTAL_NOTE}`, acts };
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Pantau terus update berikutnya ya 🚧" };
+  const ai = EP_APPS.findIndex((a) => a[6].test(ql));
+  if (ai >= 0) return { text: `${EP_APPS[ai][1]} (${EP_APPS[ai][5].toLowerCase()}) — keterangan: under construction. ${EPORTAL_NOTE}`, acts: [["📑 Lihat slide " + EP_APPS[ai][1], () => epSlides(ai)], ["🌐 Akses E-Portal", () => epOpenPortal()]] };
+  if (/aplikasi|apa saja|daftar|isi|fitur|menu|layanan/.test(ql)) return { text: `Di E-Portal SSO ada 7 aplikasi: ${EP_APPS.slice(0, 7).map((a) => a[1]).join(", ")}; plus 2 aplikasi mobile: UCL Mobile Android dan Short Course Android. Semuanya berketerangan: under construction. Slidenya terpasang di dinding ruangan ini.`, acts };
+  if (/sso|single sign|login|masuk|akses|link|tautan|alamat|buka|url|portal/.test(ql)) return { text: `Silakan! Tekan tombol di bawah untuk menuju ${EPORTAL_URL.replace("https://", "")}. Satu kali login (Single Sign-On) untuk semua aplikasi sesuai hak aksesmu. ${EPORTAL_NOTE}`, acts };
+  if (/kapan|update|jadi|selesai|rilis|versi/.test(ql)) return { text: `${EPORTAL_NOTE} Nantikan update berikutnya di galeri ini.`, acts };
+  return { text: `Aku hanya mengurus gerbang E-Portal. ${EPORTAL_NOTE} Coba tanyakan aplikasi tertentu (mis. SIAKAD) atau minta akses ke E-Portal.`, acts };
+}
+function buildEportal() {
+  const R = ROOMS.eportal;
+  // slide tiap aplikasi di dinding
+  const place = [["W", 36], ["W", 43], ["W", 50], ["E", 36], ["E", 43], ["E", 50], ["S", -16], ["N", -17.3], ["N", -12.2]];
+  EP_APPS.forEach((a, i) => {
+    const [side, along] = place[i], p = world.onWall("eportal", side, along, 2.6), g = world.group(p), w = 4.2, h = w * 9 / 16;
+    const m = xPlane(epSlideCanvas(i), w, h); m.material.transparent = false; m.position.z = 0.03; g.add(m);
+    xBox(w + 0.16, h + 0.16, 0.05, new THREE2.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 }), 0, 0, -0.01, 0, g);
+    xBox(w + 0.22, 0.04, 0.07, new THREE2.MeshBasicMaterial({ color: new THREE2.Color(a[3]), toneMapped: false }), 0, -h / 2 - 0.1, 0, 0, g);
+    xAct(m, { type: "x_epslide", i });
+    world.panels["ep_" + a[0]] = { id: "ep_" + a[0], kind: "ep", title: a[1], data: { title: a[1] + " (E-Portal)", d: `${a[1]}: aplikasi di E-Portal SSO UIKA. Keterangan: under construction.` }, mesh: m, x: p.x + Math.sin(p.ry) * 3.2, z: p.z + Math.cos(p.ry) * 3.2, yaw: p.ry, room: "eportal" };
+  });
+  // papan selamat datang (sisi E-Portal dinding utara, timur pintu)
+  {
+    const c = mkCanvas(1600, 900), x = c.getContext("2d");
+    const bg = x.createLinearGradient(0, 0, 1600, 900); bg.addColorStop(0, "#ffffff"); bg.addColorStop(1, "#d1fae5");
+    x.fillStyle = bg; x.fillRect(0, 0, 1600, 900);
+    x.fillStyle = "#047857"; x.font = `700 40px ${FONT}`; x.fillText("● SINGLE SIGN-ON PORTAL", 90, 150);
+    x.fillStyle = "#0f172a"; x.font = `800 110px ${FONT}`; x.fillText("E-PORTAL", 90, 300);
+    x.fillStyle = "#10b981"; x.fillText("SSO", 90 + x.measureText("E-PORTAL ").width, 300);
+    x.fillStyle = "#334155"; x.font = `500 46px ${FONT}`; x.fillText("Universitas Ibn Khaldun Bogor", 94, 380);
+    x.font = `400 36px ${FONT}`; x.fillStyle = "#475569";
+    wrap(x, "Satu akun untuk CBT, E-Library UIKA, Meeting, Short Course, SIAKAD, SIMPEG, UCL, serta aplikasi mobile UCL & Short Course.", 94, 470, 1400, 52, 3);
+    x.fillStyle = "#111827"; rr(x, 90, 650, 1000, 100, 20); x.fill();
+    x.fillStyle = "#facc15"; x.font = `800 48px ${FONT}`; x.fillText("🚧 MASIH DALAM PENGEMBANGAN", 130, 718);
+    x.fillStyle = "#047857"; x.font = `600 34px ${FONT}`; x.fillText("Klik papan ini untuk melihat slide aplikasi →", 94, 840);
+    const p = world.onWall("eportal", "N", 2.5, 2.7), g = world.group(p);
+    const m = xPlane(c, 5.4, 3.04); m.material.transparent = false; m.position.z = 0.03; g.add(m);
+    xAct(m, { type: "x_epall" });
+  }
+  // gerbang portal + layar URL (dinding selatan, tengah)
+  {
+    const gx = -5.5, gz = 55.5, g = new THREE2.Group(); g.position.set(gx, 0, gz); g.rotation.y = Math.PI; scene.add(g);
+    const green = new THREE2.MeshStandardMaterial({ color: 0x10b981, metalness: 0.5, roughness: 0.3, emissive: 0x065f46, emissiveIntensity: 0.6 });
+    for (const sx of [-1.9, 1.9]) xBox(0.4, 4.4, 0.5, green, sx, 2.2, 0, 0, g);
+    const arch = new THREE2.Mesh(new THREE2.TorusGeometry(1.9, 0.2, 12, 48, Math.PI), green); arch.position.y = 4.4; g.add(arch);
+    const vm = new THREE2.MeshBasicMaterial({ color: 0x6ee7b7, transparent: true, opacity: 0.5, side: THREE2.DoubleSide, depthWrite: false, toneMapped: false, blending: THREE2.AdditiveBlending });
+    const veil = new THREE2.Mesh(new THREE2.PlaneGeometry(3.4, 4.4), vm); veil.position.y = 2.2; g.add(veil);
+    const glow = world.glowSprite("#34d399", 1, 0.4); glow.scale.set(6, 6.5, 1); glow.position.set(0, 2.6, -0.2); g.add(glow);
+    XT.anim.push(() => { if (curRoom === "eportal") vm.opacity = 0.38 + Math.sin(t * 2.2) * 0.12; });
+    xAct(veil, { type: "x_epgo" });
+    const tc = mkCanvas(1400, 220), tx = tc.getContext("2d");
+    tx.fillStyle = "#064e3b"; rr(tx, 0, 0, 1400, 220, 40); tx.fill();
+    tx.fillStyle = "#a7f3d0"; tx.font = `600 44px ${FONT}`; tx.textAlign = "center"; tx.fillText("GERBANG", 700, 80);
+    tx.fillStyle = "#fff"; tx.font = `800 76px ${FONT}`; tx.fillText("eportal.uika-bogor.ac.id", 700, 170);
+    const tm = xPlane(tc, 4.6, 0.72); tm.position.set(0, 5.5, 0.1); g.add(tm); xAct(tm, { type: "x_epgo" });
+    world.colliders.push({ a: [gx - 2.2, gz], b: [gx + 2.2, gz], r: 0.3 });
+  }
+  // bangku & tanaman
+  for (const [bx, bz] of [[-13, 40], [2, 40], [-13, 47], [2, 47]]) {
+    const bench = new THREE2.Mesh(new THREE2.BoxGeometry(2.4, 0.42, 0.7), new THREE2.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4 })); bench.position.set(bx, 0.21, bz); scene.add(bench);
+    const cu = new THREE2.Mesh(new THREE2.BoxGeometry(2.4, 0.06, 0.7), new THREE2.MeshStandardMaterial({ color: 0x10b981, roughness: 0.8 })); cu.position.set(bx, 0.45, bz); scene.add(cu);
+    world.colliders.push({ a: [bx - 1.2, bz], b: [bx + 1.2, bz], r: 0.38 });
+    for (const dx of [-0.7, 0, 0.7]) world.seats.push({ x: bx + dx, z: bz + 0.05, yaw: 0 });
+  }
+  for (const [px, pz] of [[-19.2, 30.8], [8.2, 30.8], [-19.2, 55.2], [8.2, 55.2]]) {
+    const pot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.34, 0.26, 0.6, 18), new THREE2.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 })); pot.position.set(px, 0.3, pz); scene.add(pot);
+    for (let i = 0; i < 6; i++) { const lf = new THREE2.Mesh(new THREE2.SphereGeometry(0.3, 10, 8), new THREE2.MeshStandardMaterial({ color: 0x15803d, roughness: 0.8 })); lf.scale.set(0.6, 1.6, 0.6); lf.position.set(px + Math.cos(i) * 0.16, 0.95 + (i % 2) * 0.24, pz + Math.sin(i) * 0.16); lf.rotation.z = Math.cos(i * 2) * 0.4; scene.add(lf); }
+    world.circles.push({ x: px, z: pz, r: 0.38 });
+  }
+  // papan arah di Ruang Sambutan (atas pintu)
+  { const c = mkCanvas(900, 170), x = c.getContext("2d"); x.fillStyle = "#047857"; rr(x, 0, 0, 900, 170, 30); x.fill(); x.fillStyle = "#fff"; x.font = `700 66px ${FONT}`; x.textAlign = "center"; x.fillText("↓ RUANG E-PORTAL UIKA", 450, 110);
+    const m = xPlane(c, 2.2, 0.42); m.position.set(-6.5, 3.75, 29.82); m.rotation.y = Math.PI; scene.add(m);
+    const c2 = mkCanvas(900, 170), x2 = c2.getContext("2d"); x2.fillStyle = "#4c1d95"; rr(x2, 0, 0, 900, 170, 30); x2.fill(); x2.fillStyle = "#fff"; x2.font = `700 64px ${FONT}`; x2.textAlign = "center"; x2.fillText("↑ RUANG SAMBUTAN", 450, 108);
+    const m2 = xPlane(c2, 2.2, 0.42); m2.position.set(-6.5, 3.75, 30.18); scene.add(m2); }
+  // NPC Vir
+  makeCustomRobot("vir", {
+    code: "SSO", name: "Vir", role: "Penjaga Gerbang E-Portal UIKA", col: "#10b981", body: "#f0fdf4", accent: "#10b981", eye: "#22d3ee", icon: "🔐",
+    x: -5.5, z: 51.6, room: "eportal",
+    greet: "Halo! Aku Vir, penjaga gerbang E-Portal UIKA.",
+    chips: ["Akses E-Portal", "Aplikasi apa saja?", "SIAKAD", "UCL Mobile", "Kapan selesai?"],
+    roleNote: "akses eportal.uika-bogor.ac.id",
+    knowText: `Vir menjaga gerbang E-Portal SSO UIKA (${EP_APPS.length} aplikasi, semuanya berketerangan under construction) dan memberi akses ke ${EPORTAL_URL}.`,
+    greetActs: () => [["🌐 Akses E-Portal", () => epOpenPortal()], ["📑 Slide aplikasi", () => epSlides(0)]],
+    answer: virAnswer, pitch: 1.2
+  });
+  buildSit();
+}
+// ---------- Sit: waitress Cafe Rahman, pemandu ruangan di denah ----------
+var ROOM_INFO = {
+  welcome: ["Ruang Sambutan", "titik awal kamu tiba", "Ada layar besar video sambutan, slideshow “Kenali Lab Peminatan”, galeri Kepala Program Studi, logo TI 3D, denah, headset VR, dan robot Dul yang hafal kurikulum OBE serta visi-misi.", /sambutan|awal|video|kaprodi|kepala program|\bdul\b|kurikulum|obe/],
+  atrium: ["Atrium Pendaftaran", "di utara Ruang Sambutan, pusat semua ruangan", "Meja resepsionis Kak Tias untuk mendaftar peminatan, layar persentase peminatan, papan pengumuman hasil final, kuis “Kasus ini cocok di lab mana?”, papan tulis, papan pesan, dan pita Hall of Fame.", /atrium|resepsionis|\btias\b|daftar|pendaftaran|pengumuman|kuis|papan tulis/],
+  keris: ["Lab KERIS", "lewat pintu barat Atrium", "Lab AI, data mining, machine learning & computer vision — ada rak server berkedip, hologram jaringan saraf, video lab, dan robot Keri.", /keris|\bkeri\b|\bai\b|machine learning|kecerdasan/],
+  git: ["Lab GIT", "lewat pintu utara-kiri Atrium", "Lab geospasial: lantai peta kota neon, globe hologram, drone terbang, video kegiatan lapangan, dan robot Geo.", /\bgit\b|\bgeo\b|geospa|\bgis\b|drone|satelit/],
+  se: ["Lab Software Engineering", "lewat pintu utara-kanan Atrium", "Studio developer: meja laptop, beanbag, rak piala, kanban, slideshow prestasi & produk, dan robot Cody.", /\bse\b|software|\brpl\b|cody/],
+  csn: ["Lab CSN", "lewat pintu timur Atrium", "Network Operation Center: layar monitoring, hologram topologi jaringan, rak server, dan robot Neta.", /\bcsn\b|neta|jaringan|network/],
+  cafe: ["Cafe Rahman", "di timur Ruang Sambutan, lewat pintu kayu di dinding timurnya (kafe tempat aku bekerja)", "Meja bar barista Rahman (kopi, info dosen & saran pembimbing), papan menu kopi, papan keahlian dosen TI, sofa, dan rak buku.", /cafe|kafe|kopi|rahman/],
+  eportal: ["Ruang E-Portal UIKA", "lewat pintu hijau di dinding selatan Ruang Sambutan", "Ruang luas berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, UCL, dan 2 aplikasi mobile) serta robot Vir yang memberi akses ke eportal.uika-bogor.ac.id.", /e-?portal|portal|\bvir\b|\bsso\b|siakad|simpeg|\bucl\b|\bcbt\b|library/]
+};
+function sitAnswer(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
+  const mapAct = ["🗺 Buka denah", () => toggleMap(true)];
+  const roomActs = (ids) => ids.map((k) => [`Antar ke ${ROOM_INFO[k][0]}`, () => teleportSpot(SPOTS.some((s) => s.id === k) ? k : "atrium")]);
+  if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|mbak|kak)\b/.test(ql) && ql.split(" ").length <= 3)
+    return { text: `Halo ${nm}, aku Sit, waitress di Cafe Rahman 😊 Selain mengantar pesanan, aku hafal semua ruangan di denah galeri ini. Mau tahu ruangan apa saja, atau mau kuantar ke suatu tempat?`, acts: [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], mapAct] };
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Selamat menjelajah ya 😊" };
+  if (/saya di ?mana|aku di ?mana|posisi (saya|aku)|lokasi (saya|aku)|sekarang di/.test(ql)) {
+    const r = roomAt(P.x, P.z), info = ROOM_INFO[r];
+    return { text: info ? `Kamu sedang berada di ${info[0]}. ${info[2]}` : "Hmm, posisimu tidak tercantum di denah… sepertinya kamu sedang di tempat yang istimewa 😉", acts: [mapAct] };
+  }
+  if (/rahasia|secret|lorong|tersembunyi|taman|labirin/.test(ql)) return { text: "Yang tercantum di denah hanya 8 ruangan. Soal tempat yang tidak ada di peta… itu bukan bagianku, coba tanya Rahman di meja bar — dia suka mendengar bisik-bisik pelanggan ☕" };
+  const hits = Object.keys(ROOM_INFO).filter((k) => ROOM_INFO[k][3].test(ql));
+  if (hits.length && !/apa saja|semua|daftar|ada berapa|list/.test(ql)) {
+    const k = hits[0], [n, loc, desc] = ROOM_INFO[k];
+    return { text: `${n} — ${loc}. ${desc}`, acts: roomActs(hits.slice(0, 2)).concat([mapAct]) };
+  }
+  if (/ruang|ruangan|peta|denah|map|tempat|lokasi|apa saja|semua|daftar|ada berapa|kemana|ke mana|tujuan|jalan/.test(ql))
+    return { text: `Di denah ada ${Object.keys(ROOM_INFO).length} ruangan:\n` + Object.values(ROOM_INFO).map(([n, loc]) => `• ${n} — ${loc}`).join("\n") + "\nSebut nama ruangannya kalau mau penjelasan, atau klik tombol untuk kuantar.", acts: roomActs(["atrium", "eportal", "welcome"]).concat([mapAct]) };
+  if (/pesan|minum|kopi|makan|menu/.test(ql)) return { text: "Untuk pesanan kopi, langsung ke Rahman di meja bar ya — aku cuma bisa mengantar… dan menunjukkan jalan 😄", acts: [["Ngobrol dengan Rahman", () => openNpc("rahman", "chat")]] };
+  if (/toilet|wc|mushola|musholla|masjid|kantin|parkir/.test(ql)) return { text: "Ruangan itu belum ada di denah galeri ini. Saat ini ada 8 ruangan: Ruang Sambutan, Atrium, 4 lab peminatan, Cafe Rahman, dan Ruang E-Portal.", acts: [mapAct] };
+  return { text: "Aku bisa menjelaskan ruangan-ruangan di denah: Ruang Sambutan, Atrium Pendaftaran, Lab KERIS, GIT, SE, CSN, Cafe Rahman, dan Ruang E-Portal UIKA — atau mengantarmu ke sana.", acts: [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], mapAct] };
+}
+function buildSit() {
+  makeCustomHuman("sit", {
+    code: "CAFE", name: "Sit", role: "Waitress Cafe Rahman · pemandu ruangan", col: "#be185d", icon: "🗺", hint: "🗺",
+    x: 25.3, z: 24.6, room: "cafe", tag: "SIT · WAITRESS",
+    look: { shirt: "#fdf2f8", apron: "#7c2d12", hijab: "#be185d", glasses: false, badge: "🗺" },
+    chips: ["Ruangan apa saja?", "Di mana Ruang E-Portal?", "Atrium itu apa?", "Saya di mana?", "Buka denah"],
+    roleNote: "info ruangan-ruangan di denah",
+    knowText: `Sit hafal ${Object.keys(ROOM_INFO).length} ruangan di denah galeri beserta isi dan cara menuju ke sana.`,
+    greetActs: () => [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], ["🗺 Buka denah", () => toggleMap(true)]],
+    answer: (q) => (/^buka denah$/i.test(String(q).trim()) ? (toggleMap(true), { text: "Ini denahnya 🗺 Klik titik mana saja untuk berpindah." }) : sitAnswer(q))
+  });
+  NPCS.sit.pitch = 1.25;
+}
 
 </script>
 </body>
