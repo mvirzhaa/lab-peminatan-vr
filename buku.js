@@ -20,7 +20,7 @@ function loadPdfjs() {
   return pdfjs;
 }
 
-const MAX_PDF = 40 * 1024 * 1024;
+const MAX_PDF = 20 * 1024 * 1024;
 const STOP = new Set('yang dan di ke dari itu ini apa adalah untuk dengan pada atau saya kamu anda apakah bagaimana jelaskan tolong mohon dong sih kah lah tentang mengenai the of a an to is are be ada bisa akan juga sebagai dalam oleh karena agar maka saja lebih tidak bukan nya kalau jika bila seperti mana siapa kapan berapa sebutkan coba beri berikan tahu ingin mau minta buku isi bab halaman and or for in on with that this from by as at it its was were has have had not but can which their they these those we our you your he she his her than then there also into more such may will what when where who how kak ivy tolong dijelaskan jelaskan apa'.split(' '));
 const toks = (s) => String(s).toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w) && !/^\d+$/.test(w));
 
@@ -204,7 +204,7 @@ function createBuku({ dataDir, pem, onChange }) {
       }
       return json(res, 404, { ok: false, err: 'Tidak ditemukan.' });
     } catch (e) {
-      if (e && e.code === 413) return json(res, 413, { ok: false, err: 'Berkas terlalu besar (maks. 40 MB).' });
+      if (e && e.code === 413) return json(res, 413, { ok: false, err: 'Berkas terlalu besar (maks. 20 MB).' });
       console.error('buku:', e);
       if (!res.headersSent) return json(res, 500, { ok: false, err: 'Terjadi kesalahan server.' });
     }

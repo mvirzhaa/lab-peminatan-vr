@@ -7,8 +7,8 @@ server {
     listen [::]:80;
     server_name vr.ti.fts.uika-bogor.ac.id;
 
-    # Batas ukuran upload (Wajib untuk upload buku PDF s.d. 40 MB dan foto Hall of Fame)
-    client_max_body_size 50M;
+    # Batas ukuran upload (Wajib untuk upload buku PDF s.d. 20 MB dan foto Hall of Fame)
+    client_max_body_size 20M;
 
     # Nginx akan di-redirect ke HTTPS otomatis setelah certbot dijalankan
     location / {

@@ -15,7 +15,7 @@
     if (r.status === 401 && path !== '/api/admin/login') { showLogin(); throw new Error(j.err || 'Sesi berakhir.'); }
     if (!r.ok || j.ok === false) {
       let msg = j.err;
-      if (!msg && r.status === 413) msg = 'Ukuran file melebihi batas upload web server (Error 413: Payload Too Large). Atur "client_max_body_size 50M;" di Nginx.';
+      if (!msg && r.status === 413) msg = 'Ukuran file melebihi batas upload web server (Error 413: Payload Too Large). Atur "client_max_body_size 20M;" di Nginx.';
       else if (!msg) msg = `Gagal (${r.status})`;
       const e = new Error(msg); e.data = j; throw e;
     }
@@ -260,7 +260,7 @@
       const f = pickedFile;
       if (!f) { m.className = 'msg bad'; m.textContent = 'Pilih file PDF.'; return; }
       if (!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') { m.className = 'msg bad'; m.textContent = 'Hanya file PDF yang diterima.'; return; }
-      if (f.size > 40 * 1024 * 1024) { m.className = 'msg bad'; m.textContent = 'File terlalu besar (maks. 40 MB).'; return; }
+      if (f.size > 20 * 1024 * 1024) { m.className = 'msg bad'; m.textContent = 'File terlalu besar (maks. 20 MB).'; return; }
       m.textContent = 'Mengunggah ' + f.name + '…';
       await api('/api/admin/buku/upload', { method: 'POST', body: f, headers: { 'Content-Type': 'application/pdf', 'X-Filename': encodeURIComponent(f.name), 'X-Meta': encodeURIComponent(JSON.stringify(meta)) } });
       m.className = 'msg ok'; m.textContent = '✅ Buku masuk rak. Server sedang membaca isi PDF untuk Ivy…';
