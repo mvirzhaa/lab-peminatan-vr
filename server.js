@@ -95,7 +95,7 @@ function saveNotes(room, notes) {
   notesSaveT.set(room, setTimeout(() => { const f = notesFile(room), tmp = f + '.tmp'; fs.writeFile(tmp, JSON.stringify(notes), (e) => { if (!e) fs.rename(tmp, f, () => {}); }); }, 250));
 }
 const notePublic = (n) => ({ id: n.id, n: n.n, t: n.t, time: n.time });
-const ADMIN_PAGE = path.join(PUBLIC, 'admin', 'index.html');
+const ADMIN_PAGE = path.join(PUBLIC, '4adm1in', 'index.html');
 const ADMIN_CSP = "default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'";
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json', '.mp4': 'video/mp4', '.webm': 'video/webm', '.otf': 'font/otf', '.woff2': 'font/woff2' };
@@ -110,7 +110,7 @@ const server = http.createServer((req, res) => {
   }
   if (p.startsWith('/api/')) return pem.handle(req, res, p, u);
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405, secHeaders); return res.end(); }
-  if (p === '/admin' || p === '/admin/') {
+  if (p === '/4adm1in' || p === '/4adm1in/') {
     return fs.readFile(ADMIN_PAGE, (err, buf) => {
       if (err) { res.writeHead(404, secHeaders); return res.end('Not found'); }
       res.writeHead(200, { ...secHeaders, 'X-Frame-Options': 'DENY', 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Security-Policy': ADMIN_CSP });
@@ -348,7 +348,7 @@ setInterval(() => { for (const ws of wss.clients) { if (!ws.alive) { ws.terminat
 
 server.listen(PORT, () => {
   console.log(`Galeri Media Imersif berjalan di http://localhost:${PORT}  (WebSocket: /ws)`);
-  console.log(`Halaman admin peminatan: http://localhost:${PORT}/admin  (username: ${pem.info.user})`);
+  console.log(`Halaman admin peminatan: http://localhost:${PORT}/4adm1in  (username: ${pem.info.user})`);
   if (pem.info.pass) console.log(`Password admin peminatan (sesi ini saja): ${pem.info.pass}  -> atur variabel PEMINATAN_PASS agar tetap`);
   if (!process.env.ADMIN_KEY) console.log(`Kunci moderator untuk "${ADMIN_NAME}" (sesi ini saja): ${ADMIN_KEY}  -> atur variabel ADMIN_KEY agar tetap`);
 });

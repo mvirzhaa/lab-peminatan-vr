@@ -12176,7 +12176,7 @@ function drawShelf() {
     x.fillStyle = "rgba(0,0,0,.55)"; rr(x, 60, H / 2 - 70, W - 120, 140, 20); x.fill();
     x.fillStyle = "#fde68a"; x.font = `700 44px ${FONT}`; x.textAlign = "center";
     x.fillText(BUKU.loaded ? "Rak masih kosong" : "Rak buku belum terhubung ke server", W / 2, H / 2 - 4);
-    x.fillStyle = "#fff"; x.font = `400 28px ${FONT}`; x.fillText("Koleksi PDF ditambahkan admin lewat halaman /admin", W / 2, H / 2 + 42); x.textAlign = "left";
+    x.fillStyle = "#fff"; x.font = `400 28px ${FONT}`; x.fillText("Koleksi modul dan e-book PDF akan segera ditambahkan", W / 2, H / 2 + 42); x.textAlign = "left";
   }
   S2.m.material.map.needsUpdate = true;
   if (S2.lbl) { const lx = S2.lbl.c.getContext("2d"); lx.clearRect(0, 0, 1024, 200); lx.fillStyle = "#14532d"; rr(lx, 0, 0, 1024, 200, 30); lx.fill(); lx.strokeStyle = "#fbbf24"; lx.lineWidth = 8; rr(lx, 6, 6, 1012, 188, 26); lx.stroke(); lx.fillStyle = "#fff"; lx.textAlign = "center"; lx.font = `800 64px ${FONT}`; lx.fillText("📚 RAK BUKU DIGITAL", 512, 92); lx.fillStyle = "#fde68a"; lx.font = `500 38px ${FONT}`; lx.fillText(`${list.length} buku PDF · klik untuk mengunduh`, 512, 158); S2.lbl.m.material.map.needsUpdate = true; }

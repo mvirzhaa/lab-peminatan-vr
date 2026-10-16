@@ -92,7 +92,7 @@ Kode disimpan sebagai hash di sumber (seperti jawaban teka-teki) dan tidak diseb
 - **Formulir di galeri**: nama, NIM, angkatan, WhatsApp/email, pilihan 1, pilihan 2, alasan. Satu NIM = satu pendaftaran; perubahan hanya dari browser yang sama (token) atau lewat admin.
 - **Layar pie chart** di belakang Kak Tias: persentase pilihan 1 per lab, diperbarui langsung lewat WebSocket.
 - **Papan Pengumuman** (dinding timur Atrium): menampilkan hasil final yang diumumkan admin; daftar nama berganti halaman otomatis, klik untuk mencari nama atau cek NIM. NIM di papan disamarkan.
-- **Halaman admin**: `https://domain-anda/admin` (di luar VR), login username + password.
+- **Halaman admin**: `https://domain-anda/4adm1in` (di luar VR), login username + password.
   - Unduh **Excel** (.xlsx: lembar Pendaftar, Rekap, Hasil Final)
   - Buka/tutup pendaftaran, hapus data pendaftar, ubah label periode
   - **Unggah hasil final** (.xlsx/.csv, kolom `NIM`, `Nama`, `Lab`) → pratinjau → **Umumkan** / tarik pengumuman. Template berisi semua pendaftar (lab = pilihan 1) bisa diunduh sebagai draf.
@@ -132,10 +132,10 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
   - Mode headset VR: klik mushaf menampilkan halaman (5 ayat) di panel 3D; klik lagi untuk halaman berikutnya.
   - Sumber: The Noble Qur'an Encyclopedia (quranenc.com) via paket `quran-json` 3.1.2 (CC BY-SA 4.0); font KFGQPC Uthmanic Script HAFS (© King Fahd Complex, dipakai tanpa diubah). Lihat `public/assets/quran/SUMBER.txt`. Penanda catatan kaki terjemahan dihapus karena isi catatan kakinya tidak tersedia.
 - **Cafe Rahman → IT-Mart**.
-- **Rak Buku Digital IT-Mart**: lemari di dinding barat IT-Mart menampilkan buku PDF yang bisa diunduh. Koleksi dikelola di **/admin → tab "Rak Buku IT-Mart"** (akun yang sama dengan admin peminatan): unggah (hanya PDF, maks. 40 MB, diverifikasi tanda tangan `%PDF-`), ubah judul/penulis/kategori/ringkasan, hapus. File di `data/buku/`.
+- **Rak Buku Digital IT-Mart**: lemari di dinding barat IT-Mart menampilkan buku PDF yang bisa diunduh. Koleksi dikelola di **/4adm1in → tab "Rak Buku IT-Mart"** (akun yang sama dengan admin peminatan): unggah (hanya PDF, maks. 40 MB, diverifikasi tanda tangan `%PDF-`), ubah judul/penulis/kategori/ringkasan, hapus. File di `data/buku/`.
 - **NPC Ivy** (penjaga buku): menjelaskan isi buku dari ringkasan admin dan teks PDF yang diekstrak server (`pdfjs-dist`), menjawab pertanyaan dengan kutipan halaman yang paling relevan, dan memberi tombol unduh. PDF hasil pindaian (tanpa teks) hanya dijelaskan dari ringkasannya.
 - **Suara pemain sesuai jarak**: tanpa pengeras suara (megafon), suara terdengar penuh ≤ 3 m, makin pelan, dan tidak terdengar ≥ 20 m (`VOICE_NEAR`/`VOICE_FAR`). Dengan megafon tetap terdengar oleh semua.
-- **Papan Pesan IT'ers permanen**: catatan disimpan di `data/notes/<ruang>.json` (tidak hilang saat server dimulai ulang, hingga 5.000 catatan per ruang). Penulis bisa menghapus catatannya sendiri (kunci tersimpan di browsernya); moderator dan admin (/admin → tab "Papan Pesan") bisa menghapus catatan mana pun.
+- **Papan Pesan IT'ers permanen**: catatan disimpan di `data/notes/<ruang>.json` (tidak hilang saat server dimulai ulang, hingga 5.000 catatan per ruang). Penulis bisa menghapus catatannya sendiri (kunci tersimpan di browsernya); moderator dan admin (/4adm1in → tab "Papan Pesan") bisa menghapus catatan mana pun.
 - Dependensi baru: `pdfjs-dist` — jalankan `npm install` ulang. Folder `data/` sekarang berisi `buku/`, `notes/`, `peminatan.json`, `hof.json` → **jangan dihapus saat deploy ulang**.
 
 ## Pembaruan v7 — Explorer Card
@@ -146,7 +146,7 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 ## Pembaruan v8 — Lantai 2 IT-Mart, Nan & Tantangan Kognitif
 - **Lantai 2 IT-Mart ("Explorer Zone")**: naik lewat tangga kayu di sudut timur laut IT-Mart (berjalan ke anak tangga atau klik papan "⬆ LANTAI 2"); turun lewat tangga di sudut yang sama. Karena mesin galeri hanya memiliki satu ketinggian lantai, lantai 2 dibangun sebagai area tersendiri (tidak tampil di denah) dengan jendela langit agar terasa berada di atas.
 - **NPC Nan** memverifikasi Explorer Card ke **database server** (`data/kartu.json`). Kartu otomatis didaftarkan saat diambil dari Kang Santo (kartu lama didaftarkan saat pertama diverifikasi). Kartu terdaftar → gerbang kaca terbuka. Tanpa kartu → Nan menyuruh pemain menemui **Rahman** di lantai 1.
-- **Admin** (/admin → tab "Explorer Card"): daftar semua kartu, jumlah verifikasi, cabut/aktifkan kembali (kartu yang dicabut ditolak Nan).
+- **Admin** (/4adm1in → tab "Explorer Card"): daftar semua kartu, jumlah verifikasi, cabut/aktifkan kembali (kartu yang dicabut ditolak Nan).
 - **Rahman**: lorong rahasia kini disebut ada "di salah satu lab peminatan" (tidak lagi menyebut Lab SE); Rahman juga menjelaskan cara mendapat Explorer Card dan arah ke lantai 2.
 - **Tantangan 1 · Kognitif**: pintu di ujung lorong balik gerbang. Pemain dilempar ke **penjara bawah tanah**; 20 soal matematika pilihan ganda, **urutan soal & pilihan diacak setiap percobaan**, batas **60 detik** (tombol 1–4 bisa dipakai). Satu salah / waktu habis → kembali ke Nan. Berhasil → jeruji terangkat, pemain masuk ruang **Tantangan 2 · COMING SOON** (ada portal kembali ke lantai 2). Jawaban soal dihitung oleh kode (`COG_BANK`), bukan diketik manual. Pintu Tantangan 2 & 3 di lorong masih terkunci ("segera hadir").
 - Kinerja: ruangan baru tidak menambah PointLight (memakai material berpendar) agar tetap ringan di ponsel & headset VR.
