@@ -175,3 +175,10 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 - **Lencana diganti**: Pengetahuan Alam → **Teknologi · IoT & Drone**; Geografi → **Keterampilan · Kerjasama Tim** (tantangannya menyusul).
 - Bank soal di `public/index.html`: `CV_BS`, `CV_BS_KP` (Benar/Salah), `CV_LM` (lini masa), `CV_OBJ`, `CV_KP` (galeri).
 - **Portal Ring 1** (sudut barat laut Taman Apresiasi): portal hitam yang kelak terbuka bagi pemegang **Black Card** (diberikan setelah 7 lencana). Saat ini dijaga **Kang Ritzkal**, yang tidak bisa diajak chatting dan hanya mengatakan: "Anda hanya dapat mengakses portal ini jika memiliki Black Card".
+
+## Pembaruan v11 — Main ulang & sinkron lencana
+- **Main ulang atau biarkan tuntas**: setiap pemenang (termasuk pengguna kode) mendapat pilihan saat mendatangi tantangannya:
+  - *Ular Tangga (Lorong 4)*: tawaran muncul saat memasuki papan, ada tombol "🔁 Main ulang" di HUD, dan Kang Santo punya pilihan "Main ulang Ular Tangga". Main ulang memakai progres bayangan — status tuntas, sertifikat & akses taman tidak pernah hilang (Lubang Hitam hanya mengembalikan ke awal papan).
+  - *4 ruang tantangan Lantai 2*: tombol "🔁 Main ulang" / "✅ Biarkan tuntas"; gagal saat main ulang tidak menghapus status tuntas. Menang sungguhan mengubah catatan server dari "kode" menjadi "main".
+  - *Gua Pustaka*: "🔁 Main ulang dari Babak 1" / "✅ Biarkan tuntas · ke Teh Puspa".
+- **Sinkron lencana lebih tangguh**: browser kini mencocokkan progres dengan database server dan mengirim ulang tantangan/lencana yang belum tercatat. Silvia menjelaskan penyebab bila tetap gagal (server belum versi terbaru / kartu tercatat di perangkat lain / kartu dicabut / server tidak terhubung).

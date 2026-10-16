@@ -87,7 +87,7 @@ function createKartu({ dataDir, pem }) {
         if (!TANTANGAN.includes(id)) return json(res, 400, { ok: false, err: 'Tantangan tidak dikenal.' });
         k.ch = k.ch || {};
         const dt = Number(o.dt), prev = k.ch[id];
-        k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= 600 ? Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? 'kode' : (prev && prev.jalur) || 'main' };
+        k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= 600 ? Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? ((prev && prev.jalur === 'main') ? 'main' : 'kode') : 'main' };
       } else {
         if (!LENCANA[id]) return json(res, 400, { ok: false, err: 'Lencana tidak dikenal.' });
         // syarat lencana: tantangan tercatat (+ lencana sebelumnya)

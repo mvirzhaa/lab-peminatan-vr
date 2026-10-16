@@ -7341,7 +7341,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
 }
 boot().catch((err) => {
   console.error(err);
@@ -7803,7 +7803,7 @@ function rel(res, top) {
   return [["Lihat juga: " + p.title.slice(0, 26), () => openZoom(p.id)]];
 }
 function npcAnswer(npcId, q) {
-  const cheat = (typeof codyCheat === "function" ? codyCheat(npcId, q) : null) || (typeof sitCheat === "function" ? sitCheat(npcId, q) : null) || (typeof santoCheat === "function" ? santoCheat(npcId, q) : null);
+  const cheat = (typeof codyCheat === "function" ? codyCheat(npcId, q) : null) || (typeof sitCheat === "function" ? sitCheat(npcId, q) : null) || (typeof santoCheat === "function" ? santoCheat(npcId, q) : null) || (typeof replayIntent === "function" ? replayIntent(npcId, q) : null);
   if (cheat) return cheat;
   const spR = typeof spAnswer === "function" ? spAnswer(npcId, q) : null;
   if (spR) return spR;
@@ -9447,7 +9447,7 @@ function buildGarden() {
   makeCustomHuman("tama", {
     code: "TAMAN", name: "Kang Santo", role: "Penjaga Taman Apresiasi", col: "#16a34a", icon: "🏅",
     x: cx + 3.6, z: -185.5, room: "s_garden", secret: true, tag: "KANG SANTO · PENJAGA TAMAN",
-    chips: ["Ambil sertifikat", "Ambil Explorer Card", "Masuk Hall of Fame", "Aktifkan skin baru", "Siapa saja yang lulus?", "Apa isi taman ini?", "Kembali ke atrium"],
+    chips: ["Main ulang Ular Tangga", "Ambil sertifikat", "Ambil Explorer Card", "Masuk Hall of Fame", "Aktifkan skin baru", "Siapa saja yang lulus?", "Apa isi taman ini?", "Kembali ke atrium"],
     roleNote: "sertifikat, Hall of Fame & skin",
     knowText: "Kang Santo menjaga Taman Apresiasi: memberi sertifikat, mencatat penjelajah ke Hall of Fame (nama + foto), dan mengaktifkan skin eksklusif.",
     greetActs: () => [["🏆 Isi Hall of Fame", openHofForm], ["🏅 Ambil sertifikat", openCertificate], ["🪪 Explorer Card", openExplorerCard], ["👕 Lemari Skin", openSkins]],
@@ -10293,7 +10293,7 @@ function snTilePos(i) {
 }
 var inSnake = () => secretRoomAt(P.x, P.z) === "s_snake";
 // kunci gerak bebas: setelah mulai bermain, pemain hanya berpindah lewat dadu
-function snakeLock() { const q = Q(); return inSnake() && !q.snake && (q.sn > 0 || SN.busy); }
+function snakeLock() { const q = snQ(); return inSnake() && !q.snake && (q.sn > 0 || SN.busy); }
 function xGround() { return SN.anims.length ? SN.y : 0; }
 
 function buildSnake() {
@@ -10488,7 +10488,7 @@ function snFollow(curve, dur, lift = 0) {
 function snMsg(m) { SN.lastMsg = m; if ($("snMsg")) $("snMsg").textContent = m; }
 function snHud() {
   if (!SN.hud) return;
-  const q = Q(), show = inSnake() && riddlesDone();
+  const q = snQ(), show = inSnake() && riddlesDone();
   SN.hud.hidden = !show;
   if (!show) return;
   $("snPos").textContent = q.snake ? "Selesai ✓" : `Pijakan ${q.sn} / 40`;
@@ -10497,12 +10497,13 @@ function snHud() {
   $("snRoll").innerHTML = q.snake ? "🌷 Menuju Taman" : `🎲 Lempar dadu <kbd>R</kbd>`;
   if (q.snake) $("snRoll").disabled = false, $("snRoll").onclick = () => xTeleport(16.2, -176, 0);
   else $("snRoll").onclick = () => snakeRoll();
-  if (!SN.lastMsg) snMsg(q.sn >= 34 ? `Butuh tepat ${40 - q.sn} untuk finis.` : "Lempar dadu untuk maju.");
+  { let rb = $("snReplay"); if (!rb) { rb = document.createElement("button"); rb.id = "snReplay"; rb.className = "ghost"; rb.style.marginLeft = "6px"; rb.textContent = "🔁 Main ulang"; rb.onclick = () => snReplayStart(); $("snRoll").after(rb); } rb.hidden = !(Q().snake && !SN.replay); }
+  if (!SN.lastMsg) snMsg(q.snake ? "Lorong 4 sudah tuntas ✓" : q.sn >= 34 ? `Butuh tepat ${40 - q.sn} untuk finis.` : "Lempar dadu untuk maju.");
 }
 function snRand6() { const a = new Uint32Array(1); do crypto.getRandomValues(a); while (a[0] >= 4294967292); return 1 + (a[0] % 6); }
 
 async function snakeRoll() {
-  const q = Q();
+  const q = snQ();
   if (SN.busy || !inSnake() || q.snake || !riddlesDone()) return;
   SN.busy = true; snHud();
   try {
@@ -10546,6 +10547,7 @@ async function snakeRoll() {
     q.sn = pos; saveQ();
     if (pos === 40) {
       q.snake = true; saveQ();
+      if (SN.replay) { SN.replay = false; snMsg("🏁 Main ulang selesai! Pijakan 40 tercapai lagi."); toast("🏁 Main ulang Ular Tangga selesai! Masuki portal emas menuju Taman Apresiasi.", 6000); spawnSparkle(); return; }
       snMsg("🏁 Pijakan 40! Lorong 4 tuntas — gerbang taman terbuka.");
       refreshGates(false); updHud();
       if (typeof SFX !== "undefined") SFX.chime();
@@ -10567,6 +10569,13 @@ async function snBlackHole() {
   SN.hole = true;
   await snAnim(1.4, (k) => { P.yaw = y0 + k * k * 14; SN.y = -k * 0.8; avatar.scale.setScalar(1 - k * 0.85); });
   avatar.scale.setScalar(1);
+  if (SN.replay) {
+    // main ulang: hanya kembali ke awal papan, progres asli tidak tersentuh
+    SN.rq.sn = 0; SN.anims.length = 0; SN.y = 0; SN.lastMsg = ""; SN.busy = false; SN.hole = false;
+    const [hx, hz] = snTilePos(0); P.x = hx; P.z = hz;
+    toast("🕳 Lubang Hitam! (main ulang) Kembali ke awal papan — progres aslimu tetap aman.", 5500);
+    snHud(); return;
+  }
   // ulangi dari Lorong 1 (pintu rahasia tetap terbuka)
   q.maze = false; q.glass = false; q.riddles = []; q.sn = 0; q.snake = false; q.tries = {};
   saveQ();
@@ -10589,7 +10598,7 @@ function snakeTick(dt, sr) {
   }
   const D = SN.die;
   if (D) {
-    const show = sr === "s_snake" && !Q().snake && !renderer.xr.isPresenting;
+    const show = sr === "s_snake" && !snQ().snake && !renderer.xr.isPresenting;
     D.m.visible = show;
     if (show) {
       D.m.position.set(P.x, (P.y || 0) + 2.75 + Math.sin(t * 2) * 0.05, P.z);
@@ -10602,9 +10611,9 @@ function snakeTick(dt, sr) {
     }
   }
   if (sr === "s_snake" || SN.hud && !SN.hud.hidden) {
-    if (sr !== "s_snake") { SN.hud.hidden = true; return; }
-    if (SN.hud.hidden) { SN.lastMsg = ""; snHud(); if (!Q().snake && !renderer.xr.isPresenting) { P.camPitch = Math.min(P.camPitch, -0.5); P.camDist = Math.max(P.camDist || 0, 5.5); } }
-    const q = Q();
+    if (sr !== "s_snake") { SN.hud.hidden = true; if (SN.replay && !SN.busy) SN.replay = false; return; }
+    if (SN.hud.hidden) { SN.lastMsg = ""; snHud(); if (Q().snake && !SN.replay && typeof snReplayOffer === "function") setTimeout(() => snReplayOffer(), 400); if (!snQ().snake && !renderer.xr.isPresenting) { P.camPitch = Math.min(P.camPitch, -0.5); P.camDist = Math.max(P.camDist || 0, 5.5); } }
+    const q = snQ();
     // portal finis: berjalan masuk
     if (q.snake && SN.portal && Math.hypot(P.x - SN.portal.pos[0], P.z - SN.portal.pos[1]) < 0.9) xTeleport(16.2, -176, 0);
     // terkunci di pijakan: kembalikan bila bergeser (mis. dari kontroler VR)
@@ -12949,20 +12958,43 @@ function chQuestions(C) {
   return cogShuffle(CH_BANK[C.id]).slice(0, 20).map(([t2, ok, ...wr]) => { const o = cogShuffle([ok, ...wr]); return { t: t2, o, a: o.indexOf(ok), ans: `jawaban yang benar: ${ok}` }; });
 }
 // ---------- sinkron ke database kartu ----------
+// mencocokkan progres di browser dengan database server: apa pun yang belum ada di server dikirim ulang
+// (tidak bergantung pada tanda "srv" lokal, jadi tetap pulih bila data server pernah direset/terlewat)
+async function capCek(no) {
+  const r = await fetch("api/kartu/cek?no=" + encodeURIComponent(no), { credentials: "same-origin" });
+  if (r.status === 404) return { old: true };
+  return await r.json();
+}
 async function capSync() {
   const q = chMigrate();
-  if (!q.card || !q.card.no) return;
-  if (!q.card.tok) { const r = await xcEnsureServer(); if (!r.ok) return; }
+  if (!q.card || !q.card.no) return { ok: false, err: "Belum memiliki Explorer Card.", why: "nocard" };
   try {
-    for (const C of CH_LIST.concat([{ id: "pustaka" }])) if (q.chal[C.id] && !q.chal[C.id].srv) {
-      const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id: C.id, dt: q.chal[C.id].best || 0, jalur: q.chal[C.id].kode ? "kode" : "main" });
-      if (j.ok) { q.chal[C.id].srv = true; saveQ(); }
+    let S1 = await capCek(q.card.no);
+    if (S1.old) return { ok: false, err: "Server galeri belum memakai versi terbaru.", why: "old" };
+    if (S1.ok && S1.ada && S1.cabut) return { ok: false, err: "Explorer Card dicabut admin.", why: "cabut" };
+    if (!q.card.tok || !(S1.ok && S1.ada)) {
+      if (!(S1.ok && S1.ada)) delete q.card.tok;
+      const r = await xcEnsureServer();
+      if (!r.ok) return { ok: false, err: r.err, why: r.cabut ? "cabut" : /perangkat lain/.test(r.err || "") ? "device" : "reg" };
+      S1 = await capCek(q.card.no);
     }
-    for (const id of Object.keys(q.badges)) if (!q.badges[id].srv) {
+    const T = (S1 && S1.tantangan) || {}, L = (S1 && S1.lencana) || {};
+    let err = "";
+    for (const id of ["kognitif", "inggris", "sahabat", "coding", "pustaka"]) {
+      const c = q.chal[id]; if (!c) continue;
+      if (T[id] && c.srv) continue;
+      const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: c.kode ? "kode" : "main" });
+      if (j.ok) c.srv = true; else err = j.err || "Server menolak data tantangan.";
+    }
+    for (const id of ["dasar", "umum"]) {
+      const bd = q.badges[id]; if (!bd) continue;
+      if (L[id]) { bd.srv = true; continue; }
       const j = await xcPost("api/kartu/lencana", { no: q.card.no, tok: q.card.tok, id });
-      if (j.ok) { q.badges[id].srv = true; saveQ(); }
+      if (j.ok) bd.srv = true; else err = j.err || "Server menolak data lencana.";
     }
-  } catch { /* coba lagi nanti */ }
+    saveQ();
+    return err ? { ok: false, err, why: /tidak valid/.test(err) ? "device" : "reject" } : { ok: true };
+  } catch { return { ok: false, err: "Server kartu tidak terhubung.", why: "offline" }; }
 }
 // ---------- alur tantangan (menggantikan versi khusus kognitif) ----------
 function cogConfirm() { chConfirm("kognitif"); }
@@ -12975,9 +13007,9 @@ function chConfirm(id) {
   const desc = id === "kognitif" ? "<b>20 soal matematika</b>" : id === "inggris" ? "<b>20 soal Bahasa Inggris</b> (grammar & kosakata)" : id === "sahabat" ? "<b>20 soal tentang sahabat Rasulullah ﷺ</b>" : "<b>20 soal dasar-dasar coding</b>";
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>${C.icon} Tantangan ${C.no} · ${C.nama}</h2>
   <p>Begitu masuk, kamu akan <b>dikurung di ruang tantangan</b>. Untuk membuka sel, jawab ${desc} pilihan ganda dalam <b>60 detik</b>. Soal & pilihan jawaban diacak setiap percobaan.</p>
-  ${done ? `<p class="kk">✅ Sudah kamu tuntaskan${done.best ? ` (rekor ${done.best} detik)` : ""}. Boleh dicoba lagi untuk memperbaiki rekor.</p>` : ""}
+  ${done ? `<p class="kk">✅ Tantangan ini sudah tuntas${done.kode ? " (lewat kode)" : done.best ? ` — rekor ${done.best} detik` : ""}. Kamu boleh <b>main ulang</b> (status tuntas tetap aman meski gagal), atau <b>biarkan saja tuntas</b>.</p>` : ""}
   <div class="kbox"><b>ATURAN</b><ol><li>Satu jawaban salah → gagal, kembali ke Ananda.</li><li>Waktu habis → gagal, kembali ke Ananda.</li><li>20 benar sebelum waktu habis → sel terbuka, tantangan tuntas.</li><li>Tuntaskan keempat tantangan untuk Lencana Pengetahuan Dasar dari Teh Fety.</li></ol><p style="font-size:12px;color:var(--mut)">Tip: tombol angka 1–4 di keyboard memilih jawaban.</p></div>
-  <div class="rowf"><button class="btn" id="cogGo">⛓ Masuk ruang tantangan</button><button class="ghost" id="cogNo">Nanti saja</button></div>`);
+  <div class="rowf"><button class="btn" id="cogGo">${done ? "🔁 Main ulang" : "⛓ Masuk ruang tantangan"}</button><button class="ghost" id="cogNo">${done ? "✅ Biarkan tuntas" : "Nanti saja"}</button></div>`);
   $("cogGo").onclick = () => { closeGen(); chStart(id); };
   $("cogNo").onclick = () => { closeGen(); xTeleport(C.door, 27.4, Math.PI); };
 }
@@ -13042,7 +13074,7 @@ function cogEnd(win, why) {
   const card = document.querySelector("#cogOv .cog-card");
   if (win) {
     const q = chMigrate(), prev = q.chal[C.id];
-    q.chal[C.id] = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, used).toFixed(1) };
+    q.chal[C.id] = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, used).toFixed(1) }; // main sungguhan → jalur "main"
     if (C.id === "kognitif") q.chal1 = { t: q.chal[C.id].t, best: q.chal[C.id].best };
     saveQ(); capSync(); capPresDirty();
   }
@@ -13816,15 +13848,19 @@ function cvSetWon() { for (const G of CV.gates) if (G) G.setOpen(true); CV.door.
 async function silviaGate() {
   const q = chMigrate();
   if (!q.badges.dasar) return { text: `Buku-buku di balik rak ini hanya untuk pemegang Lencana Pengetahuan Dasar, ${S.name}. Taklukkan keempat ruang tantangan di Lantai 2 (temui Ananda), lalu ambil lencananya dari Teh Fety di Taman Apresiasi.`, acts: [["🏅 Lihat capaian", openCapaian]] };
-  if (!q.card || !q.card.no) return { text: "Lencanamu harus tersemat di Explorer Card. Ambil kartumu dulu dari Kang Santo di Taman Apresiasi." };
+  const r = await capSync();
   let ok = false;
-  try {
-    await capSync();
-    const j = await (await fetch("api/kartu/cek?no=" + encodeURIComponent(q.card.no), { credentials: "same-origin" })).json();
-    ok = !!(j.ok && j.ada && !j.cabut && j.lencana && j.lencana.dasar);
-    if (j.cabut) return { text: "Explorer Card-mu dicabut admin, jadi aku tidak bisa membuka rak ini." };
-  } catch { return { text: "Aku tidak bisa menghubungi database kartu sekarang. Coba lagi sebentar lagi ya.", acts: [["🔄 Coba lagi", () => askNpc("Buka Gua Pustaka", "ivy")]] }; }
-  if (!ok) return { text: "Lencana Pengetahuan Dasar-mu belum tercatat di database server. Temui Teh Fety lagi agar lencananya disinkronkan, lalu kembali ke sini." };
+  if (r.ok) { try { const j = await capCek(q.card.no); ok = !!(j.ok && j.ada && !j.cabut && j.lencana && j.lencana.dasar); } catch { /* */ } }
+  if (!ok) {
+    const why = {
+      old: "Server galeri ternyata belum memakai versi terbaru, jadi lencanamu belum bisa diperiksa. Minta admin me-restart aplikasi galeri (pm2 restart) lalu coba lagi.",
+      device: "Explorer Card-mu tercatat atas perangkat/browser lain. Buka galeri dari perangkat tempat kamu pertama kali menerima kartu dari Kang Santo, atau minta admin mengaktifkan ulang kartumu.",
+      cabut: "Explorer Card-mu dicabut admin, jadi rak ini tidak bisa kubuka.",
+      offline: "Aku tidak bisa menghubungi database kartu sekarang. Coba lagi sebentar lagi ya.",
+      nocard: "Lencanamu harus tersemat di Explorer Card. Ambil kartumu dulu dari Kang Santo di Taman Apresiasi."
+    }[r.why] || `Lencana Pengetahuan Dasar-mu belum bisa dicatat di database server${r.err ? " (" + r.err + ")" : ""}. Coba lagi sebentar lagi.`;
+    return { text: why, acts: [["🔄 Coba lagi", () => askNpc("Buka Gua Pustaka", "ivy")]] };
+  }
   cvOpenBookcase();
   return { text: `🔷 Lencana Pengetahuan Dasar terverifikasi. Ssst… dorong pelan rak di sebelah kiriku. Di baliknya ada lorong menuju GUA PUSTAKA. Di sana kamu bermain sendirian: 3 babak, 3 nyawa. Bawa lentera, ya!` };
 }
@@ -13856,7 +13892,8 @@ function cvIntro(done) {
   <li><b>Lini Masa</b> — dekati prasasti, urutkan 2 set kartu (salah satunya urutan Kaprodi TI). Urutan salah → nyawa −1.</li>
   <li><b>Galeri Benda</b> — 5 petunjuk. Cari benda atau potret Kaprodi yang tepat, <b>dekati (±2 m)</b> lalu klik. Salah pilih atau 35 detik habis → nyawa −1.</li></ol>
   <p style="font-size:12px;color:var(--mut)">Nyawa habis → kembali ke Silvia. Lolos ketiga babak → pintu ujung gua terbuka dan Teh Puspa menunggumu.</p></div>
-  <div class="rowf"><button class="btn" id="cvGo">▶ Mulai Babak 1</button>${done ? `<button class="ghost" id="cvSkip">💡 Langsung ke Teh Puspa</button>` : ""}<button class="ghost" id="cvNo">Keluar gua</button></div>`);
+  ${done ? `<p class="kk">✅ Gua Pustaka sudah kamu tuntaskan${chMigrate().chal.pustaka.kode ? " (lewat kode Kang Santo)" : ""}. Mau <b>main ulang</b> (status tuntas tetap aman meski gagal), atau <b>biarkan tuntas</b> dan langsung ke Teh Puspa?</p>` : ""}
+  <div class="rowf"><button class="btn" id="cvGo">${done ? "🔁 Main ulang dari Babak 1" : "▶ Mulai Babak 1"}</button>${done ? `<button class="ghost" id="cvSkip">✅ Biarkan tuntas · ke Teh Puspa</button>` : ""}<button class="ghost" id="cvNo">Keluar gua</button></div>`);
   $("cvGo").onclick = () => { closeGen(); cvB1Start(); };
   $("cvNo").onclick = () => { closeGen(); cvExit(); };
   $("gx").onclick = () => { closeGen(); if (CV.babak === 0) cvHudUpd("Klik papan ⛏ GUA PUSTAKA di depanmu untuk membuka aturan & memulai.", null); };
@@ -14028,7 +14065,7 @@ function cvWin() {
   CV.gl = null; CV.babak = 4; CV.won = true;
   const used = Math.round((performance.now() - CV.t0) / 1000);
   const q = chMigrate(), prev = q.chal.pustaka;
-  q.chal.pustaka = { t: (prev && prev.t) || Date.now(), best: Math.min(prev && prev.best ? prev.best : 1e9, used), lives: CV.lives };
+  q.chal.pustaka = { t: (prev && prev.t) || Date.now(), best: Math.min(prev && prev.best ? prev.best : 1e9, used), lives: CV.lives }; // main sungguhan
   saveQ(); capSync(); capPresDirty();
   CV.door.setOpen(true); NPCS.puspa.g.visible = true;
   if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
@@ -14205,6 +14242,46 @@ function ringAct(act) {
     return true;
   }
   return false;
+}
+
+
+// =====================================================================
+// MAIN ULANG ULAR TANGGA (Lorong 4) — bagi yang sudah tuntas (main maupun kode)
+// Memakai papan & dadu yang sama dengan progres "bayangan" (SN.rq), sehingga
+// status tuntas, sertifikat, dan Taman Apresiasi tidak pernah hilang.
+// =====================================================================
+function snQ() { return SN.replay ? SN.rq : Q(); }
+function snReplayStart() {
+  hidePopups();
+  SN.replay = true; SN.rq = { sn: 0, snake: false };
+  SN.lastMsg = ""; SN.busy = false;
+  const [x, z] = snTilePos(0);
+  xTeleport(x, z, 0);
+  setTimeout(() => { snHud(); toast("🔁 Main ulang Ular Tangga dimulai dari pijakan 0. Status tuntasmu tetap aman — Lubang Hitam pun hanya mengembalikanmu ke awal papan.", 6500); }, 500);
+}
+function snReplayOffer(force) {
+  const q = Q();
+  if (!q.snake || SN.replay || renderer.xr.isPresenting) return;
+  if (!force && SN.offerT && performance.now() - SN.offerT < 60000) return;
+  SN.offerT = performance.now();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🎲 Ular Tangga · Lorong 4</h2>
+  <p>Kamu sudah menuntaskan Lorong 4${q.sn === 40 && !q.t0 ? "" : ""}. Mau <b>main ulang</b> untuk bersenang-senang (status tuntas, sertifikat, dan akses taman tetap aman), atau <b>biarkan tuntas</b> dan langsung menuju Taman Apresiasi?</p>
+  <div class="rowf"><button class="btn" id="snRe">🔁 Main ulang</button><button class="ghost" id="snSkip">✅ Biarkan tuntas · ke Taman</button></div>`);
+  $("snRe").onclick = () => { closeGen(); snReplayStart(); };
+  $("snSkip").onclick = () => { closeGen(); xTeleport(16.2, -176, 0); };
+}
+function snReplayGo() {
+  const [x, z] = snTilePos(0);
+  xTeleport(x, z - 1.2, 0);
+  setTimeout(() => snReplayOffer(true), 900);
+}
+// Kang Santo melayani permintaan main ulang
+function replayIntent(npcId, q) {
+  if (npcId !== "tama") return null;
+  const ql = norm(q || "");
+  if (!/main ulang|ulang|main lagi|ular tangga|replay/.test(ql)) return null;
+  if (!Q().snake) return { text: "Ular Tangga ada di Lorong 4 — tuntaskan dulu lorong-lorong sebelumnya, ya." };
+  return { text: "Tentu! Mau main ulang Ular Tangga? Progresmu tetap aman: sertifikat, Explorer Card, dan akses taman tidak akan hilang meski kamu tersedot Lubang Hitam.", acts: [["🎲 Main ulang Ular Tangga", snReplayGo], ["Tidak, biarkan tuntas", () => askNpc("terima kasih", "tama")]] };
 }
 
 </script>
