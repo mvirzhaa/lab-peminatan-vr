@@ -150,3 +150,13 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 - **Rahman**: lorong rahasia kini disebut ada "di salah satu lab peminatan" (tidak lagi menyebut Lab SE); Rahman juga menjelaskan cara mendapat Explorer Card dan arah ke lantai 2.
 - **Tantangan 1 · Kognitif**: pintu di ujung lorong balik gerbang. Pemain dilempar ke **penjara bawah tanah**; 20 soal matematika pilihan ganda, **urutan soal & pilihan diacak setiap percobaan**, batas **60 detik** (tombol 1–4 bisa dipakai). Satu salah / waktu habis → kembali ke Nan. Berhasil → jeruji terangkat, pemain masuk ruang **Tantangan 2 · COMING SOON** (ada portal kembali ke lantai 2). Jawaban soal dihitung oleh kode (`COG_BANK`), bukan diketik manual. Pintu Tantangan 2 & 3 di lorong masih terkunci ("segera hadir").
 - Kinerja: ruangan baru tidak menambah PointLight (memakai material berpendar) agar tetap ringan di ponsel & headset VR.
+
+## Pembaruan v9 — Tahap 2, Lencana & Capaian
+- **4 ruang tantangan di Lantai 2 IT-Mart** (setelah verifikasi Nan): Kognitif (matematika), Bahasa Inggris, Sahabat Rasulullah, Dasar Coding. Masing-masing 20 soal pilihan ganda acak dalam 60 detik; satu salah atau waktu habis → kembali ke Nan. Bank soal ada di `CH_BANK` (Inggris/Sahabat/Coding, 25 soal per bank, 20 diambil acak) dan `COG_BANK` (matematika).
+- **Teh Fety** (paviliun putih, Taman Apresiasi): menyematkan **Lencana Pengetahuan Dasar** bila keempat tantangan tuntas (butuh Explorer Card).
+- **Kode cepat tahap 2**: ketik `butnavudivoxyziz2` ke **Sit** (waitress IT-Mart) → keempat tantangan dinyatakan tuntas, berhak atas lencana dari Teh Fety. Kode disimpan sebagai hash.
+- **Menu CAPAIAN** (tombol 🏅 di bilah atas / menu ☰): sertifikat, Explorer Card, 7 slot lencana (Dasar, Umum, Alam, Jari, Coding, Agama Islam, Geografi — 6 terakhir "segera hadir").
+- **Profil pemain**: klik avatar pemain lain (atau 👤 Profil di menu PEOPLE) → sertifikat, kartu (dicek ke database server) & lencananya.
+- **Pamerkan**: tombol 📣 menyiarkan capaian ke semua pemain (melayang di atas avatar 15 detik + notifikasi "Lihat"). Ikon capaian kecil di atas kepala bisa dimatikan di menu Capaian.
+- **Database kartu** (`DATA_DIR/kartu.json`) kini juga mencatat tantangan & lencana; terlihat di admin → tab Explorer Card. API publik baru: `GET /api/kartu/cek?no=…`; `POST /api/kartu/tantangan`, `POST /api/kartu/lencana` (butuh token pemilik kartu).
+- **Lorong rahasia Lab SE**: selama misi 4 robot lab belum tuntas, dinding tertutup rapat dan tampak sama persis dengan dinding sekitarnya (tanpa celah, garis, atau simbol).
