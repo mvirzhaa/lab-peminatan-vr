@@ -13,7 +13,7 @@ kuis, zoom/unduh/tautan panel, denah + minimap, joystick ponsel, dan mode VR Web
 | **Lab KERIS** (barat) | Tema pusat data: rak server berkedip, hologram jaringan saraf, workstation HPC, 11 slide + slideshow dokumentasi, layar 3 video Google Drive, robot **KERI** |
 | **Lab GIT** (utara-kiri) | Tema geospasial: lantai peta kota neon, globe hologram + satelit, drone terbang, tumpukan layer peta, 13 slide + slideshow kegiatan/drone, video kegiatan lapangan, robot **GEO** |
 | **Lab SE** (utara-kanan) | Tema studio developer: meja laptop berisi kode, beanbag, rak piala, kanban, neon motto, 16 slide + 3 slideshow (prestasi, produk, kegiatan), robot **CODY** |
-| **Cafe Rahman** (timur Ruang Sambutan) | Kafe kayu dengan meja bar, papan menu kopi, papan keahlian dosen TI, barista **Rahman** (info kopi, petunjuk awal lorong rahasia, keahlian dosen, saran dosen pembimbing) |
+| **IT-Mart** (timur Ruang Sambutan) | Kafe kayu dengan meja bar, papan menu kopi, papan keahlian dosen TI, barista **Rahman** (info kopi, petunjuk awal lorong rahasia, keahlian dosen, saran dosen pembimbing) |
 | **Lab CSN** (timur) | Tema Network Operation Center: 3 layar monitoring animasi, hologram topologi dengan paket data mengalir, rak server, 8 slide, robot **NETA** |
 
 - Nama karakter default: **IT'ers** (bisa diganti di Pengaturan).
@@ -106,7 +106,7 @@ Kode disimpan sebagai hash di sumber (seperti jawaban teka-teki) dan tidak diseb
 Keamanan: password di-hash (scrypt) dan dibandingkan waktu-konstan; maks. 8 login gagal per 15 menit per IP; sesi cookie `HttpOnly; SameSite=Strict` (+`Secure` di HTTPS) 8 jam; header anti-CSRF pada semua permintaan yang mengubah data; CSP ketat di halaman admin; batas 12 pendaftaran/10 menit per IP.
 Dependensi baru: `exceljs` (jalankan `npm install` ulang).
 
-### 3. Cafe Rahman
+### 3. IT-Mart
 Ruangan baru di timur Ruang Sambutan (pintu kayu di dinding timur, dekat gerbang Atrium), tercantum di denah, minimap, dan menu GO TO.
 Barista **Rahman** menjawab: jenis-jenis kopi & rekomendasi, kopi Nusantara, petunjuk awal (bertahap) soal lorong rahasia, keahlian 19 dosen TI,
 dan **saran dosen pembimbing**: tulis judul skripsi (mis. “judul: Klasifikasi penyakit daun padi dengan CNN”), Rahman mencocokkan kata kunci
@@ -123,4 +123,30 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 - **Video gempa pintu rahasia**: setelah keempat robot lab menerima jawaban *secret passage*, terasa gempa kecil lalu video `assets/ext/lorong-rahasia.webm` / `.mp4` diputar layar penuh (bisa dilewati; tidak diputar saat mode headset VR). Server kini mendukung permintaan *Range* untuk video.
 - **Ruang E-Portal UIKA**: ruang luas (29 × 26 m) di selatan Ruang Sambutan, lewat pintu hijau di dinding selatannya. Tercantum di denah, minimap, dan GO TO. Berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library UIKA, Meeting, Short Course, SIAKAD, SIMPEG, UCL, UCL Mobile Android, Short Course Android) dengan keterangan *under construction*, papan selamat datang, dan gerbang portal. Robot **Vir** memberi akses ke `https://eportal.uika-bogor.ac.id` (tab baru) dan menyampaikan bahwa sistem masih dalam pengembangan.
 - **KURI** kini bernama **Dul**.
-- **Sit**, waitress Cafe Rahman: menjelaskan ke-8 ruangan di denah, posisi pemain, membuka denah, dan mengantar ke ruangan mana pun (tidak membocorkan ruang rahasia).
+- **Sit**, waitress IT-Mart: menjelaskan ke-8 ruangan di denah, posisi pemain, membuka denah, dan mengantar ke ruangan mana pun (tidak membocorkan ruang rahasia).
+
+## Pembaruan v6
+- **Sudut Al-Qur'an** (Atrium, sisi timur laut — di kanan pintu masuk): paviliun berkubah hijau berlis emas di atas panggung bertingkat, karpet bermotif bintang, lentera gantung, dan mushaf terbuka di atas rehal. Klik mushaf atau papan kaligrafi untuk membuka pembaca:
+  - 114 surah, teks Arab rasm Utsmani + terjemahan Kementerian Agama RI (data disimpan di server sendiri: `public/assets/quran/`, ±2,6 MB), pencarian surah, ukuran huruf, sembunyikan/tampilkan terjemahan, penanda baca terakhir.
+  - Audio murattal per ayat atau satu surah berurutan (Alafasy / Al-Husary / As-Sudais) dari `cdn.islamic.network`. **Audio hanya diputar di perangkat pemain yang menekan tombol putar** — tidak disiarkan ke pemain lain. Musik galeri otomatis dikecilkan selama murattal.
+  - Mode headset VR: klik mushaf menampilkan halaman (5 ayat) di panel 3D; klik lagi untuk halaman berikutnya.
+  - Sumber: The Noble Qur'an Encyclopedia (quranenc.com) via paket `quran-json` 3.1.2 (CC BY-SA 4.0); font KFGQPC Uthmanic Script HAFS (© King Fahd Complex, dipakai tanpa diubah). Lihat `public/assets/quran/SUMBER.txt`. Penanda catatan kaki terjemahan dihapus karena isi catatan kakinya tidak tersedia.
+- **Cafe Rahman → IT-Mart**.
+- **Rak Buku Digital IT-Mart**: lemari di dinding barat IT-Mart menampilkan buku PDF yang bisa diunduh. Koleksi dikelola di **/admin → tab "Rak Buku IT-Mart"** (akun yang sama dengan admin peminatan): unggah (hanya PDF, maks. 40 MB, diverifikasi tanda tangan `%PDF-`), ubah judul/penulis/kategori/ringkasan, hapus. File di `data/buku/`.
+- **NPC Ivy** (penjaga buku): menjelaskan isi buku dari ringkasan admin dan teks PDF yang diekstrak server (`pdfjs-dist`), menjawab pertanyaan dengan kutipan halaman yang paling relevan, dan memberi tombol unduh. PDF hasil pindaian (tanpa teks) hanya dijelaskan dari ringkasannya.
+- **Suara pemain sesuai jarak**: tanpa pengeras suara (megafon), suara terdengar penuh ≤ 3 m, makin pelan, dan tidak terdengar ≥ 20 m (`VOICE_NEAR`/`VOICE_FAR`). Dengan megafon tetap terdengar oleh semua.
+- **Papan Pesan IT'ers permanen**: catatan disimpan di `data/notes/<ruang>.json` (tidak hilang saat server dimulai ulang, hingga 5.000 catatan per ruang). Penulis bisa menghapus catatannya sendiri (kunci tersimpan di browsernya); moderator dan admin (/admin → tab "Papan Pesan") bisa menghapus catatan mana pun.
+- Dependensi baru: `pdfjs-dist` — jalankan `npm install` ulang. Folder `data/` sekarang berisi `buku/`, `notes/`, `peminatan.json`, `hof.json` → **jangan dihapus saat deploy ulang**.
+
+## Pembaruan v7 — Explorer Card
+- **Kang Santo** kini juga memberi **Explorer Card** (template `public/assets/ext/explorer-card.jpg`) bertuliskan **nama pemain** dan **nomor sertifikat** (nomor yang sama dengan sertifikat penjelajah) plus tanggal terbit. Bisa dilihat & diunduh sebagai PNG dari kartu Kang Santo, chat ("kartu"/"explorer card"), halaman sertifikat, dan daftar misi.
+- Kartu tersimpan di progres pemain (`Q().card`). Untuk ruangan tantangan berikutnya sudah disiapkan penjaga akses: `XC.has()` (punya kartu?) dan `XC.require("Nama Ruangan")` (menampilkan pesan & menolak bila belum punya).
+- Catatan: progres pemain disimpan di browser masing-masing, jadi untuk tantangan yang butuh keamanan tinggi kepemilikan kartu sebaiknya kelak juga dicatat & diverifikasi di server.
+
+## Pembaruan v8 — Lantai 2 IT-Mart, Nan & Tantangan Kognitif
+- **Lantai 2 IT-Mart ("Explorer Zone")**: naik lewat tangga kayu di sudut timur laut IT-Mart (berjalan ke anak tangga atau klik papan "⬆ LANTAI 2"); turun lewat tangga di sudut yang sama. Karena mesin galeri hanya memiliki satu ketinggian lantai, lantai 2 dibangun sebagai area tersendiri (tidak tampil di denah) dengan jendela langit agar terasa berada di atas.
+- **NPC Nan** memverifikasi Explorer Card ke **database server** (`data/kartu.json`). Kartu otomatis didaftarkan saat diambil dari Kang Santo (kartu lama didaftarkan saat pertama diverifikasi). Kartu terdaftar → gerbang kaca terbuka. Tanpa kartu → Nan menyuruh pemain menemui **Rahman** di lantai 1.
+- **Admin** (/admin → tab "Explorer Card"): daftar semua kartu, jumlah verifikasi, cabut/aktifkan kembali (kartu yang dicabut ditolak Nan).
+- **Rahman**: lorong rahasia kini disebut ada "di salah satu lab peminatan" (tidak lagi menyebut Lab SE); Rahman juga menjelaskan cara mendapat Explorer Card dan arah ke lantai 2.
+- **Tantangan 1 · Kognitif**: pintu di ujung lorong balik gerbang. Pemain dilempar ke **penjara bawah tanah**; 20 soal matematika pilihan ganda, **urutan soal & pilihan diacak setiap percobaan**, batas **60 detik** (tombol 1–4 bisa dipakai). Satu salah / waktu habis → kembali ke Nan. Berhasil → jeruji terangkat, pemain masuk ruang **Tantangan 2 · COMING SOON** (ada portal kembali ke lantai 2). Jawaban soal dihitung oleh kode (`COG_BANK`), bukan diketik manual. Pintu Tantangan 2 & 3 di lorong masih terkunci ("segera hadir").
+- Kinerja: ruangan baru tidak menambah PointLight (memakai material berpendar) agar tetap ringan di ponsel & headset VR.

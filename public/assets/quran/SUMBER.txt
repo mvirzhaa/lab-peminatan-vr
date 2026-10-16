@@ -1,0 +1,4 @@
+Teks Al-Qur'an (rasm Utsmani) dan terjemahan Bahasa Indonesia (Kementerian Agama RI) dari The Noble Qur'an Encyclopedia (quranenc.com),
+via paket quran-json 3.1.2 oleh Risan Bagja Pradana (CC BY-SA 4.0). Penanda catatan kaki terjemahan dihapus (isi catatan kaki tidak disertakan).
+Font: KFGQPC Uthmanic Script HAFS (c) King Fahd Glorious Quran Printing Complex — digunakan tanpa diubah sesuai lisensinya.
+Audio murattal: cdn.islamic.network (Islamic Network / alquran.cloud).

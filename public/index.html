@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Lab Peminatan VR — Teknik Informatika UIKA</title>
 <meta name="description" content="Galeri virtual 3D/VR 4 lab peminatan Teknik Informatika UIKA Bogor (KERIS, GIT, SE, CSN) dengan robot pemandu, resepsionis pendaftaran, video sambutan, dan musik piano.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://drive.google.com; connect-src 'self' ws: wss: https://cdn.jsdelivr.net; worker-src blob:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob: https://cdn.islamic.network; frame-src https://www.youtube-nocookie.com https://www.youtube.com https://drive.google.com; connect-src 'self' ws: wss: https://cdn.jsdelivr.net; worker-src blob:; base-uri 'none'; form-action 'none'">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap">
 <style>
@@ -420,6 +420,60 @@ canvas {
 #quakeVid.out{opacity:0;transition:opacity .5s}
 @keyframes qvIn{from{opacity:0}to{opacity:1}}
 @keyframes qvShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(4px,4px)}}
+@font-face{font-family:"KFGQPC Hafs";src:url(vendor/fonts/KFGQPC-Uthmanic-HAFS.otf) format("opentype");font-display:swap}
+#genCard.qr-card{max-width:min(1100px,96vw);width:min(1100px,96vw)}
+.qr-wrap{display:grid;grid-template-columns:250px 1fr;gap:14px;min-height:0}
+.qr-side{display:flex;flex-direction:column;gap:8px;min-width:0}
+.qr-list{max-height:62vh;overflow:auto;display:flex;flex-direction:column;gap:4px;padding-right:4px}
+.qr-it{display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:center;text-align:left;background:#17121f;border:1px solid #2c2440;border-radius:10px;padding:7px 9px;color:#fff;cursor:pointer}
+.qr-it:hover,.qr-it.on{border-color:#d4af37;background:#1f1a12}
+.qr-no{width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:#14532d;color:#fde68a;font-size:12px;font-weight:700}
+#genCard .qr-nm b{display:block;font-size:13px}#genCard .qr-nm small{color:var(--mut);font-size:11px}
+.qr-ar{font-family:"KFGQPC Hafs",serif;font-size:20px;color:#fde68a}
+.qr-main{min-width:0;display:flex;flex-direction:column}
+.qr-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.qr-tools select{width:auto;max-width:230px}
+.qr-chk{display:flex;gap:6px;align-items:center;font-size:12.5px;color:#d6d3e0}
+.qr-body{--qs:1;max-height:56vh;overflow:auto;background:#fffaf0;color:#1f2937;border-radius:12px;padding:10px 16px;border:3px double #b8860b}
+.qr-sh{text-align:center;padding:10px 0 6px;border-bottom:1px solid #e7d7a8;margin-bottom:6px}
+#genCard .qr-sar{font-family:"KFGQPC Hafs",serif;font-size:calc(32px * var(--qs));color:#14532d}
+#genCard .qr-slat{font-weight:700;color:#14532d}#genCard .qr-body .kk{color:#78716c}
+#genCard .qr-bas{font-family:"KFGQPC Hafs",serif;text-align:center;font-size:calc(28px * var(--qs));padding:8px 0;color:#1f2937}
+.qr-ay{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:12px 4px;border-bottom:1px dashed #e7d7a8;border-radius:8px}
+.qr-ay.playing{background:#ecfdf5;box-shadow:inset 3px 0 0 #16a34a}
+.qr-ctl{display:flex;flex-direction:column;gap:6px;align-items:center}
+.qr-badge{font-size:11px;font-weight:700;color:#14532d;background:#dcfce7;border-radius:6px;padding:2px 6px}
+.qr-pl{width:32px;height:32px;border-radius:50%;border:1px solid #16a34a;background:#fff;color:#16a34a;cursor:pointer}
+#genCard .qr-arab{font-family:"KFGQPC Hafs",serif;font-size:calc(30px * var(--qs));line-height:2.1;text-align:right;margin:0;color:#111827}
+#genCard .qr-id{margin:6px 0 0;font-size:calc(14px * var(--qs));line-height:1.6;color:#44403c}
+.qr-body.notr #genCard .qr-id{display:none}
+.qr-nav{display:flex;justify-content:space-between;margin-top:8px}
+#genCard .qr-src{font-size:10.5px;color:var(--mut);margin:8px 0 0}
+#genCard input[type=search]{width:100%;box-sizing:border-box;background:#1b1c22;color:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-family:var(--font);font-size:13px}
+#genCard .bk-tx p{margin:4px 0 0}
+@media (max-width:720px){.qr-wrap{grid-template-columns:1fr}.qr-list{max-height:24vh}.qr-body{max-height:50vh}}
+.bk-list{display:flex;flex-direction:column;gap:8px;max-height:58vh;overflow:auto;margin-top:10px}
+.bk-it{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;background:#17121f;border:1px solid #2c2440;border-radius:12px;padding:10px}
+.bk-it.on{border-color:#fbbf24}
+.bk-cv{width:52px;height:66px;border-radius:6px;background:linear-gradient(135deg,#b91c1c,#7f1d1d);color:#fff;font-weight:800;font-size:12px;display:grid;place-items:center}
+#genCard .bk-tx b{display:block}#genCard .bk-tx small{color:var(--mut);font-size:11.5px}#genCard .bk-tx p{margin:4px 0 0;font-size:12.5px;color:#d6d3e0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.bk-ac{display:flex;flex-direction:column;gap:6px}.bk-ac a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+@media (max-width:560px){.bk-it{grid-template-columns:44px 1fr}.bk-ac{grid-column:1/-1;flex-direction:row}}
+.xc-wrap{display:grid;place-items:center;margin:8px 0}
+#xcImg{width:min(360px,80vw);border-radius:18px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+#cogOv{position:fixed;inset:0;z-index:8000;display:grid;place-items:center;background:radial-gradient(circle,rgba(20,10,5,.55),rgba(0,0,0,.85));padding:16px}
+.cog-card{width:min(560px,94vw);background:#1c1410;border:2px solid #92400e;border-radius:18px;padding:20px;color:#fff;box-shadow:0 20px 80px rgba(0,0,0,.7)}
+.cog-top{display:flex;justify-content:space-between;align-items:center;color:#fde68a;font-size:13px;letter-spacing:.06em}
+.cog-bar{height:10px;background:#3f2a1d;border-radius:6px;margin:12px 0 6px;overflow:hidden}.cog-bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#f59e0b,#ef4444);transition:width .1s linear}
+.cog-time{font-weight:700;color:#fed7aa;text-align:right;font-size:14px}.cog-time.warn{color:#f87171}
+.cog-q{font-size:44px;font-weight:800;text-align:center;margin:18px 0 16px}
+.cog-o{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cog-o button{font:700 24px var(--font);padding:14px;border-radius:12px;border:2px solid #78350f;background:#2a1d14;color:#fff;cursor:pointer}
+.cog-o button:hover{border-color:#f59e0b;background:#3a2716}.cog-o button kbd{font-size:12px;opacity:.6;margin-right:4px}
+.cog-o button.bad{background:#7f1d1d;border-color:#ef4444}.cog-o button.good{background:#14532d;border-color:#22c55e}
+#cogQuit{margin-top:14px}
+.cog-count{position:absolute;font:900 120px var(--font);color:#fde68a;text-shadow:0 8px 40px rgba(0,0,0,.8);pointer-events:none}
+.cog-res{text-align:center}.cog-res h2{margin:6px 0}.cog-res.win h2{color:#4ade80}
 </style>
 
 </head>
@@ -764,8 +818,9 @@ var FAQ = [
   ["daftar pendaftaran formulir form gform link cara mendaftar isi", "Pendaftaran peminatan sekarang langsung dari galeri ini: klik meja resepsionis saya (atau kios “Daftar” di tiap lab), isi NIM, nama, kontak, lalu pilih lab pilihan 1 dan 2. Persentase pendaftar tampil di layar di belakang saya, dan hasil final diumumkan di papan pengumuman dinding timur Atrium."],
   ["hasil pengumuman final penetapan diterima lab saya", "Hasil final peminatan diumumkan di papan pengumuman dinding timur Atrium. Klik papannya untuk mencari namamu atau mengecek dengan NIM."],
   ["statistik persentase jumlah pendaftar pie chart grafik", "Layar besar di belakang saya menampilkan persentase pendaftar tiap lab (berdasarkan pilihan 1) secara langsung. Klik layarnya untuk melihat angkanya."],
+  ["quran al-quran alquran mushaf ngaji tilawah murattal ayat surah surat", "Sudut Al-Qur'an ada di sisi timur laut Atrium ini, di paviliun berkubah. Klik mushaf di atas rehal untuk membaca 114 surah lengkap dengan terjemahan Bahasa Indonesia dan audio murattal — suaranya hanya terdengar olehmu sendiri."],
   ["eportal e-portal sso portal siakad simpeg ucl cbt vir", "Ruang E-Portal UIKA ada di selatan Ruang Sambutan (pintu hijau di dinding selatan). Di sana robot Vir memberi akses ke eportal.uika-bogor.ac.id — sistemnya masih dalam pengembangan."],
-  ["cafe kafe kopi ngopi rahman minum sit waitress", "Ada Cafe Rahman di sebelah timur Ruang Sambutan (pintu di dinding timur dekat gerbang Atrium). Barista Rahman bisa cerita soal jenis-jenis kopi, dosen-dosen TI, dan memberi saran dosen pembimbing; waitress Sit bisa menjelaskan semua ruangan di denah."],
+  ["cafe kafe kopi ngopi rahman minum sit waitress", "Ada IT-Mart di sebelah timur Ruang Sambutan (pintu di dinding timur dekat gerbang Atrium). Barista Rahman bisa cerita soal jenis-jenis kopi, dosen-dosen TI, dan memberi saran dosen pembimbing; waitress Sit bisa menjelaskan semua ruangan di denah."],
   ["lab apa saja peminatan ada berapa pilihan empat", "Ada 4 lab peminatan di galeri ini: KERIS (AI & sistem cerdas) di pintu barat, GIT (geospasial) di pintu utara-kiri, SE (software engineering) di pintu utara-kanan, dan CSN (jaringan & keamanan) di pintu timur."],
   ["bingung pilih rekomendasi saran cocok mana", "Coba pikirkan masalah apa yang paling ingin kamu pecahkan: suka AI & data → KERIS; suka peta, satelit, drone → GIT; suka membangun aplikasi web/mobile → SE; suka jaringan, server, keamanan → CSN. Kerjakan juga kuis di atrium ini!"],
   ["robot npc tanya siapa pemandu", "Setiap lab punya robot pemandu: Keri di Lab KERIS, Geo di Lab GIT, Cody di Lab SE, dan Neta di Lab CSN. Klik robotnya untuk bertanya — mereka hafal isi presentasi lab masing-masing."],
@@ -2256,7 +2311,7 @@ var ROOMS = {
   git: { x0: -24, x1: 0, z0: -38, z1: -12, h: 5.5, name: "Lab GIT", short: "GIT", col: "#d946ef", lab: "git" },
   se: { x0: 0, x1: 24, z0: -38, z1: -12, h: 5.5, name: "Lab Software Engineering", short: "SE", col: "#6366f1", lab: "se" },
   csn: { x0: 12, x1: 40, z0: -12, z1: 12, h: 5.5, name: "Lab CSN", short: "CSN", col: "#0ea5e9", lab: "csn" },
-  cafe: { x0: 9, x1: 27, z0: 12, z1: 30, h: 4.6, name: "Cafe Rahman", short: "Cafe", col: "#c08457" },
+  cafe: { x0: 9, x1: 27, z0: 12, z1: 30, h: 4.6, name: "IT-Mart", short: "IT-Mart", col: "#c08457" },
   eportal: { x0: -20, x1: 9, z0: 30, z1: 56, h: 6, name: "Ruang E-Portal UIKA", short: "E-Portal", col: "#34d399" }
 };
 var SPOTS = [
@@ -2267,7 +2322,7 @@ var SPOTS = [
   { id: "git", name: "Lab GIT", x: -5, z: -15, yaw: 0 },
   { id: "se", name: "Lab Software Engineering", x: 5, z: -15, yaw: 0 },
   { id: "csn", name: "Lab CSN", x: 15, z: 0, yaw: -Math.PI / 2 },
-  { id: "cafe", name: "☕ Cafe Rahman", x: 18, z: 22.5, yaw: Math.PI },
+  { id: "cafe", name: "☕ IT-Mart", x: 18, z: 22.5, yaw: Math.PI },
   { id: "eportal", name: "🌐 Ruang E-Portal UIKA", x: -5.5, z: 36.5, yaw: Math.PI }
 ];
 var NPC_POS = {
@@ -2284,8 +2339,8 @@ var WALLS = [
   { z: 12, x: [-12, 9], d: [[-2.5, 2.5, 4]], f: "welcome", b: "atrium", h: 7 },
   { z: 12, x: [9, 12], f: "cafe", b: "atrium", h: 7 },
   { x: -9, z: [12, 30], f: "welcome", b: "welcome", h: 6 },
-  { x: 9, z: [12, 30], d: [[12.75, 14.85, 3.1]], f: "welcome", b: "cafe", h: 6 }, // pintu ke Cafe Rahman
-  // Cafe Rahman (timur Ruang Sambutan)
+  { x: 9, z: [12, 30], d: [[12.75, 14.85, 3.1]], f: "welcome", b: "cafe", h: 6 }, // pintu ke IT-Mart
+  // IT-Mart (timur Ruang Sambutan)
   { z: 30, x: [9, 27], f: "cafe", b: "cafe", h: 4.6 },
   { x: 27, z: [12, 30], f: "cafe", b: "cafe", h: 4.6 },
   { z: 30, x: [-9, 9], d: [[-7.7, -5.3, 3.3]], f: "eportal", b: "welcome", h: 6 }, // pintu ke Ruang E-Portal
@@ -2330,7 +2385,7 @@ function roomAt(x, z) {
   for (const [k, r] of Object.entries(ROOMS))
     if (x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1)
       return k;
-  return typeof secretRoomAt === "function" ? secretRoomAt(x, z) : null;
+  return (typeof secretRoomAt === "function" ? secretRoomAt(x, z) : null) || (typeof xRoomAt === "function" ? xRoomAt(x, z) : null);
 }
 
 // ---------- tekstur prosedural ----------
@@ -3551,7 +3606,7 @@ function buildWorld(scene2, quality) {
       api.mapBoard2 = mm2;
     }
     // bangku bundar & tanaman
-    for (const [bx, bz] of [[-7.5, 6.5], [7.5, 6.5], [-7.5, -6], [7.5, -6]]) {
+    for (const [bx, bz] of [[-7.5, 6.5], [7.5, 6.5], [-7.5, -6]]) { // [7.5,-6] kini Sudut Al-Qur'an (src/ext_quran.js)
       const bench = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.1, 0.42, 32), M.white);
       bench.position.set(bx, 0.21, bz);
       scene2.add(bench);
@@ -4333,6 +4388,10 @@ function wsNet(url, h) {
         h.onHofAdd && h.onHofAdd(m.e);
       } else if (m.type === "hof_del" && typeof m.id === "string") {
         h.onHofDel && h.onHofDel(m.id);
+      } else if (m.type === "buku") {
+        h.onBuku && h.onBuku();
+      } else if (m.type === "note_res") {
+        if (!m.ok && typeof m.err === "string") toast(m.err.slice(0, 160));
       } else if (m.type === "pem" && m.s && typeof m.s === "object") {
         h.onPem && h.onPem(m.s);
       } else if (m.type === "hof_res") {
@@ -4391,11 +4450,11 @@ function wsNet(url, h) {
     sendWbClear() {
       send({ type: "wb_clear" });
     },
-    sendNoteAdd(note) {
-      send({ type: "note_add", note });
+    sendNoteAdd(note, k) {
+      send({ type: "note_add", note, k });
     },
-    sendNoteDel(id, idx) {
-      send({ type: "note_del", id, idx });
+    sendNoteDel(id, k) {
+      send({ type: "note_del", id, k });
     },
     sendHof(o) {
       // pesan berfoto: dikirim langsung (melebihi batas pesan biasa); "type" & "n" harus di depan
@@ -4517,7 +4576,7 @@ const roomLights = [
   { x: -14, y: 5.0, z: -24, col: 0x10b981, intensity: 3.0, dist: 32 },// GIT
   { x: 14, y: 5.0, z: -24, col: 0xa855f7, intensity: 3.0, dist: 32 }, // SE
   { x: 25, y: 5.0, z: 0, col: 0xf59e0b, intensity: 3.0, dist: 32 },  // CSN
-  { x: 18, y: 4.2, z: 20, col: 0xffb36b, intensity: 2.4, dist: 22 },  // Cafe Rahman
+  { x: 18, y: 4.2, z: 20, col: 0xffb36b, intensity: 2.4, dist: 22 },  // IT-Mart
   { x: -5.5, y: 5.6, z: 43, col: 0xecfdf5, intensity: 2.6, dist: 34 }  // Ruang E-Portal
 ];
 roomLights.forEach(l => {
@@ -4835,6 +4894,10 @@ function insideAnyRoom(x, z) {
   for (const r of Object.values(ROOMS))
     if (x > r.x0 + 0.3 && x < r.x1 - 0.3 && z > r.z0 + 0.3 && z < r.z1 - 0.3)
       return r;
+  if (typeof XROOMS !== "undefined")
+    for (const r of Object.values(XROOMS))
+      if (x > r.x0 + 0.3 && x < r.x1 - 0.3 && z > r.z0 + 0.3 && z < r.z1 - 0.3)
+        return r;
   if (typeof SECRET_ROOMS !== "undefined")
     for (const r of Object.values(SECRET_ROOMS))
       if (x > r.x0 + 0.3 && x < r.x1 - 0.3 && z > r.z0 + 0.3 && z < r.z1 - 0.3)
@@ -5509,10 +5572,13 @@ var sharedNotes = null;
 var getNotes = () => {
   if (Array.isArray(sharedNotes)) return sharedNotes;
   const n = store.get("notes", null);
-  sharedNotes = Array.isArray(n) ? n.filter((x) => x && typeof x.t === "string").slice(-60) : SEED_NOTES.slice();
+  sharedNotes = Array.isArray(n) ? n.filter((x) => x && typeof x.t === "string").slice(-1000) : SEED_NOTES.slice();
   return sharedNotes;
 };
 var diskusiRenderFn = null;
+// kunci pemilik catatan (disimpan di browser ini) — server hanya mengizinkan penulis/moderator menghapus
+var myNoteKeys = () => { const o = store.get("noteKeys", {}); return o && typeof o === "object" ? o : {}; };
+var canDelNote = (n) => !!(n && (myNoteKeys()[n.id] || IS_MOD || !net || net.mode !== "ws"));
 function drawDiskusi() {
   if (!world || !world.diskusi || !world.diskusi.canvas) return;
   const c = world.diskusi.canvas, x = c.getContext("2d"), W = c.width, H = c.height;
@@ -5546,13 +5612,13 @@ function drawDiskusi() {
   }
   x.fillStyle = "#fbbf24";
   x.font = `500 24px ${FONT}`;
-  x.fillText("Klik papan untuk menambah catatan · Tersinkron Real-time", 50, H - 30);
+  x.fillText(`Klik papan untuk menambah catatan · ${getNotes().length} catatan tersimpan`, 50, H - 30);
   world.diskusi.mesh.userData.tex.needsUpdate = true;
 }
 function openDiskusi() {
   const render = () => {
     const notes = getNotes();
-    genCard(`<button class="x" id="gx" aria-label="Tutup">\xD7</button><h2>Papan Pesan IT'ers</h2><p>Lab peminatan mana yang paling menarik untukmu, dan kenapa? Catatan tersinkronisasi langsung dengan seluruh pengunjung.</p><div class="notes" id="nts"></div><label class="f" for="nIn">Catatan Anda (${S.name || "IT'ers"})</label><textarea id="nIn" maxlength="280" rows="3" placeholder="Tulis pendapat Anda\u2026"></textarea><div class="rowf" style="margin-top:10px"><button class="btn" id="nAdd">Tempel catatan</button><span style="font-size:11px;color:var(--mut)">Maks. 280 karakter · Tersinkron otomatis</span></div>`);
+    genCard(`<button class="x" id="gx" aria-label="Tutup">\xD7</button><h2>Papan Pesan IT'ers</h2><p>Lab peminatan mana yang paling menarik untukmu, dan kenapa? Catatan tersinkronisasi langsung dengan seluruh pengunjung.</p><div class="notes" id="nts"></div><label class="f" for="nIn">Catatan Anda (${S.name || "IT'ers"})</label><textarea id="nIn" maxlength="280" rows="3" placeholder="Tulis pendapat Anda\u2026"></textarea><div class="rowf" style="margin-top:10px"><button class="btn" id="nAdd">Tempel catatan</button><span style="font-size:11px;color:var(--mut)">Maks. 280 karakter · tersimpan permanen · hanya penulis (atau moderator) yang bisa menghapus</span></div>`);
     const box = $("nts");
     notes.forEach((n, i) => {
       const d = document.createElement("div");
@@ -5562,6 +5628,8 @@ function openDiskusi() {
       const p = document.createElement("div");
       p.textContent = n.t;
       d.append(b, p);
+      if (n.time) { const tm = document.createElement("small"); tm.style.cssText = "display:block;color:var(--mut);font-size:10.5px;margin-top:4px"; tm.textContent = new Date(n.time).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" }); d.appendChild(tm); }
+      if (!canDelNote(n)) { box.appendChild(d); return; }
       const del = document.createElement("button");
       del.className = "del";
       del.textContent = "\xD7";
@@ -5570,9 +5638,9 @@ function openDiskusi() {
         const arr = getNotes();
         const deleted = arr[i];
         arr.splice(i, 1);
-        store.set("notes", arr);
-        if (net && typeof net.sendNoteDel === "function") {
-          net.sendNoteDel(deleted ? deleted.id : null, i);
+        store.set("notes", arr.slice(-1000));
+        if (net && typeof net.sendNoteDel === "function" && deleted) {
+          net.sendNoteDel(deleted.id, myNoteKeys()[deleted.id] || "");
         }
         drawDiskusi();
         render();
@@ -5595,10 +5663,11 @@ function openDiskusi() {
       };
       const arr = getNotes();
       arr.push(note);
-      if (arr.length > 60) arr.shift();
-      store.set("notes", arr);
+      store.set("notes", arr.slice(-1000));
+      const keys = myNoteKeys(), k = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join("");
+      keys[note.id] = k; store.set("noteKeys", keys);
       if (net && typeof net.sendNoteAdd === "function") {
-        net.sendNoteAdd(note);
+        net.sendNoteAdd(note, k);
       }
       drawDiskusi();
       render();
@@ -6619,6 +6688,7 @@ function setAvatarNameOf(av, n) {
   t2.material.map.colorSpace = THREE2.SRGBColorSpace;
   t2.scale.set(0.2 * c.width / c.height, 0.2, 1);
 }
+var VOICE_NEAR = 3, VOICE_FAR = 20;
 function mpTick(dt) {
   for (const r of remotes.values()) {
     const k = Math.min(1, dt * 8);
@@ -6632,7 +6702,8 @@ function mpTick(dt) {
     r.av.userData.body.scale.y = r.sit ? 0.85 : 1;
     if (r.audio) {
       const d = Math.hypot(r.cur.x - P.x, r.cur.z - P.z);
-      r.audio.volume = r.mega ? 1 : clamp(1 - (d - 8) / 36, 0.25, 1);
+      // tanpa pengeras suara: jelas ≤ 3 m, makin pelan, tidak terdengar ≥ 20 m
+      r.audio.volume = r.mega ? 1 : d <= VOICE_NEAR ? 1 : d >= VOICE_FAR ? 0 : Math.pow((VOICE_FAR - d) / (VOICE_FAR - VOICE_NEAR), 1.6);
     }
   }
   presT += dt;
@@ -6654,6 +6725,7 @@ async function startNet() {
     },
     onHofInit: (list) => hofInit(list),
     onPem: (st) => pemOnStats(st),
+    onBuku: () => bukuLoad(),
     onHofAdd: (e) => hofUpsert(e),
     onHofDel: (id) => hofDelete(id),
     onWbInit: (strokes) => {
@@ -6690,7 +6762,7 @@ async function startNet() {
       }
     },
     onNotesInit: (notes) => {
-      if (Array.isArray(notes) && notes.length) {
+      if (Array.isArray(notes)) {
         sharedNotes = notes;
         store.set("notes", sharedNotes);
       }
@@ -6699,9 +6771,9 @@ async function startNet() {
     },
     onNoteAdd: (note) => {
       if (!sharedNotes) getNotes();
+      if (sharedNotes.some((x) => x.id === note.id)) return;
       sharedNotes.push(note);
-      if (sharedNotes.length > 60) sharedNotes.shift();
-      store.set("notes", sharedNotes);
+      store.set("notes", sharedNotes.slice(-1000));
       if (world && world.diskusi) drawDiskusi();
       if (diskusiRenderFn) diskusiRenderFn();
       toast(`📌 Catatan baru dari ${note.n || "Pengunjung"} ditempel di Papan Pesan.`);
@@ -7195,7 +7267,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt };
 }
 boot().catch((err) => {
   console.error(err);
@@ -7676,7 +7748,7 @@ function npcAnswer(npcId, q) {
     return { text: L ? `Pendaftaran peminatan langsung dari galeri ini — tidak perlu Google Form lagi. Klik tombol di bawah, isi NIM & kontak, lalu pilih ${L.code} sebagai pilihan 1 bila kamu yakin!` : `Pendaftaran peminatan kini langsung dari galeri ini. Isi NIM, nama, kontak, lalu pilih lab pilihan 1 dan pilihan 2.${typeof PEM !== "undefined" && PEM.stats ? ` Saat ini sudah ${PEM.stats.total} pendaftar${PEM.stats.open ? "" : " dan pendaftaran sedang DITUTUP"}.` : ""}`, acts: [["✍ Isi formulir", () => openRegister(lab)], ["📊 Statistik", () => pemStatsCard()], ["📢 Hasil final", () => pemFinalCard()]] };
   if (!L && /\b(hasil|pengumuman|diterima|penetapan|final)\b/.test(ql)) return { text: typeof PEM !== "undefined" && PEM.final && PEM.final.published ? `Hasil final sudah diumumkan: ${PEM.final.title}. Klik tombol di bawah untuk mencari namamu, atau lihat papan pengumuman di dinding timur Atrium.` : "Hasil final peminatan belum diumumkan. Nanti akan tampil di papan pengumuman dinding timur Atrium — pantau terus ya!", acts: [["📢 Papan pengumuman", () => pemFinalCard()]] };
   if (!L && /statistik|persentase|persen|berapa (orang|pendaftar|banyak)|jumlah pendaftar|grafik|pie/.test(ql)) return { text: pemStatsText(), acts: [["📊 Lihat diagram", () => pemStatsCard()]] };
-  if (/\b(cafe|kafe|kopi|ngopi|rahman)\b/.test(ql)) return { text: "Cafe Rahman ada di sebelah timur Ruang Sambutan — masuk lewat pintu kayu di dinding timur dekat gerbang Atrium. Rahman si barista bisa cerita soal kopi, para dosen TI, dan memberi saran dosen pembimbing untuk judulmu ☕", acts: [["Antar ke Cafe", () => teleportSpot("cafe")]] };
+  if (/\b(cafe|kafe|kopi|ngopi|rahman|mart|it-mart|ivy)\b/.test(ql)) return { text: "IT-Mart ada di sebelah timur Ruang Sambutan — masuk lewat pintu kayu di dinding timur dekat gerbang Atrium. Rahman si barista bisa cerita soal kopi, para dosen TI, dan memberi saran dosen pembimbing untuk judulmu ☕", acts: [["Antar ke Cafe", () => teleportSpot("cafe")]] };
   const ml = mentionedLab(ql);
   if (/(lab|peminatan) apa saja|apa saja (lab|peminatan)|ada berapa (lab|peminatan)|pilihan (lab|peminatan)|daftar lab|semua lab/.test(ql))
     return { text: FAQ[1][1], acts: LAB_IDS.map((k) => [`Lab ${LABS[k].code}`, () => teleportSpot(k)]) };
@@ -7786,6 +7858,7 @@ function askNpc(q, npcId = curNpc) {
   setTimeout(() => {
     sMsg(NPCS[npcId].name, a.text, false, a.acts, a.quiz, npcId);
     sayBubble(a.text.length > 110 ? a.text.slice(0, 108) + "…" : a.text, "npc_" + npcId);
+    if (a.later && typeof a.later.then === "function") a.later.then((b) => { if (b && b.text) { sMsg(NPCS[npcId].name, b.text, false, b.acts, null, npcId); sayBubble(b.text.length > 110 ? b.text.slice(0, 108) + "…" : b.text, "npc_" + npcId); } }).catch(() => sMsg(NPCS[npcId].name, "Maaf, aku tidak bisa menghubungi server sekarang.", false, null, null, npcId));
   }, 300);
 }
 function askNpcAbout(id) {
@@ -8363,8 +8436,8 @@ function zoneTick(dt) {
   } else if (r === "eportal") {
     toast("🌐 Ruang E-Portal UIKA — temui Vir di gerbang portal untuk akses eportal.uika-bogor.ac.id (masih dalam pengembangan).", 4500);
   } else if (r === "cafe") {
-    toast("☕ Cafe Rahman — ngobrol dengan barista Rahman soal kopi, dosen TI, atau saran dosen pembimbing.", 4200);
-    if (!store.get("cafeHint", false)) { store.set("cafeHint", true); setTimeout(() => sayBubble(`Selamat datang di Cafe Rahman, ${S.name}! Mau kopi apa hari ini? ☕`, "npc_rahman"), 600); }
+    toast("☕ IT-Mart — ngobrol dengan barista Rahman soal kopi, dosen TI, atau saran dosen pembimbing.", 4200);
+    if (!store.get("cafeHint", false)) { store.set("cafeHint", true); setTimeout(() => sayBubble(`Selamat datang di IT-Mart, ${S.name}! Mau kopi apa hari ini? ☕`, "npc_rahman"), 600); }
   } else if (r === "atrium" && prev && prev !== "welcome") {
     toast("Atrium Pendaftaran — temui Kak Tias di meja tengah untuk mendaftar.", 3e3);
   } else if (r === "atrium" && prev === "welcome" && !store.get("atriumHint", false)) {
@@ -8586,9 +8659,10 @@ function showQuestCard() {
   const q = Q(), ck = (b) => b ? "✅" : "⬜";
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🗝 Lorong Rahasia</h2>
   <p>Kamu telah menemukan jalan rahasia di balik dinding Lab SE. Taklukkan keempat lorong untuk mencapai Taman Apresiasi.</p>
-  <ul class="qlist"><li>${ck(questUnlocked())} Pintu rahasia terbuka</li><li>${ck(q.maze)} Lorong 1 · Labirin</li><li>${ck(q.glass)} Lorong 2 · Rumah Kaca</li><li>${ck(riddlesDone())} Lorong 3 · 10 teka-teki (${q.riddles.length}/10)</li><li>${ck(!!q.snake)} Lorong 4 · Ular Tangga (pijakan ${q.sn}/40)</li><li>${ck(!!q.cert)} Sertifikat dari Kang Santo</li><li>${ck(!!q.hof)} Tercatat di Hall of Fame</li></ul>
+  <ul class="qlist"><li>${ck(questUnlocked())} Pintu rahasia terbuka</li><li>${ck(q.maze)} Lorong 1 · Labirin</li><li>${ck(q.glass)} Lorong 2 · Rumah Kaca</li><li>${ck(riddlesDone())} Lorong 3 · 10 teka-teki (${q.riddles.length}/10)</li><li>${ck(!!q.snake)} Lorong 4 · Ular Tangga (pijakan ${q.sn}/40)</li><li>${ck(!!q.cert)} Sertifikat dari Kang Santo</li><li>${ck(!!q.card)} Explorer Card ${q.card ? `<button class="ghost" id="qXc" style="height:26px;margin-left:6px">Lihat kartu</button>` : ""}</li><li>${ck(!!q.hof)} Tercatat di Hall of Fame</li></ul>
   <p style="font-size:12px;color:var(--mut)">Progres tersimpan di browser ini atas nama <b id="qnm"></b>.</p>`);
   $("qnm").textContent = S.name || "-";
+  if ($("qXc")) $("qXc").onclick = openExplorerCard;
 }
 
 // ---------- helper geometri ----------
@@ -9270,16 +9344,17 @@ function buildGarden() {
   makeCustomHuman("tama", {
     code: "TAMAN", name: "Kang Santo", role: "Penjaga Taman Apresiasi", col: "#16a34a", icon: "🏅",
     x: cx + 3.6, z: -185.5, room: "s_garden", secret: true, tag: "KANG SANTO · PENJAGA TAMAN",
-    chips: ["Ambil sertifikat", "Masuk Hall of Fame", "Aktifkan skin baru", "Siapa saja yang lulus?", "Apa isi taman ini?", "Kembali ke atrium"],
+    chips: ["Ambil sertifikat", "Ambil Explorer Card", "Masuk Hall of Fame", "Aktifkan skin baru", "Siapa saja yang lulus?", "Apa isi taman ini?", "Kembali ke atrium"],
     roleNote: "sertifikat, Hall of Fame & skin",
     knowText: "Kang Santo menjaga Taman Apresiasi: memberi sertifikat, mencatat penjelajah ke Hall of Fame (nama + foto), dan mengaktifkan skin eksklusif.",
-    greetActs: () => [["🏆 Isi Hall of Fame", openHofForm], ["🏅 Ambil sertifikat", openCertificate], ["👕 Lemari Skin", openSkins]],
+    greetActs: () => [["🏆 Isi Hall of Fame", openHofForm], ["🏅 Ambil sertifikat", openCertificate], ["🪪 Explorer Card", openExplorerCard], ["👕 Lemari Skin", openSkins]],
     onCard: () => tamaCard(),
     answer: (q) => {
       const ql = norm(q);
       const hofAsk = Q().hof ? "" : " Satu lagi: tuliskan namamu dan unggah fotomu supaya tampil di Hall of Fame Atrium ya!";
+      if (/kartu|card|explorer|\bxc\b|akses|tantangan/.test(ql)) return { text: Q().card ? `Explorer Card-mu sudah ada (nomor ${Q().card.no}). Simpan baik-baik — kartu ini akan membuka ruangan-ruangan tantangan yang sedang disiapkan.` : `Ini hadiah istimewa untukmu, ${S.name}: Explorer Card bertuliskan nama dan nomor sertifikatmu. Kelak kartu ini membuka akses ke ruangan-ruangan tantangan baru!`, acts: [["🪪 Explorer Card", openExplorerCard]] };
       if (/hall|fame|foto|unggah|upload/.test(ql)) return { text: Q().hof ? "Kamu sudah tercatat di Hall of Fame. Mau memperbarui fotomu?" : "Tuliskan nama dan unggah fotomu, nanti tampil di layar Hall of Fame di Atrium dan di papan taman ini.", acts: [["🏆 Isi Hall of Fame", openHofForm], ["Lihat Hall of Fame", openHofGallery]] };
-      if (/sertifikat|piagam|hadiah/.test(ql) || !ql.trim() || /^(halo|hai|hi)\b/.test(ql)) return { text: `Selamat, ${S.name}! Kamu berhasil melewati Labirin, Rumah Kaca, 10 teka-teki, dan Ular Tangga. Ambil sertifikatmu di sini ya 🏅${skinsUnlocked() ? " Sebagai hadiah, 3 skin eksklusif sudah kuaktifkan untukmu." : ""}${hofAsk}`, acts: [["🏆 Isi Hall of Fame", openHofForm], ["🏅 Ambil sertifikat", openCertificate], ["👕 Lemari Skin", openSkins]] };
+      if (/sertifikat|piagam|hadiah/.test(ql) || !ql.trim() || /^(halo|hai|hi)\b/.test(ql)) return { text: `Selamat, ${S.name}! Kamu berhasil melewati Labirin, Rumah Kaca, 10 teka-teki, dan Ular Tangga. Ambil sertifikatmu di sini ya 🏅 Aku juga punya Explorer Card bertuliskan namamu 🪪${skinsUnlocked() ? " Sebagai hadiah, 3 skin eksklusif sudah kuaktifkan untukmu." : ""}${hofAsk}`, acts: [["🏆 Isi Hall of Fame", openHofForm], ["🏅 Ambil sertifikat", openCertificate], ["🪪 Explorer Card", openExplorerCard], ["👕 Lemari Skin", openSkins]] };
       if (/lulus|siapa|kehormatan|daftar/.test(ql)) return { text: `Penjelajah yang berhasil tampil di Hall of Fame: papan sebelah timur air mancur dan layar besar di Atrium. Saat ini tercatat ${HOF.list.length} penjelajah.`, acts: [["Lihat Hall of Fame", openHofGallery]] };
       if (/skin|kostum|baju|tampilan|avatar|lemari/.test(ql)) return { text: skinsUnlocked() ? "Skin eksklusifmu sudah aktif: Astronot Nebula, Ronin Neon, dan Hantu Hologram. Buka Lemari Skin untuk berganti kapan saja (menu ☰ atau tombol K)." : "Bicara denganku setelah menaklukkan keempat lorong untuk membuka 3 skin eksklusif.", acts: [["👕 Lemari Skin", openSkins]] };
       if (/kembali|atrium|pulang|keluar/.test(ql)) return { text: "Gunakan portal ungu di ujung utara taman, atau menu GO TO.", acts: [["⟲ Ke Atrium", () => teleportSpot("atrium")]] };
@@ -9346,11 +9421,12 @@ function openCertificate() {
     x.fillStyle = "#6b7280"; x.font = `400 30px ${FONT}`; x.fillText(`Kode sertifikat: ${q.cert}  ·  Galeri VR Lab Peminatan TI · Fakultas Teknik dan Sains`, 1000, 1230);
     x.textAlign = "left";
     const url = c.toDataURL("image/png");
-    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 Sertifikat Penjelajah</h2><p>Selamat, <b id="cnm"></b>! Simpan sertifikatmu di bawah ini.</p><img id="certImg" alt="Sertifikat penjelajah" style="width:100%;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.35)"><div class="rowf" style="margin-top:12px"><button class="btn" id="certDl">Unduh PNG</button><button class="ghost" id="certFame">🏆 Hall of Fame</button></div>`);
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 Sertifikat Penjelajah</h2><p>Selamat, <b id="cnm"></b>! Simpan sertifikatmu di bawah ini.</p><img id="certImg" alt="Sertifikat penjelajah" style="width:100%;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.35)"><div class="rowf" style="margin-top:12px"><button class="btn" id="certDl">Unduh PNG</button><button class="btn" id="certXc" style="background:#5b21b6;color:#fff">🪪 Explorer Card</button><button class="ghost" id="certFame">🏆 Hall of Fame</button></div>`);
     $("genCard").classList.add("wide");
     $("cnm").textContent = S.name;
     $("certImg").src = url;
     $("certDl").onclick = () => c.toBlob((b) => b && saveFile(`sertifikat-penjelajah-${(S.name || "it").replace(/[^a-z0-9]/gi, "_")}.png`, b), "image/png");
+    $("certXc").onclick = openExplorerCard;
     $("certFame").onclick = () => (Q().hof ? openHofGallery() : openHofForm());
     if (typeof SFX !== "undefined") SFX.chime();
     spawnSparkle();
@@ -9461,6 +9537,14 @@ function xHandleAct(act, hit, e) {
     case "x_dice": snakeRoll(); break;
     case "x_snportal": if (Q().snake) xTeleport(16.2, -176, 0); else toast("Portal finis aktif setelah kamu tepat mencapai pijakan 40."); break;
     case "x_pemstats": pemStatsCard(); break;
+    case "x_l2up": l2Stairs(true); break;
+    case "x_l2down": l2Stairs(false); break;
+    case "x_l2gate": case "x_l2scan": openNpc("nan", "chat"); if (!L2.ok) askNpc("verifikasi kartu saya", "nan"); break;
+    case "x_cogdoor": if (L2.ok) cogConfirm(); else toast("Verifikasi Explorer Card ke Nan dulu."); break;
+    case "x_l2soon": toast("🔒 Pintu ini untuk tantangan yang akan datang — segera hadir!"); break;
+    case "x_l2back": if (L2.ok && L2.okName === S.name) xTeleport(59, 27.2, 0); else xTeleport(59, 22.6, 0); break;
+    case "x_quran": if (renderer.xr.isPresenting) quranVR(true); else quranOpen(); break;
+    case "x_buku": bukuCard(); break;
     case "x_epslide": epSlides(act.i); break;
     case "x_epall": epSlides(0); break;
     case "x_epgo": openNpc("vir", "chat"); epOpenPortal(); break;
@@ -9554,6 +9638,9 @@ function buildExtras() {
     try { buildPeminatan(); } catch (err) { console.error("Peminatan gagal dibangun:", err); }
     try { buildCafe(); } catch (err) { console.error("Cafe gagal dibangun:", err); }
     try { buildEportal(); } catch (err) { console.error("Ruang E-Portal gagal dibangun:", err); }
+    try { buildQuran(); } catch (err) { console.error("Sudut Al-Qur'an gagal dibangun:", err); }
+    try { buildBuku(); } catch (err) { console.error("Rak buku gagal dibangun:", err); }
+    try { buildLantai2(); } catch (err) { console.error("Lantai 2 gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -9804,10 +9891,11 @@ function tamaCard() {
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏅 Kang Santo · Penjaga Taman</h2>
   <p>${fresh ? `Selamat, <b id="tnm"></b>! Kamu menaklukkan keempat lorong rahasia. Aku mengaktifkan <b>3 skin eksklusif</b> untukmu: Astronot Nebula, Ronin Neon, dan Hantu Hologram.` : `Halo <b id="tnm"></b>! Ambil sertifikatmu atau ganti skin avatarmu di sini.`}</p>
   ${q.hof ? `<p>✅ Kamu sudah tercatat di <b>Hall of Fame</b>.</p>` : `<div class="hofAsk">🏆 <b>Satu langkah lagi:</b> tuliskan namamu dan unggah fotomu agar tampil di <b>Hall of Fame</b> di Atrium.</div>`}
-  <div class="rowf"><button class="btn" id="tmHof" style="background:#f59e0b;color:#1f1300">🏆 ${q.hof ? "Perbarui Hall of Fame" : "Isi Hall of Fame"}</button><button class="btn" id="tmCert">🏅 Ambil sertifikat</button><button class="btn" id="tmSkin" style="background:#a855f7;color:#fff">👕 Lemari Skin</button><button class="ghost" id="tmAsk">Tanya Kang Santo</button></div>`);
+  <div class="rowf"><button class="btn" id="tmHof" style="background:#f59e0b;color:#1f1300">🏆 ${q.hof ? "Perbarui Hall of Fame" : "Isi Hall of Fame"}</button><button class="btn" id="tmCert">🏅 Ambil sertifikat</button><button class="btn" id="tmCard" style="background:#5b21b6;color:#fff">🪪 ${q.card ? "Explorer Card" : "Ambil Explorer Card"}</button><button class="btn" id="tmSkin" style="background:#a855f7;color:#fff">👕 Lemari Skin</button><button class="ghost" id="tmAsk">Tanya Kang Santo</button></div>`);
   $("tnm").textContent = S.name;
   $("tmHof").onclick = openHofForm;
   $("tmCert").onclick = openCertificate;
+  $("tmCard").onclick = openExplorerCard;
   $("tmSkin").onclick = openSkins;
   $("tmAsk").onclick = () => { closeGen(); openNpc("tama", "chat"); };
   if (fresh) { if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); toast("👕 3 skin baru diaktifkan!", 5000); }
@@ -11013,7 +11101,7 @@ function pemRegister(lab) {
 }
 
 // =====================================================================
-// src/ext_cafe.js — CAFE RAHMAN (timur Ruang Sambutan, tercantum di denah)
+// src/ext_cafe.js — IT-MART (timur Ruang Sambutan, tercantum di denah)
 // Barista Rahman: info jenis kopi, petunjuk awal lorong rahasia, keahlian
 // dosen TI, dan saran dosen pembimbing berdasarkan judul skripsi.
 // Juga: kode rahasia Cody (Lab SE) untuk langsung ke Taman Apresiasi.
@@ -11102,7 +11190,7 @@ function rahmanAnswer(q) {
     CAFE.wait = null;
   }
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|punten|bang|mas)\b/.test(ql))
-    return { text: `Halo ${nm}, selamat datang di Cafe Rahman ☕ Aku Rahman, barista di sini. Sambil nunggu kopimu, aku bisa cerita soal jenis-jenis kopi, siapa ahli apa di antara dosen-dosen TI, bahkan kasih saran dosen pembimbing buat judul skripsimu. Oh iya… aku juga sering dengar bisik-bisik soal lorong rahasia 🤫`, acts: chipsA.concat([["🎓 Saran pembimbing", () => askNpc("Saran dosen pembimbing", "rahman")]]) };
+    return { text: `Halo ${nm}, selamat datang di IT-Mart ☕ Aku Rahman, barista di sini. Sambil nunggu kopimu, aku bisa cerita soal jenis-jenis kopi, siapa ahli apa di antara dosen-dosen TI, bahkan kasih saran dosen pembimbing buat judul skripsimu. Oh iya… aku juga sering dengar bisik-bisik soal lorong rahasia 🤫`, acts: chipsA.concat([["🎓 Saran pembimbing", () => askNpc("Saran dosen pembimbing", "rahman")]]) };
   if (/terima ?kasih|makasih|thanks|nuhun/.test(ql)) return { text: "Sama-sama! Jangan lupa mampir lagi, kopi pertama selalu terasa paling hangat ☕" };
   // ---- dosen pembimbing ----
   if (/pembimbing|dospem|bimbing|judul|skripsi|tugas akhir|\bta\b/.test(ql)) {
@@ -11114,12 +11202,16 @@ function rahmanAnswer(q) {
     return { text: "Boleh! Tulis judul (atau rencana judul) skripsimu di kotak chat — aku cocokkan dengan keahlian para dosen TI. Contoh: “Klasifikasi penyakit daun padi menggunakan CNN” atau “Aplikasi mobile pemesanan kopi berbasis Flutter”. (ketik “batal” untuk berhenti)" };
   }
   // ---- lorong rahasia (petunjuk awal saja) ----
+  if (/kartu|card|explorer|\bnan\b|lantai ?2|lantai dua|verifikasi|tantangan/.test(ql) && !/kopi/.test(ql)) {
+    const has = Q().card && Q().card.no;
+    return { text: has ? `Kamu sudah punya Explorer Card? Hebat! Naik tangga di sudut timur laut IT-Mart ke lantai 2 — Nan akan memverifikasi kartumu ke database lalu membuka gerbang tantangan.` : `Explorer Card? Itu bukan barang dagangan di sini 😄 Kartu itu hanya diberikan Kang Santo, penjaga sebuah taman yang konon berada di ujung lorong rahasia. Jalan masuknya tersembunyi di salah satu lab peminatan… mau dengar bisik-bisiknya?`, acts: has ? [["⬆ Naik ke lantai 2", () => l2Stairs(true)]] : [["🤫 Ceritakan lorong rahasia", () => askNpc("lorong rahasia itu apa?", "rahman")]] };
+  }
   const moreHint = CAFE.spTier > 0 && /^(petunjuk|hint|clue|bocoran)|petunjuk (lagi|lain)|(kasih|minta|ada) (petunjuk|clue|hint)|lanjut(kan)? (cerita|bisik)/.test(ql);
   if (moreHint || /rahasia|secret|lorong|pintu tersembunyi|misteri|labirin|taman apresiasi|hall of fame|bisik/.test(ql)) {
     const more = moreHint || (/lagi|lanjut|lebih|detail|caranya|bagaimana|gimana|petunjuk/.test(ql) && CAFE.spTier > 0);
     CAFE.spTier++;
-    if (!more) return { text: "🤫 Psst… pelanggan tetap di sini sering cerita: di salah satu dinding Lab Software Engineering ada pintu yang tidak tercatat di denah. Katanya kuncinya dipegang oleh keempat robot lab — Keri, Geo, Cody, dan Neta. Masing-masing menyimpan satu “pertanyaan rahasia”. Kalau mau petunjuk lagi, tanya aku “petunjuk lorong rahasia”.", acts: [["Petunjuk lagi", () => askNpc("petunjuk lagi soal lorong rahasia", "rahman")]] };
-    return { text: "Oke, satu petunjuk lagi, tapi jangan bilang siapa-siapa ya ☕ Coba ketik “secret passage” saat mengobrol dengan setiap robot lab. Pertanyaan mereka seputar visi kampus, fakultas, prodi, dan nama-nama lab — robot Dul di Ruang Sambutan hafal semua visi itu. Setelah keempatnya puas… rasakan saja getarannya. Di baliknya ada beberapa lorong yang menguji kesabaran, dan konon di ujungnya ada taman yang indah. Selebihnya, temukan sendiri! 😉", acts: [["Antar ke Lab SE", () => teleportSpot("se")], ["Antar ke Dul", () => teleportSpot("welcome")]] };
+    if (!more) return { text: "🤫 Psst… pelanggan tetap di sini sering cerita: di salah satu lab peminatan ada pintu tersembunyi yang tidak tercatat di denah — tapi aku tidak tahu lab yang mana. Katanya kuncinya dipegang oleh keempat robot lab — Keri, Geo, Cody, dan Neta. Masing-masing menyimpan satu “pertanyaan rahasia”. Kalau mau petunjuk lagi, tanya aku “petunjuk lorong rahasia”.", acts: [["Petunjuk lagi", () => askNpc("petunjuk lagi soal lorong rahasia", "rahman")]] };
+    return { text: "Oke, satu petunjuk lagi, tapi jangan bilang siapa-siapa ya ☕ Coba ketik “secret passage” saat mengobrol dengan setiap robot lab. Pertanyaan mereka seputar visi kampus, fakultas, prodi, dan nama-nama lab — robot Dul di Ruang Sambutan hafal semua visi itu. Setelah keempatnya puas… rasakan saja getarannya. Di baliknya ada beberapa lorong yang menguji kesabaran, dan konon di ujungnya ada taman yang indah. Selebihnya, temukan sendiri! 😉", acts: [["Antar ke Dul", () => teleportSpot("welcome")], ["Antar ke Atrium", () => teleportSpot("atrium")]] };
   }
   // ---- dosen ----
   if (/daftar dosen|semua dosen|dosen (ti|informatika)|siapa saja dosen|list dosen|keahlian dosen|dosen.*(ahli|keahlian|bidang)/.test(ql) && !dosenFind(ql)) {
@@ -11133,15 +11225,15 @@ function rahmanAnswer(q) {
   }
   // ---- kopi ----
   const c = COFFEE.find(([k]) => new RegExp(`\\b${k}\\b`).test(ql)) || (/capucino|kapucino|cappucino/.test(ql) ? COFFEE[6] : /\blate\b|caffe latte/.test(ql) ? COFFEE[7] : null);
-  if (c) return { text: `${c[1]}: ${c[2]} Di sini harganya ${c[3]} — tapi karena ini kafe virtual, gratis buat IT'ers 😄`, acts: [["☕ Menu lengkap", () => cafeMenuCard()]] };
+  if (c) return { text: `${c[1]}: ${c[2]} Di sini harganya ${c[3]} — tapi karena ini IT-Mart virtual, gratis buat IT'ers 😄`, acts: [["☕ Menu lengkap", () => cafeMenuCard()]] };
   if (/arabika|arabica|robusta|liberika|excelsa/.test(ql)) return { text: "Empat spesies kopi yang dikenal: Arabika (rasa kompleks, asam buah, kafein lebih rendah, tumbuh di dataran tinggi), Robusta (pahit tebal, kafein hampir dua kali Arabika, tahan penyakit — banyak di Lampung & Sumatera Selatan), Liberika (aroma nangka/smoky, pohon tinggi, ada di Jambi & Riau), dan Excelsa (kerabat Liberika, rasa tart). Kafe biasanya memakai Arabika, atau campuran Arabika–Robusta untuk espresso." };
   if (/nusantara|indonesia|gayo|toraja|kintamani|flores|bajawa|wamena|java|preanger|lokal|daerah/.test(ql)) return { text: "Kopi Nusantara itu juara! Beberapa yang terkenal: Gayo (Aceh, body tebal & earthy), Mandailing & Sidikalang (Sumatera Utara), Kerinci (Jambi), Java Preanger (Jawa Barat — termasuk lereng-lereng di sekitar Bogor), Kintamani (Bali, segar citrus), Toraja (Sulawesi, rempah & cokelat), Flores Bajawa (manis cokelat), dan Wamena (Papua, lembut). Mau kuseduhkan V60 salah satunya?" };
   if (/rekomendasi|saran|enak|cocok|pilih|bingung|mau (pesan|kopi|minum)|pesan/.test(ql)) {
     const pick = /dingin|seger|segar|panas banget|gerah|es\b/.test(ql) ? [COFFEE[15], COFFEE[12]] : /manis|gak suka pahit|tidak suka pahit|ga suka pahit|pemula/.test(ql) ? [COFFEE[10], COFFEE[7]] : /pahit|kuat|strong|melek|ngantuk|begadang|lembur/.test(ql) ? [COFFEE[1], COFFEE[4]] : [COFFEE[6], COFFEE[15]];
     return { text: `Rekomendasiku: ${pick[0][1]} — ${pick[0][2]} Atau ${pick[1][1]} kalau mau alternatif. Mau yang dingin, manis, atau yang bikin melek? Bilang saja!`, acts: [["☕ Menu lengkap", () => cafeMenuCard()]] };
   }
-  if (/kopi|coffee|menu|minum|jenis|macam|seduh|barista|kafein|harga/.test(ql)) return { text: "Jenis kopi di Cafe Rahman, dari yang pekat sampai yang lembut:\n" + COFFEE.map((x) => `• ${x[1]} — ${x[3]}`).join("\n") + "\nTanya salah satunya untuk penjelasan, atau minta rekomendasi (mis. “rekomendasi kopi dingin yang manis”).", acts: [["☕ Kartu menu", () => cafeMenuCard()]] };
-  if (/kafe ini|cafe ini|tempat ini|siapa kamu|kamu siapa|rahman/.test(ql)) return { text: "Ini Cafe Rahman, tempat nongkrong IT'ers di sebelah timur Ruang Sambutan. Aku Rahman, baristanya. Di dinding timur ada papan keahlian dosen TI, dan di belakangku papan menu kopi — klik saja untuk melihat." };
+  if (/kopi|coffee|menu|minum|jenis|macam|seduh|barista|kafein|harga/.test(ql)) return { text: "Jenis kopi di IT-Mart, dari yang pekat sampai yang lembut:\n" + COFFEE.map((x) => `• ${x[1]} — ${x[3]}`).join("\n") + "\nTanya salah satunya untuk penjelasan, atau minta rekomendasi (mis. “rekomendasi kopi dingin yang manis”).", acts: [["☕ Kartu menu", () => cafeMenuCard()]] };
+  if (/kafe ini|cafe ini|it-?mart|tempat ini|siapa kamu|kamu siapa|rahman/.test(ql)) return { text: "Ini IT-Mart, tempat nongkrong IT'ers di sebelah timur Ruang Sambutan. Aku Rahman, baristanya. Di dinding timur ada papan keahlian dosen TI, dan di belakangku papan menu kopi — klik saja untuk melihat." };
   // cadangan: mungkin topik penelitian
   const r = dosenRank(q);
   if (r.length && r[0].s >= 3) return { text: `Kedengarannya itu topik ${r[0].d[3]} — coba ngobrol dengan ${r[0].d[0]} (${r[0].d[1]}). Mau aku carikan dosen pembimbing untuk judulmu? Tulis saja “judul: …”.`, acts: [["🎓 Saran pembimbing", () => askNpc("Saran dosen pembimbing", "rahman")]] };
@@ -11149,13 +11241,13 @@ function rahmanAnswer(q) {
 }
 function cafeMenuCard() {
   hidePopups();
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>☕ Menu Cafe Rahman</h2><p class="kk">Kafe virtual · tanya Rahman tentang minuman mana pun</p><table class="ktab">${COFFEE.map((c) => `<tr><td><b>${c[1]}</b><br><span style="color:#a8a29e;font-size:12px">${c[3]}</span></td><td>${c[2]}</td></tr>`).join("")}</table><div class="rowf" style="margin-top:12px"><button class="btn" id="cfAsk">Ngobrol dengan Rahman</button></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>☕ Menu IT-Mart</h2><p class="kk">IT-Mart virtual · tanya Rahman tentang minuman mana pun</p><table class="ktab">${COFFEE.map((c) => `<tr><td><b>${c[1]}</b><br><span style="color:#a8a29e;font-size:12px">${c[3]}</span></td><td>${c[2]}</td></tr>`).join("")}</table><div class="rowf" style="margin-top:12px"><button class="btn" id="cfAsk">Ngobrol dengan Rahman</button></div>`);
   $("genCard").classList.add("wide");
   $("cfAsk").onclick = () => { closeGen(); openNpc("rahman", "chat"); };
 }
 function dosenCard() {
   hidePopups();
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👥 Dosen Teknik Informatika & Bidang Keahlian</h2><p class="kk">Versi Cafe Rahman · minta Rahman menyarankan dosen pembimbing untuk judulmu</p><table class="ktab">${DOSEN_TI.map((d) => `<tr><td><b>${d[0]}</b><br><span style="color:#a8a29e;font-size:12px">${d[1] === d[0] ? "" : d[1]}</span></td><td>${d[3]}${d[2] ? ` <span style="color:#fbbf77;font-size:11.5px">· ${d[2]}</span>` : ""}</td></tr>`).join("")}</table><div class="rowf" style="margin-top:12px"><button class="btn" id="dsAsk">🎓 Minta saran pembimbing</button></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👥 Dosen Teknik Informatika & Bidang Keahlian</h2><p class="kk">Versi IT-Mart · minta Rahman menyarankan dosen pembimbing untuk judulmu</p><table class="ktab">${DOSEN_TI.map((d) => `<tr><td><b>${d[0]}</b><br><span style="color:#a8a29e;font-size:12px">${d[1] === d[0] ? "" : d[1]}</span></td><td>${d[3]}${d[2] ? ` <span style="color:#fbbf77;font-size:11.5px">· ${d[2]}</span>` : ""}</td></tr>`).join("")}</table><div class="rowf" style="margin-top:12px"><button class="btn" id="dsAsk">🎓 Minta saran pembimbing</button></div>`);
   $("genCard").classList.add("wide");
   $("dsAsk").onclick = () => { closeGen(); openNpc("rahman", "chat"); askNpc("Saran dosen pembimbing", "rahman"); };
 }
@@ -11173,7 +11265,7 @@ function buildCafe() {
   world.colliders.push({ a: [12.9, 26.5], b: [23.1, 26.5], r: 0.48 });
   // panel depan counter bertuliskan nama
   const fc = mkCanvas(1024, 160), fx = fc.getContext("2d");
-  fx.fillStyle = "#3b2414"; fx.fillRect(0, 0, 1024, 160); fx.fillStyle = "#fde68a"; fx.font = `700 76px ${FONT}`; fx.textAlign = "center"; fx.fillText("☕  CAFE RAHMAN  ☕", 512, 106);
+  fx.fillStyle = "#3b2414"; fx.fillRect(0, 0, 1024, 160); fx.fillStyle = "#fde68a"; fx.font = `700 76px ${FONT}`; fx.textAlign = "center"; fx.fillText("☕  IT-MART  ☕", 512, 106);
   const fm = xPlane(fc, 3.4, 0.53); fm.material.transparent = false; fm.position.set(18, 0.6, 26.11); fm.rotation.y = Math.PI; scene.add(fm);
   // mesin espresso
   const em = new THREE2.Group(); em.position.set(15.6, 1.14, 26.55); scene.add(em);
@@ -11202,7 +11294,7 @@ function buildCafe() {
   // neon nama kafe
   {
     const c = mkCanvas(1024, 200), x = c.getContext("2d");
-    x.font = `700 110px ${FONT}`; x.textAlign = "center"; x.shadowColor = "#fb923c"; x.shadowBlur = 30; x.fillStyle = "#fff7ed"; x.fillText("Cafe Rahman", 512, 140);
+    x.font = `700 110px ${FONT}`; x.textAlign = "center"; x.shadowColor = "#fb923c"; x.shadowBlur = 30; x.fillStyle = "#fff7ed"; x.fillText("IT-Mart", 512, 140);
     const m = xPlane(c, 3.0, 0.59); m.position.set(13.2, 3.6, 29.82); m.rotation.y = Math.PI; scene.add(m);
     const gl = world.glowSprite("#fb923c", 1, 0.35); gl.scale.set(3.8, 1.2, 1); gl.position.set(13.2, 3.6, 29.75); scene.add(gl);
   }
@@ -11233,10 +11325,10 @@ function buildCafe() {
   { const bg = new THREE2.Group(); bg.position.set(9.4, 0, 24.5); scene.add(bg);
     xBox(0.4, 2.6, 4.0, wood, 0, 1.3, 0, 0, bg);
     const Rb = rndGen(88);
-    for (let sh = 0; sh < 4; sh++) for (let i = 0; i < 14; i++) { const h = 0.32 + Rb() * 0.16; const b = new THREE2.Mesh(new THREE2.BoxGeometry(0.28, h, 0.09 + Rb() * 0.05), new THREE2.MeshStandardMaterial({ color: new THREE2.Color().setHSL(Rb(), 0.45, 0.4), roughness: 0.8 })); b.position.set(0.08, 0.35 + sh * 0.6 + h / 2, -1.75 + i * 0.25); bg.add(b); }
+    // isi rak = Rak Buku Digital (src/ext_buku.js)
     world.colliders.push({ a: [9.4, 22.5], b: [9.4, 26.5], r: 0.3 }); }
   // tanaman
-  for (const [px, pz] of [[26.2, 12.8], [26.2, 29.0], [9.9, 21.6]]) {
+  for (const [px, pz] of [[26.2, 29.0], [9.9, 29.2]]) {
     const pot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.3, 0.22, 0.55, 16), new THREE2.MeshStandardMaterial({ color: 0xd6c4a8, roughness: 0.6 })); pot.position.set(px, 0.275, pz); scene.add(pot);
     for (let i = 0; i < 6; i++) { const lf = new THREE2.Mesh(new THREE2.SphereGeometry(0.26, 10, 8), new THREE2.MeshStandardMaterial({ color: 0x2f7d32, roughness: 0.8 })); lf.scale.set(0.6, 1.5, 0.6); lf.position.set(px + Math.cos(i) * 0.15, 0.85 + (i % 2) * 0.22, pz + Math.sin(i) * 0.15); lf.rotation.z = Math.cos(i * 2) * 0.4; scene.add(lf); }
     world.circles.push({ x: px, z: pz, r: 0.35 });
@@ -11259,13 +11351,13 @@ function buildCafe() {
     xAct(m, { type: "x_dosenboard" });
   }
   // papan arah di Ruang Sambutan (di atas pintu cafe) & di sisi cafe
-  { const c = mkCanvas(900, 170), x = c.getContext("2d"); x.fillStyle = "#7c2d12"; rr(x, 0, 0, 900, 170, 30); x.fill(); x.fillStyle = "#fde68a"; x.font = `700 72px ${FONT}`; x.textAlign = "center"; x.fillText("☕ CAFE RAHMAN →", 450, 112);
+  { const c = mkCanvas(900, 170), x = c.getContext("2d"); x.fillStyle = "#7c2d12"; rr(x, 0, 0, 900, 170, 30); x.fill(); x.fillStyle = "#fde68a"; x.font = `700 72px ${FONT}`; x.textAlign = "center"; x.fillText("☕ IT-MART →", 450, 112);
     const m = xPlane(c, 1.9, 0.36); m.position.set(8.82, 3.55, 13.8); m.rotation.y = -Math.PI / 2; scene.add(m);
     const c2 = mkCanvas(900, 170), x2 = c2.getContext("2d"); x2.fillStyle = "#4c1d95"; rr(x2, 0, 0, 900, 170, 30); x2.fill(); x2.fillStyle = "#fff"; x2.font = `700 64px ${FONT}`; x2.textAlign = "center"; x2.fillText("← RUANG SAMBUTAN", 450, 108);
     const m2 = xPlane(c2, 1.9, 0.36); m2.position.set(9.18, 3.55, 13.8); m2.rotation.y = Math.PI / 2; scene.add(m2); }
   // NPC Rahman — barista di balik meja bar
   makeCustomHuman("rahman", {
-    code: "CAFE", name: "Rahman", role: "Barista Cafe Rahman", col: "#b45309", icon: "☕", hint: "☕",
+    code: "CAFE", name: "Rahman", role: "Barista IT-Mart", col: "#b45309", icon: "☕", hint: "☕",
     x: 18, z: 27.9, room: "cafe", tag: "RAHMAN · BARISTA",
     look: { shirt: "#f5f5f4", apron: "#3f2a1d", hair: "#1c1410", glasses: false },
     chips: ["Jenis-jenis kopi", "Rekomendasi kopi", "Kopi Nusantara", "Dosen & keahliannya", "Saran dosen pembimbing", "Lorong rahasia?"],
@@ -11496,7 +11588,7 @@ setTimeout(() => { if (adzanBlockInfo()) adzanShowBlock(); }, 0);
 // =====================================================================
 // src/ext_eportal.js — RUANG E-PORTAL UIKA (selatan Ruang Sambutan) +
 // NPC Vir (akses ke eportal.uika-bogor.ac.id) + slide tiap aplikasi.
-// Juga: NPC Sit, waitress Cafe Rahman, pemandu ruangan-ruangan di denah.
+// Juga: NPC Sit, waitress IT-Mart, pemandu ruangan-ruangan di denah.
 // =====================================================================
 var EPORTAL_URL = "https://eportal.uika-bogor.ac.id";
 var EPORTAL_NOTE = "Sistem masih dalam pengembangan. Untuk informasi lebih lanjut akan tersedia pada update yang lain.";
@@ -11674,15 +11766,15 @@ function buildEportal() {
   });
   buildSit();
 }
-// ---------- Sit: waitress Cafe Rahman, pemandu ruangan di denah ----------
+// ---------- Sit: waitress IT-Mart, pemandu ruangan di denah ----------
 var ROOM_INFO = {
   welcome: ["Ruang Sambutan", "titik awal kamu tiba", "Ada layar besar video sambutan, slideshow “Kenali Lab Peminatan”, galeri Kepala Program Studi, logo TI 3D, denah, headset VR, dan robot Dul yang hafal kurikulum OBE serta visi-misi.", /sambutan|awal|video|kaprodi|kepala program|\bdul\b|kurikulum|obe/],
-  atrium: ["Atrium Pendaftaran", "di utara Ruang Sambutan, pusat semua ruangan", "Meja resepsionis Kak Tias untuk mendaftar peminatan, layar persentase peminatan, papan pengumuman hasil final, kuis “Kasus ini cocok di lab mana?”, papan tulis, papan pesan, dan pita Hall of Fame.", /atrium|resepsionis|\btias\b|daftar|pendaftaran|pengumuman|kuis|papan tulis/],
+  atrium: ["Atrium Pendaftaran", "di utara Ruang Sambutan, pusat semua ruangan", "Sudut Al-Qur'an berkubah di sisi timur laut (baca 114 surah + terjemahan + murattal), meja resepsionis Kak Tias untuk mendaftar peminatan, layar persentase peminatan, papan pengumuman hasil final, kuis “Kasus ini cocok di lab mana?”, papan tulis, papan pesan, dan pita Hall of Fame.", /atrium|resepsionis|\btias\b|daftar|pendaftaran|pengumuman|kuis|papan tulis/],
   keris: ["Lab KERIS", "lewat pintu barat Atrium", "Lab AI, data mining, machine learning & computer vision — ada rak server berkedip, hologram jaringan saraf, video lab, dan robot Keri.", /keris|\bkeri\b|\bai\b|machine learning|kecerdasan/],
   git: ["Lab GIT", "lewat pintu utara-kiri Atrium", "Lab geospasial: lantai peta kota neon, globe hologram, drone terbang, video kegiatan lapangan, dan robot Geo.", /\bgit\b|\bgeo\b|geospa|\bgis\b|drone|satelit/],
   se: ["Lab Software Engineering", "lewat pintu utara-kanan Atrium", "Studio developer: meja laptop, beanbag, rak piala, kanban, slideshow prestasi & produk, dan robot Cody.", /\bse\b|software|\brpl\b|cody/],
   csn: ["Lab CSN", "lewat pintu timur Atrium", "Network Operation Center: layar monitoring, hologram topologi jaringan, rak server, dan robot Neta.", /\bcsn\b|neta|jaringan|network/],
-  cafe: ["Cafe Rahman", "di timur Ruang Sambutan, lewat pintu kayu di dinding timurnya (kafe tempat aku bekerja)", "Meja bar barista Rahman (kopi, info dosen & saran pembimbing), papan menu kopi, papan keahlian dosen TI, sofa, dan rak buku.", /cafe|kafe|kopi|rahman/],
+  cafe: ["IT-Mart", "di timur Ruang Sambutan, lewat pintu kayu di dinding timurnya (tempat aku bekerja)", "Meja bar barista Rahman (kopi, info dosen & saran pembimbing), tangga ke Lantai 2 (Nan memverifikasi Explorer Card), papan menu kopi, Rak Buku Digital berisi PDF yang bisa diunduh (dijaga Ivy), papan keahlian dosen TI, sofa, dan rak buku.", /cafe|kafe|kopi|rahman|it-?mart|\bmart\b|ivy|rak buku|perpus|lantai ?2|\bnan\b/],
   eportal: ["Ruang E-Portal UIKA", "lewat pintu hijau di dinding selatan Ruang Sambutan", "Ruang luas berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, UCL, dan 2 aplikasi mobile) serta robot Vir yang memberi akses ke eportal.uika-bogor.ac.id.", /e-?portal|portal|\bvir\b|\bsso\b|siakad|simpeg|\bucl\b|\bcbt\b|library/]
 };
 function sitAnswer(q) {
@@ -11690,7 +11782,7 @@ function sitAnswer(q) {
   const mapAct = ["🗺 Buka denah", () => toggleMap(true)];
   const roomActs = (ids) => ids.map((k) => [`Antar ke ${ROOM_INFO[k][0]}`, () => teleportSpot(SPOTS.some((s) => s.id === k) ? k : "atrium")]);
   if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|mbak|kak)\b/.test(ql) && ql.split(" ").length <= 3)
-    return { text: `Halo ${nm}, aku Sit, waitress di Cafe Rahman 😊 Selain mengantar pesanan, aku hafal semua ruangan di denah galeri ini. Mau tahu ruangan apa saja, atau mau kuantar ke suatu tempat?`, acts: [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], mapAct] };
+    return { text: `Halo ${nm}, aku Sit, waitress di IT-Mart 😊 Selain mengantar pesanan, aku hafal semua ruangan di denah galeri ini. Mau tahu ruangan apa saja, atau mau kuantar ke suatu tempat?`, acts: [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], mapAct] };
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Selamat menjelajah ya 😊" };
   if (/saya di ?mana|aku di ?mana|posisi (saya|aku)|lokasi (saya|aku)|sekarang di/.test(ql)) {
     const r = roomAt(P.x, P.z), info = ROOM_INFO[r];
@@ -11705,12 +11797,12 @@ function sitAnswer(q) {
   if (/ruang|ruangan|peta|denah|map|tempat|lokasi|apa saja|semua|daftar|ada berapa|kemana|ke mana|tujuan|jalan/.test(ql))
     return { text: `Di denah ada ${Object.keys(ROOM_INFO).length} ruangan:\n` + Object.values(ROOM_INFO).map(([n, loc]) => `• ${n} — ${loc}`).join("\n") + "\nSebut nama ruangannya kalau mau penjelasan, atau klik tombol untuk kuantar.", acts: roomActs(["atrium", "eportal", "welcome"]).concat([mapAct]) };
   if (/pesan|minum|kopi|makan|menu/.test(ql)) return { text: "Untuk pesanan kopi, langsung ke Rahman di meja bar ya — aku cuma bisa mengantar… dan menunjukkan jalan 😄", acts: [["Ngobrol dengan Rahman", () => openNpc("rahman", "chat")]] };
-  if (/toilet|wc|mushola|musholla|masjid|kantin|parkir/.test(ql)) return { text: "Ruangan itu belum ada di denah galeri ini. Saat ini ada 8 ruangan: Ruang Sambutan, Atrium, 4 lab peminatan, Cafe Rahman, dan Ruang E-Portal.", acts: [mapAct] };
-  return { text: "Aku bisa menjelaskan ruangan-ruangan di denah: Ruang Sambutan, Atrium Pendaftaran, Lab KERIS, GIT, SE, CSN, Cafe Rahman, dan Ruang E-Portal UIKA — atau mengantarmu ke sana.", acts: [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], mapAct] };
+  if (/toilet|wc|mushola|musholla|masjid|kantin|parkir/.test(ql)) return { text: "Ruangan itu belum ada di denah galeri ini. Saat ini ada 8 ruangan: Ruang Sambutan, Atrium, 4 lab peminatan, IT-Mart, dan Ruang E-Portal.", acts: [mapAct] };
+  return { text: "Aku bisa menjelaskan ruangan-ruangan di denah: Ruang Sambutan, Atrium Pendaftaran, Lab KERIS, GIT, SE, CSN, IT-Mart, dan Ruang E-Portal UIKA — atau mengantarmu ke sana.", acts: [["Ruangan apa saja?", () => askNpc("Ruangan apa saja yang ada di peta?", "sit")], mapAct] };
 }
 function buildSit() {
   makeCustomHuman("sit", {
-    code: "CAFE", name: "Sit", role: "Waitress Cafe Rahman · pemandu ruangan", col: "#be185d", icon: "🗺", hint: "🗺",
+    code: "CAFE", name: "Sit", role: "Waitress IT-Mart · pemandu ruangan", col: "#be185d", icon: "🗺", hint: "🗺",
     x: 25.3, z: 24.6, room: "cafe", tag: "SIT · WAITRESS",
     look: { shirt: "#fdf2f8", apron: "#7c2d12", hijab: "#be185d", glasses: false, badge: "🗺" },
     chips: ["Ruangan apa saja?", "Di mana Ruang E-Portal?", "Atrium itu apa?", "Saya di mana?", "Buka denah"],
@@ -11720,6 +11812,907 @@ function buildSit() {
     answer: (q) => (/^buka denah$/i.test(String(q).trim()) ? (toggleMap(true), { text: "Ini denahnya 🗺 Klik titik mana saja untuk berpindah." }) : sitAnswer(q))
   });
   NPCS.sit.pitch = 1.25;
+}
+
+
+// =====================================================================
+// src/ext_quran.js — SUDUT AL-QUR'AN (Atrium, sisi timur laut)
+// Paviliun berkubah berhias, rehal & mushaf. Pembaca 114 surah: teks Arab
+// (rasm Utsmani) + terjemahan Kemenag RI, disimpan di server sendiri
+// (assets/quran). Audio murattal dari cdn.islamic.network, diputar HANYA di
+// perangkat pemain yang menekan tombol putar (tidak disiarkan ke pemain lain).
+// =====================================================================
+var QRN = { idx: null, cache: {}, audio: null, play: null, qari: null, size: 1, trans: true, vr: { s: 1, a: 0 } };
+var QARI = [
+  ["ar.alafasy", "Mishary Rashid Alafasy", 128],
+  ["ar.husary", "Mahmoud Khalil Al-Husary", 128],
+  ["ar.sudais", "Abdurrahman As-Sudais", 192]
+];
+var QR_BASMALAH = null; // diambil dari data (Al-Fatihah ayat 1) agar sama persis dengan sumber
+var arNum = (n) => String(n).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]);
+(() => { const st = store.get("quran", {}) || {}; QRN.qari = QARI.some((q) => q[0] === st.qari) ? st.qari : "ar.alafasy"; QRN.size = clamp(+st.size || 1, 0.8, 1.6); QRN.trans = st.trans !== false; QRN.last = st.last || null; })();
+var qrSave = () => store.set("quran", { qari: QRN.qari, size: QRN.size, trans: QRN.trans, last: QRN.last });
+async function qrIndex() {
+  if (QRN.idx) return QRN.idx;
+  const r = await fetch("assets/quran/index.json");
+  if (!r.ok) throw new Error("Data Al-Qur'an tidak ditemukan di server.");
+  return QRN.idx = await r.json();
+}
+async function qrSurah(n) {
+  if (QRN.cache[n]) return QRN.cache[n];
+  const r = await fetch(`assets/quran/${n}.json`);
+  if (!r.ok) throw new Error("Surah tidak dapat dimuat.");
+  return QRN.cache[n] = await r.json();
+}
+var qrFont = null;
+function qrLoadFont() {
+  if (qrFont) return qrFont;
+  try { const ff = new FontFace("KFGQPC Hafs", "url(vendor/fonts/KFGQPC-Uthmanic-HAFS.otf)"); document.fonts.add(ff); qrFont = ff.load().catch(() => null); } catch { qrFont = Promise.resolve(null); }
+  return qrFont;
+}
+// ---------- audio (lokal per pemain) ----------
+function qrAudioUrl(g, ed) { const q = QARI.find((x) => x[0] === (ed || QRN.qari)) || QARI[0]; return `https://cdn.islamic.network/quran/audio/${q[2]}/${q[0]}/${g}.mp3`; }
+function qrStop() {
+  if (QRN.audio) { try { QRN.audio.pause(); } catch { /* abaikan */ } QRN.audio.src = ""; }
+  QRN.play = null;
+  try { Music.duck(false); } catch { /* abaikan */ }
+  document.querySelectorAll(".qr-ay.playing").forEach((e) => e.classList.remove("playing"));
+  const b = $("qrPlayAll"); if (b) b.textContent = "▶ Putar surah";
+}
+function qrPlay(s, a, cont) {
+  const I = QRN.idx && QRN.idx[s - 1];
+  if (!I) return;
+  if (!QRN.audio) { QRN.audio = new Audio(); QRN.audio.preload = "auto"; }
+  const au = QRN.audio;
+  QRN.play = { s, a, cont };
+  let tried = 0;
+  au.onerror = () => { if (tried++ === 0 && QRN.qari !== "ar.alafasy") { au.src = qrAudioUrl(I.g0 + a, "ar.alafasy"); au.play().catch(() => {}); } else { toast("Audio murattal tidak dapat dimuat (periksa koneksi internet)."); qrStop(); } };
+  au.onended = () => {
+    if (!QRN.play || !QRN.play.cont) { qrStop(); return; }
+    if (a < I.ayat) qrPlay(s, a + 1, true);
+    else qrStop();
+  };
+  au.src = qrAudioUrl(I.g0 + a);
+  au.volume = 1;
+  au.play().catch(() => { toast("Ketuk tombol putar sekali lagi untuk memulai audio."); });
+  try { Music.duck(true); } catch { /* abaikan */ }
+  document.querySelectorAll(".qr-ay.playing").forEach((e) => e.classList.remove("playing"));
+  const el = document.querySelector(`.qr-ay[data-a="${a}"]`);
+  if (el && $("qrBody") && $("qrBody").dataset.s === String(s)) { el.classList.add("playing"); el.scrollIntoView({ block: "center", behavior: "smooth" }); }
+  const b = $("qrPlayAll"); if (b) b.textContent = cont ? "⏸ Hentikan" : "▶ Putar surah";
+  QRN.last = { s, a }; qrSave();
+}
+// ---------- pembaca ----------
+async function quranOpen(s, a) {
+  hidePopups();
+  if (renderer.xr.isPresenting) { quranVR(true); return; }
+  if (s == null && QRN.last) { s = QRN.last.s; a = QRN.last.a; }
+  s = clamp(s || 1, 1, 114);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button>
+  <div class="qr-head"><div><h2>📖 Al-Qur'an Al-Karim</h2><p class="kk">Teks Arab rasm Utsmani · terjemahan Kementerian Agama RI · audio hanya terdengar olehmu</p></div></div>
+  <div class="qr-wrap">
+    <aside class="qr-side"><input type="search" id="qrQ" placeholder="Cari surah… (mis. Yasin, 36)" aria-label="Cari surah"><div id="qrList" class="qr-list"><p class="kk">Memuat…</p></div></aside>
+    <section class="qr-main">
+      <div class="qr-tools">
+        <button class="btn" id="qrPlayAll">▶ Putar surah</button>
+        <select id="qrQari" aria-label="Pilih qari">${QARI.map((q) => `<option value="${q[0]}"${q[0] === QRN.qari ? " selected" : ""}>${q[1]}</option>`).join("")}</select>
+        <label class="qr-chk"><input type="checkbox" id="qrTr"${QRN.trans ? " checked" : ""}> Terjemahan</label>
+        <button class="ghost" id="qrMinus" aria-label="Perkecil huruf">A−</button><button class="ghost" id="qrPlus" aria-label="Perbesar huruf">A+</button>
+      </div>
+      <div id="qrBody" class="qr-body"><p class="kk">Memuat surah…</p></div>
+      <div class="qr-nav"><button class="ghost" id="qrPrev">◀ Surah sebelumnya</button><button class="ghost" id="qrNext">Surah berikutnya ▶</button></div>
+      <p class="qr-src">Sumber teks & terjemahan: The Noble Qur'an Encyclopedia (quranenc.com) via quran-json (CC BY-SA 4.0) · Font KFGQPC Uthmanic Script HAFS · Audio: Islamic Network (cdn.islamic.network)</p>
+    </section>
+  </div>`);
+  $("genCard").classList.add("wide", "qr-card");
+  qrLoadFont();
+  let idx;
+  try { idx = await qrIndex(); } catch (e) { $("qrList").textContent = e.message; $("qrBody").textContent = "Buka galeri lewat server agar Al-Qur'an dapat dimuat."; return; }
+  const list = $("qrList");
+  const renderList = () => {
+    const q = $("qrQ").value.trim().toLowerCase().replace(/[^a-z0-9 ]/g, "");
+    list.textContent = "";
+    idx.filter((x) => !q || String(x.n) === q || x.lat.toLowerCase().replace(/[^a-z0-9 ]/g, "").includes(q) || x.arti.toLowerCase().includes(q)).forEach((x) => {
+      const b = document.createElement("button");
+      b.className = "qr-it" + (x.n === QRN.cur ? " on" : "");
+      b.innerHTML = `<span class="qr-no"></span><span class="qr-nm"><b></b><small></small></span><span class="qr-ar"></span>`;
+      b.querySelector(".qr-no").textContent = x.n;
+      b.querySelector("b").textContent = x.lat;
+      b.querySelector("small").textContent = `${x.arti} · ${x.ayat} ayat`;
+      b.querySelector(".qr-ar").textContent = x.ar;
+      b.onclick = () => qrShow(x.n, 1);
+      list.appendChild(b);
+    });
+  };
+  $("qrQ").oninput = renderList;
+  $("qrQari").onchange = () => { QRN.qari = $("qrQari").value; qrSave(); if (QRN.play) qrPlay(QRN.play.s, QRN.play.a, QRN.play.cont); };
+  $("qrTr").onchange = () => { QRN.trans = $("qrTr").checked; qrSave(); $("qrBody").classList.toggle("notr", !QRN.trans); };
+  const sz = (d) => { QRN.size = clamp(QRN.size + d, 0.8, 1.6); qrSave(); $("qrBody").style.setProperty("--qs", QRN.size); };
+  $("qrMinus").onclick = () => sz(-0.1); $("qrPlus").onclick = () => sz(0.1);
+  $("qrPlayAll").onclick = () => { if (QRN.play && QRN.play.cont) qrStop(); else qrPlay(QRN.cur, QRN.play && QRN.play.s === QRN.cur ? QRN.play.a : 1, true); };
+  $("qrPrev").onclick = () => qrShow(Math.max(1, QRN.cur - 1), 1);
+  $("qrNext").onclick = () => qrShow(Math.min(114, QRN.cur + 1), 1);
+  QRN.renderList = renderList;
+  await qrShow(s, a || 1);
+}
+async function qrShow(s, a) {
+  const body = $("qrBody");
+  if (!body) return;
+  if (QRN.play && QRN.play.s !== s) qrStop();
+  QRN.cur = s;
+  body.dataset.s = String(s);
+  body.style.setProperty("--qs", QRN.size);
+  body.classList.toggle("notr", !QRN.trans);
+  body.innerHTML = `<p class="kk">Memuat surah…</p>`;
+  if (QRN.renderList) QRN.renderList();
+  let d;
+  try { d = await qrSurah(s); } catch (e) { body.textContent = e.message; return; }
+  if (QRN.cur !== s) return;
+  const I = QRN.idx[s - 1];
+  body.innerHTML = "";
+  const hd = document.createElement("div"); hd.className = "qr-sh";
+  hd.innerHTML = `<div class="qr-sar"></div><div class="qr-slat"></div><div class="kk"></div>`;
+  hd.querySelector(".qr-sar").textContent = "سورة " + I.ar;
+  hd.querySelector(".qr-slat").textContent = `${I.n}. ${I.lat} — ${I.arti}`;
+  hd.querySelector(".kk").textContent = `${I.tipe} · ${I.ayat} ayat`;
+  body.appendChild(hd);
+  if (!QR_BASMALAH) { try { QR_BASMALAH = (await qrSurah(1)).v[0][0]; } catch { /* abaikan */ } }
+  if (s !== 1 && s !== 9 && QR_BASMALAH) { const bs = document.createElement("div"); bs.className = "qr-bas"; bs.textContent = QR_BASMALAH; body.appendChild(bs); }
+  d.v.forEach(([ar, id], i) => {
+    const n = i + 1, row = document.createElement("div");
+    row.className = "qr-ay"; row.dataset.a = n;
+    row.innerHTML = `<div class="qr-ctl"><span class="qr-badge"></span><button class="qr-pl" aria-label="Putar ayat">▶</button></div><div class="qr-txt"><p class="qr-arab" lang="ar" dir="rtl"></p><p class="qr-id"></p></div>`;
+    row.querySelector(".qr-badge").textContent = `${s}:${n}`;
+    row.querySelector(".qr-arab").textContent = ar + " ۝" + arNum(n);
+    row.querySelector(".qr-id").textContent = `${n}. ${id}`;
+    row.querySelector(".qr-pl").onclick = () => qrPlay(s, n, false);
+    row.addEventListener("dblclick", () => { QRN.last = { s, a: n }; qrSave(); toast(`🔖 Penanda baca: ${I.lat} ayat ${n}`); });
+    body.appendChild(row);
+  });
+  QRN.last = { s, a: a || 1 }; qrSave();
+  if (a > 1) { const el = body.querySelector(`.qr-ay[data-a="${a}"]`); if (el) setTimeout(() => el.scrollIntoView({ block: "center" }), 60); } else body.scrollTop = 0;
+}
+// hentikan audio saat kartu pembaca ditutup
+new MutationObserver(() => { if (!$("genOv").classList.contains("show") || !$("qrBody")) { if (QRN.play) qrStop(); } }).observe($("genOv"), { attributes: true, attributeFilter: ["class"] });
+new MutationObserver(() => { if (QRN.play && !$("qrBody")) qrStop(); }).observe($("genCard"), { childList: true });
+// ---------- mode headset VR: halaman mushaf di panel 3D (klik mushaf = halaman berikut) ----------
+async function quranVR(next) {
+  try { await qrIndex(); await qrLoadFont(); } catch { showVRText("Data Al-Qur'an belum tersedia di server."); return; }
+  const v = QRN.vr;
+  if (QRN.last && !v.init) { v.s = QRN.last.s; v.a = Math.max(0, QRN.last.a - 1); v.init = true; }
+  let d = await qrSurah(v.s);
+  if (next && v.shown) { v.a += 5; if (v.a >= d.v.length) { v.s = v.s % 114 + 1; v.a = 0; d = await qrSurah(v.s); } }
+  v.shown = true;
+  const I = QRN.idx[v.s - 1], c = mkCanvas(1400, 1000), x = c.getContext("2d");
+  x.fillStyle = "#fdf8ec"; rr(x, 0, 0, 1400, 1000, 40); x.fill();
+  x.strokeStyle = "#b8860b"; x.lineWidth = 10; rr(x, 16, 16, 1368, 968, 30); x.stroke();
+  x.fillStyle = "#14532d"; x.font = `700 40px ${FONT}`; x.textAlign = "center";
+  x.fillText(`${I.n}. ${I.lat} (${I.arti}) · ayat ${v.a + 1}–${Math.min(d.v.length, v.a + 5)} dari ${I.ayat}`, 700, 80);
+  let y = 150;
+  x.direction = "rtl";
+  for (let i = v.a; i < Math.min(d.v.length, v.a + 5) && y < 930; i++) {
+    const [ar, id] = d.v[i];
+    x.fillStyle = "#111827"; x.font = `44px "KFGQPC Hafs", serif`; x.textAlign = "right";
+    y = wrapRtl(x, ar + " ۝" + arNum(i + 1), 1330, y + 30, 1260, 74, 4);
+    x.direction = "ltr"; x.textAlign = "left"; x.fillStyle = "#475569"; x.font = `400 24px ${FONT}`;
+    y = wrapLtr(x, `${i + 1}. ${id}`, 70, y + 4, 1260, 32, 3) + 14;
+    x.direction = "rtl";
+  }
+  x.direction = "ltr"; x.textAlign = "center"; x.fillStyle = "#92400e"; x.font = `500 24px ${FONT}`;
+  x.fillText("Klik mushaf lagi untuk halaman berikutnya · audio murattal tersedia di luar mode VR", 700, 965);
+  if (vrPanel && vrPanel.mesh) { scene.remove(vrPanel.mesh); vrPanel.mesh = null; }
+  showVRPanel(c);
+}
+function wrapLtr(x, text, left, y, maxW, lh, maxLines) {
+  const words = text.split(" ");
+  let line = "", n = 0;
+  for (const w of words) {
+    const t2 = line ? line + " " + w : w;
+    if (x.measureText(t2).width > maxW && line) { x.fillText(line, left, y); y += lh; line = w; if (++n >= maxLines - 1) { const rest = words.slice(words.indexOf(w)).join(" "); let r2 = rest; while (r2.length > 3 && x.measureText(r2 + "…").width > maxW) r2 = r2.slice(0, -4); x.fillText(r2 + (r2 !== rest ? "…" : ""), left, y); return y + lh; } }
+    else line = t2;
+  }
+  if (line) { x.fillText(line, left, y); y += lh; }
+  return y;
+}
+function wrapRtl(x, text, right, y, maxW, lh, maxLines) {
+  const words = text.split(" ");
+  let line = "", n = 0;
+  for (const w of words) {
+    const t2 = line ? line + " " + w : w;
+    if (x.measureText(t2).width > maxW && line) { x.fillText(line, right, y); y += lh; line = w; if (++n >= maxLines) { line += " …"; break; } }
+    else line = t2;
+  }
+  if (line) { x.fillText(line, right, y); y += lh; }
+  return y;
+}
+// ---------- paviliun Sudut Al-Qur'an di Atrium ----------
+function buildQuran() {
+  const cx = 7.5, cz = -6, g = new THREE2.Group(); g.position.set(cx, 0, cz); scene.add(g);
+  const gold = new THREE2.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.25, emissive: 0x3a2a00, emissiveIntensity: 0.4 });
+  const marble = new THREE2.MeshStandardMaterial({ color: 0xf8f6f0, roughness: 0.25 });
+  const green = new THREE2.MeshStandardMaterial({ color: 0x0f5132, roughness: 0.5, metalness: 0.2 });
+  // panggung bertingkat (mushaf tidak diletakkan di lantai)
+  const tier = (r, h, y, m) => { const t2 = new THREE2.Mesh(new THREE2.CylinderGeometry(r, r * 1.02, h, 8), m); t2.position.y = y + h / 2; t2.rotation.y = Math.PI / 8; t2.receiveShadow = true; g.add(t2); return t2; };
+  tier(2.3, 0.14, 0, marble); tier(2.05, 0.14, 0.14, marble);
+  const band = new THREE2.Mesh(new THREE2.CylinderGeometry(2.32, 2.32, 0.03, 8, 1, true), gold); band.position.y = 0.13; band.rotation.y = Math.PI / 8; g.add(band);
+  // karpet bermotif bintang (geometri Islami)
+  const cc = mkCanvas(1024, 1024), cx2 = cc.getContext("2d");
+  cx2.fillStyle = "#14532d"; cx2.fillRect(0, 0, 1024, 1024);
+  const star = (x0, y0, r, col) => { cx2.fillStyle = col; cx2.beginPath(); for (let i = 0; i < 16; i++) { const a = i * Math.PI / 8, rr2 = i % 2 ? r * 0.55 : r; cx2.lineTo(x0 + Math.cos(a) * rr2, y0 + Math.sin(a) * rr2); } cx2.closePath(); cx2.fill(); };
+  for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) { star(85 + i * 170, 85 + j * 170, 62, "#b8860b"); star(85 + i * 170, 85 + j * 170, 36, "#166534"); star(85 + i * 170, 85 + j * 170, 16, "#fde68a"); }
+  cx2.strokeStyle = "#d4af37"; cx2.lineWidth = 26; cx2.strokeRect(13, 13, 998, 998); cx2.lineWidth = 6; cx2.strokeRect(46, 46, 932, 932);
+  const carpet = new THREE2.Mesh(new THREE2.CircleGeometry(1.95, 8), new THREE2.MeshStandardMaterial({ map: xTex(cc), roughness: 0.95 }));
+  carpet.rotation.x = -Math.PI / 2; carpet.rotation.z = Math.PI / 8; carpet.position.y = 0.285; g.add(carpet);
+  // 8 tiang emas + kubah hijau berlis emas
+  for (let k = 0; k < 8; k++) {
+    const a = k / 8 * Math.PI * 2 + Math.PI / 8, col = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.08, 3.6, 12), gold);
+    col.position.set(Math.cos(a) * 2.0, 0.28 + 1.8, Math.sin(a) * 2.0); g.add(col);
+    const cap = new THREE2.Mesh(new THREE2.SphereGeometry(0.11, 12, 8), gold); cap.position.set(Math.cos(a) * 2.0, 3.92, Math.sin(a) * 2.0); g.add(cap);
+  }
+  const ring = new THREE2.Mesh(new THREE2.TorusGeometry(2.05, 0.08, 8, 8), gold); ring.rotation.x = Math.PI / 2; ring.rotation.z = Math.PI / 8; ring.position.y = 3.95; g.add(ring);
+  const dome = new THREE2.Mesh(new THREE2.SphereGeometry(2.0, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), green); dome.scale.y = 0.75; dome.position.y = 3.98; g.add(dome);
+  const domeIn = new THREE2.Mesh(new THREE2.SphereGeometry(1.97, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), new THREE2.MeshStandardMaterial({ color: 0xfef3c7, side: THREE2.BackSide, emissive: 0x6b4e00, emissiveIntensity: 0.25 })); domeIn.scale.y = 0.75; domeIn.position.y = 3.98; g.add(domeIn);
+  const fin = new THREE2.Mesh(new THREE2.CylinderGeometry(0.03, 0.06, 0.5, 8), gold); fin.position.y = 5.7; g.add(fin);
+  const orb = new THREE2.Mesh(new THREE2.SphereGeometry(0.12, 16, 12), gold); orb.position.y = 5.98; g.add(orb);
+  const cres = new THREE2.Mesh(new THREE2.TorusGeometry(0.16, 0.035, 8, 24, Math.PI * 1.35), gold); cres.position.y = 6.3; cres.rotation.z = Math.PI * 0.32; g.add(cres);
+  // lentera gantung (fanous)
+  const lan = new THREE2.Group(); lan.position.y = 3.2; g.add(lan);
+  const chain = new THREE2.Mesh(new THREE2.CylinderGeometry(0.008, 0.008, 0.7, 6), gold); chain.position.y = 0.55; lan.add(chain);
+  const glassM = new THREE2.MeshBasicMaterial({ color: 0xffd27a, transparent: true, opacity: 0.85, toneMapped: false });
+  const body = new THREE2.Mesh(new THREE2.CylinderGeometry(0.16, 0.12, 0.42, 8), glassM); lan.add(body);
+  for (const y of [0.24, -0.24]) { const cp = new THREE2.Mesh(new THREE2.ConeGeometry(0.19, 0.16, 8), gold); cp.position.y = y; if (y < 0) cp.rotation.x = Math.PI; lan.add(cp); }
+  const lg = world.glowSprite("#ffd27a", 2.0, 0.7); lan.add(lg);
+  // rehal (penyangga mushaf, bentuk X) + mushaf terbuka
+  const wood = new THREE2.MeshStandardMaterial({ color: 0x5b3416, roughness: 0.45 });
+  const reh = new THREE2.Group(); reh.position.set(0, 0.28, 0.15); reh.rotation.y = 0; g.add(reh);
+  xBox(1.0, 0.7, 0.6, new THREE2.MeshStandardMaterial({ color: 0x3f1f0c, roughness: 0.5 }), 0, 0.35, 0, 0, reh); // meja kecil berukir
+  xBox(1.06, 0.05, 0.66, gold, 0, 0.72, 0, 0, reh);
+  // mushaf terbuka: dua halaman membentuk huruf V landai, dimiringkan ke arah pembaca (selatan)
+  const bookG = new THREE2.Group(); bookG.position.set(0, 0.8, 0.02); bookG.rotation.x = 0.35; reh.add(bookG);
+  const pageC = [mkCanvas(512, 640), mkCanvas(512, 640)];
+  let fat = null; // Al-Fatihah dari data
+  const drawPage = (left) => {
+    const px = pageC[left ? 1 : 0].getContext("2d");
+    px.fillStyle = "#fffaf0"; px.fillRect(0, 0, 512, 640);
+    px.strokeStyle = "#b8860b"; px.lineWidth = 14; px.strokeRect(14, 14, 484, 612); px.lineWidth = 3; px.strokeRect(34, 34, 444, 572);
+    if (!fat) return;
+    px.fillStyle = "#1f2937"; px.textAlign = "right"; px.direction = "rtl"; px.font = `34px "KFGQPC Hafs", serif`;
+    const vs = left ? fat.slice(0, 4) : fat.slice(4, 7);
+    let y = 110;
+    vs.forEach(([ar], k) => { y = wrapRtl(px, ar + " \u06DD" + arNum((left ? 0 : 4) + k + 1), 470, y, 420, 62, 3) + 22; });
+    px.direction = "ltr";
+  };
+  const pages = [];
+  for (const sx of [-1, 1]) {
+    const pg2 = new THREE2.Group(); pg2.position.x = sx * 0.19; pg2.rotation.z = sx * 0.22; bookG.add(pg2);
+    const pnl = new THREE2.Mesh(new THREE2.BoxGeometry(0.4, 0.02, 0.5), wood); pnl.position.y = -0.03; pg2.add(pnl);
+    const cov = new THREE2.Mesh(new THREE2.BoxGeometry(0.38, 0.015, 0.47), new THREE2.MeshStandardMaterial({ color: 0x14532d, roughness: 0.4 })); cov.position.y = -0.01; pg2.add(cov);
+    drawPage(sx < 0);
+    const m = new THREE2.Mesh(new THREE2.PlaneGeometry(0.36, 0.45), new THREE2.MeshStandardMaterial({ map: xTex(pageC[sx < 0 ? 1 : 0]), roughness: 0.8 }));
+    m.rotation.x = -Math.PI / 2; pg2.add(m); pages.push([m, sx < 0]);
+    xAct(m, { type: "x_quran" }); xAct(cov, { type: "x_quran" });
+  }
+  const halo = world.glowSprite("#fff1c1", 1.6, 0.55); halo.position.set(0, 1.25, 0.05); reh.add(halo);
+  // gambar ulang halaman setelah font Mushaf termuat
+  Promise.all([qrLoadFont(), qrSurah(1).catch(() => null)]).then(([, d1]) => { if (d1) fat = d1.v; pages.forEach(([m, left]) => { drawPage(left); m.material.map.needsUpdate = true; }); drawSign(); });
+  // papan judul kaligrafi di atas (menghadap pintu selatan & timur)
+  const sc = mkCanvas(1400, 420), sx2 = sc.getContext("2d");
+  const drawSign = () => {
+    sx2.clearRect(0, 0, 1400, 420);
+    const gg = sx2.createLinearGradient(0, 0, 1400, 0); gg.addColorStop(0, "#0b3d24"); gg.addColorStop(0.5, "#14532d"); gg.addColorStop(1, "#0b3d24");
+    sx2.fillStyle = gg; rr(sx2, 0, 0, 1400, 420, 60); sx2.fill();
+    sx2.strokeStyle = "#d4af37"; sx2.lineWidth = 12; rr(sx2, 14, 14, 1372, 392, 50); sx2.stroke();
+    sx2.fillStyle = "#fde68a"; sx2.textAlign = "center"; sx2.direction = "rtl"; sx2.font = `120px "KFGQPC Hafs", serif`; sx2.fillText("القرآن الكريم", 700, 190);
+    sx2.direction = "ltr"; sx2.fillStyle = "#ffffff"; sx2.font = `700 54px ${FONT}`; sx2.fillText("SUDUT AL-QUR'AN", 700, 300);
+    sx2.fillStyle = "#bbf7d0"; sx2.font = `400 34px ${FONT}`; sx2.fillText("Klik mushaf untuk membaca · terjemahan & murattal", 700, 366);
+    sm.material.map.needsUpdate = true;
+  };
+  const sm = xPlane(sc, 2.6, 0.78); sm.position.set(0, 4.55, 2.06); g.add(sm); xAct(sm, { type: "x_quran" });
+  const sm2 = xPlane(sc, 2.6, 0.78); sm2.position.set(-2.06, 4.55, 0); sm2.rotation.y = -Math.PI / 2; g.add(sm2); xAct(sm2, { type: "x_quran" });
+  sm2.material.map = sm.material.map;
+  drawSign();
+  // cahaya lembut & partikel
+  const motes = [];
+  for (let i = 0; i < 18; i++) { const s2 = world.glowSprite("#fff4cc", 0.12, 0.8); g.add(s2); motes.push([s2, Math.random() * 6, 0.6 + Math.random() * 1.4]); }
+  XT.anim.push(() => {
+    if (curRoom !== "atrium") return;
+    lg.material.opacity = 0.6 + Math.sin(t * 2.3) * 0.08; lan.rotation.y = Math.sin(t * 0.4) * 0.2;
+    for (const [s2, ph, r] of motes) s2.position.set(Math.cos(t * 0.25 + ph) * r, 1.2 + ((t * 0.12 + ph) % 2.4), Math.sin(t * 0.25 + ph) * r);
+  });
+  world.circles.push({ x: cx, z: cz, r: 2.35 });
+  world.panels.quran = { id: "quran", kind: "quran", title: "Sudut Al-Qur'an", data: { title: "Sudut Al-Qur'an", d: "Mushaf Al-Qur'an digital: 114 surah, teks Arab rasm Utsmani, terjemahan Kemenag RI, dan audio murattal yang hanya terdengar oleh pemutarnya." }, mesh: sm, x: cx - 3.4, z: cz + 2.6, yaw: Math.PI * 0.75, room: "atrium" };
+  SPOTS.splice(SPOTS.findIndex((s) => s.id === "tia") + 1, 0, { id: "quran", name: "📖 Sudut Al-Qur'an (Atrium)", x: 4.4, z: -3.2, yaw: -Math.PI * 0.72, room: "atrium" });
+}
+
+// =====================================================================
+// src/ext_buku.js — RAK BUKU DIGITAL IT-Mart + NPC Ivy (penjaga buku)
+// Koleksi PDF dikelola admin di /admin (tab "Rak Buku"). Pengunjung bisa
+// mengunduh; Ivy menjelaskan isi buku dari ringkasan admin + teks PDF yang
+// diekstrak server (GET /api/buku/tanya).
+// =====================================================================
+var BUKU = { list: [], loaded: false, cur: null, shelf: null };
+async function bukuLoad() {
+  try {
+    const r = await fetch("api/buku", { cache: "no-store" });
+    const j = await r.json();
+    if (j && Array.isArray(j.books)) { BUKU.list = j.books; BUKU.loaded = true; }
+  } catch { /* server tidak tersedia */ }
+  drawShelf();
+  if (BUKU.cardOpen && $("bkList")) bukuRenderList();
+}
+var bukuSize = (b) => (b >= 1048576 ? (b / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB");
+var bukuUrl = (b) => `buku/${b.id}.pdf`;
+function drawShelf() {
+  const S2 = BUKU.shelf;
+  if (!S2) return;
+  const c = S2.c, x = c.getContext("2d"), W = c.width, H = c.height;
+  x.fillStyle = "#3b2414"; x.fillRect(0, 0, W, H);
+  const rows = 4, rh = H / rows, list = BUKU.list;
+  const cols = ["#7c2d12", "#1e3a8a", "#14532d", "#6b21a8", "#9f1239", "#0e7490", "#92400e", "#334155"];
+  let k = 0;
+  for (let r = 0; r < rows; r++) {
+    const y0 = r * rh;
+    x.fillStyle = "#24150b"; x.fillRect(0, y0, W, rh);
+    x.fillStyle = "#6b4428"; x.fillRect(0, y0 + rh - 14, W, 14);
+    let xx = 16;
+    while (xx < W - 70) {
+      const b = list[k];
+      if (!b && k >= Math.max(list.length, 1)) break;
+      const w = b ? 62 + Math.min(26, b.judul.length) : 50, h = rh - 40 - (k * 13 % 22);
+      x.fillStyle = b ? cols[k % cols.length] : "rgba(255,255,255,.06)";
+      rr(x, xx, y0 + rh - 14 - h, w, h, 6); x.fill();
+      if (b) {
+        x.fillStyle = "rgba(255,255,255,.18)"; x.fillRect(xx + 6, y0 + rh - 14 - h + 14, w - 12, 4); x.fillRect(xx + 6, y0 + rh - 34, w - 12, 4);
+        x.save(); x.translate(xx + w / 2 + 9, y0 + rh - 22); x.rotate(-Math.PI / 2);
+        x.fillStyle = "#fef3c7"; x.font = `600 24px ${FONT}`;
+        const t2 = b.judul.length > 26 ? b.judul.slice(0, 25) + "…" : b.judul;
+        x.fillText(t2, 6, 0, h - 30); x.restore();
+      }
+      xx += w + 6; k++;
+      if (!b) break;
+    }
+  }
+  if (!list.length) {
+    x.fillStyle = "rgba(0,0,0,.55)"; rr(x, 60, H / 2 - 70, W - 120, 140, 20); x.fill();
+    x.fillStyle = "#fde68a"; x.font = `700 44px ${FONT}`; x.textAlign = "center";
+    x.fillText(BUKU.loaded ? "Rak masih kosong" : "Rak buku belum terhubung ke server", W / 2, H / 2 - 4);
+    x.fillStyle = "#fff"; x.font = `400 28px ${FONT}`; x.fillText("Koleksi PDF ditambahkan admin lewat halaman /admin", W / 2, H / 2 + 42); x.textAlign = "left";
+  }
+  S2.m.material.map.needsUpdate = true;
+  if (S2.lbl) { const lx = S2.lbl.c.getContext("2d"); lx.clearRect(0, 0, 1024, 200); lx.fillStyle = "#14532d"; rr(lx, 0, 0, 1024, 200, 30); lx.fill(); lx.strokeStyle = "#fbbf24"; lx.lineWidth = 8; rr(lx, 6, 6, 1012, 188, 26); lx.stroke(); lx.fillStyle = "#fff"; lx.textAlign = "center"; lx.font = `800 64px ${FONT}`; lx.fillText("📚 RAK BUKU DIGITAL", 512, 92); lx.fillStyle = "#fde68a"; lx.font = `500 38px ${FONT}`; lx.fillText(`${list.length} buku PDF · klik untuk mengunduh`, 512, 158); S2.lbl.m.material.map.needsUpdate = true; }
+}
+function bukuCard(focusId) {
+  hidePopups();
+  BUKU.cardOpen = true;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>📚 Rak Buku Digital IT-Mart</h2><p class="kk">Koleksi PDF yang dikelola admin. Klik <b>Unduh</b> untuk menyimpan, atau tanya Ivy tentang isi bukunya.</p>
+  <div class="rowf"><input type="search" id="bkQ" placeholder="Cari judul, penulis, kategori…" aria-label="Cari buku" style="flex:1"><button class="ghost" id="bkIvy">💬 Tanya Ivy</button></div>
+  <div id="bkList" class="bk-list"></div>`);
+  $("genCard").classList.add("wide");
+  $("bkQ").oninput = bukuRenderList;
+  $("bkIvy").onclick = () => { closeGen(); openNpc("ivy", "chat"); };
+  bukuRenderList(focusId);
+  new MutationObserver((_, ob) => { if (!$("bkList")) { BUKU.cardOpen = false; ob.disconnect(); } }).observe($("genCard"), { childList: true });
+}
+function bukuRenderList(focusId) {
+  const box = $("bkList"); if (!box) return;
+  const q = ($("bkQ") && $("bkQ").value || "").trim().toLowerCase();
+  box.textContent = "";
+  const list = BUKU.list.filter((b) => !q || [b.judul, b.penulis, b.kategori, (b.topik || []).join(" ")].join(" ").toLowerCase().includes(q));
+  if (!list.length) { const p = document.createElement("p"); p.className = "kk"; p.textContent = BUKU.list.length ? "Tidak ada buku yang cocok." : (BUKU.loaded ? "Rak masih kosong. Admin dapat menambah buku PDF melalui halaman admin." : "Server rak buku tidak terhubung."); box.appendChild(p); return; }
+  for (const b of list) {
+    const d = document.createElement("div"); d.className = "bk-it" + (b.id === focusId ? " on" : "");
+    d.innerHTML = `<div class="bk-cv">PDF</div><div class="bk-tx"><b></b><small></small><p></p></div><div class="bk-ac"><a class="btn" download>⬇ Unduh</a><button class="ghost">Tanya Ivy</button></div>`;
+    d.querySelector("b").textContent = b.judul;
+    d.querySelector("small").textContent = [b.penulis, b.kategori, b.hal ? b.hal + " halaman" : "", bukuSize(b.ukuran)].filter(Boolean).join(" · ");
+    d.querySelector("p").textContent = b.ringkasan || (b.topik && b.topik.length ? "Topik: " + b.topik.slice(0, 8).join(", ") : "");
+    const a = d.querySelector("a"); a.href = bukuUrl(b); a.onclick = () => toast(`⬇ Mengunduh “${b.judul}”…`);
+    d.querySelector("button").onclick = () => { BUKU.cur = b; closeGen(); openNpc("ivy", "chat"); askNpc(`Ceritakan isi buku ${b.judul}`, "ivy"); };
+    box.appendChild(d);
+    if (b.id === focusId) setTimeout(() => d.scrollIntoView({ block: "center" }), 50);
+  }
+}
+// ---------- Ivy ----------
+var bkNorm = (s) => String(s || "").toLowerCase().normalize("NFKD").replace(/[^\p{L}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+function bukuFind(q) {
+  const qn = " " + bkNorm(q) + " ";
+  let best = null, bs = 0;
+  for (const b of BUKU.list) {
+    const tn = bkNorm(b.judul);
+    if (tn.length > 3 && qn.includes(" " + tn + " ")) return b;
+    const tw = tn.split(" ").filter((w) => w.length > 2);
+    if (!tw.length) continue;
+    const hit = tw.filter((w) => qn.includes(" " + w + " ")).length / tw.length;
+    if (hit > bs) { bs = hit; best = b; }
+  }
+  return bs >= 0.6 ? best : null;
+}
+function bukuSummary(b) {
+  const meta = [b.penulis && `karya ${b.penulis}`, b.kategori && `kategori ${b.kategori}`, b.hal && `${b.hal} halaman`].filter(Boolean).join(", ");
+  let t = `📘 “${b.judul}”${meta ? " — " + meta : ""}.`;
+  if (b.ringkasan) t += `\n${b.ringkasan}`;
+  if (b.topik && b.topik.length) t += `\nKata kunci yang sering muncul di dalamnya: ${b.topik.slice(0, 8).join(", ")}.`;
+  if (b.status === "proses") t += "\n(Aku masih membaca isi PDF-nya, coba tanya detail sebentar lagi ya.)";
+  else if (b.status === "tanpa-teks") t += "\n(PDF ini sepertinya hasil pindaian gambar, jadi aku tidak bisa membaca teksnya — hanya ringkasan dari admin.)";
+  else if (b.status === "siap") t += "\nTanyakan saja bagian tertentu, mis. “apa itu … di buku ini?”";
+  return t;
+}
+function bukuAsk(q, ids) {
+  return fetch(`api/buku/tanya?q=${encodeURIComponent(q)}${ids ? "&id=" + ids.join(",") : ""}`, { cache: "no-store" }).then((r) => r.json()).then((j) => {
+    const hits = (j && j.hits) || [];
+    if (!hits.length) return { text: ids ? "Aku tidak menemukan bagian yang membahas itu di buku tersebut. Coba kata kunci lain, atau unduh bukunya untuk membaca lengkap." : "Aku tidak menemukan pembahasan itu di koleksi rak. Coba sebut judul bukunya, atau gunakan kata kunci lain." };
+    const lines = hits.slice(0, 2).map((h) => `• “${h.judul}”, hlm. ${h.hal}: ${h.teks}`);
+    const b = BUKU.list.find((x) => x.id === hits[0].id);
+    if (b) BUKU.cur = b;
+    return { text: `Ini yang kutemukan:\n${lines.join("\n")}`, acts: b ? [["⬇ Unduh “" + (b.judul.length > 24 ? b.judul.slice(0, 23) + "…" : b.judul) + "”", () => window.open(bukuUrl(b), "_self")], ["📚 Rak buku", () => bukuCard(b.id)]] : [] };
+  });
+}
+function ivyAnswer(q) {
+  const ql = bkNorm(q), nm = S.name || "IT'ers";
+  const rak = [["📚 Lihat rak buku", () => bukuCard()]];
+  if (!BUKU.loaded) bukuLoad();
+  if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi|kak)\b/.test(ql) && ql.split(" ").length <= 3)
+    return { text: `Halo ${nm}! Aku Ivy, penjaga Rak Buku Digital IT-Mart 📚 ${BUKU.list.length ? `Saat ini ada ${BUKU.list.length} buku PDF yang bisa kamu unduh.` : "Raknya masih kosong — admin akan segera menambah koleksi."} Tanyakan isi buku mana saja, nanti kujelaskan.`, acts: rak };
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Selamat membaca 📖" };
+  if (/buku apa saja|daftar buku|koleksi|ada buku apa|judul apa|list buku|semua buku|rak/.test(ql) && !bukuFind(q)) {
+    if (!BUKU.list.length) return { text: "Rak masih kosong. Koleksi PDF ditambahkan oleh admin melalui halaman admin galeri.", acts: rak };
+    return { text: `Koleksi rak saat ini (${BUKU.list.length} buku):\n` + BUKU.list.slice(0, 25).map((b, i) => `${i + 1}. ${b.judul}${b.penulis ? " — " + b.penulis : ""}`).join("\n") + (BUKU.list.length > 25 ? `\n…dan ${BUKU.list.length - 25} lainnya.` : "") + "\nSebut judulnya untuk penjelasan isi.", acts: rak.concat(BUKU.list.slice(0, 3).map((b) => [b.judul.length > 22 ? b.judul.slice(0, 21) + "…" : b.judul, () => askNpc(`Ceritakan isi buku ${b.judul}`, "ivy")])) };
+  }
+  if (!BUKU.list.length) return { text: "Maaf, rak buku masih kosong jadi belum ada isi buku yang bisa kujelaskan.", acts: rak };
+  const b = bukuFind(q);
+  const dl = (bk) => ["⬇ Unduh PDF", () => window.open(bukuUrl(bk), "_self")];
+  if (b) {
+    BUKU.cur = b;
+    // sisa pertanyaan setelah judul dihapus → pertanyaan isi?
+    const rest = bkNorm(q).replace(bkNorm(b.judul), " ").replace(/\b(buku|isi|ceritakan|jelaskan|tentang|apa|ringkasan|rangkuman|dong|kak|ivy|di|dalam|yang|itu|ini)\b/g, " ").trim();
+    if (rest.split(" ").filter((w) => w.length > 2).length >= 2 && b.status === "siap") return { text: `Sebentar, aku buka “${b.judul}”…`, later: bukuAsk(rest, [b.id]) };
+    return { text: bukuSummary(b), acts: [dl(b), ["📚 Rak buku", () => bukuCard(b.id)]] };
+  }
+  if (/unduh|download|simpan|pdf/.test(ql)) {
+    if (BUKU.cur) return { text: `Silakan unduh “${BUKU.cur.judul}” dengan tombol di bawah.`, acts: [dl(BUKU.cur), ...rak] };
+    return { text: "Buku mana yang mau diunduh? Buka rak dan klik Unduh pada judulnya.", acts: rak };
+  }
+  if (/(buku|isi) (ini|itu|tadi|tersebut)|^ringkas|rangkum/.test(ql) && BUKU.cur) return { text: bukuSummary(BUKU.cur), acts: [dl(BUKU.cur)] };
+  // pertanyaan isi: utamakan buku yang sedang dibahas, lalu seluruh rak
+  const content = ql.split(" ").filter((w) => w.length > 2).length >= 1;
+  if (content) return { text: BUKU.cur ? `Aku cari di “${BUKU.cur.judul}” dulu ya…` : "Aku cari di seluruh koleksi rak…", later: bukuAsk(q, BUKU.cur ? [BUKU.cur.id] : null).then((r) => (BUKU.cur && /tidak menemukan/.test(r.text) ? bukuAsk(q, null) : r)) };
+  return { text: "Sebutkan judul buku atau topik yang ingin kamu ketahui, nanti kujelaskan dari isi bukunya.", acts: rak };
+}
+function buildBuku() {
+  // panel punggung buku di depan lemari (dinding barat IT-Mart)
+  const c = mkCanvas(1600, 1000), m = xPlane(c, 3.8, 2.375);
+  m.material.transparent = false; m.position.set(9.615, 1.42, 24.5); m.rotation.y = Math.PI / 2; scene.add(m);
+  xAct(m, { type: "x_buku" });
+  const lc = mkCanvas(1024, 200), lm = xPlane(lc, 2.6, 0.51);
+  lm.position.set(9.62, 2.95, 24.5); lm.rotation.y = Math.PI / 2; scene.add(lm); xAct(lm, { type: "x_buku" });
+  BUKU.shelf = { c, m, lbl: { c: lc, m: lm } };
+  drawShelf();
+  bukuLoad();
+  makeCustomHuman("ivy", {
+    code: "BUKU", name: "Ivy", role: "Penjaga Rak Buku Digital IT-Mart", col: "#0f766e", icon: "📚", hint: "📚",
+    x: 10.7, z: 21.5, room: "cafe", tag: "IVY · PENJAGA BUKU",
+    look: { shirt: "#ecfeff", apron: "#134e4a", hijab: "#0f766e", glasses: true, badge: "📚" },
+    chips: ["Buku apa saja?", "Ringkasan buku ini", "Unduh PDF", "Lihat rak buku"],
+    roleNote: "isi buku PDF di rak IT-Mart",
+    knowText: "Ivy membaca setiap PDF yang diunggah admin (teks diekstrak di server) dan menjawab dari ringkasan admin serta potongan halaman yang paling cocok dengan pertanyaanmu.",
+    greetActs: () => [["📚 Lihat rak buku", () => bukuCard()], ["Buku apa saja?", () => askNpc("Buku apa saja yang ada?", "ivy")]],
+    answer: (q) => (/^lihat rak buku$/i.test(String(q).trim()) ? (bukuCard(), { text: "Ini rak bukunya 📚" }) : ivyAnswer(q))
+  });
+  NPCS.ivy.pitch = 1.2;
+}
+
+
+// =====================================================================
+// src/ext_card.js — EXPLORER CARD (XC): kartu reward dari Kang Santo untuk
+// penjelajah yang menuntaskan keempat lorong. Berisi nama pemain + nomor
+// sertifikat. Disimpan di progres pemain (Q().card) dan kelak menjadi kunci
+// akses ruangan-ruangan tantangan baru: gunakan XC.has() / XC.require().
+// =====================================================================
+var XC = {
+  tpl: null,
+  // apakah pemain (nama ini, di browser ini) memiliki Explorer Card
+  has: () => !!(Q().card && Q().card.no),
+  // dipakai ruangan tantangan berikutnya: true bila boleh masuk, false + pesan bila belum
+  require(label) {
+    if (XC.has()) return true;
+    toast(`🪪 ${label || "Ruangan ini"} hanya bisa dimasuki pemegang Explorer Card. Taklukkan lorong rahasia lalu temui Kang Santo di Taman Apresiasi.`, 6000);
+    return false;
+  }
+};
+function xcCertNo() {
+  const q = Q();
+  if (!q.cert) { q.cert = (riddleHash(S.name + "|" + (q.t1 || Date.now())) + riddleHash(S.name)).toUpperCase().slice(0, 10); saveQ(); }
+  return q.cert;
+}
+// tulis teks pas di dalam kotak isian template (koordinat piksel template 1067×1422)
+function xcFit(x, text, bx, by, bw, bh, weight, maxPx, color) {
+  let s = maxPx;
+  x.font = `${weight} ${s}px ${FONT}`;
+  while (s > 18 && x.measureText(text).width > bw - 40) { s -= 2; x.font = `${weight} ${s}px ${FONT}`; }
+  x.fillStyle = color; x.textAlign = "center"; x.textBaseline = "middle";
+  x.fillText(text, bx + bw / 2, by + bh / 2 + 2);
+  x.textAlign = "left"; x.textBaseline = "alphabetic";
+}
+async function xcRender() {
+  if (!XC.tpl) XC.tpl = await xLoad("assets/ext/explorer-card.jpg");
+  const im = XC.tpl, q = Q();
+  const W = im ? im.naturalWidth : 1067, H = im ? im.naturalHeight : 1422, k = W / 1067;
+  const c = mkCanvas(W, H), x = c.getContext("2d");
+  if (im) x.drawImage(im, 0, 0, W, H); else { x.fillStyle = "#fff"; x.fillRect(0, 0, W, H); }
+  xcFit(x, (q.card.nama || S.name || "Penjelajah").toUpperCase(), 232 * k, 913 * k, 731 * k, 70 * k, 800, 48 * k, "#1e1b4b");
+  xcFit(x, q.card.no, 229 * k, 1095 * k, 734 * k, 70 * k, 800, 50 * k, "#5b21b6");
+  // tanggal terbit kecil di bawah kotak nomor
+  x.fillStyle = "#334155"; x.font = `600 ${20 * k}px ${FONT}`; x.textAlign = "center";
+  x.fillText(`Diterbitkan ${new Date(q.card.t).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })} · Taman Apresiasi`, W / 2, 1192 * k);
+  x.textAlign = "left";
+  return c;
+}
+async function openExplorerCard() {
+  hidePopups();
+  if (!gardenUnlocked()) { toast("Explorer Card hanya untuk penjelajah yang menuntaskan keempat lorong rahasia."); return; }
+  const q = Q(), fresh = !q.card;
+  if (fresh || q.card.nama !== S.name) { q.card = { no: xcCertNo(), nama: S.name, t: (q.card && q.card.t) || Date.now() }; saveQ(); updHud(); }
+  const c = await xcRender();
+  if (renderer.xr.isPresenting) { showVRPanel(c); return; }
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🪪 Explorer Card</h2>
+  <p>${fresh ? "Selamat! Kang Santo menyerahkan" : "Ini"} <b>Explorer Card</b> milik <b id="xcN"></b>. Kartu ini kelak menjadi kunci akses ke <b>ruangan-ruangan tantangan</b> yang sedang dikembangkan — simpan baik-baik ya.</p>
+  <div class="xc-wrap"><img id="xcImg" alt="Explorer Card"></div>
+  <p class="kk">Nomor kartu = nomor sertifikat: <b id="xcNo"></b> · <span id="xcSrv">menyimpan ke database server…</span></p>
+  <div class="rowf"><button class="btn" id="xcDl">⬇ Unduh kartu (PNG)</button><button class="ghost" id="xcCert">🏅 Sertifikat</button></div>`);
+  $("xcN").textContent = q.card.nama; $("xcNo").textContent = q.card.no;
+  $("xcImg").src = c.toDataURL("image/png");
+  $("xcDl").onclick = () => c.toBlob((b) => b && saveFile(`explorer-card-${(q.card.nama || "it").replace(/[^a-z0-9]/gi, "_")}.png`, b), "image/png");
+  $("xcCert").onclick = () => openCertificate();
+  xcEnsureServer().then((r) => { if ($("xcSrv")) $("xcSrv").textContent = r.ok ? "✅ tersimpan di database server" : "⚠ " + (r.err || "belum tersimpan") + " — Nan akan mencoba lagi saat verifikasi."; });
+  if (fresh) { if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx(); toast("🪪 Explorer Card diterima! Kartu ini akan membuka ruangan tantangan berikutnya.", 6000); }
+}
+
+
+// =====================================================================
+// src/ext_lantai2.js — LANTAI 2 IT-MART + NPC NAN (verifikasi Explorer Card)
+// + TANTANGAN 1: KOGNITIF (penjara bawah tanah, 20 soal / 60 detik)
+// + TANTANGAN 2: COMING SOON.
+// Catatan teknis: mesin galeri hanya punya satu ketinggian lantai, jadi
+// "lantai 2" adalah area tersendiri (XROOMS) yang dicapai lewat tangga di
+// IT-Mart; tidak tampil di denah. Kartu diverifikasi ke database server.
+// =====================================================================
+var XROOMS = {
+  it2: { x0: 50, x1: 68, z0: 12, z1: 30, h: 4.4, name: "IT-Mart Lantai 2", short: "Lantai 2" },
+  dungeon: { x0: 50, x1: 62, z0: 36, z1: 48, h: 4.2, name: "Penjara Bawah Tanah", short: "Penjara" },
+  soon: { x0: 66, x1: 82, z0: 36, z1: 50, h: 5, name: "Tantangan 2", short: "Tantangan 2" }
+};
+function xRoomAt(x, z) {
+  for (const [k, r] of Object.entries(XROOMS)) if (x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1) return k;
+  return null;
+}
+var L2 = { ok: false, okName: "", gate: null, cog: null, busy: false, mini: false, lastTrig: 0 };
+var L2_ARRIVE = { x: 66.8, z: 17.4, yaw: Math.PI };   // lantai 2, di depan tangga
+var L2_BACK = { x: 25.8, z: 17.2, yaw: Math.PI };      // IT-Mart lantai 1, di depan tangga
+var L2_NAN = { x: 61.6, z: 23.0 };
+// ---------- database kartu (server) ----------
+async function xcPost(path, body) {
+  const r = await fetch(path, { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json", "X-Pem": "1" }, body: JSON.stringify(body) });
+  let j = {};
+  try { j = await r.json(); } catch { /* kosong */ }
+  return j;
+}
+// pastikan kartu milik pemain ini sudah tersimpan di database server
+async function xcEnsureServer() {
+  const q = Q();
+  if (!q.card || !q.card.no) return { ok: false, err: "Belum punya kartu." };
+  try {
+    const j = await xcPost("api/kartu/daftar", { no: q.card.no, nama: q.card.nama || S.name, tok: q.card.tok || "" });
+    if (j.ok && j.tok) { q.card.tok = j.tok; q.card.srv = true; saveQ(); return { ok: true }; }
+    return { ok: false, err: j.err || "Server menolak.", cabut: !!j.cabut };
+  } catch { return { ok: false, err: "Server kartu tidak terhubung." }; }
+}
+async function xcVerify() {
+  const q = Q();
+  if (!q.card || !q.card.no) return { ok: false, alasan: "tidak-punya" };
+  if (!q.card.tok) { const r = await xcEnsureServer(); if (!r.ok) return { ok: false, alasan: r.cabut ? "dicabut" : "gagal-daftar", err: r.err }; }
+  try { return await xcPost("api/kartu/verifikasi", { no: q.card.no, tok: q.card.tok }); }
+  catch { return { ok: false, alasan: "offline" }; }
+}
+// ---------- Nan ----------
+function nanOpenGate(nama) {
+  L2.ok = true; L2.okName = S.name;
+  if (L2.gate) L2.gate.setOpen(true);
+  if (typeof SFX !== "undefined") SFX.chime();
+  spawnSparkle();
+  toast(`✅ Explorer Card ${nama ? "atas nama " + nama + " " : ""}terverifikasi. Gerbang tantangan terbuka!`, 5000);
+}
+async function nanVerify() {
+  const q = Q();
+  if (!q.card || !q.card.no) {
+    return { text: `Maaf, ${S.name}, kamu belum memiliki Explorer Card. Turunlah ke lantai 1 dan bicaralah dengan Rahman di meja bar IT-Mart — dia tahu cara mendapatkannya.`, acts: [["⬇ Turun ke lantai 1", () => l2Stairs(false)]] };
+  }
+  const r = await xcVerify();
+  if (r.ok) { nanOpenGate(r.nama); return { text: `🪪 Kartu nomor ${r.no} atas nama ${r.nama} tercatat di database server. Silakan lewati gerbang — Pintu Tantangan 1 (Kognitif) menunggumu di ujung lorong. Semoga berhasil!`, acts: [["📜 Aturan tantangan", () => askNpc("aturan tantangan kognitif", "nan")]] }; }
+  if (r.alasan === "dicabut") return { text: "Kartumu sudah dicabut oleh admin, jadi gerbang tidak bisa kubuka. Hubungi pengelola galeri bila ini keliru." };
+  if (r.alasan === "offline" || r.alasan === "gagal-daftar") return { text: `Aku tidak bisa menghubungi database kartu sekarang${r.err ? " (" + r.err + ")" : ""}. Coba lagi sebentar lagi ya.`, acts: [["🔄 Coba lagi", () => askNpc("verifikasi kartu", "nan")]] };
+  return { text: `Kartu di tanganmu tidak cocok dengan database server (${r.alasan === "bukan-pemilik" ? "kartu ini terdaftar di perangkat lain" : "tidak terdaftar"}). Kartu harus diambil langsung dari Kang Santo. Bicaralah dengan Rahman di lantai 1 untuk petunjuknya.`, acts: [["⬇ Turun ke lantai 1", () => l2Stairs(false)]] };
+}
+function nanAnswer(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
+  const v = [["🪪 Verifikasi kartu", () => askNpc("verifikasi kartu saya", "nan")]];
+  if (!ql || /^(halo|hai|hi|hello|hey|pagi|siang|sore|malam|assalamualaikum|salam|permisi)\b/.test(ql) && ql.split(" ").length <= 3)
+    return { text: `Halo ${nm}. Aku Nan, petugas verifikasi Explorer Card di Lantai 2 IT-Mart. Hanya pemegang kartu yang tercatat di database server yang boleh melewati gerbang menuju ruang-ruang tantangan.${L2.ok ? " Kartumu sudah terverifikasi — silakan lewat." : " Tunjukkan kartumu dulu ya."}`, acts: L2.ok ? [] : v };
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama. Jaga kartumu baik-baik!" };
+  if (/aturan|tantangan|kognitif|penjara|soal|matematika|waktu|cara/.test(ql)) return { text: "Tantangan 1 · Kognitif: kamu akan dilempar ke penjara bawah tanah. Untuk membuka sel, jawab 20 soal matematika pilihan ganda dalam 60 detik. Urutan soal diacak setiap percobaan. Satu jawaban salah atau waktu habis → kamu kembali ke sini. Berhasil → lanjut ke tantangan berikutnya.", acts: L2.ok ? [] : v };
+  if (/rahman|lantai 1|turun|kartu.*(dapat|ambil|cara)|cara.*kartu|belum punya/.test(ql)) return { text: "Explorer Card tidak dijual di IT-Mart 😄 Bicaralah dengan Rahman di meja bar lantai 1 — dia tahu jalan menuju orang yang memberikan kartu itu.", acts: [["⬇ Turun ke lantai 1", () => l2Stairs(false)]] };
+  if (/verif|kartu|card|scan|pindai|cek|buka|gerbang|lewat|masuk|pintu|akses/.test(ql)) return { text: "Memindai Explorer Card-mu… 🔎", later: nanVerify() };
+  return { text: "Tugasku hanya memverifikasi Explorer Card dan menjelaskan aturan tantangan. Mau kartumu kupindai sekarang?", acts: v };
+}
+// ---------- tangga antar lantai ----------
+function l2Stairs(up) {
+  if (L2.busy) return;
+  L2.busy = true;
+  const to = up ? L2_ARRIVE : L2_BACK;
+  if (typeof SFX !== "undefined") SFX.step();
+  xTeleport(to.x, to.z, to.yaw);
+  setTimeout(() => { L2.busy = false; }, 900);
+  setTimeout(() => toast(up ? "⬆ Lantai 2 IT-Mart — Nan memverifikasi Explorer Card di sini." : "⬇ IT-Mart lantai 1", 3500), 300);
+}
+// ---------- bangunan ----------
+function l2Canvas(w, h, fn) { const c = mkCanvas(w, h); fn(c.getContext("2d"), w, h); return c; }
+function l2Stairs3D(x0, x1, zTop, zBot, up, mat) {
+  // anak tangga dari zBot (bawah) ke zTop (atas); up=false → menurun ke arah zTop
+  const n = 12, w = x1 - x0, depth = (zBot - zTop) / n;
+  for (let i = 0; i < n; i++) {
+    const k = up ? i + 1 : n - i, hgt = 0.33 * k;
+    const st = new THREE2.Mesh(new THREE2.BoxGeometry(w, up ? hgt : 0.08, depth), mat);
+    st.position.set((x0 + x1) / 2, up ? hgt / 2 : -0.04 - (n - k) * 0.0, zBot - depth * (i + 0.5));
+    scene.add(st);
+  }
+}
+function buildLantai2() {
+  // ===== tangga naik di IT-Mart lantai 1 (sudut timur laut) =====
+  const woodM = new THREE2.MeshStandardMaterial({ color: 0x6b3f22, roughness: 0.55 });
+  const railM = new THREE2.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.7, roughness: 0.3 });
+  l2Stairs3D(24.9, 26.7, 12.3, 15.9, true, woodM);
+  for (const rx of [24.85, 26.75]) { const rail = xBox(0.05, 0.05, 3.9, railM, rx, 2.6, 14.1); rail.rotation.x = Math.atan2(4.0, 3.6) * 0.98; }
+  xWall(24.85, 12.3, 24.85, 15.9, 1.0, railM, 0.08); // sisi barat tangga (pagar)
+  const sign1 = xPlane(l2Canvas(900, 220, (x, w, h) => { x.fillStyle = "#4c1d95"; rr(x, 0, 0, w, h, 34); x.fill(); x.fillStyle = "#fde68a"; x.font = `800 72px ${FONT}`; x.textAlign = "center"; x.fillText("⬆ LANTAI 2", w / 2, 100); x.fillStyle = "#fff"; x.font = `500 40px ${FONT}`; x.fillText("Verifikasi Explorer Card · Nan", w / 2, 170); }), 1.7, 0.42);
+  sign1.position.set(25.8, 2.6, 16.15); scene.add(sign1); xAct(sign1, { type: "x_l2up" });
+  const glow1 = world.glowSprite("#a78bfa", 1, 0.5); glow1.scale.set(2.4, 1.2, 1); glow1.position.set(25.8, 4.3, 12.6); scene.add(glow1);
+
+  // ===== LANTAI 2 =====
+  const R = XROOMS.it2;
+  const wallC = l2Canvas(512, 512, (x) => { x.fillStyle = "#3b2a4a"; x.fillRect(0, 0, 512, 512); for (let i = 0; i < 8; i++) { x.fillStyle = i % 2 ? "#433152" : "#3e2c4e"; x.fillRect(i * 64, 0, 62, 512); } x.fillStyle = "rgba(167,139,250,.25)"; x.fillRect(0, 470, 512, 6); });
+  // tanpa PointLight tambahan (hemat GPU/VR): permukaan sedikit berpendar
+  const wallM = new THREE2.MeshStandardMaterial({ map: xTex(wallC, [4, 1]), roughness: 0.8, emissive: 0xffffff, emissiveMap: xTex(wallC, [4, 1]), emissiveIntensity: 0.45 });
+  xRoomWalls(R, {}, R.h, wallM);
+  const flC = l2Canvas(512, 512, (x) => { for (let r = 0; r < 16; r++) for (let c = 0; c < 4; c++) { x.fillStyle = `hsl(28,${35 + ((r * 7 + c * 3) % 10)}%,${30 + ((r * 5 + c * 11) % 9)}%)`; x.fillRect(c * 128 + (r % 2) * 64 - 64, r * 32, 126, 30); } });
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(flC, [6, 6]), roughness: 0.7, emissive: 0xffffff, emissiveMap: xTex(flC, [6, 6]), emissiveIntensity: 0.35 }));
+  xCeil(R, new THREE2.MeshStandardMaterial({ color: 0x2a1f36, roughness: 1, emissive: 0x1a1226 }), R.h);
+  for (const lx of [53, 59, 65]) for (const lz of [16, 22]) { const b = new THREE2.Mesh(new THREE2.CylinderGeometry(0.35, 0.35, 0.04, 20), new THREE2.MeshBasicMaterial({ color: 0xf5f3ff, toneMapped: false })); b.position.set(lx, R.h - 0.03, lz); scene.add(b); }
+  // jendela (langit) di dinding utara & barat → kesan berada di atas
+  const winC = l2Canvas(512, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#60a5fa"); g.addColorStop(1, "#dbeafe"); x.fillStyle = g; x.fillRect(0, 0, w, h); x.fillStyle = "rgba(255,255,255,.8)"; for (const [cx, cy, r] of [[90, 80, 34], [130, 70, 44], [170, 86, 30], [360, 120, 30], [400, 110, 40]]) { x.beginPath(); x.arc(cx, cy, r, 0, 7); x.fill(); } x.fillStyle = "#64748b"; for (let i = 0; i < 9; i++) x.fillRect(i * 58 + 8, 190 - (i * 37 % 60), 44, 70 + (i * 37 % 60)); x.strokeStyle = "#1f2937"; x.lineWidth = 12; x.strokeRect(0, 0, w, h); x.beginPath(); x.moveTo(w / 2, 0); x.lineTo(w / 2, h); x.stroke(); });
+  for (const wx of [53.5, 59, 64.5]) { const m = xPlane(winC, 2.6, 1.3); m.material.transparent = false; m.position.set(wx, 2.5, 12.17); scene.add(m); }
+  for (const wz of [16, 21.5]) { const m = xPlane(winC, 2.6, 1.3); m.material.transparent = false; m.position.set(50.17, 2.5, wz); m.rotation.y = Math.PI / 2; scene.add(m); }
+  // tangga turun (sudut timur laut)
+  const stairM = new THREE2.MeshStandardMaterial({ color: 0x5b3416, roughness: 0.6 });
+  for (let i = 0; i < 6; i++) { const st = new THREE2.Mesh(new THREE2.BoxGeometry(1.8, 0.04, 0.5), stairM); st.position.set(66.8, -0.02 - i * 0.001, 15.4 - i * 0.55); scene.add(st); }
+  const hole = new THREE2.Mesh(new THREE2.PlaneGeometry(1.8, 3.2), new THREE2.MeshBasicMaterial({ color: 0x120a06 })); hole.rotation.x = -Math.PI / 2; hole.position.set(66.8, 0.01, 14.0); scene.add(hole);
+  for (let i = 0; i < 6; i++) { const st = new THREE2.Mesh(new THREE2.BoxGeometry(1.7, 0.05, 0.45), stairM); st.position.set(66.8, 0.02, 15.25 - i * 0.5); st.material = new THREE2.MeshStandardMaterial({ color: new THREE2.Color().setHSL(0.07, 0.5, 0.3 - i * 0.04) }); scene.add(st); }
+  xWall(65.85, 12.3, 65.85, 15.6, 1.0, railM, 0.08);
+  const sign2 = xPlane(l2Canvas(900, 200, (x, w, h) => { x.fillStyle = "#7c2d12"; rr(x, 0, 0, w, h, 34); x.fill(); x.fillStyle = "#fde68a"; x.font = `800 70px ${FONT}`; x.textAlign = "center"; x.fillText("⬇ TURUN · IT-MART", w / 2, 128); }), 1.7, 0.38);
+  sign2.position.set(66.8, 2.4, 12.2); scene.add(sign2); xAct(sign2, { type: "x_l2down" });
+  // papan judul
+  const title = xPlane(l2Canvas(1400, 300, (x, w, h) => { const g = x.createLinearGradient(0, 0, w, 0); g.addColorStop(0, "#4c1d95"); g.addColorStop(1, "#1e1b4b"); x.fillStyle = g; rr(x, 0, 0, w, h, 40); x.fill(); x.fillStyle = "#fff"; x.font = `800 96px ${FONT}`; x.textAlign = "center"; x.fillText("🪪 EXPLORER ZONE", w / 2, 130); x.fillStyle = "#c4b5fd"; x.font = `500 46px ${FONT}`; x.fillText("Lantai 2 IT-Mart · hanya pemegang Explorer Card", w / 2, 220); }), 4.6, 0.99);
+  title.position.set(59, 3.55, 12.2); scene.add(title);
+  // sofa tunggu & tanaman
+  xBox(3.4, 0.45, 0.8, new THREE2.MeshStandardMaterial({ color: 0x5b21b6, roughness: 0.8 }), 52.6, 0.225, 20.5, Math.PI / 2);
+  world.colliders.push({ a: [52.6, 18.8], b: [52.6, 22.2], r: 0.45 });
+  for (let i = 0; i < 3; i++) world.seats.push({ x: 52.9, z: 19.4 + i * 1.1, yaw: -Math.PI / 2 });
+  // ===== gerbang kaca (z = 24.6) — hanya terbuka setelah verifikasi Nan =====
+  const glassM = new THREE2.MeshStandardMaterial({ color: 0xa5b4fc, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0.2, depthWrite: false, side: THREE2.DoubleSide });
+  const frameM = new THREE2.MeshStandardMaterial({ color: 0x312e81, metalness: 0.6, roughness: 0.3 });
+  for (const [a, b] of [[50, 57.8], [60.2, 68]]) { const m = new THREE2.Mesh(new THREE2.BoxGeometry(b - a, 3.0, 0.06), glassM); m.position.set((a + b) / 2, 1.5, 24.6); scene.add(m); xBox(b - a, 0.08, 0.12, frameM, (a + b) / 2, 3.0, 24.6); xCol(a, 24.6, b, 24.6, 0.12); }
+  for (const px of [57.75, 60.25]) xBox(0.14, 3.2, 0.2, frameM, px, 1.6, 24.6);
+  const doorM = new THREE2.MeshStandardMaterial({ color: 0x8b5cf6, transparent: true, opacity: 0.55, emissive: 0x4c1d95, emissiveIntensity: 0.6, depthWrite: false });
+  const door = new THREE2.Mesh(new THREE2.BoxGeometry(2.36, 2.9, 0.08), doorM); door.position.set(59, 1.45, 24.6); scene.add(door);
+  const dcol = xCol(57.8, 24.6, 60.2, 24.6, 0.14);
+  const ledC = l2Canvas(512, 128, () => {});
+  const led = xPlane(ledC, 1.6, 0.4); led.position.set(59, 3.35, 24.66); scene.add(led);
+  const drawLed = (open) => { const x = ledC.getContext("2d"); x.clearRect(0, 0, 512, 128); x.fillStyle = open ? "#052e16" : "#2a0a0a"; rr(x, 0, 0, 512, 128, 24); x.fill(); x.fillStyle = open ? "#4ade80" : "#f87171"; x.font = `800 54px ${FONT}`; x.textAlign = "center"; x.fillText(open ? "● TERBUKA" : "● TERKUNCI", 256, 84); led.material.map.needsUpdate = true; };
+  drawLed(false);
+  xAct(door, { type: "x_l2gate" });
+  L2.gate = { open: false, k: 0, setOpen(v) { this.open = v; dcol.off = v; drawLed(v); } };
+  // pemindai kartu
+  const scan = new THREE2.Group(); scan.position.set(56.4, 0, 23.2); scene.add(scan);
+  xBox(0.5, 1.1, 0.5, frameM, 0, 0.55, 0, 0, scan);
+  const scrC = l2Canvas(400, 300, (x, w, h) => { x.fillStyle = "#0b1020"; rr(x, 0, 0, w, h, 24); x.fill(); x.strokeStyle = "#22d3ee"; x.lineWidth = 6; rr(x, 8, 8, w - 16, h - 16, 20); x.stroke(); x.fillStyle = "#22d3ee"; x.font = `800 46px ${FONT}`; x.textAlign = "center"; x.fillText("🪪 SCAN", w / 2, 130); x.fillStyle = "#e0f2fe"; x.font = `500 30px ${FONT}`; x.fillText("Explorer Card", w / 2, 190); x.fillText("klik di sini", w / 2, 240); });
+  const scr = xPlane(scrC, 0.46, 0.35); scr.position.set(0, 1.25, 0.12); scr.rotation.x = -0.5; scan.add(scr);
+  xAct(scr, { type: "x_l2scan" });
+  world.circles.push({ x: 56.4, z: 23.2, r: 0.4 });
+  const sg = world.glowSprite("#22d3ee", 0.9, 0.6); sg.position.set(0, 1.35, 0.1); scan.add(sg);
+  // ===== lorong di balik gerbang: Pintu Tantangan 1 & pintu yang akan datang =====
+  const chDoor = (cx, label, sub, col, act, locked) => {
+    const g = new THREE2.Group(); g.position.set(cx, 0, 29.82); g.rotation.y = Math.PI; scene.add(g);
+    const fr = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(col), metalness: 0.6, roughness: 0.3, emissive: new THREE2.Color(col), emissiveIntensity: 0.35 });
+    xBox(0.2, 3.0, 0.25, fr, -1.1, 1.5, 0, 0, g); xBox(0.2, 3.0, 0.25, fr, 1.1, 1.5, 0, 0, g); xBox(2.4, 0.25, 0.25, fr, 0, 3.05, 0, 0, g);
+    const pnl = new THREE2.Mesh(new THREE2.PlaneGeometry(2.0, 2.9), new THREE2.MeshStandardMaterial({ color: locked ? 0x27272a : 0x111827, emissive: locked ? 0x000000 : new THREE2.Color(col), emissiveIntensity: 0.25 })); pnl.position.set(0, 1.45, 0.02); g.add(pnl);
+    const sc = l2Canvas(800, 300, (x, w, h) => { x.fillStyle = "rgba(10,8,24,.92)"; rr(x, 0, 0, w, h, 30); x.fill(); x.strokeStyle = col; x.lineWidth = 8; rr(x, 6, 6, w - 12, h - 12, 26); x.stroke(); x.fillStyle = "#fff"; x.font = `800 64px ${FONT}`; x.textAlign = "center"; x.fillText(label, w / 2, 125); x.fillStyle = col; x.font = `600 40px ${FONT}`; x.fillText(sub, w / 2, 210); });
+    const sm = xPlane(sc, 2.2, 0.83); sm.position.set(0, 3.75, 0.05); g.add(sm);
+    if (locked) { const lk = xPlane(l2Canvas(256, 256, (x) => { x.font = `170px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("🔒", 128, 140); }), 0.6, 0.6); lk.position.set(0, 1.5, 0.05); g.add(lk); }
+    xAct(pnl, { type: act }); xAct(sm, { type: act });
+    return g;
+  };
+  chDoor(59, "TANTANGAN 1", "KOGNITIF · 20 soal / 60 detik", "#f59e0b", "x_cogdoor", false);
+  chDoor(53.5, "TANTANGAN 2", "SEGERA HADIR", "#64748b", "x_l2soon", true);
+  chDoor(64.5, "TANTANGAN 3", "SEGERA HADIR", "#64748b", "x_l2soon", true);
+  // ===== NPC Nan =====
+  makeCustomRobot("nan", {
+    code: "XC", name: "Nan", role: "Petugas Verifikasi Explorer Card", col: "#7c3aed", body: "#ede9fe", accent: "#7c3aed", eye: "#22d3ee", icon: "🪪",
+    x: L2_NAN.x, z: L2_NAN.z, room: "it2", secret: true,
+    greet: "Halo! Aku Nan, petugas verifikasi Explorer Card.",
+    chips: ["Verifikasi kartu saya", "Aturan tantangan", "Belum punya kartu", "Turun ke lantai 1"],
+    roleNote: "verifikasi Explorer Card ke database server",
+    knowText: "Nan memeriksa Explorer Card pemain ke database server. Kartu yang terdaftar membuka gerbang menuju ruang-ruang tantangan; tanpa kartu, pemain diarahkan ke Rahman di lantai 1.",
+    greetActs: () => (L2.ok ? [["📜 Aturan tantangan", () => askNpc("aturan tantangan", "nan")]] : [["🪪 Verifikasi kartu", () => askNpc("verifikasi kartu saya", "nan")], ["📜 Aturan tantangan", () => askNpc("aturan tantangan", "nan")]]),
+    answer: (q) => (/^turun ke lantai 1$/i.test(String(q).trim()) ? (setTimeout(() => l2Stairs(false), 600), { text: "Silakan, tangganya di sudut timur laut ruangan ini." }) : nanAnswer(q)),
+    pitch: 0.95
+  });
+  buildDungeon();
+  buildSoon();
+  // ===== tick: tangga, gerbang, pintu tantangan, minimap =====
+  XT.anim.push(() => {
+    const xr = xRoomAt(P.x, P.z), now = performance.now();
+    const hide = !!xr;
+    if (hide !== L2.mini) { L2.mini = hide; $("mini").style.visibility = hide ? "hidden" : ""; }
+    if (now - L2.lastTrig > 1200 && !L2.busy) {
+      if (roomAt(P.x, P.z) === "cafe" && P.x > 24.9 && P.x < 26.7 && P.z > 12.4 && P.z < 15.2) { L2.lastTrig = now; l2Stairs(true); }
+      else if (xr === "it2" && P.x > 65.9 && P.x < 67.7 && P.z > 12.4 && P.z < 15.4) { L2.lastTrig = now; l2Stairs(false); }
+      else if (xr === "it2" && L2.ok && Math.hypot(P.x - 59, P.z - 29.2) < 0.9 && !L2.cog) { L2.lastTrig = now; cogConfirm(); }
+    }
+    // penjaga: area balik gerbang hanya untuk yang terverifikasi (nama yang sama)
+    if (xr === "it2" && P.z > 24.75 && !(L2.ok && L2.okName === S.name)) { xTeleport(59, 22.6, 0); toast("Gerbang terkunci — verifikasi Explorer Card ke Nan dulu."); }
+    if (xr === "dungeon" && !L2.cog && !L2.cogWin) { xTeleport(L2_NAN.x - 1.6, L2_NAN.z - 1.4, 0); }
+    // animasi pintu kaca
+    const G = L2.gate; if (G) { G.k += ((G.open ? 1 : 0) - G.k) * 0.08; door.position.x = 59 + G.k * 2.3; }
+  });
+}
+// ---------- TANTANGAN 1: KOGNITIF ----------
+// soal ditulis sebagai ekspresi; jawaban DIHITUNG oleh komputer (bukan diketik manual)
+var COG_BANK = [
+  ["7 × 8", 7 * 8], ["45 + 38", 45 + 38], ["100 − 37", 100 - 37], ["144 ÷ 12", 144 / 12], ["9²", 9 * 9],
+  ["√81", Math.sqrt(81)], ["3 × (4 + 5)", 3 * (4 + 5)], ["25 × 4", 25 * 4], ["15 + 27 − 9", 15 + 27 - 9], ["60 ÷ 5 + 3", 60 / 5 + 3],
+  ["12 × 11", 12 * 11], ["50% dari 80", 0.5 * 80], ["2³ + 2", 2 ** 3 + 2], ["18 ÷ 3 × 2", 18 / 3 * 2], ["(20 − 5) × 2", (20 - 5) * 2],
+  ["7 + 7 × 7", 7 + 7 * 7], ["0,5 + 0,25", 0.5 + 0.25], ["99 + 1 × 0", 99 + 1 * 0], ["13 × 3", 13 * 3], ["1.000 − 250", 1000 - 250]
+];
+var COG_TIME = 60;
+var cogFmt = (v) => (Number.isInteger(v) ? v.toLocaleString("id-ID") : v.toLocaleString("id-ID", { maximumFractionDigits: 2 }));
+function cogShuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function cogOptions(v) {
+  const c = new Set();
+  const cand = Number.isInteger(v) ? [v + 1, v - 1, v + 2, v - 2, v + 10, v - 10, v * 2, v + 5, v - 5, Math.round(v * 1.5)] : [v + 0.25, v - 0.25, v + 0.5, v * 2, v + 1, v - 0.5];
+  for (const x of cogShuffle(cand)) { if (x >= 0 && x !== v && Math.abs(x - v) > 1e-9) c.add(+x.toFixed(2)); if (c.size === 3) break; }
+  return cogShuffle([v, ...c]);
+}
+function cogConfirm() {
+  if (L2.cog) return;
+  if (renderer.xr.isPresenting) { showVRText("Tantangan Kognitif membutuhkan layar biasa. Keluar dari mode VR sebentar, lalu dekati pintu lagi."); return; }
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>⛓ Tantangan 1 · Kognitif</h2>
+  <p>Begitu masuk, kamu akan <b>dilempar ke penjara bawah tanah</b>. Untuk membuka sel, jawab <b>20 soal matematika</b> pilihan ganda dalam <b>60 detik</b>. Urutan soal diacak setiap percobaan.</p>
+  <div class="kbox"><b>ATURAN</b><ol><li>Satu jawaban salah → gagal, kembali ke Nan.</li><li>Waktu habis → gagal, kembali ke Nan.</li><li>20 benar sebelum waktu habis → sel terbuka, lanjut ke tantangan berikutnya.</li></ol><p style="font-size:12px;color:var(--mut)">Tip: tombol angka 1–4 di keyboard memilih jawaban.</p></div>
+  <div class="rowf"><button class="btn" id="cogGo">⛓ Masuk penjara</button><button class="ghost" id="cogNo">Nanti saja</button></div>`);
+  $("cogGo").onclick = () => { closeGen(); cogStart(); };
+  $("cogNo").onclick = () => { closeGen(); xTeleport(59, 27.4, 0); };
+}
+function cogStart() {
+  L2.cogWin = false;
+  L2.cog = { qs: cogShuffle(COG_BANK).map(([t2, v]) => ({ t: t2, v, o: cogOptions(v) })), i: 0, t0: 0, done: false };
+  if (DG.bars) DG.bars.setOpen(false);
+  xTeleport(56, 45.6, 0);
+  if (typeof xShake === "function") setTimeout(() => xShake(0.8, 0.06), 300);
+  setTimeout(() => toast("⛓ Kamu dilempar ke penjara bawah tanah!", 3000), 300);
+  const ov = document.createElement("div");
+  ov.id = "cogOv";
+  ov.innerHTML = `<div class="cog-card"><div class="cog-top"><b>⛓ TANTANGAN KOGNITIF</b><span id="cogN"></span></div><div class="cog-bar"><i id="cogBar"></i></div><div id="cogT" class="cog-time"></div><div id="cogQ" class="cog-q"></div><div id="cogO" class="cog-o"></div><button class="ghost" id="cogQuit">Menyerah</button></div><div id="cogCount" class="cog-count"></div>`;
+  document.body.appendChild(ov);
+  $("cogQuit").onclick = () => cogEnd(false, "Kamu menyerah.");
+  let n = 3;
+  const cd = () => { $("cogCount").textContent = n > 0 ? String(n) : "MULAI!"; if (n-- > 0) setTimeout(cd, 800); else setTimeout(() => { $("cogCount").remove(); L2.cog.t0 = performance.now(); cogShow(); cogTick(); }, 500); };
+  setTimeout(cd, 700);
+  L2.cogKey = (e) => { if (!L2.cog || !L2.cog.t0) return; const k = +e.key; if (k >= 1 && k <= 4) { e.preventDefault(); e.stopPropagation(); const b = document.querySelectorAll("#cogO button")[k - 1]; if (b) b.click(); } };
+  addEventListener("keydown", L2.cogKey, true);
+}
+function cogShow() {
+  const C = L2.cog; if (!C) return;
+  const q = C.qs[C.i];
+  $("cogN").textContent = `Soal ${C.i + 1} / ${C.qs.length}`;
+  $("cogQ").textContent = `${q.t} = ?`;
+  const o = $("cogO"); o.textContent = "";
+  q.o.forEach((v, k) => {
+    const b = document.createElement("button");
+    b.innerHTML = `<kbd>${k + 1}</kbd> `;
+    b.appendChild(document.createTextNode(cogFmt(v)));
+    b.onclick = () => {
+      if (!L2.cog || C.done) return;
+      if (Math.abs(v - q.v) > 1e-9) { b.classList.add("bad"); [...o.children][q.o.indexOf(q.v)]?.classList.add("good"); cogEnd(false, `Jawaban salah: ${q.t} = ${cogFmt(q.v)}.`); return; }
+      if (typeof SFX !== "undefined") SFX.bloop(1.5);
+      C.i++;
+      if (C.i >= C.qs.length) cogEnd(true); else cogShow();
+    };
+    o.appendChild(b);
+  });
+}
+function cogTick() {
+  const C = L2.cog; if (!C || C.done) return;
+  const left = Math.max(0, COG_TIME - (performance.now() - C.t0) / 1000);
+  $("cogT").textContent = `⏱ ${left.toFixed(1)} dtk`;
+  $("cogBar").style.width = (left / COG_TIME * 100) + "%";
+  $("cogT").classList.toggle("warn", left < 10);
+  if (left <= 0) { cogEnd(false, "Waktu habis!"); return; }
+  requestAnimationFrame(cogTick);
+}
+function cogEnd(win, why) {
+  const C = L2.cog; if (!C || C.done) return;
+  C.done = true;
+  removeEventListener("keydown", L2.cogKey, true);
+  const used = C.t0 ? (performance.now() - C.t0) / 1000 : 0;
+  const card = document.querySelector("#cogOv .cog-card");
+  if (card) card.innerHTML = win
+    ? `<div class="cog-res win"><div style="font-size:54px">🔓</div><h2>Sel terbuka!</h2><p>20 soal benar dalam ${used.toFixed(1)} detik. Bersiaplah menuju tantangan berikutnya…</p></div>`
+    : `<div class="cog-res"><div style="font-size:54px">⛓</div><h2>Gagal</h2><p>${pemEsc(why || "")} Kamu dikembalikan ke Nan. Coba lagi kapan saja!</p></div>`;
+  if (win) {
+    const q = Q(); const best = q.chal1 && q.chal1.best ? Math.min(q.chal1.best, used) : used;
+    q.chal1 = { t: Date.now(), best: +best.toFixed(1) }; saveQ();
+    L2.cogWin = true;
+    if (DG.bars) DG.bars.setOpen(true);
+    if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+    setTimeout(() => { $("cogOv")?.remove(); L2.cog = null; }, 2200);
+    setTimeout(() => { xTeleport(74, 47.5, 0); setTimeout(() => { L2.cogWin = false; toast("➡ Tantangan 2 — coming soon!", 4500); }, 600); }, 3600);
+  } else {
+    if (typeof SFX !== "undefined") SFX.whoosh();
+    setTimeout(() => { $("cogOv")?.remove(); L2.cog = null; xTeleport(L2_NAN.x - 1.6, L2_NAN.z - 1.4, 0); setTimeout(() => sayBubble("Jangan menyerah! Coba lagi kalau sudah siap 💪", "npc_nan"), 800); }, 2600);
+  }
+}
+// ---------- penjara bawah tanah ----------
+var DG = { bars: null };
+function buildDungeon() {
+  const R = XROOMS.dungeon;
+  const stC = l2Canvas(512, 512, (x) => { x.fillStyle = "#1c1917"; x.fillRect(0, 0, 512, 512); for (let r = 0; r < 8; r++) for (let c = 0; c < 4; c++) { const ox = (r % 2) * 64; x.fillStyle = `hsl(30,${6 + ((r * 3 + c) % 5)}%,${14 + ((r * 7 + c * 5) % 9)}%)`; x.fillRect(c * 128 + ox - 64 + 3, r * 64 + 3, 122, 58); } });
+  const stM = new THREE2.MeshStandardMaterial({ map: xTex(stC, [4, 2]), roughness: 0.95, emissive: 0xff8a3d, emissiveMap: xTex(stC, [4, 2]), emissiveIntensity: 0.35 });
+  xRoomWalls(R, {}, R.h, stM);
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(stC, [5, 5]), roughness: 1, color: 0x8a8a8a }));
+  xCeil(R, new THREE2.MeshStandardMaterial({ color: 0x0c0a09, roughness: 1 }), R.h);
+  // jeruji sel (z = 42.5, x 52..60) + dinding samping sel
+  const ironM = new THREE2.MeshStandardMaterial({ color: 0x3f3f46, metalness: 0.85, roughness: 0.4 });
+  const bars = new THREE2.Group(); bars.position.set(56, 0, 42.5); scene.add(bars);
+  for (let i = 0; i <= 20; i++) { const b = new THREE2.Mesh(new THREE2.CylinderGeometry(0.035, 0.035, 3.2, 8), ironM); b.position.set(-4 + i * 0.4, 1.6, 0); bars.add(b); }
+  for (const y of [0.4, 2.9]) { const h2 = new THREE2.Mesh(new THREE2.BoxGeometry(8.1, 0.08, 0.08), ironM); h2.position.y = y; bars.add(h2); }
+  const bcol = xCol(52, 42.5, 60, 42.5, 0.12);
+  xWall(52, 42.5, 52, 48, R.h, stM); xWall(60, 42.5, 60, 48, R.h, stM);
+  DG.bars = { setOpen(v) { this.open = v; bcol.off = v; }, open: false, k: 0 };
+  XT.anim.push((dt) => { const D = DG.bars; D.k += ((D.open ? 1 : 0) - D.k) * Math.min(1, dt * 1.5); bars.position.y = D.k * 3.3; });
+  // obor & rantai
+  for (const [tx, tz] of [[51, 39], [61, 39], [51, 45], [61, 45]]) {
+    xBox(0.12, 0.5, 0.12, new THREE2.MeshStandardMaterial({ color: 0x44403c }), tx + (tx < 56 ? 0.15 : -0.15), 2.4, tz);
+    const f = world.glowSprite("#f97316", 1.0, 0.9); f.position.set(tx + (tx < 56 ? 0.15 : -0.15), 2.8, tz); scene.add(f);
+    const ph = tx * 1.7 + tz; XT.anim.push(() => { f.material.opacity = 0.75 + Math.sin(t * 9 + ph) * 0.15; });
+  }
+  const sg = xPlane(l2Canvas(1000, 260, (x, w, h) => { x.fillStyle = "rgba(20,10,5,.92)"; rr(x, 0, 0, w, h, 28); x.fill(); x.strokeStyle = "#f59e0b"; x.lineWidth = 8; rr(x, 6, 6, w - 12, h - 12, 24); x.stroke(); x.fillStyle = "#fde68a"; x.font = `800 74px ${FONT}`; x.textAlign = "center"; x.fillText("PENJARA BAWAH TANAH", w / 2, 116); x.fillStyle = "#fed7aa"; x.font = `500 40px ${FONT}`; x.fillText("Jawab 20 soal dalam 60 detik untuk membuka sel", w / 2, 196); }), 3.6, 0.94);
+  sg.position.set(56, 3.4, 36.2); scene.add(sg);
+}
+// ---------- tantangan 2: coming soon ----------
+function buildSoon() {
+  const R = XROOMS.soon;
+  const wC = l2Canvas(512, 512, (x) => { x.fillStyle = "#0b1020"; x.fillRect(0, 0, 512, 512); x.strokeStyle = "rgba(56,189,248,.18)"; x.lineWidth = 2; for (let i = 0; i <= 512; i += 32) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, 512); x.moveTo(0, i); x.lineTo(512, i); x.stroke(); } });
+  const wM = new THREE2.MeshStandardMaterial({ map: xTex(wC, [4, 1]), roughness: 0.6, emissive: 0xffffff, emissiveMap: xTex(wC, [4, 1]), emissiveIntensity: 0.4 });
+  xRoomWalls(R, {}, R.h, wM);
+  xFloor(R, new THREE2.MeshStandardMaterial({ map: xTex(wC, [6, 6]), roughness: 0.4, metalness: 0.3 }));
+  xCeil(R, new THREE2.MeshStandardMaterial({ color: 0x060914, roughness: 1 }), R.h);
+  const c = l2Canvas(1600, 700, (x, w, h) => { x.fillStyle = "rgba(2,6,23,.95)"; rr(x, 0, 0, w, h, 40); x.fill(); x.strokeStyle = "#38bdf8"; x.lineWidth = 10; rr(x, 8, 8, w - 16, h - 16, 34); x.stroke(); x.textAlign = "center"; x.fillStyle = "#7dd3fc"; x.font = `700 64px ${FONT}`; x.fillText("TANTANGAN 2", w / 2, 150); x.shadowColor = "#38bdf8"; x.shadowBlur = 40; x.fillStyle = "#fff"; x.font = `900 200px ${FONT}`; x.fillText("COMING SOON", w / 2, 380); x.shadowBlur = 0; x.fillStyle = "#bae6fd"; x.font = `500 46px ${FONT}`; x.fillText("Selamat! Kamu lolos Tantangan Kognitif.", w / 2, 500); x.fillText("Tantangan berikutnya sedang dibangun — nantikan update berikutnya.", w / 2, 570); });
+  const m = xPlane(c, 9.6, 4.2); m.position.set(74, 2.6, 36.2); scene.add(m);
+  const gl = world.glowSprite("#38bdf8", 1, 0.3); gl.scale.set(13, 6, 1); gl.position.set(74, 2.6, 36.1); scene.add(gl);
+  // portal kembali ke lantai 2
+  const pg = new THREE2.Group(); pg.position.set(74, 0, 49.4); pg.rotation.y = Math.PI; scene.add(pg);
+  const pr = new THREE2.Mesh(new THREE2.TorusGeometry(1.2, 0.1, 12, 48), new THREE2.MeshBasicMaterial({ color: 0xa78bfa, toneMapped: false })); pr.position.y = 1.5; pg.add(pr);
+  const pd = new THREE2.Mesh(new THREE2.CircleGeometry(1.15, 40), new THREE2.MeshBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.45, toneMapped: false, side: THREE2.DoubleSide })); pd.position.y = 1.5; pg.add(pd);
+  const lb = xPlane(l2Canvas(900, 170, (x, w, h) => { x.fillStyle = "#4c1d95"; rr(x, 0, 0, w, h, 30); x.fill(); x.fillStyle = "#fff"; x.font = `700 62px ${FONT}`; x.textAlign = "center"; x.fillText("⟲ KEMBALI KE LANTAI 2", w / 2, 108); }), 2.2, 0.42); lb.position.y = 3.0; pg.add(lb);
+  xAct(pd, { type: "x_l2back" }); xAct(lb, { type: "x_l2back" });
+  XT.anim.push((dt) => { pr.rotation.z += dt * 0.8; });
 }
 
 </script>

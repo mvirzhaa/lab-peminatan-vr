@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Admin Peminatan · TI UIKA</title>
+<title>Admin Galeri · TI UIKA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/admin/admin.css">
@@ -13,7 +13,7 @@
 <!-- ===== LOGIN ===== -->
 <main id="login" class="login" hidden>
   <form id="loginForm" class="lcard" autocomplete="on">
-    <div class="brand"><span class="logo">TI</span><div><b>Admin Peminatan</b><small>Lab Peminatan VR · Teknik Informatika UIKA</small></div></div>
+    <div class="brand"><span class="logo">TI</span><div><b>Admin Galeri</b><small>Peminatan · Rak Buku · Papan Pesan — Lab Peminatan VR TI UIKA</small></div></div>
     <label>Username<input id="lu" name="username" autocomplete="username" required maxlength="100"></label>
     <label>Password<input id="lp" name="password" type="password" autocomplete="current-password" required maxlength="200"></label>
     <button class="btn" type="submit">Masuk</button>
@@ -42,6 +42,9 @@
     <button role="tab" data-t="daftar" class="on">Pendaftar</button>
     <button role="tab" data-t="final">Hasil Final &amp; Pengumuman</button>
     <button role="tab" data-t="arsip">Arsip &amp; Reset</button>
+    <button role="tab" data-t="buku">Rak Buku IT-Mart</button>
+    <button role="tab" data-t="pesan">Papan Pesan</button>
+    <button role="tab" data-t="kartu">Explorer Card</button>
   </nav>
 
   <!-- Pendaftar -->
@@ -110,6 +113,45 @@
     </div>
   </section>
 </div>
+<!-- (panel Rak Buku & Papan Pesan dipindah ke dalam #app oleh admin.js) -->
+<section class="panel" id="t-buku" hidden>
+  <div class="grid2">
+    <div class="card">
+      <h3>Tambah buku (PDF)</h3>
+      <p class="mut">Hanya file <b>PDF</b> (maks. 40 MB). Buku langsung muncul di Rak Buku Digital IT-Mart dan bisa diunduh pengunjung. Isi teks PDF dibaca server agar NPC <b>Ivy</b> bisa menjelaskan isinya.</p>
+      <label>Judul *<input id="bkJ" maxlength="140" placeholder="mis. Pengantar Machine Learning"></label>
+      <label>Penulis<input id="bkP" maxlength="100"></label>
+      <label>Kategori<input id="bkK" maxlength="60" placeholder="mis. KERIS / Pemrograman / Skripsi"></label>
+      <label>Ringkasan / deskripsi (dipakai Ivy)<textarea id="bkR" maxlength="2000" rows="4" placeholder="Ringkasan singkat isi buku"></textarea></label>
+      <label class="drop" id="bkDrop"><input type="file" id="bkF" accept="application/pdf,.pdf"><span id="bkFn">Klik atau seret file PDF ke sini</span></label>
+      <div class="row"><button class="btn" id="bkUp">⬆ Unggah ke rak</button></div>
+      <div id="bkMsg" class="msg" role="status"></div>
+    </div>
+    <div class="card">
+      <h3>Koleksi rak <span id="bkCount" class="pill"></span></h3>
+      <p class="mut">Status "siap" = teks berhasil dibaca. "tanpa teks" = PDF hasil pindaian (Ivy hanya memakai ringkasan). Klik judul untuk mengubah data.</p>
+      <div class="tw"><table class="tbl"><thead><tr><th>Judul</th><th>Hal.</th><th>Ukuran</th><th>Status</th><th></th></tr></thead><tbody id="bkRows"></tbody></table></div>
+      <p id="bkEmpty" class="mut center">Belum ada buku.</p>
+    </div>
+  </div>
+</section>
+<section class="panel" id="t-pesan" hidden>
+  <div class="card">
+    <h3>Papan Pesan IT'ers <span id="ntCount" class="pill"></span></h3>
+    <p class="mut">Catatan dari pengunjung tersimpan permanen. Hapus catatan yang tidak pantas di sini (pengunjung hanya bisa menghapus catatannya sendiri).</p>
+    <div class="bar"><select id="ntRoom" aria-label="Ruang"></select><input id="ntQ" type="search" placeholder="Cari nama atau isi…"><span class="grow"></span><button class="danger ghost" id="ntDelSel">Hapus yang dicentang</button></div>
+    <div class="tw"><table class="tbl"><thead><tr><th><input type="checkbox" id="ntAll" aria-label="Pilih semua"></th><th>Waktu</th><th>Nama</th><th>Catatan</th><th></th></tr></thead><tbody id="ntRows"></tbody></table></div>
+  </div>
+</section>
+<section class="panel" id="t-kartu" hidden>
+  <div class="card">
+    <h3>Database Explorer Card <span id="xcCount" class="pill"></span></h3>
+    <p class="mut">Kartu yang diberikan Kang Santo tercatat di sini. NPC Nan (Lantai 2 IT-Mart) hanya membuka gerbang tantangan untuk kartu yang terdaftar dan tidak dicabut.</p>
+    <div class="bar"><input id="xcQ" type="search" placeholder="Cari nomor atau nama…"></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>Nomor kartu</th><th>Nama</th><th>Diterbitkan</th><th>Verifikasi</th><th>Status</th><th></th></tr></thead><tbody id="xcRows"></tbody></table></div>
+    <p id="xcEmpty" class="mut center">Belum ada kartu terdaftar.</p>
+  </div>
+</section>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <script src="/admin/admin.js"></script>
 </body>

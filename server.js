@@ -11,6 +11,8 @@ const path = require('path');
 const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
 const { createPeminatan } = require('./peminatan');
+const { createBuku } = require('./buku');
+const { createKartu } = require('./kartu');
 
 // baca file .env otomatis jika ada (memudahkan konfigurasi ADMIN_KEY, PEMINATAN_USER, dll tanpa terhambat cache PM2)
 try {
@@ -73,13 +75,39 @@ const pem = createPeminatan({
   // setiap perubahan data → kirim statistik terbaru ke semua pengunjung (pie chart & papan pengumuman)
   onChange: (stats) => { for (const c of wss.clients) send(c, { type: 'pem', s: stats }); }
 });
+// ---- Rak Buku Digital IT-Mart (PDF) — dikelola dari halaman admin yang sama ----
+const buku = createBuku({ dataDir: DATA_DIR, pem, onChange: () => { for (const c of wss.clients) send(c, { type: 'buku' }); } });
+
+const kartu = createKartu({ dataDir: DATA_DIR, pem });
+
+// ---- Papan Pesan IT'ers: disimpan permanen per ruang (?room=) di DATA_DIR/notes/<ruang>.json ----
+const NOTES_DIR = path.join(DATA_DIR, 'notes');
+fs.mkdirSync(NOTES_DIR, { recursive: true });
+const MAX_NOTES = 5000;
+const notesFile = (room) => path.join(NOTES_DIR, room + '.json');
+function loadNotes(room) {
+  try { const a = JSON.parse(fs.readFileSync(notesFile(room), 'utf8')); if (Array.isArray(a)) return a.filter((n) => n && typeof n.t === 'string' && typeof n.id === 'string'); } catch { /* belum ada */ }
+  return null;
+}
+const notesSaveT = new Map();
+function saveNotes(room, notes) {
+  clearTimeout(notesSaveT.get(room));
+  notesSaveT.set(room, setTimeout(() => { const f = notesFile(room), tmp = f + '.tmp'; fs.writeFile(tmp, JSON.stringify(notes), (e) => { if (!e) fs.rename(tmp, f, () => {}); }); }, 250));
+}
+const notePublic = (n) => ({ id: n.id, n: n.n, t: n.t, time: n.time });
 const ADMIN_PAGE = path.join(PUBLIC, 'admin', 'index.html');
 const ADMIN_CSP = "default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'";
 
-const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json', '.mp4': 'video/mp4', '.webm': 'video/webm' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.json': 'application/json', '.mp4': 'video/mp4', '.webm': 'video/webm', '.otf': 'font/otf', '.woff2': 'font/woff2' };
 const server = http.createServer((req, res) => {
   const secHeaders = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'strict-origin-when-cross-origin', 'X-Frame-Options': 'SAMEORIGIN', 'Permissions-Policy': 'geolocation=(self), microphone=(self), xr-spatial-tracking=(self), autoplay=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com"), fullscreen=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com")' };
   let u, p; try { u = new URL(req.url, 'http://x'); p = decodeURIComponent(u.pathname); } catch { res.writeHead(400, secHeaders); return res.end(); }
+  if (p.startsWith('/buku/') && (req.method === 'GET' || req.method === 'HEAD') && buku.serveFile(req, res, p)) return;
+  if (p.startsWith('/api/admin/notes')) return adminNotes(req, res, p, u);
+  if (p.startsWith('/api/kartu/') || p.startsWith('/api/admin/kartu')) return Promise.resolve(kartu.handle(req, res, p)).then((done) => { if (done === false) pem.handle(req, res, p, u); });
+  if (p.startsWith('/api/buku') || p.startsWith('/api/admin/buku')) {
+    return Promise.resolve(buku.handle(req, res, p, u)).then((done) => { if (done === false) pem.handle(req, res, p, u); });
+  }
   if (p.startsWith('/api/')) return pem.handle(req, res, p, u);
   if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405, secHeaders); return res.end(); }
   if (p === '/admin' || p === '/admin/') {
@@ -120,6 +148,35 @@ const server = http.createServer((req, res) => {
     fs.createReadStream(file).pipe(res);
   });
 });
+
+// admin: kelola Papan Pesan (lihat & hapus) — login sama dengan admin peminatan
+function adminNotes(req, res, p, u) {
+  const J = (code, o) => { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }); res.end(JSON.stringify(o)); };
+  if (!pem.authed(req)) return J(401, { ok: false, err: 'Sesi berakhir. Silakan login kembali.' });
+  const room = (u.searchParams.get('room') || 'lobi').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 32) || 'lobi';
+  const getRoomNotes = () => { const r = rooms.get(room); return r ? r.notes : (loadNotes(room) || []); };
+  if (p === '/api/admin/notes' && req.method === 'GET') {
+    let list = []; try { list = fs.readdirSync(NOTES_DIR).filter((f) => /^[a-z0-9_-]+\.json$/.test(f)).map((f) => f.slice(0, -5)); } catch { /* kosong */ }
+    for (const k of rooms.keys()) if (!list.includes(k)) list.push(k);
+    return J(200, { ok: true, room, rooms: list, notes: getRoomNotes().map(notePublic) });
+  }
+  if (p === '/api/admin/notes/delete' && req.method === 'POST') {
+    if (!pem.sameOrigin(req)) return J(403, { ok: false, err: 'Permintaan ditolak.' });
+    let body = '';
+    req.on('data', (c) => { body += c; if (body.length > 4096) req.destroy(); });
+    req.on('end', () => {
+      let o = {}; try { o = JSON.parse(body || '{}'); } catch { /* abaikan */ }
+      const r = rooms.get(room), notes = r ? r.notes : (loadNotes(room) || []);
+      const ids = Array.isArray(o.ids) ? o.ids.filter((x) => typeof x === 'string').slice(0, 5000) : [o.id];
+      let n = 0;
+      for (const id of ids) { const i = notes.findIndex((x) => x.id === id); if (i >= 0) { notes.splice(i, 1); n++; if (r) for (const c of r.members) send(c, { type: 'note_del', id }); } }
+      saveNotes(room, notes);
+      J(200, { ok: true, deleted: n });
+    });
+    return;
+  }
+  return J(404, { ok: false, err: 'Tidak ditemukan.' });
+}
 
 const wss = new WebSocketServer({ noServer: true, maxPayload: MAX_HOF_MSG });
 const rooms = new Map(); // nama → { members: Set, wb: Array, notes: Array }
@@ -163,23 +220,25 @@ wss.on('connection', (ws, room) => {
   ws.id = crypto.randomBytes(8).toString('hex');
   ws.room = room; ws.presence = {}; ws.alive = true; ws.tokens = RATE; ws.last = Date.now();
   if (!rooms.has(room)) {
+    const saved = loadNotes(room);
     rooms.set(room, {
       members: new Set(),
       wb: [],
-      notes: [
+      notes: saved || [
         { id: 'seed-1', n: 'Kak Tias', t: 'Selamat datang di Lab Peminatan VR! Tulis pendapatmu mengenai lab pilihanmu di papan ini ya.', time: Date.now() },
         { id: 'seed-2', n: "IT'ers", t: 'Aku tertarik dengan KERIS karena fokus di Artificial Intelligence & Machine Learning!', time: Date.now() }
       ]
     });
   }
   const rData = rooms.get(room);
+  if (!rData.savedOnce) { rData.savedOnce = true; if (!fs.existsSync(notesFile(room))) saveNotes(room, rData.notes); }
   const members = rData.members;
   send(ws, {
     type: 'welcome',
     id: ws.id,
     peers: [...members].map(c => ({ id: c.id, data: c.presence })),
     wb: rData.wb,
-    notes: rData.notes,
+    notes: rData.notes.slice(-1000).map(notePublic),
     hof: HOF.map(hofPublic),
     pem: pem.publicStats()
   });
@@ -221,10 +280,17 @@ wss.on('connection', (ws, room) => {
       rData.wb.length = 0;
       for (const c of members) if (c !== ws) send(c, { type: 'wb_clear' });
     } else if (m.type === 'note_add' && isPlainObj(m.note)) {
+      // batas 8 catatan/menit per koneksi
+      const nowN = Date.now(); ws.noteT = (ws.noteT || []).filter((x) => nowN - x < 60000);
+      if (ws.noteT.length >= 8) return; ws.noteT.push(nowN);
       const note = validNote(m.note); if (!note) return;
+      if (rData.notes.some((x) => x.id === note.id)) return;
+      // kunci pemilik (hash) — hanya penulis / moderator / admin yang bisa menghapus
+      if (typeof m.k === 'string' && m.k.length >= 16 && m.k.length <= 64) note.kh = sha(m.k);
       rData.notes.push(note);
-      if (rData.notes.length > 60) rData.notes.shift();
-      for (const c of members) if (c !== ws) send(c, { type: 'note_add', note });
+      if (rData.notes.length > MAX_NOTES) rData.notes.shift();
+      saveNotes(room, rData.notes);
+      for (const c of members) if (c !== ws) send(c, { type: 'note_add', note: notePublic(note) });
     } else if (m.type === 'hof_add') {
       // Hall of Fame: nama + foto. Nama yang sudah terdaftar hanya bisa diperbarui pemilik token-nya.
       const reply = (ok, extra) => send(ws, { type: 'hof_res', ok, ...extra });
@@ -259,13 +325,15 @@ wss.on('connection', (ws, room) => {
       fs.unlink(path.join(PHOTO_DIR, m.id + '.jpg'), () => {});
       for (const c of wss.clients) send(c, { type: 'hof_del', id: m.id });
     } else if (m.type === 'note_del') {
-      if (typeof m.id === 'string' && m.id.length <= 40) {
-        const idx = rData.notes.findIndex(x => x.id === m.id);
-        if (idx !== -1) rData.notes.splice(idx, 1);
-      } else if (typeof m.idx === 'number') {
-        rData.notes.splice(m.idx, 1);
-      }
-      for (const c of members) if (c !== ws) send(c, { type: 'note_del', id: m.id, idx: m.idx });
+      if (typeof m.id !== 'string' || m.id.length > 40) return;
+      const idx = rData.notes.findIndex(x => x.id === m.id);
+      if (idx === -1) return;
+      const nt = rData.notes[idx];
+      const own = typeof m.k === 'string' && m.k.length <= 64 && nt.kh && nt.kh === sha(m.k);
+      if (!own && !ws.admin) return send(ws, { type: 'note_res', ok: false, err: 'Hanya penulis catatan atau moderator yang bisa menghapus.' });
+      rData.notes.splice(idx, 1);
+      saveNotes(room, rData.notes);
+      for (const c of members) if (c !== ws) send(c, { type: 'note_del', id: m.id });
     }
   });
   ws.on('close', () => {

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "exceljs": "^4.4.0",
+    "pdfjs-dist": "^3.11.174",
     "ws": "^8.22.0"
   }
 }

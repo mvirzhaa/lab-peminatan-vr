@@ -134,7 +134,10 @@
   document.querySelectorAll('.tabs button').forEach((b) => b.onclick = () => {
     tab = b.dataset.t;
     document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x === b));
-    for (const t of ['daftar', 'final', 'arsip']) $('t-' + t).hidden = t !== tab;
+    for (const t of ['daftar', 'final', 'arsip', 'buku', 'pesan', 'kartu']) $('t-' + t).hidden = t !== tab;
+    if (tab === 'kartu') loadCards();
+    if (tab === 'buku') loadBooks();
+    if (tab === 'pesan') loadNotes();
   });
   $('q').oninput = renderRows; $('fLab').onchange = renderRows;
   $('openSw').onchange = async () => {
@@ -183,6 +186,112 @@
       $('aConfirm').value = ''; $('aLabel').value = ''; $('aNext').value = '';
       load(true);
     } catch (e) { m.className = 'msg bad'; m.textContent = '❌ ' + e.message; }
+  };
+
+  // ---------- Rak Buku ----------
+  // pindahkan panel tambahan ke dalam #app
+  for (const id of ['t-buku', 't-pesan', 't-kartu']) $('app').appendChild($(id));
+  // ---------- Explorer Card ----------
+  let cards = [];
+  async function loadCards() {
+    try { cards = (await api('/api/admin/kartu')).kartu; } catch (e) { toast(e.message); return; }
+    renderCards();
+  }
+  function renderCards() {
+    const q = $('xcQ').value.trim().toLowerCase(), tb = $('xcRows'); tb.textContent = '';
+    const list = cards.filter((k) => !q || (k.no + ' ' + k.nama).toLowerCase().includes(q)).sort((a, b) => b.t - a.t);
+    $('xcEmpty').hidden = list.length > 0; $('xcCount').textContent = cards.length ? cards.length + ' kartu' : '';
+    for (const k of list) {
+      const tr = el('tr'), td = el('td', 'nw'), b = el('button', k.cabut ? 'ghost' : 'del', k.cabut ? 'Aktifkan' : 'Cabut');
+      b.onclick = async () => { try { await post('/api/admin/kartu/status', { no: k.no, cabut: !k.cabut }); toast(k.cabut ? 'Kartu diaktifkan kembali.' : 'Kartu dicabut — Nan tidak akan membuka gerbang untuknya.'); loadCards(); } catch (e) { toast(e.message); } };
+      td.appendChild(b);
+      tr.append(el('td', 'nw', k.no), el('td', '', k.nama), el('td', 'nw', fmt(k.t)), el('td', 'nw', k.ver ? k.ver + '× · ' + fmt(k.lv) : '-'), el('td', 'nw', k.cabut ? '⛔ dicabut' : '✅ aktif'), td);
+      tb.appendChild(tr);
+    }
+  }
+  $('xcQ').oninput = renderCards;
+  const fmtSize = (b) => (b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB');
+  const ST = { siap: '✅ siap', proses: '⏳ membaca…', 'tanpa-teks': '⚠ tanpa teks', gagal: '❌ gagal dibaca' };
+  let books = [], bkPoll = null;
+  async function loadBooks() {
+    try { books = (await api('/api/admin/buku')).books; } catch (e) { toast(e.message); return; }
+    const tb = $('bkRows'); tb.textContent = '';
+    $('bkEmpty').hidden = books.length > 0; $('bkCount').textContent = books.length ? books.length + ' buku' : '';
+    for (const b of books) {
+      const tr = el('tr'), t1 = el('td'), a = el('a', '', b.judul); a.href = '#'; a.onclick = (e) => { e.preventDefault(); editBook(b); };
+      t1.append(a, el('div', 'mut', [b.penulis, b.kategori].filter(Boolean).join(' · ')));
+      tr.append(t1, el('td', '', b.hal ? String(b.hal) : '-'), el('td', 'nw', fmtSize(b.ukuran)), el('td', 'nw', ST[b.status] || b.status));
+      const td = el('td', 'nw'), dl = el('a', 'ghost', '⬇'); dl.href = '/buku/' + b.id + '.pdf'; dl.title = 'Unduh';
+      const del = el('button', 'del', 'Hapus');
+      del.onclick = async () => {
+        if (del.dataset.arm !== '1') { del.dataset.arm = '1'; del.textContent = 'Yakin?'; setTimeout(() => { del.dataset.arm = ''; del.textContent = 'Hapus'; }, 2500); return; }
+        try { await post('/api/admin/buku/delete', { id: b.id }); toast('Buku dihapus dari rak.'); loadBooks(); } catch (err) { toast(err.message); }
+      };
+      td.append(dl, del); tr.appendChild(td); tb.appendChild(tr);
+    }
+    clearTimeout(bkPoll);
+    if (books.some((b) => b.status === 'proses') && tab === 'buku') bkPoll = setTimeout(loadBooks, 3000);
+  }
+  let editing = null;
+  function editBook(b) {
+    editing = b;
+    $('bkJ').value = b.judul; $('bkP').value = b.penulis || ''; $('bkK').value = b.kategori || ''; $('bkR').value = b.ringkasan || '';
+    $('bkUp').textContent = '💾 Simpan perubahan'; $('bkFn').textContent = 'Mengubah data “' + b.judul + '” (file PDF tidak diganti)';
+    $('bkJ').focus();
+  }
+  const resetForm = () => { editing = null; for (const id of ['bkJ', 'bkP', 'bkK', 'bkR']) $(id).value = ''; $('bkF').value = ''; $('bkUp').textContent = '⬆ Unggah ke rak'; $('bkFn').textContent = 'Klik atau seret file PDF ke sini'; };
+  let pickedFile = null;
+  $('bkF').onchange = () => { pickedFile = $('bkF').files[0] || null; if (pickedFile) $('bkFn').textContent = pickedFile.name + ' · ' + fmtSize(pickedFile.size); };
+  const bd = $('bkDrop');
+  bd.addEventListener('dragover', (e) => { e.preventDefault(); bd.classList.add('over'); });
+  bd.addEventListener('dragleave', () => bd.classList.remove('over'));
+  bd.addEventListener('drop', (e) => { e.preventDefault(); bd.classList.remove('over'); const f = e.dataTransfer.files[0]; if (f) { pickedFile = f; $('bkFn').textContent = f.name + ' · ' + fmtSize(f.size); } });
+  $('bkUp').onclick = async () => {
+    const m = $('bkMsg'); m.className = 'msg';
+    const meta = { judul: $('bkJ').value.trim(), penulis: $('bkP').value.trim(), kategori: $('bkK').value.trim(), ringkasan: $('bkR').value.trim() };
+    if (meta.judul.length < 2) { m.className = 'msg bad'; m.textContent = 'Isi judul buku.'; return; }
+    try {
+      if (editing) { await post('/api/admin/buku/update', { id: editing.id, ...meta }); m.className = 'msg ok'; m.textContent = '✅ Data buku diperbarui.'; resetForm(); loadBooks(); return; }
+      const f = pickedFile;
+      if (!f) { m.className = 'msg bad'; m.textContent = 'Pilih file PDF.'; return; }
+      if (!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') { m.className = 'msg bad'; m.textContent = 'Hanya file PDF yang diterima.'; return; }
+      if (f.size > 40 * 1024 * 1024) { m.className = 'msg bad'; m.textContent = 'File terlalu besar (maks. 40 MB).'; return; }
+      m.textContent = 'Mengunggah ' + f.name + '…';
+      await api('/api/admin/buku/upload', { method: 'POST', body: f, headers: { 'Content-Type': 'application/pdf', 'X-Filename': encodeURIComponent(f.name), 'X-Meta': encodeURIComponent(JSON.stringify(meta)) } });
+      m.className = 'msg ok'; m.textContent = '✅ Buku masuk rak. Server sedang membaca isi PDF untuk Ivy…';
+      pickedFile = null; resetForm(); loadBooks();
+    } catch (e) { m.className = 'msg bad'; m.textContent = '❌ ' + e.message; }
+  };
+  // ---------- Papan Pesan ----------
+  let notes = [], ntRoom = 'lobi';
+  async function loadNotes() {
+    let r; try { r = await api('/api/admin/notes?room=' + encodeURIComponent(ntRoom)); } catch (e) { toast(e.message); return; }
+    notes = r.notes;
+    const sel = $('ntRoom'); sel.textContent = '';
+    for (const k of r.rooms.length ? r.rooms : ['lobi']) { const o = el('option', '', 'Ruang: ' + k); o.value = k; if (k === r.room) o.selected = true; sel.appendChild(o); }
+    renderNotes();
+  }
+  function renderNotes() {
+    const q = $('ntQ').value.trim().toLowerCase(), tb = $('ntRows'); tb.textContent = '';
+    const list = notes.filter((n) => !q || (n.n + ' ' + n.t).toLowerCase().includes(q)).slice().reverse();
+    $('ntCount').textContent = notes.length + ' catatan';
+    for (const n of list) {
+      const tr = el('tr'), c = el('td'), cb = el('input'); cb.type = 'checkbox'; cb.value = n.id; c.appendChild(cb);
+      const td = el('td'), b = el('button', 'del', 'Hapus');
+      b.onclick = async () => { try { await post('/api/admin/notes/delete?room=' + encodeURIComponent(ntRoom), { id: n.id }); toast('Catatan dihapus.'); loadNotes(); } catch (e) { toast(e.message); } };
+      td.appendChild(b);
+      tr.append(c, el('td', 'nw', fmt(n.time)), el('td', '', n.n || '-'), el('td', 'al', n.t), td); tb.appendChild(tr);
+    }
+  }
+  $('ntQ').oninput = renderNotes;
+  $('ntRoom').onchange = () => { ntRoom = $('ntRoom').value; loadNotes(); };
+  $('ntAll').onchange = () => document.querySelectorAll('#ntRows input[type=checkbox]').forEach((x) => { x.checked = $('ntAll').checked; });
+  $('ntDelSel').onclick = async () => {
+    const ids = [...document.querySelectorAll('#ntRows input:checked')].map((x) => x.value);
+    if (!ids.length) { toast('Centang catatan yang akan dihapus.'); return; }
+    const b = $('ntDelSel');
+    if (b.dataset.arm !== '1') { b.dataset.arm = '1'; b.textContent = `Yakin hapus ${ids.length}?`; setTimeout(() => { b.dataset.arm = ''; b.textContent = 'Hapus yang dicentang'; }, 3000); return; }
+    try { const r = await post('/api/admin/notes/delete?room=' + encodeURIComponent(ntRoom), { ids }); toast(r.deleted + ' catatan dihapus.'); $('ntAll').checked = false; loadNotes(); } catch (e) { toast(e.message); }
   };
 
   // mulai: coba sesi yang ada
