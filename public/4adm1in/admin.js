@@ -13,7 +13,12 @@
     let j = {};
     try { j = await r.json(); } catch { /* kosong */ }
     if (r.status === 401 && path !== '/api/admin/login') { showLogin(); throw new Error(j.err || 'Sesi berakhir.'); }
-    if (!r.ok || j.ok === false) { const e = new Error(j.err || `Gagal (${r.status})`); e.data = j; throw e; }
+    if (!r.ok || j.ok === false) {
+      let msg = j.err;
+      if (!msg && r.status === 413) msg = 'Ukuran file melebihi batas upload web server (Error 413: Payload Too Large). Atur "client_max_body_size 50M;" di Nginx.';
+      else if (!msg) msg = `Gagal (${r.status})`;
+      const e = new Error(msg); e.data = j; throw e;
+    }
     return j;
   }
   const post = (path, body) => api(path, { method: 'POST', body: JSON.stringify(body || {}) });
