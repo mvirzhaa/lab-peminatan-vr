@@ -194,3 +194,19 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 - **Papan rekor** waktu misi drone tercepat (jalur main) di hanggar, data dari `GET /api/kartu/rekor?id=iot`.
 - **Main ulang atau lewati** bagi yang sudah lulus. **Kode cepat**: `butnavudivoxyziz4` ke **Rahman** (hanya untuk pemegang Lencana Dasar & Umum).
 - Server: tantangan `iot` (+ bintang) & lencana `iot` (syarat `iot` + lencana `umum`).
+
+## Pembaruan v13 — Tahap 5 · Kawah Api (Lencana Keterampilan Jari)
+- **Akses:** Sugiarti (Lab GIT) memeriksa Explorer Card, Lencana Dasar, Umum, dan IoT & Drone di server, **dan** pemain harus sedang memakai skin **Ronin Neon**. Setelah itu lubang tangga di lantai sebelahnya terbuka.
+- **Kawah Api** (bawah tanah, 3 nyawa untuk 4 babak, dimainkan sendirian):
+  1. **Jalur Lava**: celah yang harus diloncati, pijakan retak yang runtuh, pijakan bergerak, semburan lava, dan satu checkpoint.
+  2. **Labirin Bola Api**: kumpulkan 3 rune. Ada bola patroli, bola pemburu yang mengejar bila dekat, dan bola pemantul yang bisa diloncati.
+  3. **Labirin Bayangan**: gelap, hanya terlihat saat petir. Ada lantai jebakan, dan jatuh berarti −1 nyawa lalu mulai dari awal babak.
+  4. **Kejaran Bola Batu**: labirin bercabang. Bola batu mengikuti jejak pemain dan melambat tiap kali membentur belokan.
+- **Lencana:** Kang Safar & Teh Berlin di Aula Juara menyematkan **Lencana Keterampilan Jari**. Papan rekor Kawah Api memakai `GET /api/kartu/rekor?id=jari`.
+- **Kode cepat:** `butnavudivoxyziz5`, diketik ke Haris (berlaku bagi pemegang 3 lencana sebelumnya).
+- **Main ulang:** pemenang bisa memilih main ulang atau langsung ke Aula Juara.
+- **Fitur baru di semua tempat:** loncat dengan **Spasi** (laptop) atau tombol **⤒ LONCAT** (HP).
+- **Suara (Web Audio, tanpa berkas):** musik mencekam di Kawah Api plus guntur di Labirin Bayangan, detak jantung di tantangan Lantai 2 dan Gua Pustaka, dan desau angin saat menerbangkan drone.
+- **HP:** panel info tantangan (Gua Pustaka, Hanggar, Kawah) pindah ke atas layar dan bisa diciutkan dengan mengetuk judulnya, sehingga joystick dan tombol tidak tertutup.
+- **Server:** `kartu.js` mengenal tantangan `jari` dan lencana `jari` (prasyarat `iot`). Batas waktu rekor dinaikkan ke 60 menit. Admin menampilkan "Kawah ✓" dan "👆 Jari".
+- Setelah deploy: `pm2 restart` (atau restart proses Node) agar `kartu.js` baru aktif.

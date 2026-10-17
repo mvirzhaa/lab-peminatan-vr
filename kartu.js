@@ -25,9 +25,9 @@ function createKartu({ dataDir, pem }) {
   // tahap 2: empat ruang tantangan di Lantai 2 IT-Mart → lencana Pengetahuan Dasar (Teh Fety)
   const TAHAP2 = ['kognitif', 'inggris', 'sahabat', 'coding'];
   // tahap 3: Gua Pustaka di balik rak buku Silvia → lencana Pengetahuan Umum (Teh Puspa)
-  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot']);
+  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari']);
   // syarat tiap lencana: tantangan yang harus tercatat + lencana sebelumnya
-  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' }, iot: { ch: ['iot'], pre: 'umum' } }; // iot (IoT & Drone), jari, coding, islam, tim (kerjasama tim) menyusul
+  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' }, iot: { ch: ['iot'], pre: 'umum' }, jari: { ch: ['jari'], pre: 'iot' } }; // iot (IoT & Drone), jari (Keterampilan Jari · Kawah Api), coding, islam, tim (kerjasama tim) menyusul
   const SEC = { 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' };
   const json = (res, code, o) => { res.writeHead(code, { ...SEC, 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(o)); };
   const readJson = (req) => new Promise((resolve) => { let b = ''; req.on('data', (c) => { b += c; if (b.length > 4096) req.destroy(); }); req.on('end', () => { try { const o = JSON.parse(b || '{}'); resolve(o && typeof o === 'object' ? o : {}); } catch { resolve({}); } }); req.on('error', () => resolve({})); });
@@ -95,7 +95,7 @@ function createKartu({ dataDir, pem }) {
         if (!TANTANGAN.includes(id)) return json(res, 400, { ok: false, err: 'Tantangan tidak dikenal.' });
         k.ch = k.ch || {};
         const dt = Number(o.dt), prev = k.ch[id];
-        k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= 600 ? Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? ((prev && prev.jalur === 'main') ? 'main' : 'kode') : 'main', bintang: Math.max((prev && prev.bintang) || 0, Math.min(3, Math.max(0, Math.floor(Number(o.bintang) || 0)))) };
+        k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= 3600 ? Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? ((prev && prev.jalur === 'main') ? 'main' : 'kode') : 'main', bintang: Math.max((prev && prev.bintang) || 0, Math.min(3, Math.max(0, Math.floor(Number(o.bintang) || 0)))) };
       } else {
         if (!LENCANA[id]) return json(res, 400, { ok: false, err: 'Lencana tidak dikenal.' });
         // syarat lencana: tantangan tercatat (+ lencana sebelumnya)
