@@ -31,10 +31,11 @@ try {
   }
 } catch {}
 
-
 const PORT = +process.env.PORT || 8080;
 const MAX_CLIENTS = +process.env.MAX_CLIENTS || 150;     // total koneksi
 const MAX_PER_ROOM = +process.env.MAX_PER_ROOM || 60;    // per ruang (?room=kelas-a)
+const MAX_ROOMS = +process.env.MAX_ROOMS || 100;         // jumlah nama ruang berbeda (aktif + yang punya berkas catatan); cegah ?room= acak menghabiskan disk/memori
+const ROOM_IDLE_MS = 10 * 60e3;                          // ruang kosong dibuang dari memori setelah 10 menit
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean); // kosong = semua
 const MAX_MSG = 16 * 1024;           // byte per pesan (16 KB)
 const RATE = 60;                     // pesan per detik per klien
@@ -89,8 +90,11 @@ function loadNotes(room) {
   try { const a = JSON.parse(fs.readFileSync(notesFile(room), 'utf8')); if (Array.isArray(a)) return a.filter((n) => n && typeof n.t === 'string' && typeof n.id === 'string'); } catch { /* belum ada */ }
   return null;
 }
+const roomNames = new Set(); // nama ruang yang punya berkas catatan di disk
+try { for (const f of fs.readdirSync(NOTES_DIR)) { const m = /^([a-z0-9_-]{1,32})\.json$/.exec(f); if (m) roomNames.add(m[1]); } } catch { /* kosong */ }
 const notesSaveT = new Map();
 function saveNotes(room, notes) {
+  roomNames.add(room);
   clearTimeout(notesSaveT.get(room));
   notesSaveT.set(room, setTimeout(() => { const f = notesFile(room), tmp = f + '.tmp'; fs.writeFile(tmp, JSON.stringify(notes), (e) => { if (!e) fs.rename(tmp, f, () => {}); }); }, 250));
 }
@@ -178,16 +182,29 @@ function adminNotes(req, res, p, u) {
   return J(404, { ok: false, err: 'Tidak ditemukan.' });
 }
 
+// Origin WebSocket: bila ALLOWED_ORIGINS diisi, harus cocok persis; bila kosong, hanya situs yang sama
+// (host Origin == host permintaan) atau klien non-browser tanpa header Origin. Situs lain tak bisa membuka /ws.
+function originOK(req) {
+  const o = req.headers.origin;
+  if (ALLOWED_ORIGINS.length) return ALLOWED_ORIGINS.includes(o);
+  if (!o) return true;
+  try { return new URL(o).host.toLowerCase() === String(req.headers.host || '').toLowerCase(); } catch { return false; }
+}
 const wss = new WebSocketServer({ noServer: true, maxPayload: MAX_HOF_MSG });
 const rooms = new Map(); // nama → { members: Set, wb: Array, notes: Array }
 
 server.on('upgrade', (req, socket, head) => {
   let url; try { url = new URL(req.url, 'http://x'); } catch { return socket.destroy(); }
   if (url.pathname !== '/ws') return socket.destroy();
-  if (ALLOWED_ORIGINS.length && !ALLOWED_ORIGINS.includes(req.headers.origin)) return socket.destroy();
+  if (!originOK(req)) return socket.destroy();
   if (wss.clients.size >= MAX_CLIENTS) return socket.destroy();
   const room = (url.searchParams.get('room') || 'lobi').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 32) || 'lobi';
   if ((rooms.get(room)?.members?.size || 0) >= MAX_PER_ROOM) return socket.destroy();
+  // nama ruang baru ditolak bila jumlah ruang berbeda sudah mencapai batas
+  if (!rooms.has(room) && !roomNames.has(room)) {
+    const known = new Set(roomNames); for (const k of rooms.keys()) known.add(k);
+    if (known.size >= MAX_ROOMS) return socket.destroy();
+  }
   wss.handleUpgrade(req, socket, head, ws => wss.emit('connection', ws, room));
 });
 
@@ -231,7 +248,7 @@ wss.on('connection', (ws, room) => {
     });
   }
   const rData = rooms.get(room);
-  if (!rData.savedOnce) { rData.savedOnce = true; if (!fs.existsSync(notesFile(room))) saveNotes(room, rData.notes); }
+  clearTimeout(rData.idleT); // berkas catatan baru dibuat saat ada catatan ditambah/dihapus (bukan tiap sambungan)
   const members = rData.members;
   send(ws, {
     type: 'welcome',
@@ -338,6 +355,11 @@ wss.on('connection', (ws, room) => {
   });
   ws.on('close', () => {
     members.delete(ws);
+    if (!members.size) { // ruang kosong → buang dari memori setelah jeda (catatan sudah di disk; papan tulis ikut hilang)
+      clearTimeout(rData.idleT);
+      rData.idleT = setTimeout(() => { if (!members.size && rooms.get(room) === rData) rooms.delete(room); }, ROOM_IDLE_MS);
+      rData.idleT.unref();
+    }
     for (const c of members) send(c, ws.kicked ? { type: 'leave', id: ws.id, q: 1 } : { type: 'leave', id: ws.id });
   });
   ws.on('error', () => {});

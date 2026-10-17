@@ -461,7 +461,7 @@ function createPeminatan({ dataDir, onChange }) {
   }
 
   return {
-    handle, publicStats, authed, sameOrigin,
+    handle, publicStats, authed, sameOrigin, clientIp,
     info: { user: ADMIN_USER, pass: genPass ? ADMIN_PASS : null }
   };
 }

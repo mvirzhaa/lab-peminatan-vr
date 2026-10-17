@@ -38,7 +38,8 @@ WebSocket otomatis memakai `wss://` bila halaman dibuka lewat `https://`.
 | `PORT` | 8080 | Port server |
 | `MAX_CLIENTS` | 150 | Batas total koneksi |
 | `MAX_PER_ROOM` | 60 | Batas orang per ruang |
-| `ALLOWED_ORIGINS` | (semua) | Daftar origin yang diizinkan, pisahkan koma |
+| `ALLOWED_ORIGINS` | (situs yang sama) | Daftar origin WebSocket yang diizinkan, pisahkan koma. Bila kosong, hanya halaman dari host yang sama (atau klien tanpa header Origin) yang boleh membuka `/ws`. Isi bila galeri disajikan lewat domain/port lain dari yang dilihat Nginx |
+| `MAX_ROOMS` | 100 | Batas jumlah nama ruang (`?room=`) berbeda, yaitu yang aktif + yang punya berkas catatan. Nama baru di luar batas ditolak |
 | `ADMIN_NAME` | `~velov~` | Nama pengguna yang berwenang kick |
 | `DATA_DIR` | `./data` | Folder penyimpanan Hall of Fame (jangan dihapus saat deploy ulang) |
 | `ADMIN_KEY` | (acak tiap start) | Kunci rahasia moderator. Jika kosong, server membuat kunci acak dan menampilkannya sekali di konsol saat start |
@@ -210,3 +211,43 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 - **HP:** panel info tantangan (Gua Pustaka, Hanggar, Kawah) pindah ke atas layar dan bisa diciutkan dengan mengetuk judulnya, sehingga joystick dan tombol tidak tertutup.
 - **Server:** `kartu.js` mengenal tantangan `jari` dan lencana `jari` (prasyarat `iot`). Batas waktu rekor dinaikkan ke 60 menit. Admin menampilkan "Kawah ✓" dan "👆 Jari".
 - Setelah deploy: `pm2 restart` (atau restart proses Node) agar `kartu.js` baru aktif.
+
+## Perbaikan keamanan & stabilitas (pasca-v13)
+- **Rate limit kartu memakai IP asli klien.** `kartu.js` kini memakai `clientIp()` yang sama dengan `peminatan.js` (membaca `X-Real-IP` dari Nginx lokal). Sebelumnya semua pengunjung di belakang Nginx terlihat sebagai `127.0.0.1` dan berbagi satu kuota (20 daftar / 60 verifikasi / 120 catat per 10 menit untuk seluruh pengguna).
+- **Batas ruang.** `?room=` baru ditolak setelah `MAX_ROOMS` tercapai. Berkas `data/notes/<ruang>.json` kini hanya dibuat saat ada catatan ditambah/dihapus (bukan tiap ada sambungan), dan ruang yang kosong dibuang dari memori setelah 10 menit (catatan tetap di disk; coretan papan tulis ikut hilang).
+- **Origin WebSocket** dicek secara bawaan (lihat `ALLOWED_ORIGINS`).
+- Catatan: pastikan Nginx tetap meneruskan `Host` dan `X-Real-IP` seperti di `nginx.conf.example`.
+
+## Pembaruan v14 — Tahap 6 · Dunia Server Lab KERIS (Lencana Pengetahuan Coding)
+- **Hartono** (teknisi server, berkacamata) berjalan acak antara meja Kak Tias dan keempat lab sambil berkata "akan ada bahaya…".
+  - Bertemu pemain **tanpa** Lencana Keterampilan Jari → "Kamu belum siap mengerjakannya."
+  - Bertemu pemegang Lencana Keterampilan Jari → "Tolong bantu, apakah kamu bersedia membantu? Jika iya, ikuti aku." dengan pilihan **Bersedia / Tidak**. Bila bersedia, kartu & 4 lencana diverifikasi ke server, lalu Hartono berjalan mengantar ke rak **SERVER KERIS-08** (rak paling timur di Lab KERIS). Rak terbuka menjadi portal; melangkah ke depannya = masuk Dunia Server.
+- **Dunia Server** (solo, 5 nyawa, 6 babak, bahasa campuran Python/JavaScript/pseudocode):
+  1. *Robot Kurir* — susun blok `maju(n)`, `belok_kiri()`, `belok_kanan()`, `ulangi n× { }` (3 level, batas jumlah blok memaksa pemakaian perulangan); robot 3D menjalankan program, jatuh bila salah.
+  2. *Pemburu Bug* — ketuk baris yang salah (3 bug, 45 dtk/program); salah → alarm & kode "bocor" berjatuhan.
+  3. *Duel Kilat* — tebak output lebih cepat dari robot SENIOR-9000; tarik tambang ±3.
+  4. *Brankas Hacker* — cari input fungsi yang menghasilkan target (3 gembok acak, 4 percobaan/gembok).
+  5. *Lorong Laser* — 6 gerbang laser, tebak output; salah → dinding laser di belakang mendekat; tersentuh = nyawa −1.
+  6. *Jinakkan Bom* — 3 bom (60/45/30 dtk) di meja resepsionis inti; potong kabel berisi potongan kode yang benar. Salah/waktu habis → ledakan: kilat putih, **gempa**, lantai & dinding **retak menjalar**, **asap**, puing, ruangan gosong lalu pulih.
+- **Kang Sahid** (gamis putih, kopiah) & **Teh Gibhta** (kerudung hijau) di Aula Penyelamat menyematkan **Lencana Pengetahuan Coding**; papan rekor `GET /api/kartu/rekor?id=server`.
+- **Kode cepat:** `butnavudivoxyziz6` diketik ke **Teh Puspa** (bagi pemegang Lencana Dasar, Umum, IoT & Drone, Jari).
+- Server: tantangan `server`, lencana `coding` (prasyarat `jari`). Admin menampilkan "Server ✓" dan "💻 Coding".
+
+## Pembaruan v15 — Tahap 7 · Galeri Islam & Lembah Gurun (Lencana Pengetahuan Agama Islam)
+- **Teh Mila** (kerudung putih) baru muncul di samping **Sudut Al-Qur'an** Atrium bila pemain memegang Lencana Pengetahuan Coding. Ia meminta pemain **berwudhu** dulu dan mengaktifkan lift kaca Lab CSN.
+- **Tempat wudhu** di Hanggar Drone, di sebelah ruang praktik drone (barat panggung pilot). Klik anggota wudhu pada gambar sesuai urutan — tangan, mulut, hidung, wajah, lengan, ubun-ubun, telinga, kaki — masing-masing **3×**. Salah urutan → ulang dari awal. Selesai → animasi wudhu lengkap + doa setelah wudhu. Status wudhu berlaku untuk hari itu.
+- Kembali ke Teh Mila: **Man Rabbuka? Ma Dinuka? Man Nabiyyuka? Ma Kitabuka?** Jawaban diketik (Latin atau Arab), toleran terhadap variasi penulisan (mis. "Allah SWT", "Nabi Muhammad", "Al-Qur'an", "Quran").
+- **Galeri Islam** (40 × 26 m): dinding berisi ayat pilihan — teks Arab & terjemahan diambil langsung dari data mushaf `assets/quran/` (tidak diketik manual), termasuk Ayat Kursi di atas portal — dan 9 hadits populer. Murattal **Al-Ikhlas, Al-Falaq, An-Nas** berulang selama pemain di galeri (hanya di perangkat pemain; musik piano dimatikan).
+- Portal di ujung galeri → **Lembah Gurun Senja** (musik piano diganti suara angin, gemericik air, dan kicau burung — semua Web Audio). **3 nyawa · 4 babak:**
+  1. *Bayangan Waktu* — matahari bergerak di langit; tebak sholat yang sedang masuk waktunya dari ketinggian matahari & panjang bayangan tongkat istiwa' (dihitung dengan rumus yang sama dengan fitur adzan, untuk lokasi pemain/ Bogor dan tanggal hari ini). Lalu hadapkan badan ke **kiblat** dari kota acak (rumus lingkaran besar, toleransi ±10°).
+  2. *Jembatan Ayat* — seberangi ngarai lewat 5 tiang; tiap tiang 3 gerbang. Soal dibangkitkan otomatis dari data mushaf (Juz 30, Al-Fatihah, Ayat Kursi, akhir Al-Baqarah): sambung ayat, tebak surah dari terjemahan, Makkiyah/Madaniyah, jumlah ayat; tombol 🔊 murattal. Gerbang salah → jembatan runtuh.
+  3. *Peta Hijrah* — susun lini masa 6 peristiwa sirah acak, lalu tempatkan tiap peristiwa di lokasinya pada peta raksasa (Makkah, Bukit Aqabah, Gua Tsur, Hudaibiyah, Badar, Quba, Madinah, Uhud).
+  4. *Simpang Akhlak* — 5 skenario etika digital (tabayyun, menyalin kode, celah keamanan, ghibah di grup, janji ke klien) dengan dalil; jalan keliru → kabut turun, nyawa −1.
+- **Serambi masjid**: **Kang Fitrah** (berjenggot) & **Teh Freza** (kerudung putih), keduanya berbaju putih, menyematkan **Lencana Pengetahuan Agama Islam**; papan rekor `GET /api/kartu/rekor?id=islam`.
+- Server: tantangan `islam`, lencana `islam` (prasyarat `coding`).
+- **Mohon ditinjau dosen/ustadz**: teks hadits (Arab & terjemahan) di Galeri Islam ditulis manual di `IS_HADITS`, lafaz niat & doa wudhu di `IS_NIAT`/`IS_DOA_WUDHU`, serta data sirah `IS_SIRAH` dan skenario `IS_AKHLAK`. Ayat Al-Qur'an selalu diambil dari data mushaf.
+- Setelah deploy: `pm2 restart` agar `kartu.js` baru aktif.
+- Daftar dosen IT-Mart (`DOSEN_TI`): nama lengkap "Bu Mila" kini **Nurul Kamilah, M.Kom.** (lab GIT).
+- Panel tantangan (Dunia Server, wudhu, Lembah Gurun) otomatis menutup jendela obrolan NPC agar tidak bertumpuk di sisi kanan.
+- Hartono hanya mengajak pemain yang **belum** menuntaskan Dunia Server; yang sudah tuntas cukup disapa (main ulang tetap bisa lewat obrolan dengannya).
+- **Kode cepat tahap 7:** `butnavudivoxyziz7` diketik ke **Kang Jejen** — NPC baru (bertubuh gemuk) yang duduk ngopi di meja tengah IT-Mart bersama **Kang Bayu** (kurus). Berlaku bagi pemegang Lencana Dasar, Umum, IoT & Drone, Jari, dan Coding; pemain langsung diantar ke serambi masjid (Kang Fitrah & Teh Freza). Keduanya sesekali mengobrol (balon kata) saat pemain berada di IT-Mart; kursi mereka tidak bisa diduduki pemain.

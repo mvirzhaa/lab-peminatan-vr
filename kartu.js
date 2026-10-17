@@ -25,14 +25,16 @@ function createKartu({ dataDir, pem }) {
   // tahap 2: empat ruang tantangan di Lantai 2 IT-Mart → lencana Pengetahuan Dasar (Teh Fety)
   const TAHAP2 = ['kognitif', 'inggris', 'sahabat', 'coding'];
   // tahap 3: Gua Pustaka di balik rak buku Silvia → lencana Pengetahuan Umum (Teh Puspa)
-  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari']);
+  // tahap 6: Dunia Server Lab KERIS (6 babak coding) → lencana Pengetahuan Coding (Kang Sahid & Teh Gibhta)
+  // tahap 7: Galeri Islam & Lembah Gurun → lencana Pengetahuan Agama Islam (Kang Fitrah & Teh Freza)
+  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam']);
   // syarat tiap lencana: tantangan yang harus tercatat + lencana sebelumnya
-  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' }, iot: { ch: ['iot'], pre: 'umum' }, jari: { ch: ['jari'], pre: 'iot' } }; // iot (IoT & Drone), jari (Keterampilan Jari · Kawah Api), coding, islam, tim (kerjasama tim) menyusul
+  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' }, iot: { ch: ['iot'], pre: 'umum' }, jari: { ch: ['jari'], pre: 'iot' }, coding: { ch: ['server'], pre: 'jari' }, islam: { ch: ['islam'], pre: 'coding' } }; // iot (IoT & Drone), jari (Keterampilan Jari · Kawah Api), coding, islam, tim (kerjasama tim) menyusul
   const SEC = { 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' };
   const json = (res, code, o) => { res.writeHead(code, { ...SEC, 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(o)); };
   const readJson = (req) => new Promise((resolve) => { let b = ''; req.on('data', (c) => { b += c; if (b.length > 4096) req.destroy(); }); req.on('end', () => { try { const o = JSON.parse(b || '{}'); resolve(o && typeof o === 'object' ? o : {}); } catch { resolve({}); } }); req.on('error', () => resolve({})); });
   const lim = new Map();
-  const limited = (req, key, max) => { const ip = req.socket.remoteAddress || ''; const k = key + ip, now = Date.now(); const r = lim.get(k) || { n: 0, t: now }; if (now - r.t > 10 * 60e3) { r.n = 0; r.t = now; } r.n++; lim.set(k, r); return r.n > max; };
+  const limited = (req, key, max) => { const ip = pem.clientIp(req); const k = key + ip, now = Date.now(); const r = lim.get(k) || { n: 0, t: now }; if (now - r.t > 10 * 60e3) { r.n = 0; r.t = now; } r.n++; lim.set(k, r); return r.n > max; };
   setInterval(() => { const now = Date.now(); for (const [k, r] of lim) if (now - r.t > 10 * 60e3) lim.delete(k); }, 60e3).unref();
 
   async function handle(req, res, p) {
