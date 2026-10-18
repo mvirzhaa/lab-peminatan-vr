@@ -29,7 +29,7 @@ function createKartu({ dataDir, pem }) {
   // tahap 7: Galeri Islam & Lembah Gurun → lencana Pengetahuan Agama Islam (Kang Fitrah & Teh Freza)
   const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam']);
   // syarat tiap lencana: tantangan yang harus tercatat + lencana sebelumnya
-  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' }, iot: { ch: ['iot'], pre: 'umum' }, jari: { ch: ['jari'], pre: 'iot' }, coding: { ch: ['server'], pre: 'jari' }, islam: { ch: ['islam'], pre: 'coding' } }; // iot (IoT & Drone), jari (Keterampilan Jari · Kawah Api), coding, islam, tim (kerjasama tim) menyusul
+  const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' }, iot: { ch: ['iot'], pre: 'umum' }, jari: { ch: ['jari'], pre: 'iot' }, coding: { ch: ['server'], pre: 'jari' }, islam: { ch: ['islam'], pre: 'coding' } }; // tim (Kerjasama Tim) TIDAK bisa dikirim klien: hanya diberikan server (tim.js) kepada pemenang Game 4
   const SEC = { 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' };
   const json = (res, code, o) => { res.writeHead(code, { ...SEC, 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(o)); };
   const readJson = (req) => new Promise((resolve) => { let b = ''; req.on('data', (c) => { b += c; if (b.length > 4096) req.destroy(); }); req.on('end', () => { try { const o = JSON.parse(b || '{}'); resolve(o && typeof o === 'object' ? o : {}); } catch { resolve({}); } }); req.on('error', () => resolve({})); });
@@ -75,7 +75,7 @@ function createKartu({ dataDir, pem }) {
       const no = String(new URL(req.url, 'http://x').searchParams.get('no') || '').toUpperCase();
       const k = noOK(no) ? K.find((x) => x.no === no) : null;
       if (!k) return json(res, 200, { ok: true, ada: false });
-      return json(res, 200, { ok: true, ada: true, no: k.no, nama: k.nama, t: k.t, cabut: !!k.cabut, lencana: k.lb || {}, tantangan: k.ch || {} });
+      return json(res, 200, { ok: true, ada: true, no: k.no, nama: k.nama, t: k.t, cabut: !!k.cabut, lencana: k.lb || {}, tantangan: k.ch || {}, hadiah: k.rw || {} });
     }
     // papan rekor publik (mis. misi drone): 10 waktu tercepat jalur "main"
     if (p === '/api/kartu/rekor' && req.method === 'GET') {
@@ -111,7 +111,7 @@ function createKartu({ dataDir, pem }) {
     }
     if (!p.startsWith('/api/admin/kartu')) return false;
     if (!pem.authed(req)) return json(res, 401, { ok: false, err: 'Sesi berakhir. Silakan login kembali.' });
-    if (p === '/api/admin/kartu' && req.method === 'GET') return json(res, 200, { ok: true, kartu: K.map((k) => ({ no: k.no, nama: k.nama, t: k.t, ver: k.ver || 0, lv: k.lv || 0, cabut: !!k.cabut, ch: k.ch || {}, lb: k.lb || {} })) });
+    if (p === '/api/admin/kartu' && req.method === 'GET') return json(res, 200, { ok: true, kartu: K.map((k) => ({ no: k.no, nama: k.nama, t: k.t, ver: k.ver || 0, lv: k.lv || 0, cabut: !!k.cabut, ch: k.ch || {}, lb: k.lb || {}, rw: k.rw || {}, tm: k.tm || {} })) });
     if (p === '/api/admin/kartu/status' && req.method === 'POST') {
       if (!pem.sameOrigin(req)) return json(res, 403, { ok: false, err: 'Permintaan ditolak.' });
       const o = await readJson(req), k = K.find((x) => x.no === o.no);
@@ -121,6 +121,8 @@ function createKartu({ dataDir, pem }) {
     }
     return json(res, 404, { ok: false, err: 'Tidak ditemukan.' });
   }
-  return { handle };
+  // dipakai modul Kerjasama Tim (tim.js): verifikasi pemilik kartu lewat WebSocket
+  const auth = (no, tok) => { const k = noOK(no) ? K.find((x) => x.no === no) : null; return k && !k.cabut && tok && eq(k.kh, sha(tok)) ? k : null; };
+  return { handle, auth, list: () => K, save };
 }
 module.exports = { createKartu };

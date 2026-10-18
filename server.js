@@ -13,6 +13,7 @@ const { WebSocketServer } = require('ws');
 const { createPeminatan } = require('./peminatan');
 const { createBuku } = require('./buku');
 const { createKartu } = require('./kartu');
+const { createTim } = require('./tim');
 
 // baca file .env otomatis jika ada (memudahkan konfigurasi ADMIN_KEY, PEMINATAN_USER, dll tanpa terhambat cache PM2)
 try {
@@ -80,6 +81,8 @@ const pem = createPeminatan({
 const buku = createBuku({ dataDir: DATA_DIR, pem, onChange: () => { for (const c of wss.clients) send(c, { type: 'buku' }); } });
 
 const kartu = createKartu({ dataDir: DATA_DIR, pem });
+// ---- Tahap 8 · Kerjasama Tim (lobi tim, Game 1–3, Game 4 rahasia) ----
+const tim = createTim({ kartu, sendRaw: (ws, o) => send(ws, o), onWinner: (nama) => { for (const c of wss.clients) send(c, { type: 'tim_kabar', n: nama }); } });
 
 // ---- Papan Pesan IT'ers: disimpan permanen per ruang (?room=) di DATA_DIR/notes/<ruang>.json ----
 const NOTES_DIR = path.join(DATA_DIR, 'notes');
@@ -108,6 +111,7 @@ const server = http.createServer((req, res) => {
   let u, p; try { u = new URL(req.url, 'http://x'); p = decodeURIComponent(u.pathname); } catch { res.writeHead(400, secHeaders); return res.end(); }
   if (p.startsWith('/buku/') && (req.method === 'GET' || req.method === 'HEAD') && buku.serveFile(req, res, p)) return;
   if (p.startsWith('/api/admin/notes')) return adminNotes(req, res, p, u);
+  if (p.startsWith('/api/tim/')) { if (tim.handle(req, res, p, u)) return; res.writeHead(404, secHeaders); return res.end(); }
   if (p.startsWith('/api/kartu/') || p.startsWith('/api/admin/kartu')) return Promise.resolve(kartu.handle(req, res, p)).then((done) => { if (done === false) pem.handle(req, res, p, u); });
   if (p.startsWith('/api/buku') || p.startsWith('/api/admin/buku')) {
     return Promise.resolve(buku.handle(req, res, p, u)).then((done) => { if (done === false) pem.handle(req, res, p, u); });
@@ -270,6 +274,7 @@ wss.on('connection', (ws, room) => {
     if (buf.length > MAX_MSG && buf.subarray(0, 23).toString('latin1') !== '{"type":"hof_add","n":"' ) return;
     let m; try { m = JSON.parse(buf.toString('utf8')); } catch { return; }
     if (!isPlainObj(m)) return;
+    if (typeof m.type === 'string' && m.type.startsWith('tim_')) return tim.onMessage(ws, m);
     if (m.type === 'auth') {
       // maks. 5 percobaan per koneksi untuk mencegah tebak-tebakan kunci
       ws.authTries = (ws.authTries || 0) + 1;
@@ -354,6 +359,7 @@ wss.on('connection', (ws, room) => {
     }
   });
   ws.on('close', () => {
+    tim.onClose(ws);
     members.delete(ws);
     if (!members.size) { // ruang kosong → buang dari memori setelah jeda (catatan sudah di disk; papan tulis ikut hilang)
       clearTimeout(rData.idleT);
