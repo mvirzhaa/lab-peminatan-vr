@@ -12002,16 +12002,30 @@ function adzanBlockInfo() {
   return b && typeof b.until === "number" && Date.now() < b.until ? b : null;
 }
 // ---------- lokasi (wajib) ----------
+// Bila izin lokasi SUDAH diberikan tetapi perangkat tidak bisa menentukan posisi
+// (mis. Location Services macOS/Windows mati untuk browser, PC tanpa Wi-Fi),
+// jadwal adzan memakai waktu default kota Jakarta.
+function adzanFallback() {
+  return { lat: -6.2088, lng: 106.8456, acc: 50000, t: Date.now(), approx: "Jakarta" };
+}
 function adzanLocate() {
-  return new Promise((res, rej) => {
-    if (!("geolocation" in navigator)) return rej(new Error("Browser ini tidak mendukung pendeteksian lokasi."));
-    if (!window.isSecureContext) return rej(new Error("Pendeteksian lokasi hanya bisa lewat HTTPS (atau localhost). Buka galeri lewat alamat https://."));
-    navigator.geolocation.getCurrentPosition(
-      (p) => res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, t: Date.now() }),
-      (e) => rej(new Error(e.code === 1 ? "Izin lokasi DITOLAK. Galeri tidak dapat dimainkan tanpa izin lokasi — izinkan lokasi untuk situs ini di pengaturan browser (ikon gembok di bilah alamat), lalu coba lagi." : e.code === 3 ? "Lokasi tidak terdeteksi (waktu habis). Pastikan GPS/lokasi perangkat aktif, lalu coba lagi." : "Lokasi tidak dapat ditentukan. Aktifkan layanan lokasi perangkat, lalu coba lagi.")),
-      { enableHighAccuracy: false, timeout: 15000, maximumAge: 10 * 60e3 }
-    );
-  });
+  const once = (opt) => new Promise((res, rej) => navigator.geolocation.getCurrentPosition(
+    (p) => res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, t: Date.now() }), rej, opt));
+  if (!("geolocation" in navigator)) return Promise.reject(new Error("Browser ini tidak mendukung pendeteksian lokasi."));
+  if (!window.isSecureContext) return Promise.reject(new Error("Pendeteksian lokasi hanya bisa lewat HTTPS (atau localhost). Buka galeri lewat alamat https://."));
+  const denied = () => new Error("Izin lokasi DITOLAK. Galeri tidak dapat dimainkan tanpa izin lokasi — izinkan lokasi untuk situs ini di pengaturan browser (ikon gembok di bilah alamat), lalu coba lagi.");
+  return once({ enableHighAccuracy: false, timeout: 15000, maximumAge: 10 * 60e3 })
+    .catch((e) => {
+      if (e && e.code === 1) throw denied();
+      // izin sudah diberikan tetapi posisi belum didapat → coba sekali lagi dengan GPS/Wi-Fi akurat
+      return once({ enableHighAccuracy: true, timeout: 12000, maximumAge: 30 * 60e3 });
+    })
+    .catch((e) => {
+      if (e && e.code === 1) throw denied();
+      if (e && e.message && !("code" in e)) throw e;
+      // izin diberikan, perangkat tetap tidak bisa menentukan posisi → pakai perkiraan zona waktu
+      return adzanFallback();
+    });
 }
 function adzanMsg(html, bad) {
   const el = $("ldGeo");
@@ -12039,7 +12053,7 @@ function adzanGate(enterFn) {
     ADZ.busy = false;
     if (go) { go.disabled = false; go.textContent = prevTxt; }
     const nx = adzanEvents(loc).find((e) => e.t > Date.now());
-    adzanMsg(`✅ Lokasi terdeteksi. Adzan berikutnya: <b>${nx ? ADZ_NAMES[nx.k] + " " + adzanFmt(nx.t) : "-"}</b> (galeri ditutup ${ADZAN_BLOCK_MIN} menit saat adzan).`);
+    adzanMsg(`${loc.approx ? `✅ Izin lokasi diberikan, tetapi lokasi perangkat tidak ditemukan — jadwal adzan memakai waktu default <b>${loc.approx}</b>.` : "✅ Lokasi terdeteksi."} Adzan berikutnya: <b>${nx ? ADZ_NAMES[nx.k] + " " + adzanFmt(nx.t) : "-"}</b> (galeri ditutup ${ADZAN_BLOCK_MIN} menit saat adzan).`);
     enterFn();
   }).catch((err) => {
     ADZ.busy = false;
