@@ -45,6 +45,8 @@
     <button role="tab" data-t="buku">Rak Buku IT-Mart</button>
     <button role="tab" data-t="pesan">Papan Pesan</button>
     <button role="tab" data-t="kartu">Explorer Card</button>
+    <button role="tab" data-t="sb">Smart Board &amp; Video</button>
+    <button role="tab" data-t="kls">Kelas &amp; Jadwal</button>
   </nav>
 
   <!-- Pendaftar -->
@@ -148,11 +150,73 @@
     <h3>Database Explorer Card <span id="xcCount" class="pill"></span></h3>
     <p class="mut">Kartu yang diberikan Kang Santo tercatat di sini. NPC Nan (Lantai 2 IT-Mart) hanya membuka gerbang tantangan untuk kartu yang terdaftar dan tidak dicabut.</p>
     <div class="bar"><input id="xcQ" type="search" placeholder="Cari nomor atau nama…"></div>
-    <div class="tw"><table class="tbl"><thead><tr><th>Nomor kartu</th><th>Nama</th><th>Diterbitkan</th><th>Verifikasi</th><th>Tantangan (Lt. 2 · Gua · Hanggar · Kawah · Server · Lembah · Tim)</th><th>Lencana</th><th>Status</th><th></th></tr></thead><tbody id="xcRows"></tbody></table></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>Nomor kartu</th><th>Nama</th><th>Diterbitkan</th><th>Verifikasi</th><th>Tantangan (Lt. 2 · Gua · Hanggar · Kawah)</th><th>Lencana</th><th>Status</th><th></th></tr></thead><tbody id="xcRows"></tbody></table></div>
     <p id="xcEmpty" class="mut center">Belum ada kartu terdaftar.</p>
   </div>
 </section>
+<section class="panel" id="t-sb" hidden>
+  <div class="card">
+    <h3>🎬 Video sambutan · Ruang Sambutan</h3>
+    <p class="mut">Video YouTube di layar besar Ruang Sambutan (titik awal pemain). Tempel URL video YouTube atau ID-nya. Perubahan langsung berlaku untuk pemain yang sedang online.</p>
+    <div class="row sbw"><input id="wYt" maxlength="200" placeholder="https://www.youtube.com/watch?v=…"><button class="btn" id="wSave">💾 Simpan video sambutan</button><a class="ghost" id="wOpen" target="_blank" rel="noopener">▶ Cek di YouTube</a></div>
+  </div>
+  <div class="card">
+    <h3>🖥 Smart Board</h3>
+    <p class="mut">Setiap smart board menampilkan <b>slide</b> (gambar JPG/PNG/WebP, maks. 8 MB per slide, urutan bisa diatur) atau <b>video YouTube</b>.
+    Di <b>Kelas 1, Kelas 2, dan Ruang Rapat</b> isinya <b>dibagikan ke semua pemain</b> di ruangan itu: slide yang dibuka, coretan, dan putar/jeda video ikut berubah untuk semua.
+    Di <b>keempat lab</b> setiap pemain memutar dan menggeser slide <b>masing-masing</b>. Untuk materi PowerPoint/PDF, ekspor dulu tiap halaman menjadi gambar (PowerPoint: File → Export → PNG).</p>
+    <div class="bar"><label class="inl">Smart board <select id="sbSel"></select></label><span id="sbKind" class="pill"></span></div>
+    <div class="grid2">
+      <div>
+        <label>Judul (tampil di bawah layar, opsional)<input id="sbJ" maxlength="80" placeholder="mis. Kuliah Umum Kecerdasan Buatan"></label>
+        <div class="row sbmode"><label class="chk"><input type="radio" name="sbMode" value="slide" checked> 🖼 Slide gambar</label><label class="chk"><input type="radio" name="sbMode" value="youtube"> ▶ Video YouTube</label></div>
+        <label id="sbYtL">URL video YouTube<input id="sbYt" maxlength="200" placeholder="https://www.youtube.com/watch?v=…"></label>
+        <div class="row"><button class="btn" id="sbSave">💾 Simpan pengaturan</button></div>
+        <div id="sbMsg" class="msg" role="status"></div>
+      </div>
+      <div>
+        <label class="drop" id="sbDrop"><input type="file" id="sbF" accept="image/jpeg,image/png,image/webp,application/pdf,.pdf,.pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation" multiple><span id="sbFn">Klik atau seret gambar slide, <b>PDF</b>, atau <b>PowerPoint (.pptx)</b> ke sini — tiap halaman menjadi satu slide</span></label>
+        <div id="sbUpMsg" class="msg" role="status"></div>
+      </div>
+    </div>
+    <h3>Slide <span id="sbCount" class="pill"></span></h3>
+    <p id="sbEmpty" class="mut">Belum ada slide. Bila mode slide dipilih tanpa slide, layar menampilkan slide bawaan profil keempat lab.</p>
+    <div id="sbGrid" class="sbgrid"></div>
+  </div>
+</section>
+<section class="panel" id="t-kls" hidden>
+  <div class="grid2">
+    <div class="card">
+      <h3 id="kjTitle">➕ Jadwal baru</h3>
+      <p class="mut">Di luar jadwal, Kelas 1, Kelas 2, dan Ruang Rapat terbuka untuk siapa saja. Selama jadwal berlangsung, ruangan hanya bisa dimasuki dengan <b>Token Peserta</b>; dosen/pimpinan masuk dengan <b>Kode Pengajar</b> untuk memegang kontrol kelas. Kedua kode dibuat otomatis setelah jadwal disimpan.</p>
+      <label>Ruangan<select id="kjR"><option value="kelas1">Kelas 1 · Auditorium (128 kursi)</option><option value="kelas2">Kelas 2 · Auditorium (128 kursi)</option><option value="rapat">Ruang Rapat (25 kursi)</option></select></label>
+      <label>Judul kegiatan<input id="kjJ" maxlength="100" placeholder="mis. Kecerdasan Buatan — Kelas A / Rapat Prodi"></label>
+      <label>Pengajar / pimpinan rapat<input id="kjP" maxlength="80" placeholder="mis. Dr. Puspa Eosina, M.Kom."></label>
+      <div class="row kjt"><label>Tanggal<input id="kjD" type="date"></label><label>Mulai<input id="kjS" type="time" value="08:00"></label><label>Selesai<input id="kjE" type="time" value="09:40"></label></div>
+      <div class="row kjt"><label class="chk"><input type="checkbox" id="kjW"> Berulang tiap minggu</label><label id="kjUL">sampai tanggal<input id="kjU" type="date"></label></div>
+      <div class="row"><button class="btn" id="kjSave">💾 Simpan jadwal</button><button class="ghost" id="kjNew" hidden>Batal ubah</button></div>
+      <div id="kjMsg" class="msg" role="status"></div>
+    </div>
+    <div class="card">
+      <h3>Server media (suara & berbagi layar)</h3>
+      <p class="mut" id="kjSfu">-</p>
+      <h3>Cara pakai singkat</h3>
+      <ol class="mut kjhelp"><li>Buat jadwal, lalu berikan <b>Kode Pengajar</b> dan <b>Token Peserta</b> kepada dosen/pimpinan rapat.</li><li>Dosen membagikan Token Peserta ke mahasiswa/peserta (offline/grup kelas).</li><li>Saat jadwal berjalan, pintu ruangan terkunci: pemain memasukkan token di depan pintu.</li><li>Presensi tercatat otomatis; unduh Excel dan notulen di daftar sesi di bawah.</li></ol>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Jadwal <span id="kjCount" class="pill"></span></h3>
+    <div class="tw"><table class="tbl"><thead><tr><th>Ruangan</th><th>Kegiatan</th><th>Waktu</th><th>Token Peserta</th><th>Kode Pengajar</th><th></th></tr></thead><tbody id="kjRows"></tbody></table></div>
+    <p id="kjEmpty" class="mut center">Belum ada jadwal — semua ruang kelas & rapat terbuka bebas.</p>
+  </div>
+  <div class="card">
+    <h3>Sesi & presensi <span id="ksCount" class="pill"></span></h3>
+    <div class="tw"><table class="tbl"><thead><tr><th>Waktu</th><th>Ruangan</th><th>Kegiatan</th><th>Pengajar</th><th>Peserta hadir</th><th></th></tr></thead><tbody id="ksRows"></tbody></table></div>
+    <p id="ksEmpty" class="mut center">Belum ada sesi terjadwal yang berlangsung.</p>
+  </div>
+</section>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="/4adm1in/vendor/pdf.min.js"></script>
 <script src="/4adm1in/admin.js"></script>
 </body>
 </html>

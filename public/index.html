@@ -318,6 +318,36 @@ canvas {
 #questHud{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left,0px));z-index:19;max-width:calc(100vw - 180px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(20,10,40,.88);border:1px solid #7c3aed;text-transform:none;letter-spacing:0;font-size:12px;font-weight:600}
 #questHud[hidden]{display:none!important}
 .card.wide{max-width:min(980px,100%)}
+.sb-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}.sb-tabs button.on,.sb-tools button.on{background:var(--acc,#7c3aed);color:#fff;border-color:transparent}
+.sb-wrap{background:#0b1220;border-radius:12px;overflow:hidden;line-height:0}#sbCv{width:100%;height:auto;touch-action:none;cursor:crosshair;display:block}
+.sb-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px}.sb-tools button{height:32px;padding:0 10px;font-size:13px}.sb-tools .sb-col{width:32px;padding:0;border:2px solid rgba(255,255,255,.25)}.sb-tools .sb-col.on{outline:3px solid #fff}
+#klsP{position:fixed;z-index:31;left:max(12px,env(safe-area-inset-left,0px));top:calc(64px + env(safe-area-inset-top,0px));width:min(340px,calc(100vw - 24px));max-height:calc(100vh - 160px);display:flex;flex-direction:column;background:rgba(12,14,24,.94);border:1px solid rgba(147,197,253,.35);border-radius:14px;color:#e5e7eb;font-size:13px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+#klsP .kh{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+#klsP .kh b{display:block;font-size:14px;color:#bfdbfe}#klsP .kh small{display:block;font-size:11.5px;color:#9ca3af;line-height:1.35}
+#klsP .kh button{height:26px;width:28px;padding:0}
+#klsP.min .kb{display:none}
+#klsP .kb{display:flex;flex-direction:column;min-height:0;padding:8px 10px 10px;gap:8px}
+#klsP .kctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}#klsP .kctl button{height:30px;padding:0 10px;font-size:12px}
+#klsP .ktabs{display:flex;gap:4px}#klsP .ktabs button{flex:1;height:30px;padding:0 4px;font-size:11.5px;background:rgba(255,255,255,.05);border:1px solid transparent;border-radius:8px;color:#d1d5db;cursor:pointer}
+#klsP .ktabs button.on{background:#1d4ed8;color:#fff}#klsP .ktabs button.new{border-color:#facc15}
+#klsP .kpane{overflow:auto;min-height:60px;max-height:calc(100vh - 330px)}
+#klsP .kmut{color:#9ca3af;font-size:12px;margin:4px 0}
+#klsP .kpp{display:flex;align-items:center;gap:6px;padding:5px 6px;border-radius:8px}#klsP .kpp:nth-child(odd){background:rgba(255,255,255,.03)}
+#klsP .kpp .kdot{width:8px;height:8px;border-radius:50%;background:#4b5563;flex:none}#klsP .kpp.spk .kdot{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.35)}
+#klsP .knm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#klsP .krole{font-size:10.5px;background:#1d4ed8;color:#fff;border-radius:6px;padding:1px 6px}
+#klsP .kx{height:24px;padding:0 7px;font-size:11px}#klsP .kdel{color:#fca5a5;border-color:rgba(248,113,113,.4)}
+#klsP .kchat{max-height:min(300px,calc(100vh - 420px));overflow:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+#klsP .kcm b{color:#e5e7eb}#klsP .kcm b.kt{color:#93c5fd}#klsP .kcm small{color:#6b7280;font-size:10.5px}#klsP .kcm div{white-space:pre-wrap;word-break:break-word}
+#klsP .kf{display:block;font-size:11.5px;color:#9ca3af;margin:6px 0 0}#klsP textarea,#klsP input{width:100%;box-sizing:border-box;background:#111827;color:#f9fafb;border:1px solid #374151;border-radius:8px;padding:7px 9px;font:13px var(--font,inherit);margin-top:3px;resize:vertical}
+#klsP textarea[readonly]{opacity:.8}
+#klsP .rowf{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}#klsP .rowf input{flex:1;margin:0}
+#klsP .kpoll{display:flex;flex-direction:column;gap:6px}#klsP .kpoll small{color:#9ca3af}
+#klsP .kopt{position:relative;display:flex;align-items:center;justify-content:space-between;height:34px;border:1px solid #374151;border-radius:8px;background:#111827;color:#f9fafb;overflow:hidden;padding:0 10px;cursor:pointer;font-size:13px}
+#klsP .kopt i{position:absolute;left:0;top:0;bottom:0;background:rgba(59,130,246,.28)}#klsP .kopt span,#klsP .kopt em{position:relative;font-style:normal}#klsP .kopt.on{border-color:#60a5fa}
+#klsP .kmk{display:flex;flex-direction:column;gap:4px;margin-top:10px;border-top:1px dashed rgba(255,255,255,.12);padding-top:8px}
+body.touch #klsP{top:auto;bottom:calc(150px + env(safe-area-inset-bottom,0px));max-height:45vh;width:min(330px,calc(100vw - 16px))}
+body.touch #klsP .kpane{max-height:24vh}
+.sb-sep{width:1px;height:24px;background:rgba(255,255,255,.2);margin:0 4px}.sb-pg{font-size:13px;color:var(--mut);min-width:52px;text-align:center}.sb-note{font-size:12px;color:var(--mut);margin:8px 0 0}
 .card .kk{color:var(--mut);font-size:12.5px;margin:0 0 10px}
 .kbox{background:#17121f;border:1px solid #2c2440;border-radius:12px;padding:12px 14px;margin:10px 0}
 .kbox>b{display:block;font-size:11px;letter-spacing:.08em;color:#fde68a;margin-bottom:6px}
@@ -391,6 +421,18 @@ canvas {
 #ldGeo{max-width:340px;font-size:12px;line-height:1.5;color:#e9d5ff;text-align:center;background:rgba(124,58,237,.18);border:1px solid rgba(196,181,253,.35);border-radius:10px;padding:8px 12px}
 #ldGeo.bad{color:#fecaca;background:rgba(220,38,38,.18);border-color:rgba(248,113,113,.5)}
 #ldGo:disabled{opacity:.6;cursor:not-allowed}
+#ldAv{width:min(340px,92vw);display:flex;flex-direction:column;gap:6px;font-size:12px;color:#e9d5ff;background:rgba(124,58,237,.14);border:1px solid rgba(196,181,253,.35);border-radius:12px;padding:8px 10px}
+#ldAv.need{border-color:#f87171;box-shadow:0 0 0 3px rgba(248,113,113,.35)}
+#ldAv .av-h{font-size:10px;font-weight:800;letter-spacing:.14em;color:#c4b5fd;text-align:center}
+#ldAv .av-row{display:flex;align-items:center;gap:8px}
+#ldAv .av-ic{font-size:18px;width:24px;text-align:center}
+#ldAv .av-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;text-align:left}
+#ldAv .av-tx b{font-size:12.5px;color:#fff}#ldAv .av-tx small{font-size:11px;line-height:1.35;color:#ddd6fe}
+#ldAv .av-row.ok .av-tx small{color:#86efac}#ldAv .av-row.bad .av-tx small{color:#fecaca}
+#ldAv .av-lvl{display:block;height:5px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}#ldAv .av-lvl b{display:block;height:100%;width:0;background:linear-gradient(90deg,#22c55e,#facc15);transition:width .08s}
+#ldAv button{border:0;border-radius:16px;height:30px;padding:0 12px;font:700 12px inherit;font-family:inherit;color:#fff;background:#7c3aed;cursor:pointer;white-space:nowrap}
+#ldAv .av-row.ok button{background:#15803d}
+#ldAv .av-q{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;padding-top:2px}#ldAv .av-q span{font-weight:700;color:#fff}#ldAv #avNo{background:#b91c1c}
 #adzanOv{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,rgba(22,101,52,.96),rgba(5,20,12,.98));color:#fff;text-align:center;padding:20px;animation:azIn .6s ease}
 #adzanOv>div{max-width:520px}
 #adzanOv .az-ic{font-size:72px;line-height:1}
@@ -780,6 +822,12 @@ body:not(.touch) #tmPanel{max-height:calc(100vh - 84px)}
     <input type="password" id="ldKey" maxlength="200" placeholder="Kunci moderator" autocomplete="current-password" style="display:none">
     <button id="ldGo" type="button">MASUK KE GALERI ▶</button>
     <div id="ldGeo" role="status" aria-live="polite">📍 Galeri ini mewajibkan izin <b>lokasi</b> untuk jadwal adzan di wilayahmu. Saat adzan tiba, semua pemain dikeluarkan sementara.</div>
+    <div id="ldAv" role="group" aria-label="Pemeriksaan mikrofon dan speaker">
+      <div class="av-h">WAJIB SEBELUM MASUK</div>
+      <div class="av-row" id="avMic"><span class="av-ic">🎙</span><div class="av-tx"><b>Mikrofon</b><small id="avMicTx">Izinkan mikrofon untuk obrolan suara dengan pemain lain.</small><i class="av-lvl"><b id="avLvl"></b></i></div><button type="button" id="avMicBtn">Izinkan</button></div>
+      <div class="av-row" id="avSpk"><span class="av-ic">🔊</span><div class="av-tx"><b>Speaker / headset</b><small id="avSpkTx">Nyalakan speaker, putar suara tes, lalu konfirmasi.</small></div><button type="button" id="avSpkBtn">▶ Tes</button></div>
+      <div class="av-q" id="avSpkQ" hidden><span>Suara tes terdengar?</span><button type="button" id="avYes">✅ Terdengar</button><button type="button" id="avNo">❌ Tidak</button></div>
+    </div>
   </div>
 </div>
 <div id="fade"></div>
@@ -2602,7 +2650,10 @@ var ROOMS = {
   se: { x0: 0, x1: 24, z0: -38, z1: -12, h: 5.5, name: "Lab Software Engineering", short: "SE", col: "#6366f1", lab: "se" },
   csn: { x0: 12, x1: 40, z0: -12, z1: 12, h: 5.5, name: "Lab CSN", short: "CSN", col: "#0ea5e9", lab: "csn" },
   cafe: { x0: 9, x1: 27, z0: 12, z1: 30, h: 4.6, name: "IT-Mart", short: "IT-Mart", col: "#c08457" },
-  eportal: { x0: -20, x1: 9, z0: 30, z1: 56, h: 6, name: "Ruang E-Portal UIKA", short: "E-Portal", col: "#34d399" }
+  eportal: { x0: -20, x1: 9, z0: 30, z1: 56, h: 6, name: "Ruang E-Portal UIKA", short: "E-Portal", col: "#34d399" },
+  kelas1: { x0: -26, x1: -8, z0: 56, z1: 80, h: 6, name: "Kelas 1 · Auditorium", short: "Kelas 1", col: "#60a5fa" },
+  rapat: { x0: -8, x1: 10, z0: 56, z1: 80, h: 4.6, name: "Ruang Rapat", short: "R. Rapat", col: "#b45309" },
+  kelas2: { x0: 9, x1: 27, z0: 30, z1: 56, h: 6, name: "Kelas 2 · Auditorium", short: "Kelas 2", col: "#2dd4bf" }
 };
 var SPOTS = [
   { id: "welcome", name: "Ruang Sambutan (video)", x: 0, z: 18.5, yaw: Math.PI },
@@ -2613,7 +2664,10 @@ var SPOTS = [
   { id: "se", name: "Lab Software Engineering", x: 5, z: -15, yaw: 0 },
   { id: "csn", name: "Lab CSN", x: 15, z: 0, yaw: -Math.PI / 2 },
   { id: "cafe", name: "☕ IT-Mart", x: 18, z: 22.5, yaw: Math.PI },
-  { id: "eportal", name: "🌐 Ruang E-Portal UIKA", x: -5.5, z: 36.5, yaw: Math.PI }
+  { id: "eportal", name: "🌐 Ruang E-Portal UIKA", x: -5.5, z: 36.5, yaw: Math.PI },
+  { id: "kelas1", name: "🎓 Kelas 1 · Auditorium", x: -12.4, z: 59.5, yaw: 0 },
+  { id: "kelas2", name: "🎓 Kelas 2 · Auditorium", x: 12.6, z: 33.6, yaw: 0 },
+  { id: "rapat", name: "🤝 Ruang Rapat", x: 3, z: 58.4, yaw: Math.PI }
 ];
 var NPC_POS = {
   tia: { x: 0, z: -0.35, yaw: 0, room: "atrium" },
@@ -2631,14 +2685,27 @@ var WALLS = [
   { x: -9, z: [12, 30], f: "welcome", b: "welcome", h: 6 },
   { x: 9, z: [12, 30], d: [[12.75, 14.85, 3.1]], f: "welcome", b: "cafe", h: 6 }, // pintu ke IT-Mart
   // IT-Mart (timur Ruang Sambutan)
-  { z: 30, x: [9, 27], f: "cafe", b: "cafe", h: 4.6 },
+  { z: 30, x: [9, 27], f: "kelas2", b: "cafe", h: 6 }, // IT-Mart | Kelas 2
   { x: 27, z: [12, 30], f: "cafe", b: "cafe", h: 4.6 },
   { z: 30, x: [-9, 9], d: [[-7.7, -5.3, 3.3]], f: "eportal", b: "welcome", h: 6 }, // pintu ke Ruang E-Portal
   // Ruang E-Portal UIKA (selatan Ruang Sambutan)
   { z: 30, x: [-20, -9], f: "eportal", b: "eportal", h: 6 },
   { x: -20, z: [30, 56], f: "eportal", b: "eportal", h: 6 },
-  { x: 9, z: [30, 56], f: "eportal", b: "eportal", h: 6 },
-  { z: 56, x: [-20, 9], f: "eportal", b: "eportal", h: 6 },
+  { x: 9, z: [30, 56], d: [[31.6, 33.6, 3.1]], f: "eportal", b: "kelas2", h: 6, dc: "#2dd4bf" }, // pintu ke Kelas 2
+  { z: 56, x: [-20, -8], d: [[-11.8, -9.8, 3.1]], f: "kelas1", b: "eportal", h: 6, dc: "#60a5fa" }, // pintu ke Kelas 1
+  { z: 56, x: [-8, 9], d: [[2, 4, 3.1]], f: "rapat", b: "eportal", h: 6, dc: "#f59e0b" }, // pintu ke Ruang Rapat
+  // Kelas 1 · Auditorium (selatan-barat E-Portal)
+  { z: 56, x: [-26, -20], f: "kelas1", b: "kelas1", h: 6 },
+  { x: -26, z: [56, 80], f: "kelas1", b: "kelas1", h: 6 },
+  { z: 80, x: [-26, -8], f: "kelas1", b: "kelas1", h: 6 },
+  { x: -8, z: [56, 80], f: "kelas1", b: "rapat", h: 6 },
+  // Ruang Rapat (selatan E-Portal)
+  { z: 56, x: [9, 10], f: "rapat", b: "kelas2", h: 6 },
+  { x: 10, z: [56, 80], f: "rapat", b: "rapat", h: 4.6 },
+  { z: 80, x: [-8, 10], f: "rapat", b: "rapat", h: 4.6 },
+  // Kelas 2 · Auditorium (timur E-Portal, selatan IT-Mart)
+  { x: 27, z: [30, 56], f: "kelas2", b: "kelas2", h: 6 },
+  { z: 56, x: [10, 27], f: "kelas2", b: "kelas2", h: 6 },
   // Atrium barat/timur
   { x: -12, z: [-12, 12], d: [[-2.5, 2.5, 4]], f: "keris", b: "atrium", h: 7 },
   { x: 12, z: [-12, 12], d: [[-2.5, 2.5, 4]], f: "atrium", b: "csn", h: 7 },
@@ -2666,7 +2733,7 @@ var WALLS = [
   { x: 24, z: [-38, -12], f: "se", b: "se", h: 5.5 }
 ];
 function groundH(x, z) {
-  return 0;
+  return typeof audGround === "function" ? audGround(x, z) : 0;
 }
 function blocked(x, z) {
   return false;
@@ -2773,6 +2840,37 @@ function wallCanvas(kind) {
     for (let i = 0; i < 7; i++) { x.beginPath(); x.arc(110, 120, 30 + i * 46, 0, 7); x.stroke(); }
     x.fillStyle = "rgba(16,185,129,.08)";
     x.fillRect(0, 470, 512, 42);
+  } else if (kind === "kelas1" || kind === "kelas2") {
+    // ruang kelas auditorium: dinding terang + panel akustik bilah kayu
+    const acc = kind === "kelas1" ? "#2563eb" : "#0d9488";
+    x.fillStyle = "#eef1f6";
+    x.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 16; i++) {
+      const g = x.createLinearGradient(i * 32, 0, i * 32 + 32, 0);
+      g.addColorStop(0, "#c9a27a"); g.addColorStop(0.5, "#d8b28a"); g.addColorStop(1, "#b88f66");
+      x.fillStyle = g;
+      x.fillRect(i * 32 + 4, 96, 24, 320);
+    }
+    x.fillStyle = "rgba(30,20,10,.25)";
+    x.fillRect(0, 416, 512, 4);
+    x.fillStyle = acc;
+    x.fillRect(0, 78, 512, 6);
+    x.fillRect(0, 430, 512, 6);
+  } else if (kind === "rapat") {
+    // ruang rapat: panel kayu walnut gelap + lis emas tipis
+    x.fillStyle = "#3a2618";
+    x.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 4; i++) {
+      const g = x.createLinearGradient(i * 128, 0, i * 128 + 128, 0);
+      g.addColorStop(0, "#4a3020"); g.addColorStop(0.5, "#5a3b27"); g.addColorStop(1, "#432b1c");
+      x.fillStyle = g;
+      x.fillRect(i * 128 + 3, 0, 122, 512);
+      x.strokeStyle = "rgba(20,10,4,.35)";
+      x.lineWidth = 2;
+      for (let k = 0; k < 7; k++) { x.beginPath(); x.moveTo(i * 128 + 10 + R() * 100, 0); x.bezierCurveTo(i * 128 + R() * 128, 170, i * 128 + R() * 128, 340, i * 128 + 10 + R() * 100, 512); x.stroke(); }
+    }
+    x.fillStyle = "rgba(252,211,77,.55)";
+    for (let i = 0; i <= 4; i++) x.fillRect(i * 128 - 1, 0, 2, 512);
   } else if (kind === "cafe") {
     // panel kayu hangat + lis bata ekspos
     x.fillStyle = "#5b3a24";
@@ -2906,6 +3004,23 @@ function floorCanvas(k, r) {
     x.strokeStyle = "rgba(5,150,105,.6)";
     x.lineWidth = 0.08 * sx;
     for (const rad of [3, 4.6]) { x.beginPath(); x.arc(X(-5.5), Z(51), rad * sx, 0, 7); x.stroke(); }
+  } else if (k === "kelas1" || k === "kelas2") {
+    // karpet kelas (abu kebiruan / hijau toska) + jalur depan
+    x.fillStyle = k === "kelas1" ? "#3b4a63" : "#2f5650";
+    x.fillRect(0, 0, c.width, c.height);
+    for (let i = 0; i < 9000; i++) { x.fillStyle = `rgba(255,255,255,${R() * 0.05})`; x.fillRect(R() * c.width, R() * c.height, 2, 2); }
+    x.fillStyle = k === "kelas1" ? "#e2e8f0" : "#e7eeea";
+    x.fillRect(0, 0, c.width, 6 * sz); // area depan (panggung dosen) berlantai vinil terang
+    x.strokeStyle = "rgba(15,23,42,.15)"; x.lineWidth = 2;
+    for (let i = 0; i < c.width; i += 1.2 * sx) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, 6 * sz); x.stroke(); }
+  } else if (k === "rapat") {
+    // karpet ruang rapat bermotif
+    x.fillStyle = "#3f3f46";
+    x.fillRect(0, 0, c.width, c.height);
+    x.strokeStyle = "rgba(250,204,21,.10)"; x.lineWidth = 3;
+    for (let i = -c.height; i < c.width; i += 0.8 * sx) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i + c.height, c.height); x.stroke(); }
+    x.fillStyle = "rgba(120,53,15,.55)";
+    x.beginPath(); x.ellipse(X(1), Z(68.5), 3.4 * sx, 8.8 * sz, 0, 0, 7); x.fill();
   } else if (k === "cafe") {
     // lantai papan kayu
     const pw = 0.22 * sx;
@@ -3239,13 +3354,13 @@ function buildWorld(scene2, quality) {
   };
   api.texFrom = texFrom;
   const wallC = {};
-  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal"]) wallC[k] = wallCanvas(k);
+  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat"]) wallC[k] = wallCanvas(k);
   const wallMatCache = {};
   const wallMat = (k, len, h) => {
     const key = k + "|" + len.toFixed(1) + "|" + h;
     if (wallMatCache[key]) return wallMatCache[key];
     const t2 = texFrom(wallC[k], [Math.max(1, Math.round(len / 4)), Math.max(1, Math.round(h / 4))]);
-    const m = new THREE.MeshStandardMaterial({ map: t2, roughness: k === "atrium" ? 0.35 : 0.85, metalness: 0, emissive: k === "se" || k === "atrium" || k === "eportal" ? 0 : 16777215, emissiveMap: k === "se" || k === "atrium" || k === "eportal" ? null : t2, emissiveIntensity: k === "welcome" ? 0.15 : k === "cafe" ? 0.22 : 0.35 });
+    const m = new THREE.MeshStandardMaterial({ map: t2, roughness: k === "atrium" ? 0.35 : 0.85, metalness: 0, emissive: k === "se" || k === "atrium" || k === "eportal" || k === "rapat" ? 0 : 16777215, emissiveMap: k === "se" || k === "atrium" || k === "eportal" || k === "rapat" ? null : t2, emissiveIntensity: k === "welcome" ? 0.15 : k === "cafe" ? 0.22 : 0.35 });
     return wallMatCache[key] = m;
   };
   const M = {
@@ -3277,7 +3392,7 @@ function buildWorld(scene2, quality) {
     api.walls.add(m);
     return m;
   }
-  function archPiece(w, H, dh, cx, cz, rotY, mf, mb) {
+  function archPiece(w, H, dh, cx, cz, rotY, mf, mb, dc) {
     const r = w / 2, hb = Math.max(0.3, dh - r), s = new THREE.Shape();
     s.moveTo(-w / 2 - 1e-3, 0);
     s.lineTo(-w / 2, hb);
@@ -3297,7 +3412,7 @@ function buildWorld(scene2, quality) {
       api.walls.add(m);
     }
     // bingkai pintu bercahaya
-    const dcol = Math.abs(cz - 30) < 0.01 ? "#10b981" : cx === 9 ? "#d97706" : cz > 11 ? "#f5b400" : cx < -11 ? LABS.keris.col : cx > 11 ? LABS.csn.col : cx < 0 ? LABS.git.col : LABS.se.col;
+    const dcol = dc ? dc : Math.abs(cz - 30) < 0.01 ? "#10b981" : cx === 9 ? "#d97706" : cz > 11 ? "#f5b400" : cx < -11 ? LABS.keris.col : cx > 11 ? LABS.csn.col : cx < 0 ? LABS.git.col : LABS.se.col;
     const ring = new THREE.Mesh(new THREE.TorusGeometry(r + 0.05, 0.05, 8, 40, Math.PI), basicCol(dcol));
     ring.position.set(cx, hb, cz);
     ring.rotation.y = rotY;
@@ -3328,7 +3443,7 @@ function buildWorld(scene2, quality) {
       const a0 = d0 - 0.35, a1 = d1 + 0.35;
       if (a0 > cur) solids.push([cur, a0]);
       const [cx, cz] = P2((d0 + d1) / 2);
-      archPiece(d1 - d0, H, dh || DOOR_H, cx, cz, rotY, wallMat(w.f, 4, H), wallMat(w.b, 4, H));
+      archPiece(d1 - d0, H, dh || DOOR_H, cx, cz, rotY, wallMat(w.f, 4, H), wallMat(w.b, 4, H), w.dc);
       api.colliders.push({ a: P2(a0), b: P2(d0) }, { a: P2(d1), b: P2(a1) });
       cur = a1;
     }
@@ -3340,7 +3455,7 @@ function buildWorld(scene2, quality) {
     }
   }
   // lantai, plafon, lampu strip
-  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528", eportal: "#ffffff" };
+  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528", eportal: "#ffffff", kelas1: "#e8edf5", kelas2: "#e6f2f0", rapat: "#2a1d14" };
   for (const [k, r] of Object.entries(ROOMS)) {
     const w = r.x1 - r.x0, d = r.z1 - r.z0;
     const fc = floorCanvas(k, r);
@@ -3372,7 +3487,7 @@ function buildWorld(scene2, quality) {
     ce.rotation.x = Math.PI / 2;
     ce.position.y = r.h;
     scene2.add(ce);
-    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : k === "eportal" ? "#10b981" : "#ffffff";
+    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : k === "eportal" ? "#10b981" : k === "kelas1" ? "#93c5fd" : k === "kelas2" ? "#5eead4" : k === "rapat" ? "#fcd34d" : "#ffffff";
     const sm = basicCol(stripCol);
     for (const [ax, az, bx, bz] of [[r.x0 + 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z0 + 0.5], [r.x0 + 0.5, r.z1 - 0.5, r.x1 - 0.5, r.z1 - 0.5], [r.x0 + 0.5, r.z0 + 0.5, r.x0 + 0.5, r.z1 - 0.5], [r.x1 - 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z1 - 0.5]]) {
       const len = Math.hypot(bx - ax, bz - az), led = new THREE.Mesh(new THREE.BoxGeometry(ax === bx ? 0.08 : len, 0.03, ax === bx ? len : 0.08), sm);
@@ -4625,6 +4740,7 @@ function wsNet(url, h) {
       if (api.modKey) send({ type: "auth", key: api.modKey });
       send({ type: "presence", data: pres });
       if (typeof timOnOpen === "function") timOnOpen();
+      if (typeof klsOnOpen === "function") klsOnOpen();
     };
     ws.onmessage = (ev) => {
       if (typeof ev.data !== "string" || ev.data.length > 4e6)
@@ -4649,6 +4765,8 @@ function wsNet(url, h) {
         if (Array.isArray(m.notes)) h.onNotesInit && h.onNotesInit(m.notes);
         if (Array.isArray(m.hof)) h.onHofInit && h.onHofInit(m.hof);
         if (m.pem && typeof m.pem === "object") h.onPem && h.onPem(m.pem);
+        if (m.sb && typeof m.sb === "object" && typeof sbRx === "function") sbRx({ type: "sb_init", sb: m.sb });
+        if (m.kls && typeof klsRx === "function") klsRx({ type: "kls_jadwal", j: m.kls });
       } else if (m.type === "presence" && typeof m.id === "string" && m.id !== selfId) {
         peers.set(m.id, { id: m.id, presence: obj(m.data) });
         emitPeers();
@@ -4689,6 +4807,12 @@ function wsNet(url, h) {
         if (api.hofCb) { api.hofCb(m); api.hofCb = null; }
       } else if (typeof m.type === "string" && m.type.startsWith("tim_")) {
         if (typeof timRx === "function") timRx(m);
+      } else if (typeof m.type === "string" && m.type.startsWith("sb_")) {
+        if (typeof sbRx === "function") sbRx(m);
+      } else if (typeof m.type === "string" && m.type.startsWith("kls_")) {
+        if (typeof klsRx === "function") klsRx(m);
+      } else if (typeof m.type === "string" && m.type.startsWith("sfu_")) {
+        if (typeof sfuRx === "function") sfuRx(m);
       }
     };
     ws.onclose = () => {
@@ -6431,10 +6555,10 @@ function closeAll() {
   if (drawMode)
     setDrawMode(false);
 }
-var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal"];
+var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat"];
 function drawMap(c, opt = {}) {
   const x = c.getContext("2d"), W = c.width, H = c.height;
-  const bx0 = -42, bx1 = 42, bz0 = -40, bz1 = 58;
+  const bx0 = -42, bx1 = 42, bz0 = -40, bz1 = 82;
   const sc = Math.min((W - 40) / (bx1 - bx0), (H - 40) / (bz1 - bz0));
   const ox = (W - (bx1 - bx0) * sc) / 2 - bx0 * sc, oz = (H - (bz1 - bz0) * sc) / 2 - bz0 * sc;
   const X = (v) => ox + v * sc, Z = (v) => oz + v * sc;
@@ -7008,6 +7132,8 @@ function setAvatarNameOf(av, n) {
   t2.scale.set(0.2 * c.width / c.height, 0.2, 1);
 }
 var VOICE_NEAR = 3, VOICE_FAR = 20;
+// ruangan tanpa batas jarak suara: semua yang berada di ruangan yang sama terdengar jelas tanpa pengeras suara
+var VOICE_ROOMS = new Set(["kelas1", "kelas2", "rapat"]);
 function mpTick(dt) {
   for (const r of remotes.values()) {
     const k = Math.min(1, dt * 8);
@@ -7022,7 +7148,10 @@ function mpTick(dt) {
     if (r.audio) {
       const d = Math.hypot(r.cur.x - P.x, r.cur.z - P.z);
       // tanpa pengeras suara: jelas ≤ 3 m, makin pelan, tidak terdengar ≥ 20 m
-      r.audio.volume = (typeof caveSolo === "function" && caveSolo(r)) ? 0 : r.mega ? 1 : d <= VOICE_NEAR ? 1 : d >= VOICE_FAR ? 0 : Math.pow((VOICE_FAR - d) / (VOICE_FAR - VOICE_NEAR), 1.6);
+      const rmMe = VOICE_ROOMS.has(curRoom) ? curRoom : null, rmIt = roomAt(r.cur.x, r.cur.z), sameRoom = rmMe && rmIt === rmMe;
+      // ruang kelas/rapat dengan server media: suara lewat SFU, jalur langsung (P2P) dimatikan; orang di luar tidak mendengar isi kelas
+      const viaSfu = typeof KLS !== "undefined" && ((rmMe && KLS.sfu) || (!rmMe && VOICE_ROOMS.has(rmIt) && !KLS.sfuOff));
+      r.audio.volume = (typeof caveSolo === "function" && caveSolo(r)) || viaSfu ? 0 : r.mega || sameRoom ? 1 : d <= VOICE_NEAR ? 1 : d >= VOICE_FAR ? 0 : Math.pow((VOICE_FAR - d) / (VOICE_FAR - VOICE_NEAR), 1.6);
     }
   }
   presT += dt;
@@ -7138,6 +7267,7 @@ async function voiceStart() {
   return true;
 }
 function voiceEnable(on) {
+  if (typeof klsMicApply === "function") setTimeout(klsMicApply, 0);
   if (micStream)
     micStream.getAudioTracks().forEach((t2) => t2.enabled = on);
 }
@@ -7528,6 +7658,8 @@ async function boot() {
       }
       return;
     }
+    // wajib mikrofon & speaker aktif
+    if (!avGate(enter)) return;
     // wajib izin lokasi (jadwal adzan per wilayah) & tidak sedang dalam jeda adzan
     if (!adzanGate(enter)) return;
     if (isModName(nm) && !enter.ok) {
@@ -7558,6 +7690,7 @@ async function boot() {
       setTimeout(() => ytCmd("play"), 400);
     setTimeout(() => toast(`Selamat datang, ${S.name}! Tonton video sambutan, lalu jalan ke utara menuju Atrium & 4 lab.`, 6e3), 700);
     adzanStart();
+    avAfterEnter();
   };
   const go = $("ldGo");
   const form = $("ldForm");
@@ -8437,6 +8570,7 @@ function setupYT() {
   Y.mesh.material = yt.hole;
   addEventListener("message", (ev) => {
     if (typeof ev.origin !== "string" || !/^https:\/\/www\.youtube(-nocookie)?\.com$/.test(ev.origin)) return;
+    if (!yt.frame || ev.source !== yt.frame.contentWindow) return;
     let d;
     try {
       d = typeof ev.data === "string" ? JSON.parse(ev.data) : ev.data;
@@ -8496,7 +8630,7 @@ function ytCmd(cmd) {
 function ytTick(dt) {
   if (!cssR) return;
   const r = curRoom;
-  const vis = !renderer.xr.isPresenting && (r === "welcome" || r === "atrium" && P.z > 4);
+  const vis = !renderer.xr.isPresenting && (r === "welcome" || r === "atrium" && P.z > 4 || (typeof sbCssOn === "function" && sbCssOn()));
   if (vis !== yt.visible) {
     yt.visible = vis;
     cssR.domElement.style.display = vis ? "" : "none";
@@ -8760,6 +8894,10 @@ function zoneTick(dt) {
     }
   } else if (r === "eportal") {
     toast("🌐 Ruang E-Portal UIKA — temui Virzha di gerbang portal untuk akses eportal.uika-bogor.ac.id (masih dalam pengembangan).", 4500);
+  } else if (r === "kelas1" || r === "kelas2") {
+    toast(`🎓 ${ROOMS[r].name} — suara semua orang di ruangan ini terdengar jelas tanpa pengeras suara. Klik smart board untuk slide/video; tekan tombol duduk di dekat kursi.`, 5200);
+  } else if (r === "rapat") {
+    toast("🤝 Ruang Rapat — suara semua peserta terdengar jelas tanpa pengeras suara. Klik layar di dinding selatan untuk slide/video.", 4800);
   } else if (r === "cafe") {
     toast("☕ IT-Mart — ngobrol dengan barista Rahman soal kopi, dosen TI, atau saran dosen pembimbing.", 4200);
     if (!store.get("cafeHint", false)) { store.set("cafeHint", true); setTimeout(() => sayBubble(`Selamat datang di IT-Mart, ${S.name}! Mau kopi apa hari ini? ☕`, "npc_rahman"), 600); }
@@ -9909,6 +10047,7 @@ function xHandleAct(act, hit, e) {
     case "x_buku": bukuCard(); break;
     case "x_epslide": epSlides(act.i); break;
     case "x_epall": epSlides(0); break;
+    case "x_smart": sbOpen(act.id); break;
     case "x_epgo": openNpc("vir", "chat"); epOpenPortal(); break;
     case "x_pemboard": pemFinalCard(); break;
     case "x_cafemenu": cafeMenuCard(); break;
@@ -10001,6 +10140,7 @@ function buildExtras() {
     try { buildPeminatan(); } catch (err) { console.error("Peminatan gagal dibangun:", err); }
     try { buildCafe(); } catch (err) { console.error("Cafe gagal dibangun:", err); }
     try { buildEportal(); } catch (err) { console.error("Ruang E-Portal gagal dibangun:", err); }
+    try { buildKelas(); } catch (err) { console.error("Kelas & Ruang Rapat gagal dibangun:", err); }
     try { buildQuran(); } catch (err) { console.error("Sudut Al-Qur'an gagal dibangun:", err); }
     try { buildBuku(); } catch (err) { console.error("Rak buku gagal dibangun:", err); }
     try { buildLantai2(); } catch (err) { console.error("Lantai 2 gagal dibangun:", err); }
@@ -11973,6 +12113,76 @@ function adzanKick(ev, reason) {
   document.body.appendChild(ov);
   setTimeout(() => location.reload(), 6000);
 }
+// ---------- mikrofon & speaker (wajib sebelum masuk) ----------
+var AV = { mic: false, spk: false, ctx: null, an: null, raf: 0, busy: false };
+function avRow(id, cls, txt) { const r = $(id); if (!r) return; r.classList.remove("ok", "bad"); if (cls) r.classList.add(cls); const sm = r.querySelector("small"); if (sm && txt) sm.textContent = txt; }
+function avCtx() { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; if (!AV.ctx) AV.ctx = new AC(); if (AV.ctx.state === "suspended") AV.ctx.resume().catch(() => {}); return AV.ctx; }
+async function avMicAsk() {
+  if (AV.mic || AV.busy) return AV.mic;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.isSecureContext) { avRow("avMic", "bad", "Browser ini tidak bisa memakai mikrofon (butuh HTTPS dan browser terbaru)."); return false; }
+  AV.busy = true; avRow("avMic", "", "Mohon izinkan akses mikrofon pada jendela browser…");
+  try {
+    if (!micStream) micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+    AV.mic = true;
+    avRow("avMic", "ok", "Mikrofon aktif ✓ — coba bicara, bilah di bawah akan bergerak.");
+    $("avMicBtn").textContent = "✓ Aktif";
+    const c = avCtx();
+    if (c) {
+      const src = c.createMediaStreamSource(micStream); AV.an = c.createAnalyser(); AV.an.fftSize = 512; src.connect(AV.an);
+      const buf = new Uint8Array(AV.an.fftSize);
+      const loop = () => { if (!$("avLvl")) return; AV.an.getByteTimeDomainData(buf); let m = 0; for (const v of buf) m = Math.max(m, Math.abs(v - 128)); $("avLvl").style.width = Math.min(100, m * 1.6) + "%"; AV.raf = requestAnimationFrame(loop); };
+      loop();
+    }
+  } catch (e) {
+    const nf = e && (e.name === "NotFoundError" || e.name === "OverconstrainedError");
+    avRow("avMic", "bad", nf ? "Mikrofon tidak ditemukan. Sambungkan mikrofon/headset lalu coba lagi." : "Izin mikrofon DITOLAK. Izinkan mikrofon untuk situs ini (ikon gembok di bilah alamat), lalu klik Izinkan lagi.");
+    $("avMicBtn").textContent = "Coba lagi";
+  }
+  AV.busy = false;
+  return AV.mic;
+}
+function avSpkTest() {
+  const c = avCtx();
+  if (!c) { avRow("avSpk", "bad", "Browser ini tidak bisa memutar suara tes."); return; }
+  const t0 = c.currentTime + 0.05, g = c.createGain(); g.connect(c.destination); g.gain.value = 0.9;
+  [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+    const o = c.createOscillator(), e = c.createGain(); o.type = "sine"; o.frequency.value = f;
+    e.gain.setValueAtTime(0.0001, t0 + i * 0.28); e.gain.exponentialRampToValueAtTime(0.5, t0 + i * 0.28 + 0.03); e.gain.exponentialRampToValueAtTime(0.0001, t0 + i * 0.28 + 0.5);
+    o.connect(e); e.connect(g); o.start(t0 + i * 0.28); o.stop(t0 + i * 0.28 + 0.55);
+  });
+  try { if ("speechSynthesis" in window) { const u = new SpeechSynthesisUtterance("Tes speaker. Satu, dua, tiga."); u.lang = "id-ID"; setTimeout(() => speechSynthesis.speak(u), 1300); } } catch { }
+  avRow("avSpk", "", "Mendengarkan suara tes…");
+  $("avSpkBtn").textContent = "↻ Ulangi";
+  $("avSpkQ").hidden = false;
+}
+function avSpkAnswer(ok) {
+  $("avSpkQ").hidden = true;
+  AV.spk = ok;
+  if (ok) { avRow("avSpk", "ok", "Speaker aktif ✓"); $("avSpkBtn").textContent = "✓ Aktif"; }
+  else avRow("avSpk", "bad", "Belum terdengar: nyalakan & besarkan volume, lepas mode senyap, atau pasang headset — lalu tes ulang.");
+}
+// dipanggil di awal enter(): true = mikrofon & speaker siap
+function avGate(enterFn) {
+  if (AV.mic && AV.spk) return true;
+  $("ldAv")?.classList.add("need"); setTimeout(() => $("ldAv")?.classList.remove("need"), 1600);
+  if (!AV.mic) { avMicAsk().then((ok) => { if (ok && AV.spk) enterFn(); else if (ok) toast("Mikrofon aktif. Sekarang tes speaker: klik ▶ Tes lalu konfirmasi.", 4500); }); return false; }
+  toast("Tes speaker dulu: klik ▶ Tes, lalu pilih ✅ Terdengar.", 4500);
+  return false;
+}
+function avAfterEnter() {
+  cancelAnimationFrame(AV.raf);
+  // mikrofon langsung menyala (bisa dibisukan lewat tombol mikrofon)
+  setTimeout(() => { if (!micOn) $("btnMic").click(); }, 1200);
+  // izin mikrofon dicabut di tengah permainan → keluar
+  try { navigator.permissions?.query({ name: "microphone" }).then((st) => { st.onchange = () => { if (st.state === "denied") adzanKick(null, "Izin mikrofon dicabut. Galeri tidak dapat dimainkan tanpa mikrofon."); }; }).catch(() => {}); } catch { /* opsional */ }
+}
+setTimeout(() => {
+  if (!$("avMicBtn")) return;
+  $("avMicBtn").onclick = () => avMicAsk();
+  $("avSpkBtn").onclick = avSpkTest;
+  $("avYes").onclick = () => avSpkAnswer(true);
+  $("avNo").onclick = () => avSpkAnswer(false);
+}, 0);
 // tampilkan status jeda/izin di layar awal sejak halaman dimuat
 setTimeout(() => { if (adzanBlockInfo()) adzanShowBlock(); }, 0);
 
@@ -12158,6 +12368,884 @@ function buildEportal() {
   });
   buildSit();
 }
+// =====================================================================
+// src/ext_kelas.js — KELAS 1 & KELAS 2 (auditorium + smart board) dan
+// RUANG RAPAT (meja elips panjang). Ketiganya berpintu dan terhubung
+// langsung dengan Ruang E-Portal UIKA.
+// =====================================================================
+// lantai bertingkat: area depan (panggung dosen) datar, lalu 8 baris naik ke belakang
+var AUD = {
+  kelas1: { front: 6, rows: 8, rowD: 2, step: 0.25, carpet: 0x34425a, seat: "#1e3a8a", acc: "#60a5fa", title: "KELAS 1" },
+  kelas2: { front: 6, rows: 8, rowD: 2, step: 0.25, carpet: 0x2b4f4a, seat: "#115e59", acc: "#2dd4bf", title: "KELAS 2" }
+};
+function audGround(x, z) {
+  for (const k in AUD) {
+    const r = ROOMS[k], A = AUD[k];
+    if (x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1) {
+      const d = z - (r.z0 + A.front);
+      return d <= 0 ? 0 : Math.min(A.rows, Math.floor(d / A.rowD) + 1) * A.step;
+    }
+  }
+  return 0;
+}
+// ---------- pintu geser kaca otomatis ----------
+var KDOORS = [];
+function kDoor(cx, cz, horiz, acc, room) {
+  const g = new THREE2.Group(); g.position.set(cx, 0, cz); g.rotation.y = horiz ? 0 : -Math.PI / 2; scene.add(g);
+  const frameM = new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.85, roughness: 0.3 });
+  const glassM = new THREE2.MeshStandardMaterial({ color: 0xdbeafe, transparent: true, opacity: 0.32, metalness: 0.1, roughness: 0.05, depthWrite: false });
+  const accM = new THREE2.MeshBasicMaterial({ color: new THREE2.Color(acc), toneMapped: false });
+  const leaves = [-1, 1].map((sx) => {
+    const L = new THREE2.Group(); g.add(L);
+    xBox(0.96, 2.04, 0.03, glassM, 0, 1.04, 0, 0, L);
+    for (const [w, h, x, y] of [[0.98, 0.06, 0, 2.06], [0.98, 0.08, 0, 0.04], [0.05, 2.1, -0.47, 1.05], [0.05, 2.1, 0.47, 1.05]]) xBox(w, h, 0.05, frameM, x, y, 0, 0, L);
+    xBox(0.9, 0.05, 0.035, accM, 0, 1.35, 0, 0, L);           // stiker pengaman setinggi mata
+    xBox(0.03, 0.7, 0.09, frameM, -sx * 0.4, 1.05, 0, 0, L);  // pegangan
+    L.position.x = sx * 0.5;
+    return { L, sx };
+  });
+  const col = room ? xCol(horiz ? cx - 1.05 : cx, horiz ? cz : cz - 1.05, horiz ? cx + 1.05 : cx, horiz ? cz : cz + 1.05, 0.12) : null;
+  if (col) col.off = true;
+  KDOORS.push({ cx, cz, leaves, k: 0, room, col, lock: false });
+}
+function kDoorTick(dt) {
+  for (const D of KDOORS) {
+    const d = Math.hypot(P.x - D.cx, P.z - D.cz);
+    if (d > 9 && D.k < 0.001) continue;
+    const tgt = d < 3.2 && !D.lock ? 1 : 0;
+    D.k += (tgt - D.k) * Math.min(1, dt * 4);
+    for (const { L, sx } of D.leaves) L.position.x = sx * (0.5 + D.k * 0.97);
+  }
+}
+// papan nama ruangan di atas pintu (dua sisi)
+function kSign(txt, col, x, z, ry) {
+  const c = mkCanvas(900, 170), t2 = c.getContext("2d");
+  t2.fillStyle = col; rr(t2, 0, 0, 900, 170, 30); t2.fill();
+  t2.fillStyle = "#fff"; t2.font = `700 62px ${FONT}`; t2.textAlign = "center"; t2.textBaseline = "middle"; t2.fillText(txt, 450, 88);
+  const m = xPlane(c, 2.2, 0.42); m.position.set(x, 3.72, z); m.rotation.y = ry; scene.add(m);
+  return m;
+}
+// lampu panel plafon
+function kCeilLights(R, gap, col = "#ffffff") {
+  const m = new THREE2.MeshBasicMaterial({ color: new THREE2.Color(col), transparent: true, opacity: 0.9, toneMapped: false, side: THREE2.DoubleSide });
+  const pos = [];
+  for (let x = R.x0 + gap / 2; x < R.x1 - 1; x += gap) for (let z = R.z0 + gap / 2; z < R.z1 - 1; z += gap) pos.push([x, z]);
+  const im = new THREE2.InstancedMesh(new THREE2.PlaneGeometry(1.2, 1.2), m, pos.length), o = new THREE2.Object3D();
+  pos.forEach(([x, z], i) => { o.position.set(x, R.h - 0.03, z); o.rotation.set(Math.PI / 2, 0, 0); o.updateMatrix(); im.setMatrixAt(i, o.matrix); });
+  scene.add(im);
+}
+function kPlant(px, pz) {
+  const pot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.3, 0.24, 0.55, 16), new THREE2.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.5 })); pot.position.set(px, 0.275, pz); scene.add(pot);
+  const lm = new THREE2.MeshStandardMaterial({ color: 0x15803d, roughness: 0.8 });
+  for (let i = 0; i < 6; i++) { const lf = new THREE2.Mesh(new THREE2.SphereGeometry(0.28, 10, 8), lm); lf.scale.set(0.55, 1.5, 0.55); lf.position.set(px + Math.cos(i) * 0.15, 0.85 + (i % 2) * 0.15, pz + Math.sin(i) * 0.15); lf.rotation.z = Math.cos(i) * 0.4; scene.add(lf); }
+  world.circles.push({ x: px, z: pz, r: 0.34 });
+}
+
+// ---------- SMART BOARD (konten dari admin: slide gambar atau YouTube) ----------
+// Kelas 1, Kelas 2 & Ruang Rapat: slide aktif, coretan, dan putar/jeda video dibagikan ke semua pemain (pesan sb_*).
+// Smart board di 4 lab: dimainkan masing-masing pemain (tidak disinkronkan).
+var SB = { boards: {}, cfg: null, pend: {}, cur: null, col: "#dc2626", size: 6, erase: false, raf: 0, hole: null, cfgT: 0 };
+var SB_W = 1280, SB_H = 720;
+var SB_FALL = null;
+function sbFallback() {
+  if (SB_FALL) return SB_FALL;
+  SB_FALL = [];
+  for (const lab of ["keris", "git", "se", "csn"]) for (const s of (LABS[lab] && LABS[lab].slides) || []) { const n = String(s.p).padStart(2, "0"); SB_FALL.push({ src: `assets/${lab}/z${n}.webp`, alt: `assets/${lab}/w${n}.webp`, judul: `${LABS[lab].code} · ${s.t}` }); }
+  return SB_FALL;
+}
+function sbList(B) { const c = B.cfg; return c && c.slides && c.slides.length ? c.slides.map((s) => ({ src: `/sb/${s.id}.${s.ext}`, judul: s.judul || "" })) : sbFallback(); }
+var sbMode = (B) => (B.cfg && B.cfg.mode === "youtube" && B.cfg.yt ? "youtube" : "slide");
+var sbPos = (B) => B.yt.t + (B.yt.p ? (performance.now() - B.yt.base) / 1000 : 0);
+function sbSend(B, o) { if (!B.local && net && typeof net.raw === "function") net.raw(Object.assign({ b: B.id }, o)); }
+
+function sbMake(id, title, acc, group, w, h, room, local) {
+  const c = mkCanvas(SB_W, SB_H), ann = mkCanvas(SB_W, SB_H);
+  const m = xPlane(c, w, h); m.material.transparent = false; m.position.z = 0.05; group.add(m);
+  xAct(m, { type: "x_smart", id });
+  const B = SB.boards[id] = { id, title, acc, c, ann, mesh: m, mat: m.material, w, room, local: !!local, cfg: null, v: 0, i: 0, strokes: [], yt: { p: false, t: 0, base: performance.now() }, img: null, imgSrc: "", css: null, frame: null, ready: false, cur: 0, muted: false };
+  if (SB.cfg) sbApplyBoard(B); else sbRender(B);
+  if (SB.pend[id]) { sbLive(B, SB.pend[id]); delete SB.pend[id]; }
+  return B;
+}
+function sbLive(B, L) {
+  if (!L) return;
+  B.i = L.i | 0; B.strokes = Array.isArray(L.strokes) ? L.strokes.slice() : [];
+  const y = L.yt || {}; B.yt = { p: !!y.p, t: (+y.t || 0) + (y.p ? (+y.el || 0) / 1000 : 0), base: performance.now() };
+  sbRedrawAnn(B); sbLoadSlide(B); sbYtApply(B);
+}
+async function sbLoadCfg() {
+  let j; try { j = await (await fetch("/api/sb", { cache: "no-store" })).json(); } catch { return; }
+  if (!j || !j.ok) return;
+  SB.cfg = j;
+  // video sambutan Ruang Sambutan
+  if (j.welcome && /^[\w-]{11}$/.test(j.welcome.yt) && j.welcome.yt !== WELCOME_YT) {
+    WELCOME_YT = j.welcome.yt;
+    if (yt.frame) { const origin = /^https?:$/.test(location.protocol) ? "&origin=" + encodeURIComponent(location.origin) : ""; yt.ready = false; yt.playing = false; yt.frame.src = `https://www.youtube-nocookie.com/embed/${WELCOME_YT}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1${origin}`; }
+  }
+  for (const B of Object.values(SB.boards)) sbApplyBoard(B);
+}
+function sbApplyBoard(B) {
+  const c = SB.cfg && SB.cfg.boards && SB.cfg.boards[B.id];
+  if (!c) return;
+  const changed = B.v !== c.v, modeOld = B.cfg ? sbMode(B) : null, ytOld = B.cfg && B.cfg.yt;
+  B.cfg = c;
+  if (changed && B.v) { B.i = 0; B.strokes = []; B.yt = { p: false, t: 0, base: performance.now() }; sbRedrawAnn(B); }
+  B.v = c.v;
+  if (modeOld !== sbMode(B) || ytOld !== c.yt) sbCssOff(B);
+  B.img = null; B.imgSrc = "";
+  if (sbMode(B) === "slide") sbLoadSlide(B); else sbRender(B);
+  if (SB.cur === B.id) sbPanel(B);
+}
+// ----- jaringan -----
+function sbRx(m) {
+  if (m.type === "sb_init") { for (const [k, L] of Object.entries(m.sb || {})) { const B = SB.boards[k]; if (B) sbLive(B, L); else SB.pend[k] = L; } return; }
+  if (m.type === "sb_cfg") { clearTimeout(SB.cfgT); SB.cfgT = setTimeout(sbLoadCfg, 300); return; }
+  if (m.type === "sb_deny") { toast("🔒 Papan sedang dikendalikan pengajar.", 3000); const B2 = SB.boards[m.b]; if (B2 && typeof klsResync === "function") klsResync(B2); return; }
+  const B = SB.boards[m.b]; if (!B || B.local) return;
+  if (m.type === "sb_set") { B.i = m.i | 0; B.strokes = []; sbRedrawAnn(B); sbLoadSlide(B); if (SB.cur === B.id) sbTools(B); }
+  else if (m.type === "sb_stroke" && m.stroke) { B.strokes.push(m.stroke); sbDrawStroke(B.ann.getContext("2d"), m.stroke); sbRender(B); }
+  else if (m.type === "sb_clear") { B.strokes = []; sbRedrawAnn(B); sbRender(B); }
+  else if (m.type === "sb_yt") { B.yt = { p: !!m.p, t: +m.t || 0, base: performance.now() }; sbYtApply(B); if (SB.cur === B.id) sbTools(B); }
+}
+// ----- gambar -----
+function sbDrawStroke(x, st) {
+  const p = st.p; if (!p || !p.length) return;
+  x.save(); x.globalCompositeOperation = st.e ? "destination-out" : "source-over";
+  x.strokeStyle = st.c; x.lineWidth = st.w; x.lineCap = x.lineJoin = "round";
+  x.beginPath(); x.moveTo(p[0][0] * SB_W, p[0][1] * SB_H);
+  if (p.length === 1) x.lineTo(p[0][0] * SB_W + 0.1, p[0][1] * SB_H + 0.1);
+  for (let i = 1; i < p.length; i++) x.lineTo(p[i][0] * SB_W, p[i][1] * SB_H);
+  x.stroke(); x.restore();
+}
+function sbRedrawAnn(B) { const x = B.ann.getContext("2d"); x.clearRect(0, 0, SB_W, SB_H); for (const st of B.strokes) sbDrawStroke(x, st); }
+function sbRender(B) {
+  const x = B.c.getContext("2d");
+  x.save();
+  if (typeof klsPollDraw === "function" && klsPollDraw(B, x)) {
+    /* hasil polling ditampilkan pengajar di papan */
+  } else if (!B.cfg) {
+    x.fillStyle = "#0b1220"; x.fillRect(0, 0, SB_W, SB_H);
+    x.fillStyle = "#94a3b8"; x.font = `500 34px ${FONT}`; x.textAlign = "center"; x.fillText("Memuat konten smart board…", SB_W / 2, SB_H / 2);
+  } else if (sbMode(B) === "youtube") {
+    const g = x.createLinearGradient(0, 0, SB_W, SB_H); g.addColorStop(0, "#0b1220"); g.addColorStop(1, "#1e293b");
+    x.fillStyle = g; x.fillRect(0, 0, SB_W, SB_H);
+    x.fillStyle = "#dc2626"; rr(x, SB_W / 2 - 110, 210, 220, 154, 40); x.fill();
+    x.fillStyle = "#fff"; x.beginPath(); x.moveTo(SB_W / 2 - 30, 245); x.lineTo(SB_W / 2 + 50, 287); x.lineTo(SB_W / 2 - 30, 329); x.closePath(); x.fill();
+    x.textAlign = "center"; x.fillStyle = "#f8fafc"; x.font = `700 44px ${FONT}`; x.fillText((B.cfg.judul || "Video YouTube").slice(0, 46), SB_W / 2, 450);
+    x.fillStyle = "#94a3b8"; x.font = `500 28px ${FONT}`; x.fillText(B.local ? "Klik layar untuk memutar video" : "Klik layar untuk memutar · diputar bersama semua pemain di ruangan", SB_W / 2, 505);
+    x.fillStyle = B.acc; x.fillRect(0, 0, SB_W, 10);
+  } else {
+    x.fillStyle = "#0b1220"; x.fillRect(0, 0, SB_W, SB_H);
+    const list = sbList(B), s = list[Math.min(B.i, list.length - 1)];
+    if (B.img) { const k = Math.min(SB_W / B.img.width, (SB_H - 64) / B.img.height), iw = B.img.width * k, ih = B.img.height * k; x.drawImage(B.img, (SB_W - iw) / 2, (SB_H - 64 - ih) / 2, iw, ih); }
+    else { x.fillStyle = "#94a3b8"; x.font = `500 30px ${FONT}`; x.textAlign = "center"; x.fillText(list.length ? "Memuat slide…" : "Belum ada slide", SB_W / 2, SB_H / 2); }
+    x.fillStyle = "rgba(2,6,23,.92)"; x.fillRect(0, SB_H - 64, SB_W, 64);
+    x.fillStyle = B.acc; x.fillRect(0, SB_H - 64, 10, 64);
+    x.textAlign = "left"; x.fillStyle = "#f8fafc"; x.font = `600 25px ${FONT}`;
+    x.fillText([B.cfg.judul, s && s.judul].filter(Boolean).join(" · ").slice(0, 78) || B.title, 28, SB_H - 23);
+    x.textAlign = "right"; x.fillStyle = "#94a3b8"; x.fillText(list.length ? `${Math.min(B.i, list.length - 1) + 1}/${list.length}` : "", SB_W - 24, SB_H - 23);
+    x.drawImage(B.ann, 0, 0);
+  }
+  x.restore();
+  B.mat.map.needsUpdate = true;
+  const pv = $("sbCv"); if (pv && SB.cur === B.id) pv.getContext("2d").drawImage(B.c, 0, 0);
+}
+async function sbLoadSlide(B) {
+  if (!B.cfg || sbMode(B) !== "slide") { sbRender(B); return; }
+  const list = sbList(B); if (!list.length) { sbRender(B); return; }
+  if (B.i >= list.length) B.i = 0;
+  const s = list[B.i]; if (B.imgSrc === s.src && B.img) { sbRender(B); return; }
+  B.imgSrc = s.src; B.img = null; sbRender(B);
+  let im = await xLoad(s.src);
+  if (!im && s.alt) im = await xLoad(s.alt);
+  if (B.imgSrc === s.src) { B.img = im; sbRender(B); }
+  // muat slide berikutnya lebih dulu
+  const nx = list[(B.i + 1) % list.length]; if (nx) xLoad(nx.src);
+}
+function sbGo(B, d) {
+  if (!klsBoardOK(B)) { toast("🔒 Papan sedang dikendalikan pengajar.", 3000); return; }
+  const n = sbList(B).length; if (!n) return;
+  B.i = (B.i + d + n) % n; B.strokes = []; sbRedrawAnn(B); sbLoadSlide(B);
+  sbSend(B, { type: "sb_set", i: B.i });
+  if (SB.cur === B.id) sbTools(B);
+}
+// ----- YouTube di dalam dunia 3D (CSS3D, memakai renderer layar sambutan) -----
+function sbCssOn() { return Object.values(SB.boards).some((B) => !!B.css); }
+function sbCssOff(B) {
+  if (!B.css) return;
+  try { B.frame.src = "about:blank"; } catch { }
+  cssScene.remove(B.css); B.css.element.remove();
+  B.css = null; B.frame = null; B.ready = false;
+  B.mesh.material = B.mat;
+}
+function sbCssOn1(B) {
+  if (B.css || !cssR) return;
+  if (!SB.hole) SB.hole = new THREE2.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0, blending: THREE2.NoBlending, toneMapped: false });
+  const div = document.createElement("div"); div.style.cssText = "width:1280px;height:720px;background:#000";
+  const fr = document.createElement("iframe");
+  const origin = /^https?:$/.test(location.protocol) ? "&origin=" + encodeURIComponent(location.origin) : "";
+  fr.src = `https://www.youtube-nocookie.com/embed/${B.cfg.yt}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1${origin}`;
+  fr.width = 1280; fr.height = 720; fr.title = "Video smart board " + B.title;
+  fr.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; fr.referrerPolicy = "strict-origin-when-cross-origin";
+  fr.style.cssText = "border:0;width:1280px;height:720px";
+  fr.addEventListener("load", () => {
+    if (B.frame !== fr) return;
+    B.ready = true;
+    try { fr.contentWindow.postMessage(JSON.stringify({ event: "listening", id: "sb_" + B.id, channel: "widget" }), "*"); } catch { }
+    setTimeout(() => sbYtApply(B, true), 600);
+  });
+  div.appendChild(fr);
+  const o = new CSS3DObject(div);
+  B.mesh.updateMatrixWorld(true); B.mesh.getWorldPosition(o.position); B.mesh.getWorldQuaternion(o.quaternion);
+  o.scale.setScalar(B.w / 1280);
+  cssScene.add(o);
+  B.css = o; B.frame = fr; B.ready = false;
+  B.mesh.material = SB.hole;
+}
+function sbYtPost(B, func, args = []) { try { B.frame.contentWindow.postMessage(JSON.stringify({ event: "command", func, args }), "*"); } catch { } }
+function sbYtApply(B, force) {
+  if (!B.frame || !B.ready || sbMode(B) !== "youtube") return;
+  const pos = sbPos(B);
+  if (force || Math.abs(pos - B.cur) > 2.5) sbYtPost(B, "seekTo", [pos, true]);
+  sbYtPost(B, B.yt.p ? "playVideo" : "pauseVideo");
+  if (B.yt.p && !B.muted) sbYtPost(B, "unMute");
+}
+function sbYtCtl(B, act) {
+  if (act !== "mute" && act !== "big" && !klsBoardOK(B)) { toast("🔒 Video dikendalikan pengajar.", 3000); return; }
+  const now = B.frame && B.ready ? B.cur : sbPos(B);
+  if (act === "play") B.yt = { p: true, t: now, base: performance.now() };
+  else if (act === "pause") B.yt = { p: false, t: now, base: performance.now() };
+  else if (act === "restart") B.yt = { p: true, t: 0, base: performance.now() };
+  else if (act === "mute") { B.muted = !B.muted; sbYtPost(B, B.muted ? "mute" : "unMute"); sbTools(B); return; }
+  else if (act === "big") { if (B.yt.p) sbYtCtl(B, "pause"); openVideoModal({ t: B.cfg.judul || "Video smart board · " + B.title, embed: `https://www.youtube-nocookie.com/embed/${B.cfg.yt}?rel=0&modestbranding=1&playsinline=1`, open: `https://www.youtube.com/watch?v=${B.cfg.yt}` }); return; }
+  B.cur = B.yt.t;
+  sbYtApply(B, true);
+  sbSend(B, { type: "sb_yt", p: B.yt.p, t: B.yt.t });
+  sbTools(B);
+}
+addEventListener("message", (ev) => {
+  if (typeof ev.origin !== "string" || !/^https:\/\/www\.youtube(-nocookie)?\.com$/.test(ev.origin)) return;
+  const B = Object.values(SB.boards).find((b) => b.frame && b.frame.contentWindow === ev.source); if (!B) return;
+  let d; try { d = typeof ev.data === "string" ? JSON.parse(ev.data) : ev.data; } catch { return; }
+  const inf = d && d.info; if (!inf) return;
+  if (typeof inf.currentTime === "number") B.cur = inf.currentTime;
+  if (typeof inf.muted === "boolean") B.muted = inf.muted;
+  if (inf.playerState === 0 && B.yt.p) { B.yt = { p: false, t: 0, base: performance.now() }; if (SB.cur === B.id) sbTools(B); } // video selesai
+});
+function sbTick() {
+  const ok = typeof cssR !== "undefined" && cssR && EMBED_OK && !renderer.xr.isPresenting;
+  for (const B of Object.values(SB.boards)) {
+    const want = ok && B.cfg && sbMode(B) === "youtube" && curRoom === B.room && !B.screen;
+    if (want && !B.css) sbCssOn1(B); else if (!want && B.css) sbCssOff(B);
+  }
+}
+// ----- panel (jendela) smart board -----
+function sbOpen(id) {
+  const B = SB.boards[id]; if (!B) return;
+  if (renderer.xr.isPresenting) { showVRText("Smart board membutuhkan layar biasa. Keluar dari mode VR sebentar."); return; }
+  SB.cur = id;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🖥 Smart Board · ${B.title}</h2>
+  <p class="sb-note" id="sbInfo"></p>
+  <div class="sb-wrap" id="sbWrap"><canvas id="sbCv" width="${SB_W}" height="${SB_H}"></canvas></div>
+  <div class="sb-tools" id="sbTools"></div>`);
+  $("genCard").classList.add("wide");
+  const close = () => { SB.cur = null; $("genCard").classList.remove("wide"); closeGen(); };
+  $("gx").onclick = close;
+  sbPanel(B);
+}
+function sbPanel(B) {
+  if (SB.cur !== B.id || !$("sbCv")) return;
+  const yt2 = sbMode(B) === "youtube", shared = !B.local;
+  $("sbInfo").textContent = (yt2 ? "Video YouTube" : "Slide") + " diatur admin galeri. " + (shared ? (yt2 ? "Putar/jeda di sini ikut berlaku untuk semua pemain di ruangan ini." : "Slide yang dibuka dan coretanmu terlihat oleh semua pemain di ruangan ini.") : (yt2 ? "Video diputar di perangkatmu sendiri." : "Kamu menggeser slide dan mencoret untuk dirimu sendiri."));
+  const cv = $("sbCv"); cv.style.cursor = yt2 ? "pointer" : "crosshair";
+  cv.getContext("2d").drawImage(B.c, 0, 0);
+  let pts = null;
+  const pt = (e) => { const r = cv.getBoundingClientRect(); return [clamp((e.clientX - r.left) / r.width, 0, 1), clamp((e.clientY - r.top) / r.height, 0, 1)]; };
+  const st0 = () => ({ c: SB.col, w: SB.erase ? SB.size * 5 : SB.size, e: SB.erase ? 1 : 0 });
+  cv.onpointerdown = (e) => {
+    if (!klsBoardOK(B) && !yt2) { toast("🔒 Papan sedang dikendalikan pengajar — kamu bisa melihat dan mengunduh saja.", 3500); return; }
+    if (yt2) { sbYtCtl(B, B.yt.p ? "pause" : "play"); return; }
+    cv.setPointerCapture(e.pointerId); pts = [pt(e)];
+    sbDrawStroke(B.ann.getContext("2d"), Object.assign(st0(), { p: pts })); sbRender(B);
+  };
+  cv.onpointermove = (e) => {
+    if (!pts) return; const p = pt(e), q = pts[pts.length - 1];
+    if (Math.hypot(p[0] - q[0], p[1] - q[1]) < 0.002) return;
+    pts.push(p); sbDrawStroke(B.ann.getContext("2d"), Object.assign(st0(), { p: [q, p] }));
+    if (!SB.raf) SB.raf = requestAnimationFrame(() => { SB.raf = 0; sbRender(B); });
+  };
+  cv.onpointerup = cv.onpointercancel = () => {
+    if (!pts) return;
+    let p = pts; pts = null;
+    if (p.length > 400) { const k = Math.ceil(p.length / 400); p = p.filter((_, i) => i % k === 0 || i === p.length - 1); }
+    const st = Object.assign(st0(), { p: p.map(([a, b]) => [Math.round(a * 1e4) / 1e4, Math.round(b * 1e4) / 1e4]) });
+    B.strokes.push(st); if (B.strokes.length > 400) { B.strokes.shift(); sbRedrawAnn(B); }
+    sbSend(B, { type: "sb_stroke", stroke: st });
+  };
+  sbTools(B);
+}
+function sbTools(B) {
+  const T2 = $("sbTools"); if (!T2 || SB.cur !== B.id) return;
+  T2.innerHTML = "";
+  const btn = (txt, fn, cls = "ghost", st = "") => { const b = document.createElement("button"); b.className = cls; b.textContent = txt; if (st) b.style.cssText = st; b.onclick = fn; T2.appendChild(b); return b; };
+  const sep = () => { const s = document.createElement("span"); s.className = "sb-sep"; T2.appendChild(s); };
+  if (sbMode(B) === "youtube") {
+    if (!EMBED_OK || curRoom !== B.room) { const a = document.createElement("a"); a.className = "btn"; a.textContent = "▶ Tonton di YouTube"; a.href = `https://www.youtube.com/watch?v=${B.cfg.yt}`; a.target = "_blank"; a.rel = "noopener noreferrer"; T2.appendChild(a); return; }
+    btn(B.yt.p ? "⏸ Jeda" : "▶ Putar", () => sbYtCtl(B, B.yt.p ? "pause" : "play"), "btn");
+    btn("⏮ Dari awal", () => sbYtCtl(B, "restart"));
+    btn(B.muted ? "🔈 Nyalakan suara" : "🔇 Bisukan (perangkatku)", () => sbYtCtl(B, "mute"));
+    btn("⛶ Perbesar", () => sbYtCtl(B, "big"));
+    return;
+  }
+  const n = sbList(B).length;
+  if (!klsBoardOK(B)) { const s2 = document.createElement("span"); s2.className = "sb-pg"; s2.textContent = `🔒 Papan dikendalikan pengajar · slide ${n ? Math.min(B.i, n - 1) + 1 : 0}/${n}`; T2.appendChild(s2); btn("⬇ Unduh PNG", () => downloadCanvas(B.c, `smart-board-${B.id}.png`)); return; }
+  btn("◀", () => sbGo(B, -1)); const lb = document.createElement("span"); lb.className = "sb-pg"; lb.textContent = n ? `${Math.min(B.i, n - 1) + 1} / ${n}` : "0 / 0"; T2.appendChild(lb); btn("▶", () => sbGo(B, 1));
+  sep();
+  for (const col of ["#111827", "#1d4ed8", "#dc2626", "#16a34a", "#f59e0b", "#ffffff"]) { const b = btn("", () => { SB.col = col; SB.erase = false; sbTools(B); }, "ghost sb-col", `background:${col}`); if (!SB.erase && SB.col === col) b.classList.add("on"); b.setAttribute("aria-label", "Warna"); }
+  for (const [nm, sz] of [["Tipis", 3], ["Sedang", 6], ["Tebal", 12]]) { const b = btn(nm, () => { SB.size = sz; sbTools(B); }); if (SB.size === sz) b.classList.add("on"); }
+  { const b = btn("🧽 Penghapus", () => { SB.erase = !SB.erase; sbTools(B); }); if (SB.erase) b.classList.add("on"); }
+  btn("🗑 Bersihkan coretan", () => { B.strokes = []; sbRedrawAnn(B); sbRender(B); sbSend(B, { type: "sb_clear" }); });
+  btn("⬇ Unduh PNG", () => downloadCanvas(B.c, `smart-board-${B.id}.png`));
+}
+function kSmartBoard(room, id, title, acc, along, w, h, y) {
+  const p = world.onWall(room, room === "rapat" ? "S" : "N", along, y), g = world.group(p);
+  const bez = new THREE2.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4, metalness: 0.4 });
+  xBox(w + 0.22, h + 0.22, 0.08, bez, 0, 0, 0, 0, g);
+  if (room !== "rapat") {
+    xBox(w * 0.6, 0.06, 0.16, new THREE2.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 }), 0, -h / 2 - 0.16, 0.08, 0, g); // baki pena
+    for (const sx of [-1, 1]) xBox(0.18, h * 0.8, 0.12, bez, sx * (w / 2 + 0.28), 0, 0, 0, g);                                // speaker
+    const lc = mkCanvas(900, 120), lx = lc.getContext("2d"); lx.fillStyle = acc; lx.font = `700 64px ${FONT}`; lx.textAlign = "center"; lx.fillText(title + " · SMART BOARD", 450, 84);
+    const lb = xPlane(lc, 3.2, 0.43); lb.position.set(0, h / 2 + 0.5, 0.05); g.add(lb);
+  }
+  const B = sbMake(id, title, acc, g, w, h, room, false);
+  world.panels["sb_" + id] = { id: "sb_" + id, kind: "sb", title: "Smart Board " + title, data: { title: "Smart Board " + title, d: "Smart board: slide atau video YouTube yang diatur admin galeri." }, mesh: B.mesh, x: p.x + Math.sin(p.ry) * 4, z: p.z + Math.cos(p.ry) * 4, yaw: p.ry, room };
+  return B;
+}
+// smart board beroda di tiap lab (diputar masing-masing pemain)
+function kStandBoard(lab, x, z, ry) {
+  const L = LABS[lab], acc = L.col || "#7c3aed", w = 2.7, h = 1.52, cy = 1.68;
+  const g = new THREE2.Group(); g.position.set(x, 0, z); g.rotation.y = ry; scene.add(g);
+  const dark = new THREE2.MeshStandardMaterial({ color: 0x111827, roughness: 0.4, metalness: 0.5 }), steel = new THREE2.MeshStandardMaterial({ color: 0x9ca3af, roughness: 0.3, metalness: 0.8 });
+  const bz = new THREE2.Group(); bz.position.set(0, cy, 0); g.add(bz);
+  xBox(w + 0.14, h + 0.14, 0.07, dark, 0, 0, 0, 0, bz);
+  xBox(w + 0.14, 0.09, 0.09, new THREE2.MeshBasicMaterial({ color: new THREE2.Color(acc), toneMapped: false }), 0, -h / 2 - 0.1, 0.01, 0, bz);
+  for (const sx of [-0.95, 0.95]) {
+    xBox(0.08, 2.5, 0.08, steel, sx, 1.25, -0.08, 0, g);
+    xBox(0.09, 0.05, 0.75, steel, sx, 0.09, -0.08, 0, g);
+    for (const sz of [-0.33, 0.33]) { const wh = new THREE2.Mesh(new THREE2.CylinderGeometry(0.055, 0.055, 0.04, 14), dark); wh.rotation.z = Math.PI / 2; wh.position.set(sx, 0.055, -0.08 + sz); g.add(wh); }
+  }
+  xBox(1.98, 0.06, 0.06, steel, 0, 0.6, -0.08, 0, g);
+  const lc = mkCanvas(900, 110), lx = lc.getContext("2d"); lx.fillStyle = "rgba(15,23,42,.9)"; rr(lx, 0, 0, 900, 110, 24); lx.fill(); lx.fillStyle = "#fff"; lx.font = `700 54px ${FONT}`; lx.textAlign = "center"; lx.fillText("SMART BOARD · " + "LAB " + L.code, 450, 74);
+  const lb = xPlane(lc, 2.2, 0.27); lb.position.set(0, cy + h / 2 + 0.3, 0.02); g.add(lb);
+  const B = sbMake(lab, "LAB " + L.code, acc, bz, w, h, lab, true);
+  const cx = Math.cos(ry), sx2 = Math.sin(ry);
+  xCol(x - cx * 1.45, z + sx2 * 1.45, x + cx * 1.45, z - sx2 * 1.45, 0.4);
+  world.panels["sb_" + lab] = { id: "sb_" + lab, kind: "sb", title: "Smart Board Lab " + L.code, data: { title: "Smart Board Lab " + L.code, d: "Smart board lab: slide atau video YouTube yang diatur admin galeri, diputar masing-masing pengunjung." }, mesh: B.mesh, x: x + Math.sin(ry) * 3.5, z: z + Math.cos(ry) * 3.5, yaw: ry, room: lab };
+  return B;
+}
+function buildLabBoards() {
+  kStandBoard("keris", -37.6, -0.5, Math.PI / 2);
+  kStandBoard("git", -22.6, -31.5, Math.PI / 2);
+  kStandBoard("se", 16, -22.6, 0);
+  kStandBoard("csn", 25.5, 10.6, Math.PI);
+}
+
+// ---------- KELAS FUNGSIONAL (jadwal & token, peran pengajar, presensi, SFU, berbagi layar, chat, notulen, polling) ----------
+var KLS = { jad: {}, pass: {}, tok: {}, tokTry: null, joined: null, role: null, st: {}, spk: new Set(), tab: "p", min: false, prompt: 0, joinT: 0, note: {}, chat: {}, sfu: null, inRoomOnce: false };
+var KLS_ROOMS = ["kelas1", "kelas2", "rapat"];
+var KLS_DOOR = { kelas1: { x: -10.8, z: 54.4, yaw: Math.PI, dx: -10.8, dz: 56 }, kelas2: { x: 7.4, z: 32.6, yaw: Math.PI / 2, dx: 9, dz: 32.6 }, rapat: { x: 3, z: 54.4, yaw: Math.PI, dx: 3, dz: 56 } };
+var KLS_NOTE_F = [["agenda", "Agenda"], ["ringkasan", "Ringkasan pembahasan"], ["keputusan", "Keputusan / kesimpulan"], ["tindak", "Tindak lanjut (siapa · apa · tenggat)"]];
+var klsSend = (o) => { if (net && typeof net.raw === "function") net.raw(o); };
+var klsFmtJam = (t) => new Date(t).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }).replace(".", ":");
+function klsLocked(r) { const j = KLS.jad[r]; return !!(j && j.aktif) && KLS.pass[r] !== j.aktif.mulai; }
+function klsEsc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+// ----- pesan dari server -----
+function klsRx(m) {
+  switch (m.type) {
+    case "kls_jadwal": KLS.jad = m.j || {}; break;
+    case "kls_join_res": {
+      if (m.ok) {
+        KLS.joined = m.r; KLS.role = m.role; KLS.joinT = performance.now();
+        if (KLS.tokTry && KLS.tokTry.r === m.r) { KLS.tok[m.r] = KLS.tokTry; KLS.tokTry = null; }
+        const j = KLS.jad[m.r]; if (j && j.aktif) KLS.pass[m.r] = j.aktif.mulai;
+        if ($("klsTok")) closeGen();
+        if (m.role === "pengajar") toast("👩‍🏫 Kamu masuk sebagai PENGAJAR — kontrol kelas ada di panel kiri.", 5000);
+        else if (m.role === "peserta") toast("✅ Token diterima — silakan masuk ruangan.", 3500);
+        klsPanel(true);
+        if (m.sfu) sfuStart(m.r); else KLS.sfuOff = true;
+      } else {
+        if (m.need && !m.err) { klsPrompt(m.r, true); break; }
+        if ($("klsTokMsg")) $("klsTokMsg").textContent = "❌ " + (m.err || "Gagal bergabung.");
+        else toast("⛔ " + (m.err || "Gagal bergabung."), 4500);
+        if (curRoom === m.r) klsOut(m.r);
+      }
+      break;
+    }
+    case "kls_st": KLS.st[m.r] = m; if (m.me) KLS.role = m.me.role; klsRender(); klsMicApply(); for (const B of Object.values(SB.boards)) if (B.room === m.r) { sbRender(B); if (SB.cur === B.id) sbTools(B); } break;
+    case "kls_out": KLS.pass[m.r] = null; if (KLS.joined === m.r) klsLeft(); toast("🚪 " + m.why, 6000); if (KLS_ROOMS.includes(curRoom)) klsOut(m.r); if (m.need) setTimeout(() => klsPrompt(m.r, true), 1200); break;
+    case "kls_info": toast(m.t, 5000); break;
+    case "kls_chat": (KLS.chat[m.r] = KLS.chat[m.r] || []).push(m.m); if (KLS.chat[m.r].length > 200) KLS.chat[m.r].shift(); klsRenderChat(true); break;
+    case "kls_chatlog": KLS.chat[m.r] = m.list || []; klsRenderChat(); break;
+    case "kls_note": KLS.note[m.r] = { t: typeof m.t === "object" && m.t ? m.t : { ringkasan: m.t || "" }, v: m.v, by: m.by }; if (m.conflict) toast("Notulen baru saja diubah orang lain — isinya dimuat ulang. Tambahkan lagi perubahanmu.", 5000); klsRenderNote(m.mine || m.conflict); break;
+    case "kls_spk": KLS.spk = new Set(m.ids || []); klsSpkApply(); break;
+  }
+}
+function klsOut(r) {
+  const D = KLS_DOOR[r] || KLS_DOOR.kelas1;
+  xTeleport(D.x, D.z, D.yaw);
+}
+function klsLeft() {
+  sfuStop();
+  KLS.joined = null; KLS.role = null; KLS.spk = new Set();
+  klsPanel(false);
+}
+// ----- gerbang token -----
+function klsPrompt(r, force) {
+  const j = KLS.jad[r]; if (!j || !j.aktif) return;
+  if (!force && performance.now() - KLS.prompt < 8000) return;
+  KLS.prompt = performance.now();
+  const a = j.aktif, nm = ROOMS[r].name;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🔒 ${klsEsc(nm)}</h2>
+  <p><b>${klsEsc(a.judul)}</b>${a.pengajar ? ` · ${klsEsc(a.pengajar)}` : ""}<br><span style="color:var(--mut)">Sedang berlangsung ${klsFmtJam(a.mulai)}–${klsFmtJam(a.selesai)} WIB. Ruangan hanya untuk peserta yang memiliki token dari pengajar.</span></p>
+  <form id="klsTokF" class="rowf" autocomplete="off"><input id="klsTok" maxlength="12" placeholder="Token peserta (6 huruf)" style="text-transform:uppercase;letter-spacing:.15em;font-weight:700" aria-label="Token peserta"><button class="btn" type="submit">Masuk</button></form>
+  <details style="margin-top:8px"><summary style="cursor:pointer;color:var(--mut);font-size:13px">Saya pengajar / pimpinan rapat</summary><div class="rowf" style="margin-top:6px"><input id="klsKode" maxlength="12" placeholder="Kode pengajar" style="text-transform:uppercase;letter-spacing:.12em" aria-label="Kode pengajar"><button class="ghost" id="klsKodeGo" type="button">Masuk sebagai pengajar</button></div></details>
+  <p id="klsTokMsg" style="min-height:20px;font-size:13px;color:#fca5a5"></p>`);
+  const no = (Q().card && Q().card.no) || "";
+  const go = (token, kode) => { $("klsTokMsg").textContent = "Memeriksa…"; KLS.tokTry = { r, token, kode }; klsSend({ type: "kls_join", r, token, kode, no }); };
+  $("klsTokF").onsubmit = (e) => { e.preventDefault(); const t = $("klsTok").value.trim(); if (!t) { $("klsTokMsg").textContent = "Masukkan token dari pengajar."; return; } go(t, ""); };
+  $("klsKodeGo").onclick = () => { const k = $("klsKode").value.trim(); if (!k) { $("klsTokMsg").textContent = "Masukkan kode pengajar."; return; } go("", k); };
+  setTimeout(() => $("klsTok") && $("klsTok").focus(), 60);
+}
+// dipanggil tiap frame
+function klsTick(dt) {
+  const r = curRoom, inR = KLS_ROOMS.includes(r);
+  // pintu: terkunci selama sesi bagi yang belum memasukkan token
+  for (const D of KDOORS) {
+    if (!D.room) continue;
+    const lock = klsLocked(D.room);
+    D.lock = lock; if (D.col) D.col.off = !lock;
+    if (lock && !inR && Math.hypot(P.x - D.cx, P.z - D.cz) < 2.4 && !$("klsTok")) klsPrompt(D.room);
+  }
+  if (inR) {
+    if (klsLocked(r) && KLS.joined !== r) { klsOut(r); klsPrompt(r, true); return; }
+    if (KLS.joined !== r && !KLS.joining) { KLS.joining = true; setTimeout(() => { KLS.joining = false; }, 4000); const tk = KLS.pass[r] ? KLS.tok[r] || {} : {}; klsSend({ type: "kls_join", r, token: tk.token || "", kode: tk.kode || "", no: (Q().card && Q().card.no) || "" }); }
+    KLS.inRoomOnce = true;
+  } else if (KLS.joined) {
+    // keluar ruangan (atau token dimasukkan tetapi tidak masuk dalam 90 detik)
+    const D = KLS_DOOR[KLS.joined], near = D && Math.hypot(P.x - D.dx, P.z - D.dz) < 4;
+    if (KLS.inRoomOnce || (!near && performance.now() - KLS.joinT > 90000)) { klsSend({ type: "kls_leave" }); klsLeft(); KLS.inRoomOnce = false; }
+  }
+}
+// ----- mikrofon: ikuti status dari pengajar -----
+function klsMicApply() {
+  const st = KLS.joined && KLS.st[KLS.joined], me = st && st.me;
+  if (!KLS.sfu || !KLS.sfu.mic) return;
+  const want = micOn && (!me || me.mic);
+  if (want && KLS.sfu.mic.paused) { KLS.sfu.mic.resume(); sfuReq("sfu_pause", { pid: KLS.sfu.mic.id, on: false }).catch(() => {}); }
+  else if (!want && !KLS.sfu.mic.paused) { KLS.sfu.mic.pause(); sfuReq("sfu_pause", { pid: KLS.sfu.mic.id, on: true }).catch(() => {}); }
+}
+// ----- indikator bicara (cincin hijau di atas kepala) -----
+function klsSpkRing(av) {
+  if (!av) return null;
+  if (!av.userData.spk) { const s = world.glowSprite("#22c55e", 0.7, 0.85); s.position.y = 2.45; s.visible = false; av.add(s); av.userData.spk = s; }
+  return av.userData.spk;
+}
+function klsSpkApply() {
+  const me = net && net.selfId;
+  for (const [id, r] of remotes) { const s = klsSpkRing(r.av); if (s) s.visible = KLS.spk.has(id); }
+  const s = klsSpkRing(avatar); if (s) s.visible = !!me && KLS.spk.has(me);
+  document.querySelectorAll("#klsPane [data-pid]").forEach((el) => el.classList.toggle("spk", KLS.spk.has(el.dataset.pid)));
+}
+
+// ---------- SFU (mediasoup-client) ----------
+var SFU_REQ = { n: 0, cb: new Map() };
+function sfuReq(type, body = {}) {
+  return new Promise((res, rej) => {
+    const rid = ++SFU_REQ.n;
+    const t = setTimeout(() => { SFU_REQ.cb.delete(rid); rej(new Error("waktu habis")); }, 12000);
+    SFU_REQ.cb.set(rid, { res, rej, t });
+    klsSend(Object.assign({ type, rid }, body));
+  });
+}
+function sfuRx(m) {
+  if (m.type === "sfu_res") { const c = SFU_REQ.cb.get(m.rid); if (!c) return; SFU_REQ.cb.delete(m.rid); clearTimeout(c.t); if (m.ok) c.res(m.data || {}); else c.rej(new Error(m.err || "gagal")); return; }
+  const S = KLS.sfu; if (!S) return;
+  if (m.type === "sfu_new") sfuConsume(S, m);
+  else if (m.type === "sfu_closed") sfuDrop(S, m.pid);
+}
+async function sfuStart(r) {
+  if (KLS.sfu) return;
+  const S = KLS.sfu = { r, cons: new Map(), q: Promise.resolve(), dead: false };
+  try {
+    const msc = await import("./vendor/mediasoup-client.js");
+    const { caps } = await sfuReq("sfu_caps");
+    S.dev = new msc.Device(); await S.dev.load({ routerRtpCapabilities: caps });
+    const rp = await sfuReq("sfu_tr", { dir: "recv" });
+    S.recv = S.dev.createRecvTransport(rp);
+    S.recv.on("connect", ({ dtlsParameters }, cb, eb) => sfuReq("sfu_conn", { tid: S.recv.id, dtls: dtlsParameters }).then(cb, eb));
+    if (S.dead) return;
+    await sfuSendT(S);
+    if (micStream && micStream.getAudioTracks()[0]) {
+      S.mic = await S.send.produce({ track: micStream.getAudioTracks()[0].clone(), appData: { src: "mic" }, codecOptions: { opusStereo: false, opusDtx: true } });
+      klsMicApply();
+    }
+    const { list } = await sfuReq("sfu_list");
+    for (const p of list) sfuConsume(S, p);
+    toast("🔊 Suara ruangan tersambung — semua di ruangan ini terdengar jelas.", 3500);
+  } catch (e) {
+    console.warn("SFU gagal:", e);
+    if (KLS.sfu === S) { KLS.sfu = null; KLS.sfuOff = true; }
+    toast("Suara ruangan memakai mode langsung (server media tidak terjangkau).", 4000);
+  }
+}
+async function sfuSendT(S) {
+  if (S.send) return S.send;
+  const sp = await sfuReq("sfu_tr", { dir: "send" });
+  S.send = S.dev.createSendTransport(sp);
+  S.send.on("connect", ({ dtlsParameters }, cb, eb) => sfuReq("sfu_conn", { tid: S.send.id, dtls: dtlsParameters }).then(cb, eb));
+  S.send.on("produce", ({ kind, rtpParameters, appData }, cb, eb) => sfuReq("sfu_prod", { tid: S.send.id, kind, rtp: rtpParameters, src: appData.src }).then((d) => cb({ id: d.id }), eb));
+  return S.send;
+}
+function sfuConsume(S, p) {
+  // antre satu per satu agar tidak membanjiri server
+  S.q = S.q.then(async () => {
+    if (S.dead || S.cons.has(p.pid)) return;
+    try {
+      const d = await sfuReq("sfu_cons", { pid: p.pid, caps: S.dev.rtpCapabilities });
+      const c = await S.recv.consume({ id: d.id, producerId: d.pid, kind: d.kind, rtpParameters: d.rtp });
+      const ent = { c, peer: p.peer, src: p.src };
+      if (c.kind === "audio") { const a = new Audio(); a.srcObject = new MediaStream([c.track]); a.autoplay = true; a.play().catch(() => {}); ent.el = a; }
+      else klsScreenShow(new MediaStream([c.track]), p.peer);
+      S.cons.set(p.pid, ent);
+      await sfuReq("sfu_resume", { cid: c.id });
+    } catch (e) { console.warn("SFU consume:", e.message); }
+  });
+}
+function sfuDrop(S, pid) {
+  const e = S.cons.get(pid); if (!e) return;
+  S.cons.delete(pid);
+  try { e.c.close(); } catch { }
+  if (e.el) { e.el.srcObject = null; e.el.remove(); }
+  if (e.src === "screen") klsScreenHide();
+}
+function sfuStop() {
+  const S = KLS.sfu; if (!S) return;
+  S.dead = true; KLS.sfu = null;
+  for (const pid of [...S.cons.keys()]) sfuDrop(S, pid);
+  if (S.screen) { try { S.screen.track.stop(); S.screen.close(); } catch { } }
+  try { S.mic && S.mic.close(); } catch { }
+  try { S.send && S.send.close(); } catch { }
+  try { S.recv && S.recv.close(); } catch { }
+  klsScreenHide();
+}
+// ----- berbagi layar laptop → smart board -----
+async function klsShareScreen() {
+  const S = KLS.sfu;
+  if (!S) { toast("Berbagi layar butuh server media (SFU) aktif. Hubungi admin galeri.", 5000); return; }
+  if (S.screen) { klsStopScreen(); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) { toast("Browser ini tidak mendukung berbagi layar. Gunakan Chrome/Edge/Firefox di laptop.", 5000); return; }
+  let st;
+  try { st = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 15, width: { max: 1920 }, height: { max: 1080 } }, audio: false }); }
+  catch { toast("Berbagi layar dibatalkan.", 2500); return; }
+  const tr = st.getVideoTracks()[0];
+  try {
+    await sfuSendT(S);
+    S.screen = await S.send.produce({ track: tr, appData: { src: "screen" }, encodings: [{ maxBitrate: 1500000 }] });
+    klsScreenShow(new MediaStream([tr]), net && net.selfId);
+    tr.onended = () => klsStopScreen();
+    toast("🖥 Layarmu tampil di smart board untuk semua peserta. Klik lagi tombol berbagi layar untuk berhenti.", 5000);
+  } catch (e) { tr.stop(); toast("⛔ " + e.message, 5000); }
+  klsRender();
+}
+function klsStopScreen() {
+  const S = KLS.sfu; if (!S || !S.screen) return;
+  const id = S.screen.id;
+  try { S.screen.track.stop(); S.screen.close(); } catch { }
+  S.screen = null;
+  sfuReq("sfu_stop", { pid: id }).catch(() => {});
+  klsScreenHide(); klsRender();
+}
+function klsScreenShow(stream, peer) {
+  const B = SB.boards[KLS.joined]; if (!B) return;
+  klsScreenHide();
+  const v = document.createElement("video"); v.muted = true; v.playsInline = true; v.autoplay = true; v.srcObject = stream; v.play().catch(() => {});
+  const tex = new THREE2.VideoTexture(v); tex.colorSpace = THREE2.SRGBColorSpace;
+  sbCssOff(B); B.screen = { v, tex, peer };
+  B.mesh.material = new THREE2.MeshBasicMaterial({ map: tex, toneMapped: false });
+}
+function klsScreenHide() {
+  for (const B of Object.values(SB.boards)) if (B.screen) { try { B.screen.v.srcObject = null; B.screen.tex.dispose(); B.mesh.material.dispose(); } catch { } B.screen = null; B.mesh.material = B.mat; }
+}
+
+// ---------- panel kelas ----------
+function klsPanel(show) {
+  let el = $("klsP");
+  if (!show) { if (el) el.remove(); return; }
+  if (!el) {
+    el = document.createElement("div"); el.id = "klsP";
+    el.innerHTML = `<div class="kh"><div><b id="klsT"></b><small id="klsS"></small></div><button class="ghost" id="klsMin" aria-label="Ciutkan">–</button></div>
+    <div class="kb"><div class="kctl" id="klsCtl"></div>
+    <div class="ktabs" role="tablist"><button data-k="p">👥 Peserta <span id="klsN"></span></button><button data-k="c">💬 Chat</button><button data-k="n">📝 Notulen</button><button data-k="q">📊 Polling</button></div>
+    <div class="kpane" id="klsPane"></div></div>`;
+    document.body.appendChild(el);
+    $("klsMin").onclick = () => { KLS.min = !KLS.min; el.classList.toggle("min", KLS.min); $("klsMin").textContent = KLS.min ? "+" : "–"; };
+    el.querySelectorAll(".ktabs button").forEach((b) => b.onclick = () => { KLS.tab = b.dataset.k; klsTab(); });
+    if (KLS.min) el.classList.add("min");
+  }
+  klsTab();
+}
+function klsTab() {
+  const el = $("klsP"); if (!el) return;
+  el.querySelectorAll(".ktabs button").forEach((b) => b.classList.toggle("on", b.dataset.k === KLS.tab));
+  const pane = $("klsPane"); pane.innerHTML = "";
+  if (KLS.tab === "c") {
+    pane.innerHTML = `<div class="kchat" id="klsChatL"></div><form class="rowf" id="klsChatF" autocomplete="off"><input id="klsChatI" maxlength="300" placeholder="Tulis pesan ke ruangan…" aria-label="Pesan"><button class="btn" type="submit">Kirim</button></form>`;
+    $("klsChatF").onsubmit = (e) => { e.preventDefault(); const t = $("klsChatI").value.trim(); if (!t) return; klsSend({ type: "kls_chat", t }); $("klsChatI").value = ""; };
+    $("klsChatI").addEventListener("keydown", (e) => e.stopPropagation());
+    klsRenderChat();
+  } else if (KLS.tab === "n") {
+    pane.innerHTML = `<p class="kmut" id="klsNoteInfo"></p>${KLS_NOTE_F.map(([k, l]) => `<label class="kf">${l}<textarea data-f="${k}" rows="${k === "ringkasan" ? 5 : 3}" maxlength="8000"></textarea></label>`).join("")}<div class="rowf"><button class="btn" id="klsNoteSave">💾 Simpan notulen</button><button class="ghost" id="klsNoteDl">⬇ Unduh</button></div>`;
+    pane.querySelectorAll("textarea").forEach((t) => { t.addEventListener("keydown", (e) => e.stopPropagation()); t.oninput = () => { KLS.noteDirty = true; }; });
+    $("klsNoteSave").onclick = () => { const n = KLS.note[KLS.joined] || { v: 0 }, t = {}; pane.querySelectorAll("textarea").forEach((x) => { t[x.dataset.f] = x.value; }); klsSend({ type: "kls_note", t, v: n.v }); KLS.noteDirty = false; };
+    $("klsNoteDl").onclick = klsNoteDownload;
+    klsRenderNote(true);
+  } else if (KLS.tab === "q") klsRenderPoll();
+  else klsRenderPeople();
+  klsRender();
+}
+function klsCanNote() {
+  const st = KLS.st[KLS.joined]; if (!st) return false;
+  return !st.sesi || KLS.joined === "rapat" || KLS.role === "pengajar";
+}
+function klsRender() {
+  const el = $("klsP"), r = KLS.joined, st = KLS.st[r]; if (!el || !st) return;
+  const T = KLS.role === "pengajar", ses = st.sesi;
+  $("klsT").textContent = ROOMS[r].name;
+  $("klsS").textContent = ses ? `${ses.judul} · ${klsFmtJam(ses.mulai)}–${klsFmtJam(ses.selesai)}${T ? " · Anda pengajar" : ""}` : "Mode bebas (tidak ada jadwal)";
+  $("klsN").textContent = st.peserta.length + "/" + st.cap;
+  const c = $("klsCtl"); c.innerHTML = "";
+  const btn = (txt, fn, cls = "ghost", tip = "") => { const b = document.createElement("button"); b.className = cls; b.textContent = txt; if (tip) b.title = tip; b.onclick = fn; c.appendChild(b); return b; };
+  const me = st.me || {};
+  if (ses && !T) {
+    btn(me.hand ? "✋ Turunkan tangan" : "✋ Angkat tangan", () => klsSend({ type: "kls_hand", up: !me.hand }), me.hand ? "btn" : "ghost");
+    if (st.ctl.muteAll && !me.mic) { const s = document.createElement("span"); s.className = "kmut"; s.textContent = "🔇 Dibisukan pengajar"; c.appendChild(s); }
+  }
+  const canScreen = !!KLS.sfu && (!ses || T) && (!st.screen || (net && st.screen.id === net.selfId));
+  if (canScreen) btn(KLS.sfu && KLS.sfu.screen ? "⏹ Hentikan berbagi layar" : "🖥 Bagikan layar", klsShareScreen, KLS.sfu && KLS.sfu.screen ? "btn" : "ghost", "Tampilkan layar laptopmu di smart board");
+  else if (st.screen) { const s = document.createElement("span"); s.className = "kmut"; s.textContent = `🖥 ${st.screen.n} sedang berbagi layar`; c.appendChild(s); }
+  if (T) {
+    btn(st.ctl.muteAll ? "🔊 Buka mic semua" : "🔇 Bisukan semua", () => klsSend({ type: "kls_muteall", on: !st.ctl.muteAll }), st.ctl.muteAll ? "btn" : "ghost");
+    btn(st.ctl.lock ? "🔒 Papan: hanya pengajar" : "🔓 Papan: semua boleh", () => klsSend({ type: "kls_lock", on: !st.ctl.lock }));
+  }
+  if (KLS.tab === "p") klsRenderPeople(); else if (KLS.tab === "q") klsRenderPoll(); else if (KLS.tab === "n") { const i = $("klsNoteInfo"); if (i) klsRenderNote(false); }
+}
+function klsRenderPeople() {
+  const pane = $("klsPane"), st = KLS.st[KLS.joined]; if (!pane || KLS.tab !== "p" || !st) return;
+  const T = KLS.role === "pengajar", me = net && net.selfId;
+  const list = st.peserta.slice().sort((a, b) => (a.role === b.role ? (b.hand - a.hand) || a.n.localeCompare(b.n, "id") : a.role === "pengajar" ? -1 : 1));
+  pane.innerHTML = `<div class="kpl">${list.map((p) => `<div class="kpp${KLS.spk.has(p.id) ? " spk" : ""}" data-pid="${p.id}"><span class="kdot"></span><span class="knm">${klsEsc(p.n)}${p.id === me ? " (kamu)" : ""}</span>${p.role === "pengajar" ? '<span class="krole">Pengajar</span>' : ""}${p.hand ? '<span title="Angkat tangan">✋</span>' : ""}${p.floor ? '<span title="Diberi giliran bicara">🎤</span>' : ""}${p.mic ? "" : '<span title="Dibisukan">🔇</span>'}${T && p.role !== "pengajar" && st.sesi ? `<button class="ghost kx" data-a="floor" data-id="${p.id}" data-on="${p.floor ? 0 : 1}">${p.floor ? "Akhiri giliran" : "Beri giliran"}</button><button class="ghost kx kdel" data-a="kick" data-id="${p.id}">Keluarkan</button>` : ""}</div>`).join("")}</div>`;
+  pane.querySelectorAll("button[data-a]").forEach((b) => b.onclick = () => {
+    if (b.dataset.a === "floor") klsSend({ type: "kls_floor", id: b.dataset.id, on: b.dataset.on === "1" });
+    else { if (b.dataset.arm !== "1") { b.dataset.arm = "1"; b.textContent = "Yakin?"; setTimeout(() => { b.dataset.arm = ""; b.textContent = "Keluarkan"; }, 2500); return; } klsSend({ type: "kls_kick", id: b.dataset.id }); }
+  });
+}
+function klsRenderChat(isNew) {
+  const L2 = $("klsChatL"), list = KLS.chat[KLS.joined] || [];
+  if (!L2) { if (isNew && KLS.tab !== "c" && $("klsP")) { const b = $("klsP").querySelector('.ktabs button[data-k="c"]'); if (b) b.classList.add("new"); } return; }
+  L2.innerHTML = list.map((m) => `<div class="kcm"><b class="${m.role === "pengajar" ? "kt" : ""}">${klsEsc(m.n)}</b> <small>${klsFmtJam(m.at)}</small><div>${klsEsc(m.t)}</div></div>`).join("") || '<p class="kmut">Belum ada pesan di ruangan ini.</p>';
+  L2.scrollTop = 1e6;
+  const b = $("klsP") && $("klsP").querySelector('.ktabs button[data-k="c"]'); if (b) b.classList.remove("new");
+}
+function klsRenderNote(force) {
+  const pane = $("klsPane"); if (!pane || KLS.tab !== "n") return;
+  const n = KLS.note[KLS.joined] || { t: {}, v: 0 }, can = klsCanNote();
+  const info = $("klsNoteInfo");
+  if (info) info.textContent = (can ? "Rangkuman tertulis kegiatan ini. Isi lalu Simpan — tersimpan di server dan bisa diunduh admin." : "Notulen ditulis pengajar; kamu bisa membaca dan mengunduhnya.") + (n.by ? ` Terakhir disimpan oleh ${n.by}.` : "");
+  pane.querySelectorAll("textarea").forEach((t) => {
+    t.readOnly = !can;
+    if (force || !KLS.noteDirty || document.activeElement !== t) t.value = (n.t && n.t[t.dataset.f]) || "";
+  });
+  if (force) KLS.noteDirty = false;
+  const sv = $("klsNoteSave"); if (sv) sv.hidden = !can;
+}
+function klsNoteDownload() {
+  const r = KLS.joined, st = KLS.st[r], n = KLS.note[r] || { t: {} }, ses = st && st.sesi;
+  const fields = {}; ($("klsPane") ? [...$("klsPane").querySelectorAll("textarea")] : []).forEach((t) => { fields[t.dataset.f] = t.value; });
+  const t = Object.assign({}, n.t, fields), now = new Date();
+  const poll = st && st.poll ? `<h2>Polling</h2><p><b>${klsEsc(st.poll.q)}</b><br>${st.poll.opsi.map((o, i) => `${klsEsc(o)}: ${st.poll.hasil[i]} suara`).join(" · ")}</p>` : "";
+  const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Notulen</title><style>body{font:15px/1.6 system-ui,sans-serif;max-width:780px;margin:32px auto;padding:0 20px}h1{font-size:22px;margin:0}h2{font-size:16px;color:#4c1d95;border-bottom:1px solid #ddd;margin:20px 0 6px}.m{color:#555;margin:2px 0}</style></head><body><h1>NOTULEN · ${klsEsc(ses ? ses.judul : ROOMS[r].name)}</h1><p class="m">${klsEsc(ROOMS[r].name)} · Galeri VR Teknik Informatika UIKA Bogor</p><p class="m">${now.toLocaleString("id-ID", { dateStyle: "full", timeStyle: "short" })}${ses && ses.pengajar ? " · Pengajar/pimpinan: " + klsEsc(ses.pengajar) : ""}</p>${KLS_NOTE_F.map(([k, l]) => `<h2>${l}</h2><p>${t[k] ? klsEsc(t[k]).replace(/\n/g, "<br>") : "—"}</p>`).join("")}${poll}<h2>Hadir saat diunduh (${st ? st.peserta.length : 0})</h2><p>${st ? st.peserta.map((p) => klsEsc(p.n) + (p.role === "pengajar" ? " (pengajar)" : "")).join(", ") : ""}</p></body></html>`;
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([html], { type: "text/html" })); a.download = `notulen-${r}-${now.toISOString().slice(0, 10)}.html`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+function klsRenderPoll() {
+  const pane = $("klsPane"), st = KLS.st[KLS.joined]; if (!pane || KLS.tab !== "q" || !st) return;
+  const T = KLS.role === "pengajar", p = st.poll, me = net && net.selfId;
+  const canMake = !st.sesi || T, canCtl = p && (T || (!st.sesi && p.by === S.name));
+  if (document.activeElement && pane.contains(document.activeElement) && document.activeElement.tagName === "INPUT") return; // jangan ganggu yang sedang mengetik
+  let h = "";
+  if (p) {
+    const tot = Math.max(1, p.n);
+    h += `<div class="kpoll"><b>${klsEsc(p.q)}</b><small>${p.open ? "Terbuka" : "Ditutup"} · ${p.n} suara · oleh ${klsEsc(p.by)}</small>${p.opsi.map((o, i) => `<button class="kopt${p.mine === i ? " on" : ""}" data-i="${i}" ${p.open ? "" : "disabled"}><span>${klsEsc(o)}</span><i style="width:${Math.round(p.hasil[i] / tot * 100)}%"></i><em>${p.hasil[i]}</em></button>`).join("")}</div>`;
+    if (canCtl) h += `<div class="rowf">${p.open ? '<button class="ghost" data-c="tutup">Tutup polling</button>' : ""}<button class="ghost" data-c="tampil" data-on="${p.show ? 0 : 1}">${p.show ? "Sembunyikan dari papan" : "📺 Tampilkan di papan"}</button><button class="ghost kdel" data-c="hapus">Hapus</button></div>`;
+  }
+  if (canMake && (!p || !p.open)) h += `<div class="kmk"><b>Buat polling / kuis cepat</b><input id="kpQ" maxlength="200" placeholder="Pertanyaan"><div id="kpO">${[0, 1, 2].map((i) => `<input class="kpo" maxlength="80" placeholder="Pilihan ${i + 1}">`).join("")}</div><div class="rowf"><button class="ghost" id="kpAdd">+ Pilihan</button><button class="btn" id="kpGo">Mulai polling</button></div></div>`;
+  if (!p && !canMake) h += '<p class="kmut">Belum ada polling. Pengajar bisa membuat polling atau kuis cepat di sini.</p>';
+  pane.innerHTML = h;
+  pane.querySelectorAll(".kopt").forEach((b) => b.onclick = () => klsSend({ type: "kls_vote", i: +b.dataset.i }));
+  pane.querySelectorAll("button[data-c]").forEach((b) => b.onclick = () => klsSend({ type: "kls_pollctl", a: b.dataset.c, on: b.dataset.on === "1" }));
+  pane.querySelectorAll("input").forEach((i) => i.addEventListener("keydown", (e) => e.stopPropagation()));
+  if ($("kpAdd")) $("kpAdd").onclick = () => { const n = $("kpO").children.length; if (n >= 6) return; const i = document.createElement("input"); i.className = "kpo"; i.maxLength = 80; i.placeholder = "Pilihan " + (n + 1); i.addEventListener("keydown", (e) => e.stopPropagation()); $("kpO").appendChild(i); };
+  if ($("kpGo")) $("kpGo").onclick = () => { const opsi = [...pane.querySelectorAll(".kpo")].map((i) => i.value.trim()).filter(Boolean); klsSend({ type: "kls_poll", q: $("kpQ").value.trim(), opsi }); };
+  void me;
+}
+// hasil polling di smart board (dipanggil dari sbRender)
+function klsPollDraw(B, x) {
+  const st = KLS.st[B.room], p = st && st.poll;
+  if (!p || !p.show || B.local) return false;
+  const g = x.createLinearGradient(0, 0, SB_W, SB_H); g.addColorStop(0, "#0b1220"); g.addColorStop(1, "#1e1b4b");
+  x.fillStyle = g; x.fillRect(0, 0, SB_W, SB_H);
+  x.fillStyle = B.acc; x.fillRect(0, 0, SB_W, 10);
+  x.fillStyle = "#c4b5fd"; x.font = `700 26px ${FONT}`; x.textAlign = "left"; x.fillText(`📊 POLLING · ${p.n} suara${p.open ? " · masih dibuka" : ""}`, 60, 70);
+  x.fillStyle = "#f8fafc"; x.font = `700 40px ${FONT}`; wrap(x, p.q, 60, 125, SB_W - 120, 48, 2);
+  const tot = Math.max(1, p.n), top = 230, h = Math.min(72, (SB_H - top - 40) / p.opsi.length - 14), cols = ["#60a5fa", "#34d399", "#fbbf24", "#f472b6", "#a78bfa", "#fb923c"];
+  p.opsi.forEach((o, i) => {
+    const y = top + i * (h + 14), w = (SB_W - 420) * p.hasil[i] / tot;
+    x.fillStyle = "rgba(255,255,255,.08)"; rr(x, 340, y, SB_W - 420, h, 12); x.fill();
+    x.fillStyle = cols[i % cols.length]; if (w > 2) { rr(x, 340, y, w, h, 12); x.fill(); }
+    x.fillStyle = "#e2e8f0"; x.font = `600 28px ${FONT}`; x.textAlign = "right"; x.fillText(o.slice(0, 22), 320, y + h / 2 + 10);
+    x.textAlign = "left"; x.fillStyle = "#fff"; x.font = `700 28px ${FONT}`; x.fillText(`${p.hasil[i]} (${Math.round(p.hasil[i] / tot * 100)}%)`, 350 + Math.max(w, 0), y + h / 2 + 10);
+  });
+  return true;
+}
+// apakah pemain boleh mengendalikan smart board ruangan ini
+function klsBoardOK(B) {
+  if (B.local || !KLS_ROOMS.includes(B.room)) return true;
+  const st = KLS.st[B.room];
+  if (!st || !st.sesi) return true;
+  return KLS.role === "pengajar" || !st.ctl.lock;
+}
+
+// sambungan ulang ke server: daftar ulang ke ruangan (token disimpan selama sesi)
+function klsOnOpen() {
+  if (KLS.joined) { sfuStop(); KLS.joined = null; klsPanel(false); }
+}
+// papan menolak perubahan (dikunci pengajar) → muat ulang keadaan dari server saat bergabung berikutnya
+function klsResync(B) { B.strokes = B.strokes.slice(0, -1); sbRedrawAnn(B); sbRender(B); }
+
+// ---------- KELAS AUDITORIUM ----------
+function buildAud(k) {
+  const R = ROOMS[k], A = AUD[k], cx = (R.x0 + R.x1) / 2, W = R.x1 - R.x0;
+  const tierM = new THREE2.MeshStandardMaterial({ color: A.carpet, roughness: 0.95 });
+  const noseM = new THREE2.MeshBasicMaterial({ color: new THREE2.Color(A.acc), toneMapped: false });
+  for (let i = 1; i <= A.rows; i++) {
+    const z0 = R.z0 + A.front + (i - 1) * A.rowD, h = i * A.step, d = R.z1 - z0;
+    const tb = xBox(W - 0.02, h, d, tierM, cx, h / 2, z0 + d / 2); world.floors.push(tb);
+    xBox(W - 0.4, 0.02, 0.05, noseM, cx, h + 0.006, z0 + 0.04); // lampu tepi anak tangga
+  }
+  // kursi + meja lipat (instanced)
+  const seatM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(A.seat), roughness: 0.75 });
+  const darkM = new THREE2.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.5, metalness: 0.4 });
+  const deskM = new THREE2.MeshStandardMaterial({ color: 0xd6b48c, roughness: 0.55 });
+  const per = 8, sp = 0.9, blocks = [R.x0 + 1.0, cx + 0.8], seatPos = [];
+  for (let i = 1; i <= A.rows; i++) for (const b0 of blocks) for (let j = 0; j < per; j++) seatPos.push([b0 + 0.45 + j * sp, R.z0 + A.front + (i - 1) * A.rowD + 1.3, i * A.step]);
+  const o = new THREE2.Object3D();
+  const inst = (geo, mat, fn, n = seatPos.length) => { const im = new THREE2.InstancedMesh(geo, mat, n); seatPos.slice(0, n).forEach((s, i) => { fn(o, s, i); o.updateMatrix(); im.setMatrixAt(i, o.matrix); }); scene.add(im); return im; };
+  inst(new THREE2.BoxGeometry(0.52, 0.09, 0.48), seatM, (o2, [x, z, y]) => { o2.position.set(x, y + 0.46, z); o2.rotation.set(0, 0, 0); });
+  inst(new THREE2.BoxGeometry(0.52, 0.62, 0.07), seatM, (o2, [x, z, y]) => { o2.position.set(x, y + 0.82, z + 0.25); o2.rotation.set(-0.12, 0, 0); });
+  inst(new THREE2.CylinderGeometry(0.05, 0.08, 0.42, 8), darkM, (o2, [x, z, y]) => { o2.position.set(x, y + 0.21, z + 0.05); o2.rotation.set(0, 0, 0); });
+  for (const [x, z, y] of seatPos) world.seats.push({ x, z, yaw: 0 });
+  // meja panjang per baris & blok
+  const rowsB = []; for (let i = 1; i <= A.rows; i++) for (const b0 of blocks) rowsB.push([b0 + per * sp / 2, R.z0 + A.front + (i - 1) * A.rowD + 0.45, i * A.step]);
+  const L = per * sp + 0.1;
+  const dt = new THREE2.InstancedMesh(new THREE2.BoxGeometry(L, 0.04, 0.42), deskM, rowsB.length), dp = new THREE2.InstancedMesh(new THREE2.BoxGeometry(L, 0.7, 0.04), deskM, rowsB.length);
+  rowsB.forEach(([x, z, y], i) => {
+    o.position.set(x, y + 0.75, z); o.rotation.set(0, 0, 0); o.updateMatrix(); dt.setMatrixAt(i, o.matrix);
+    o.position.set(x, y + 0.38, z - 0.2); o.updateMatrix(); dp.setMatrixAt(i, o.matrix);
+    xCol(x - L / 2, z, x + L / 2, z, 0.2);
+  });
+  scene.add(dt); scene.add(dp);
+  // panggung dosen: meja dosen + laptop, mimbar
+  const wood = new THREE2.MeshStandardMaterial({ color: 0x8b5e3c, roughness: 0.55 });
+  const tx = cx - 4.6, tz = R.z0 + 3.0;
+  xBox(2.2, 0.06, 0.9, wood, tx, 0.76, tz); xBox(2.2, 0.72, 0.05, wood, tx, 0.38, tz - 0.42);
+  for (const sx of [-1, 1]) xBox(0.05, 0.74, 0.86, wood, tx + sx * 1.07, 0.37, tz);
+  const lap = new THREE2.Group(); lap.position.set(tx + 0.3, 0.79, tz); lap.rotation.y = Math.PI; scene.add(lap);
+  xBox(0.42, 0.02, 0.3, darkM, 0, 0.01, 0, 0, lap);
+  const scr = xBox(0.42, 0.28, 0.015, new THREE2.MeshBasicMaterial({ color: new THREE2.Color(A.acc), toneMapped: false }), 0, 0.15, -0.15, 0, lap); scr.rotation.x = -0.25;
+  world.colliders.push({ a: [tx - 1.1, tz], b: [tx + 1.1, tz], r: 0.45 });
+  const lx2 = cx + 4.2, lz = R.z0 + 3.4, lec = new THREE2.Group(); lec.position.set(lx2, 0, lz); lec.rotation.y = Math.PI; scene.add(lec);
+  xBox(0.8, 1.1, 0.55, wood, 0, 0.55, 0, 0, lec); const top = xBox(0.86, 0.05, 0.62, wood, 0, 1.16, -0.02, 0, lec); top.rotation.x = 0.18;
+  const lgc = mkCanvas(400, 400), lg = lgc.getContext("2d"); lg.fillStyle = "#fff"; lg.beginPath(); lg.arc(200, 200, 190, 0, 7); lg.fill(); lg.fillStyle = A.acc; lg.font = `800 120px ${FONT}`; lg.textAlign = "center"; lg.textBaseline = "middle"; lg.fillText("TI", 200, 190); lg.font = `700 44px ${FONT}`; lg.fillStyle = "#334155"; lg.fillText("UIKA", 200, 290);
+  const lgp = xPlane(lgc, 0.42, 0.42); lgp.position.set(0, 0.62, -0.28); lgp.rotation.y = Math.PI; lec.add(lgp);
+  world.circles.push({ x: lx2, z: lz, r: 0.5 });
+  // smart board di dinding depan (utara)
+  kSmartBoard(k, k, A.title, A.acc, cx, 5.6, 3.15, 2.7);
+  kCeilLights(R, 6);
+  kPlant(R.x0 + 0.7, R.z0 + 0.7); kPlant(R.x1 - 0.7, R.z0 + 0.7);
+  // jam dinding di dinding belakang + tulisan aturan kelas
+  const rc = mkCanvas(1200, 260), rx = rc.getContext("2d");
+  rx.fillStyle = "rgba(255,255,255,.92)"; rr(rx, 0, 0, 1200, 260, 30); rx.fill();
+  rx.fillStyle = A.seat; rx.font = `800 72px ${FONT}`; rx.textAlign = "center"; rx.fillText(A.title + " · AUDITORIUM", 600, 110);
+  rx.fillStyle = "#475569"; rx.font = `500 40px ${FONT}`; rx.fillText("Teknik Informatika · Universitas Ibn Khaldun Bogor", 600, 190);
+  const rp = world.onWall(k, "S", cx, 4.4), rg = world.group(rp), rm = xPlane(rc, 4.6, 1.0); rm.position.z = 0.02; rg.add(rm);
+}
+
+// ---------- RUANG RAPAT ----------
+function buildRapat() {
+  // meja elips panjang membujur utara–selatan: 12 kursi tiap sisi + 1 kursi pimpinan di ujung utara = 25 kursi
+  const R = ROOMS.rapat, cx = 1, cz = 68.4, a = 7.0, b = 1.9;
+  const walnut = new THREE2.MeshStandardMaterial({ color: 0x4a2e1c, roughness: 0.25, metalness: 0.1 });
+  const top = new THREE2.Mesh(new THREE2.CylinderGeometry(1, 1, 0.08, 96), walnut); top.scale.set(b, 1, a); top.position.set(cx, 0.76, cz); scene.add(top);
+  const rim = new THREE2.Mesh(new THREE2.TorusGeometry(1, 0.012, 6, 128), new THREE2.MeshStandardMaterial({ color: 0xd4a017, metalness: 0.8, roughness: 0.3 })); rim.rotation.x = Math.PI / 2; rim.scale.set(b * 0.86, a * 0.93, 1); rim.position.set(cx, 0.802, cz); scene.add(rim);
+  const baseM = new THREE2.MeshStandardMaterial({ color: 0x1c1917, roughness: 0.4, metalness: 0.5 });
+  for (const sz of [-1, 0, 1]) { const ped = new THREE2.Mesh(new THREE2.BoxGeometry(1.0, 0.72, 0.5), baseM); ped.position.set(cx, 0.36, cz + sz * a * 0.6); scene.add(ped); }
+  for (let i = 0; i < 28; i++) { const t0 = i / 28 * Math.PI * 2, t1 = (i + 1) / 28 * Math.PI * 2; xCol(cx + Math.cos(t0) * b, cz + Math.sin(t0) * a, cx + Math.cos(t1) * b, cz + Math.sin(t1) * a, 0.12); }
+  const chairs = [];
+  for (let k = 0; k < 12; k++) {
+    const dz = -6.05 + k * 1.1, e = b * Math.sqrt(1 - (dz / a) ** 2);
+    chairs.push([cx - e - 0.62, cz + dz, -Math.PI / 2], [cx + e + 0.62, cz + dz, Math.PI / 2]);
+  }
+  chairs.push([cx, cz - a - 0.62, Math.PI]);   // kursi pimpinan menghadap layar
+  const leather = new THREE2.MeshStandardMaterial({ color: 0x18181b, roughness: 0.45 }), chrome = new THREE2.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.9, roughness: 0.2 });
+  for (const [x, z, yw] of chairs) {
+    const g = new THREE2.Group(); g.position.set(x, 0, z); g.rotation.y = yw; scene.add(g);
+    xBox(0.56, 0.1, 0.52, leather, 0, 0.47, 0, 0, g);
+    const back = xBox(0.54, 0.78, 0.08, leather, 0, 0.92, 0.27, 0, g); back.rotation.x = -0.1;
+    for (const sx of [-1, 1]) xBox(0.05, 0.05, 0.4, chrome, sx * 0.3, 0.66, 0.02, 0, g);
+    xBox(0.06, 0.38, 0.06, chrome, 0, 0.22, 0, 0, g);
+    for (let k = 0; k < 5; k++) xBox(0.05, 0.04, 0.34, chrome, Math.sin(k * 1.2566) * 0.17, 0.04, Math.cos(k * 1.2566) * 0.17, k * 1.2566, g);
+    world.seats.push({ x, z, yaw: yw });
+    // mikrofon konferensi di depan kursi
+    const mic = new THREE2.Group(); mic.position.set(x - Math.sin(yw) * 0.75, 0.8, z - Math.cos(yw) * 0.75); scene.add(mic);
+    xBox(0.12, 0.03, 0.08, baseM, 0, 0.015, 0, 0, mic); const st = xBox(0.012, 0.22, 0.012, chrome, 0, 0.13, 0, 0, mic); st.rotation.x = 0.3;
+  }
+  // layar presentasi besar di dinding selatan + kredenza
+  kSmartBoard("rapat", "rapat", "RUANG RAPAT", "#f59e0b", cx, 4.4, 2.48, 2.3);
+  xBox(3.8, 0.72, 0.5, walnut, cx, 0.36, R.z1 - 0.42); world.colliders.push({ a: [cx - 1.9, R.z1 - 0.42], b: [cx + 1.9, R.z1 - 0.42], r: 0.3 });
+  // lampu gantung linear di atas meja
+  xBox(0.28, 0.07, 11.5, new THREE2.MeshBasicMaterial({ color: 0xfff3c4, toneMapped: false }), cx, 2.9, cz);
+  const cab = new THREE2.MeshBasicMaterial({ color: 0x111111 }); for (const sz of [-5.2, 5.2]) xBox(0.01, R.h - 2.9, 0.01, cab, cx, (R.h + 2.9) / 2, cz + sz);
+  const lg = world.glowSprite("#fde68a", 1, 0.35); lg.scale.set(3.2, 12, 1); lg.position.set(cx, 2.85, cz); scene.add(lg);
+  kCeilLights(R, 6, "#fff7ed");
+  // papan nama ruang di dinding timur
+  const nc = mkCanvas(1400, 300), nx = nc.getContext("2d");
+  nx.fillStyle = "#fcd34d"; nx.font = `800 96px ${FONT}`; nx.textAlign = "center"; nx.fillText("RUANG RAPAT", 700, 130);
+  nx.fillStyle = "#e7d3b0"; nx.font = `500 44px ${FONT}`; nx.fillText("Program Studi Teknik Informatika · UIKA Bogor", 700, 215);
+  const np = world.onWall("rapat", "E", cz, 2.4), ng = world.group(np), nm = xPlane(nc, 4.2, 0.9); nm.position.z = 0.02; ng.add(nm);
+  for (const [px, pz] of [[R.x0 + 0.6, R.z0 + 0.6], [R.x1 - 0.6, R.z1 - 0.6], [R.x0 + 0.6, R.z1 - 0.6], [R.x1 - 0.6, R.z0 + 2.6]]) kPlant(px, pz);
+}
+
+function buildKelas() {
+  buildAud("kelas1"); buildAud("kelas2"); buildRapat();
+  try { buildLabBoards(); } catch (e) { console.error("Smart board lab gagal dibangun:", e); }
+  sbLoadCfg();
+  // pintu kaca geser + papan nama di kedua sisi
+  kDoor(-10.8, 56, true, "#60a5fa", "kelas1"); kSign("KELAS 1 · AUDITORIUM", "#1e40af", -10.8, 55.82, Math.PI); kSign("↑ RUANG E-PORTAL", "#047857", -10.8, 56.18, 0);
+  kDoor(3, 56, true, "#f59e0b", "rapat"); kSign("RUANG RAPAT", "#92400e", 3, 55.82, Math.PI); kSign("↑ RUANG E-PORTAL", "#047857", 3, 56.18, 0);
+  kDoor(9, 32.6, false, "#2dd4bf", "kelas2"); kSign("KELAS 2 · AUDITORIUM →", "#0f766e", 8.82, 32.6, -Math.PI / 2); kSign("← RUANG E-PORTAL", "#047857", 9.18, 32.6, Math.PI / 2);
+  XT.anim.push((dt) => { kDoorTick(dt); sbTick(); klsTick(dt); });
+}
+
 // ---------- Patimah: waitress IT-Mart, pemandu ruangan di denah ----------
 var ROOM_INFO = {
   welcome: ["Ruang Sambutan", "titik awal kamu tiba", "Ada layar besar video sambutan, slideshow “Kenali Lab Peminatan”, galeri Kepala Program Studi, logo TI 3D, denah, headset VR, dan robot Haris yang hafal kurikulum OBE serta visi-misi.", /sambutan|awal|video|kaprodi|kepala program|\bdul\b|haris|kurikulum|obe/],
@@ -12167,7 +13255,10 @@ var ROOM_INFO = {
   se: ["Lab Software Engineering", "lewat pintu utara-kanan Atrium", "Studio developer: meja laptop, beanbag, rak piala, kanban, slideshow prestasi & produk, dan robot Cody.", /\bse\b|software|\brpl\b|cody/],
   csn: ["Lab CSN", "lewat pintu timur Atrium", "Network Operation Center: layar monitoring, hologram topologi jaringan, rak server, robot Neta, dan lift menuju Hanggar Drone (diaktifkan Haryani di IT-Mart Lantai 2).", /\bcsn\b|neta|jaringan|network/],
   cafe: ["IT-Mart", "di timur Ruang Sambutan, lewat pintu kayu di dinding timurnya (tempat aku bekerja)", "Meja bar barista Rahman (kopi, info dosen & saran pembimbing), tangga ke Lantai 2 (Ananda memverifikasi Explorer Card), papan menu kopi, Rak Buku Digital berisi PDF yang bisa diunduh (dijaga Silvia), papan keahlian dosen TI, sofa, dan rak buku.", /cafe|kafe|kopi|rahman|it-?mart|\bmart\b|ivy|rak buku|perpus|lantai ?2|\bnan\b|ananda|silvia|patimah|gua pustaka/],
-  eportal: ["Ruang E-Portal UIKA", "lewat pintu hijau di dinding selatan Ruang Sambutan", "Ruang luas berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, UCL, dan 2 aplikasi mobile) serta robot Virzha yang memberi akses ke eportal.uika-bogor.ac.id.", /e-?portal|portal|\bvir\b|virzha|\bsso\b|siakad|simpeg|\bucl\b|\bcbt\b|library/]
+  eportal: ["Ruang E-Portal UIKA", "lewat pintu hijau di dinding selatan Ruang Sambutan", "Ruang luas berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, UCL, dan 2 aplikasi mobile) serta robot Virzha yang memberi akses ke eportal.uika-bogor.ac.id.", /e-?portal|portal|\bvir\b|virzha|\bsso\b|siakad|simpeg|\bucl\b|\bcbt\b|library/],
+  kelas1: ["Kelas 1 · Auditorium", "dari Ruang E-Portal, pintu biru di dinding selatan (kiri)", "Ruang kelas bergaya auditorium: 8 baris kursi bertingkat dengan meja lipat, mimbar dosen, dan smart board besar di depan untuk papan tulis dan presentasi slide lab.", /kelas ?1|kelas satu|auditorium|ruang kelas|kuliah/],
+  kelas2: ["Kelas 2 · Auditorium", "dari Ruang E-Portal, pintu toska di dinding timur", "Ruang kelas auditorium kedua (di selatan IT-Mart): kursi bertingkat, mimbar dosen, dan smart board di depan.", /kelas ?2|kelas dua/],
+  rapat: ["Ruang Rapat", "dari Ruang E-Portal, pintu kuning di dinding selatan (kanan, di balik gerbang portal)", "Ruang rapat berpanel kayu dengan meja elips panjang 14 meter, 25 kursi eksekutif, dan layar presentasi besar di dinding selatan.", /rapat|meeting|diskusi tim|ruang pertemuan/]
 };
 function sitAnswer(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
@@ -18289,6 +19380,7 @@ function buildIslam() {
   IS.ownW = new Set(world.walls.children.filter((o) => !wBefore.has(o)));
   buildMila(); buildWudhuStation();
   try { buildKopi(); } catch (e) { console.error("Kang Jejen & Kang Bayu gagal dibangun:", e); }
+  try { buildAftaf(); } catch (e) { console.error("Kang Aftaf gagal dibangun:", e); }
   XT.anim.push((dt) => isTick(dt));
 }
 function isIsolate(on) {
@@ -18409,6 +19501,48 @@ function kopiTick(dt) {
     KOPI.talkT -= dt;
     if (KOPI.talkT <= 0) { const [who, txt] = KOPI_OBROLAN[KOPI.turn % KOPI_OBROLAN.length]; KOPI.turn++; sayBubble(txt, "npc_" + who); KOPI.talkT = 7 + Math.random() * 4; }
   }
+}
+// ---------- Kang Aftaf: duduk sendirian di IT-Mart, bercerita soal tantangan & rumor Black Card ----------
+var AFTAF = { t: { x: 23.4, z: 16.2 }, K: null, talkT: 6, i: 0 };
+var AFTAF_GUMAM = [
+  "Galeri ini bukan cuma buat milih peminatan, lho… coba jelajahi lebih jauh.",
+  "Labirin, rumah kaca, gua gelap, kawah api… seru semua! 😄",
+  "Explorer Card itu kunci ke banyak tantangan. Sudah punya belum?",
+  "Hmm… katanya ada yang namanya Black Card. Tapi entahlah, aku belum tahu pasti 🤔"
+];
+function buildAftaf() {
+  const T = AFTAF.t, a = 0.4 + Math.PI * 2 / 3;   // kursi sisi barat laut meja timur depan
+  const s0 = { x: T.x + Math.cos(a) * 1.0, z: T.z + Math.sin(a) * 1.0 };
+  const i = world.seats.findIndex((w) => Math.hypot(w.x - s0.x, w.z - s0.z) < 0.05); if (i >= 0) world.seats.splice(i, 1);
+  const A = makeCustomHuman("aftaf", { code: "KOPI", name: "Kang Aftaf", role: "Pengunjung setia IT-Mart · penjelajah galeri", col: "#7c3aed", icon: "🧭", hint: "🧭", x: s0.x, z: s0.z, room: "cafe", tag: "KANG AFTAF",
+    look: { shirt: "#e9d5ff", apron: "#e9d5ff", hair: "#1c1410", glasses: false, noApron: true, wide: 1.0, badge: "🧭" },
+    chips: ["Serunya apa sih?", "Explorer Card?", "Lencana?", "Rumor apa?"], roleNote: "pengunjung IT-Mart",
+    knowText: "Kang Aftaf duduk sendirian di IT-Mart. Ia suka bercerita betapa serunya tantangan-tantangan di galeri, mengajak pemain menjelajah lebih jauh, mendapatkan Explorer Card dan lencana-lencana, serta ragu-ragu menyebut rumor tentang Black Card.",
+    greetActs: () => [], answer: (q) => aftafAnswer(q) });
+  A.pitch = 0.95;
+  const c = world.circles.find((cc) => cc.x === A.x && cc.z === A.z && cc.r === 0.35); if (c) c.r = 0.25;
+  const K = kopiSit(A, { shirt: "#e9d5ff", w: 1.0, leg: 0.065, ph: 1.2, pants: "#334155" });
+  K.face = Math.atan2(T.x - A.x, T.z - A.z);
+  KOPI.npcs.push(K); AFTAF.K = K;
+  XT.anim.push((dt) => aftafTick(dt));
+}
+function aftafTick(dt) {
+  const K = AFTAF.K; if (!K || roomAt(P.x, P.z) !== "cafe") return;
+  if ($("sashaDr")?.classList.contains("show") && typeof curNpc !== "undefined" && curNpc === "aftaf") return;
+  if (Math.hypot(P.x - K.n.x, P.z - K.n.z) > 6) return;
+  AFTAF.talkT -= dt;
+  if (AFTAF.talkT <= 0) { sayBubble(AFTAF_GUMAM[AFTAF.i++ % AFTAF_GUMAM.length], "npc_aftaf"); AFTAF.talkT = 12 + Math.random() * 6; }
+}
+function aftafAnswer(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), qs = Q(), card = !!qs.card;
+  const nb = typeof BADGES !== "undefined" ? BADGES.filter((b) => qs.badges && qs.badges[b.id]).length : 0;
+  const acts = [["🎢 Serunya apa?", () => askNpc("Serunya apa sih?", "aftaf")], ["🪪 Explorer Card?", () => askNpc("Explorer Card?", "aftaf")], ["🏅 Lencana?", () => askNpc("Lencana?", "aftaf")], ["🤫 Rumor apa?", () => askNpc("Rumor apa?", "aftaf")]];
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Selamat menjelajah, semoga ketemu lagi di tantangan berikutnya 🧭" };
+  if (/black|hitam|rumor|gosip|isu|rahasia besar/.test(ql)) return { text: nb >= 7 ? "Eh… jangan-jangan kamu sudah pegang Black Card itu? Wah, berarti rumornya benar! 😮" : "Hmm… ini cuma rumor ya. Katanya ada yang namanya Black Card, kartu hitam buat penjelajah yang sudah menaklukkan semuanya. Tapi aku sendiri belum tahu pasti… bisa jadi cuma cerita orang. Kalau kamu nemu kebenarannya, kabari aku ya 🤔", acts };
+  if (/explorer|kartu|card|akses/.test(ql)) return { text: card ? "Kamu sudah punya Explorer Card! Itu kunci ke ruang-ruang tantangan berikutnya. Coba tanya-tanya ke Ananda di Lantai 2 IT-Mart, dari situ petualangannya makin seru 😉" : "Explorer Card itu kunci ke berbagai tantangan di galeri ini. Caranya? Jelajahi dulu lab-lab peminatan dan ngobrol sama robot-robotnya — konon ada lorong rahasia di salah satu lab. Siapa yang berhasil melewatinya bakal ketemu Kang Santo, dan dari dia kartunya didapat. Tanya juga Rahman di meja bar, dia suka kasih petunjuk 😉", acts };
+  if (/lencana|badge|capaian|koleksi/.test(ql)) return { text: `Ada tujuh lencana yang bisa dikumpulkan: Dasar, Umum, IoT & Drone, Jari, Coding, Agama Islam, dan Kerjasama Tim. Tiap lencana punya tantangannya sendiri.${nb ? ` Kamu sudah punya ${nb} — mantap!` : ""} Lihat koleksimu di menu 🏅 Capaian.`, acts };
+  if (/seru|tantangan|cerita|ngobrol|apa sih|game|main/.test(ql)) return { text: "Seru banget! Ada labirin yang bikin pusing, rumah kaca penuh cermin, gua gelap yang cuma diterangi lentera, menerbangkan drone di atap, kawah api yang bikin jari keringetan, sampai dunia server yang harus diselamatkan. Jadi VR ini bukan sekadar untuk peminatan — coba kamu jelajahi lebih jauh lagi!", acts };
+  return { text: `Halo, ${S.name}! Aku Kang Aftaf. Duduk sini sebentar… Kamu tahu nggak, galeri VR ini bukan sekadar untuk memilih peminatan. Coba jelajahi lebih jauh, dapatkan Explorer Card untuk akses ke berbagai tantangan, lalu kumpulkan lencananya. Seru, deh!`, acts };
 }
 function kopiAnswer(q, who) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), me = who === "jejen" ? "Kang Jejen" : "Kang Bayu", other = who === "jejen" ? "Kang Bayu" : "Kang Jejen";

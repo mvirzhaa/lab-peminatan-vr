@@ -135,7 +135,9 @@
   document.querySelectorAll('.tabs button').forEach((b) => b.onclick = () => {
     tab = b.dataset.t;
     document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x === b));
-    for (const t of ['daftar', 'final', 'arsip', 'buku', 'pesan', 'kartu']) $('t-' + t).hidden = t !== tab;
+    for (const t of ['daftar', 'final', 'arsip', 'buku', 'pesan', 'kartu', 'sb', 'kls']) $('t-' + t).hidden = t !== tab;
+    if (tab === 'kls') loadKls();
+    if (tab === 'sb') loadSb();
     if (tab === 'kartu') loadCards();
     if (tab === 'buku') loadBooks();
     if (tab === 'pesan') loadNotes();
@@ -191,7 +193,7 @@
 
   // ---------- Rak Buku ----------
   // pindahkan panel tambahan ke dalam #app
-  for (const id of ['t-buku', 't-pesan', 't-kartu']) $('app').appendChild($(id));
+  for (const id of ['t-buku', 't-pesan', 't-kartu', 't-sb', 't-kls']) $('app').appendChild($(id));
   // ---------- Explorer Card ----------
   let cards = [];
   async function loadCards() {
@@ -293,6 +295,168 @@
     const b = $('ntDelSel');
     if (b.dataset.arm !== '1') { b.dataset.arm = '1'; b.textContent = `Yakin hapus ${ids.length}?`; setTimeout(() => { b.dataset.arm = ''; b.textContent = 'Hapus yang dicentang'; }, 3000); return; }
     try { const r = await post('/api/admin/notes/delete?room=' + encodeURIComponent(ntRoom), { ids }); toast(r.deleted + ' catatan dihapus.'); $('ntAll').checked = false; loadNotes(); } catch (e) { toast(e.message); }
+  };
+
+  // ---------- Smart Board & video sambutan ----------
+  let SBD = null, sbCur = 'kelas1';
+  async function loadSb() {
+    try { SBD = await api('/api/admin/sb'); } catch (e) { toast(e.message); return; }
+    $('wYt').value = 'https://www.youtube.com/watch?v=' + SBD.welcome.yt; $('wOpen').href = 'https://www.youtube.com/watch?v=' + SBD.welcome.yt;
+    const sel = $('sbSel');
+    if (!sel.options.length) for (const [k, b] of Object.entries(SBD.boards)) { const o = el('option', '', b.nama + (b.lokal ? ' (diputar masing-masing pemain)' : ' (dibagikan ke semua pemain)')); o.value = k; sel.appendChild(o); }
+    sel.value = sbCur; renderSb();
+  }
+  function renderSb() {
+    const b = SBD.boards[sbCur]; if (!b) return;
+    $('sbKind').textContent = b.lokal ? 'Lab · tiap pemain memutar sendiri' : 'Dibagikan ke semua pemain di ruangan';
+    $('sbJ').value = b.judul || '';
+    document.querySelectorAll('input[name=sbMode]').forEach((r) => { r.checked = r.value === b.mode; });
+    $('sbYt').value = b.yt ? 'https://www.youtube.com/watch?v=' + b.yt : '';
+    $('sbYtL').style.opacity = b.mode === 'youtube' ? 1 : 0.55;
+    const g = $('sbGrid'); g.textContent = '';
+    $('sbCount').textContent = b.slides.length + ' slide'; $('sbEmpty').hidden = b.slides.length > 0;
+    b.slides.forEach((s, i) => {
+      const card = el('div', 'sl'), img = el('img'); img.src = '/sb/' + s.id + '.' + s.ext; img.alt = s.judul || 'Slide ' + (i + 1); img.loading = 'lazy';
+      const meta = el('div', 'meta'), no = el('b', '', String(i + 1)), inp = el('input'); inp.value = s.judul || ''; inp.placeholder = 'Judul slide'; inp.maxLength = 80;
+      inp.onchange = async () => { try { await post('/api/admin/sb/rename', { b: sbCur, id: s.id, judul: inp.value }); toast('Judul slide disimpan.'); } catch (e) { toast(e.message); } };
+      const up = el('button', 'ghost', '↑'), dn = el('button', 'ghost', '↓'), del = el('button', 'del', '✕');
+      up.title = 'Geser ke kiri'; dn.title = 'Geser ke kanan'; del.title = 'Hapus slide';
+      up.disabled = i === 0; dn.disabled = i === b.slides.length - 1;
+      up.onclick = () => move(s.id, -1); dn.onclick = () => move(s.id, 1);
+      del.onclick = async () => {
+        if (del.dataset.arm !== '1') { del.dataset.arm = '1'; del.textContent = 'Yakin?'; setTimeout(() => { del.dataset.arm = ''; del.textContent = '✕'; }, 2500); return; }
+        try { await post('/api/admin/sb/delete', { b: sbCur, id: s.id }); toast('Slide dihapus.'); loadSb(); } catch (e) { toast(e.message); }
+      };
+      meta.append(no, inp, up, dn, del); card.append(img, meta); g.appendChild(card);
+    });
+  }
+  async function move(id, dir) { try { await post('/api/admin/sb/move', { b: sbCur, id, dir }); loadSb(); } catch (e) { toast(e.message); } }
+  $('sbSel').onchange = () => { sbCur = $('sbSel').value; $('sbMsg').textContent = ''; renderSb(); };
+  document.querySelectorAll('input[name=sbMode]').forEach((r) => r.onchange = () => { $('sbYtL').style.opacity = r.value === 'youtube' && r.checked ? 1 : 0.55; });
+  $('sbSave').onclick = async () => {
+    const m = $('sbMsg'); m.className = 'msg';
+    const mode = document.querySelector('input[name=sbMode]:checked').value;
+    try {
+      await post('/api/admin/sb/set', { b: sbCur, mode, yt: $('sbYt').value, judul: $('sbJ').value });
+      m.className = 'msg ok'; m.textContent = '✅ Tersimpan. Smart board ' + SBD.boards[sbCur].nama + ' kini menampilkan ' + (mode === 'youtube' ? 'video YouTube.' : 'slide.');
+      loadSb();
+    } catch (e) { m.className = 'msg bad'; m.textContent = '❌ ' + e.message; }
+  };
+  $('wSave').onclick = async () => {
+    try { const r = await post('/api/admin/sb/welcome', { yt: $('wYt').value }); toast('✅ Video sambutan diganti (' + r.yt + ').'); loadSb(); } catch (e) { toast(e.message); }
+  };
+  // PDF/PPTX → gambar per halaman (dirender di browser admin dengan pdf.js; PPTX diubah ke PDF dulu di server)
+  async function pdfToImages(buf, name, m) {
+    if (!window.pdfjsLib) throw new Error('Pembaca PDF belum termuat — muat ulang halaman admin.');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/admin/vendor/pdf.worker.min.js';
+    const doc = await pdfjsLib.getDocument({ data: buf }).promise, out = [];
+    const n = Math.min(doc.numPages, 80);
+    for (let i = 1; i <= n; i++) {
+      m.textContent = `Mengubah ${name}: halaman ${i}/${n}…`;
+      const pg = await doc.getPage(i), v0 = pg.getViewport({ scale: 1 }), sc = Math.min(2.5, 1920 / v0.width), vp = pg.getViewport({ scale: sc });
+      const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+      const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+      await pg.render({ canvasContext: x, viewport: vp }).promise;
+      const blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', 0.88));
+      out.push(new File([blob], `${name.replace(/\.[a-z0-9]+$/i, '')} – hal ${String(i).padStart(2, '0')}.jpg`, { type: 'image/jpeg' }));
+    }
+    return out;
+  }
+  async function uploadSlides(files) {
+    const m = $('sbUpMsg'); m.className = 'msg';
+    const expanded = [];
+    for (const f of files) {
+      try {
+        if (/\.pdf$/i.test(f.name) || f.type === 'application/pdf') expanded.push(...await pdfToImages(await f.arrayBuffer(), f.name, m));
+        else if (/\.pptx$/i.test(f.name)) {
+          m.textContent = `Mengubah ${f.name} ke PDF di server…`;
+          const r = await fetch('/api/admin/sb/pptx', { method: 'POST', credentials: 'same-origin', headers: { 'X-Pem': '1', 'Content-Type': 'application/octet-stream' }, body: f });
+          if (!r.ok) { let j = {}; try { j = await r.json(); } catch { } throw new Error(j.err || 'Gagal mengubah PowerPoint.'); }
+          expanded.push(...await pdfToImages(await r.arrayBuffer(), f.name, m));
+        } else expanded.push(f);
+      } catch (e) { m.className = 'msg bad'; m.textContent = '❌ ' + f.name + ': ' + e.message; return; }
+    }
+    files = expanded;
+    const list = [...files].filter((f) => /^image\/(jpeg|png|webp)$/.test(f.type) || /\.(jpe?g|png|webp)$/i.test(f.name));
+    if (!list.length) { m.className = 'msg bad'; m.textContent = 'Pilih gambar JPG/PNG/WebP, PDF, atau PowerPoint (.pptx).'; return; }
+    let ok = 0; const errs = [];
+    if (!expanded.some((f) => / – hal \d+\.jpg$/.test(f.name))) list.sort((a, b) => a.name.localeCompare(b.name, 'id', { numeric: true }));
+    for (const f of list) {
+      m.textContent = `Mengunggah ${ok + errs.length + 1}/${list.length}: ${f.name}…`;
+      if (f.size > 8 * 1024 * 1024) { errs.push(f.name + ' (lebih dari 8 MB)'); continue; }
+      try { await api('/api/admin/sb/upload?b=' + encodeURIComponent(sbCur), { method: 'POST', body: f, headers: { 'Content-Type': 'application/octet-stream', 'X-Filename': encodeURIComponent(f.name) } }); ok++; } catch (e) { errs.push(f.name + ': ' + e.message); }
+    }
+    m.className = errs.length ? 'msg bad' : 'msg ok';
+    m.textContent = `✅ ${ok} slide diunggah.` + (errs.length ? '\n⚠ Gagal:\n• ' + errs.join('\n• ') : '') + (ok && document.querySelector('input[name=sbMode]:checked').value !== 'slide' ? '\nCatatan: mode saat ini YouTube — pilih "Slide gambar" lalu Simpan agar slide tampil.' : '');
+    $('sbF').value = ''; loadSb();
+  }
+  $('sbF').onchange = () => uploadSlides($('sbF').files);
+  const sdr = $('sbDrop');
+  sdr.addEventListener('dragover', (e) => { e.preventDefault(); sdr.classList.add('over'); });
+  sdr.addEventListener('dragleave', () => sdr.classList.remove('over'));
+  sdr.addEventListener('drop', (e) => { e.preventDefault(); sdr.classList.remove('over'); uploadSlides(e.dataTransfer.files); });
+
+  // ---------- Kelas & Jadwal ----------
+  let KJ = null, kjEdit = null;
+  const RN = { kelas1: 'Kelas 1', kelas2: 'Kelas 2', rapat: 'Ruang Rapat' };
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const dIn = (t) => { const d = new Date(t); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+  const tIn = (t) => { const d = new Date(t); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+  const jam = (t) => new Date(t).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  const HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  async function loadKls() {
+    try { KJ = await api('/api/admin/kelas'); } catch (e) { toast(e.message); return; }
+    $('kjSfu').textContent = KJ.sfu ? `✅ Aktif di ${KJ.sfu.ip}:${KJ.sfu.port} (UDP & TCP). Pastikan port ini terbuka di firewall server agar suara dan berbagi layar berjalan.` : '⚠ Tidak aktif — suara kelas memakai mode langsung (peer-to-peer, cocok untuk ±10 orang) dan berbagi layar tidak tersedia. Pasang paket "mediasoup" (npm install) lalu restart server.';
+    const tb = $('kjRows'); tb.textContent = '';
+    $('kjEmpty').hidden = KJ.jadwal.length > 0; $('kjCount').textContent = KJ.jadwal.length ? KJ.jadwal.length + ' jadwal' : '';
+    for (const j of KJ.jadwal) {
+      const tr = el('tr'), w = el('td');
+      w.append(el('div', '', j.ulang === 'mingguan' ? `Tiap ${HARI[new Date(j.mulai).getDay()]}, ${jam(j.mulai)}–${jam(j.selesai)}` : `${fmt(j.mulai)} – ${jam(j.selesai)}`));
+      if (j.ulang === 'mingguan') w.append(el('div', 'mut', `mulai ${new Date(j.mulai).toLocaleDateString('id-ID', { dateStyle: 'medium' })}${j.sampai ? ' s.d. ' + new Date(j.sampai).toLocaleDateString('id-ID', { dateStyle: 'medium' }) : ''}`));
+      const k = el('td'), kk = el('div', '', j.judul); if (j.aktif) kk.appendChild(el('span', 'live', 'BERLANGSUNG')); k.append(kk, el('div', 'mut', j.pengajar || '-'));
+      const tokCell = (val, cls, jenis) => { const td = el('td', 'nw'), b = el('span', 'tok' + cls, val), cp = el('button', 'ghost sm', '📋'), rg = el('button', 'ghost sm', '↻'); cp.title = 'Salin'; rg.title = 'Buat kode baru';
+        cp.onclick = async () => { try { await navigator.clipboard.writeText(val); toast('Disalin: ' + val); } catch { toast(val); } };
+        rg.onclick = async () => { if (rg.dataset.arm !== '1') { rg.dataset.arm = '1'; rg.textContent = 'Ganti?'; setTimeout(() => { rg.dataset.arm = ''; rg.textContent = '↻'; }, 2500); return; } try { await post('/api/admin/kelas/token', { id: j.id, jenis }); toast('Kode baru dibuat — kode lama tidak berlaku.'); loadKls(); } catch (e) { toast(e.message); } };
+        td.append(b, ' ', cp, rg); return td; };
+      const act = el('td', 'nw'), ed = el('button', 'ghost sm', 'Ubah'), del = el('button', 'del sm', 'Hapus');
+      ed.onclick = () => editKj(j);
+      del.onclick = async () => { if (del.dataset.arm !== '1') { del.dataset.arm = '1'; del.textContent = 'Yakin?'; setTimeout(() => { del.dataset.arm = ''; del.textContent = 'Hapus'; }, 2500); return; } try { await post('/api/admin/kelas/hapus', { id: j.id }); toast('Jadwal dihapus.'); loadKls(); } catch (e) { toast(e.message); } };
+      act.append(ed, del);
+      tr.append(el('td', 'nw', RN[j.ruang]), k, w, tokCell(j.token, '', 'token'), tokCell(j.kode, ' k', 'kode'), act); tb.appendChild(tr);
+    }
+    const sb2 = $('ksRows'); sb2.textContent = '';
+    $('ksEmpty').hidden = KJ.sesi.length > 0; $('ksCount').textContent = KJ.sesi.length ? KJ.sesi.length + ' sesi' : '';
+    for (const S of KJ.sesi) {
+      const tr = el('tr'), td = el('td', 'nw'), x = el('a', 'ghost sm', '⬇ Presensi (Excel)'), n = el('a', 'ghost sm', '📝 Notulen');
+      x.href = '/api/admin/kelas/presensi.xlsx?k=' + encodeURIComponent(S.key);
+      n.href = '/api/admin/kelas/notulen.html?k=' + encodeURIComponent(S.key); n.title = S.catatan ? 'Unduh notulen (buka di browser lalu cetak/simpan PDF)' : 'Notulen belum diisi — berisi daftar hadir saja';
+      td.append(x, ' ', n);
+      tr.append(el('td', 'nw', `${fmt(S.mulai)}–${jam(S.selesai)}`), el('td', 'nw', RN[S.ruang]), el('td', '', S.judul), el('td', '', S.pengajar || '-'), el('td', 'nw', S.n + ' orang'), td); sb2.appendChild(tr);
+    }
+  }
+  function editKj(j) {
+    kjEdit = j; $('kjTitle').textContent = '✏ Ubah jadwal'; $('kjNew').hidden = false;
+    $('kjR').value = j.ruang; $('kjJ').value = j.judul; $('kjP').value = j.pengajar || '';
+    $('kjD').value = dIn(j.mulai); $('kjS').value = tIn(j.mulai); $('kjE').value = tIn(j.selesai);
+    $('kjW').checked = j.ulang === 'mingguan'; $('kjU').value = j.sampai ? dIn(j.sampai) : ''; $('kjUL').style.opacity = $('kjW').checked ? 1 : 0.5;
+    $('kjJ').focus();
+  }
+  function resetKj() { kjEdit = null; $('kjTitle').textContent = '➕ Jadwal baru'; $('kjNew').hidden = true; $('kjJ').value = ''; $('kjP').value = ''; $('kjW').checked = false; $('kjU').value = ''; $('kjUL').style.opacity = 0.5; }
+  $('kjNew').onclick = resetKj;
+  $('kjW').onchange = () => { $('kjUL').style.opacity = $('kjW').checked ? 1 : 0.5; };
+  $('kjUL').style.opacity = 0.5;
+  if (!$('kjD').value) $('kjD').value = dIn(Date.now());
+  $('kjSave').onclick = async () => {
+    const m = $('kjMsg'); m.className = 'msg';
+    const d = $('kjD').value, s1 = $('kjS').value, e1 = $('kjE').value;
+    if (!d || !s1 || !e1) { m.className = 'msg bad'; m.textContent = 'Isi tanggal, jam mulai, dan jam selesai.'; return; }
+    const mulai = new Date(`${d}T${s1}`).getTime(), selesai = new Date(`${d}T${e1}`).getTime();
+    const sampai = $('kjW').checked && $('kjU').value ? new Date(`${$('kjU').value}T23:59`).getTime() : 0;
+    try {
+      const r = await post('/api/admin/kelas/simpan', { id: kjEdit && kjEdit.id, ruang: $('kjR').value, judul: $('kjJ').value, pengajar: $('kjP').value, mulai, selesai, ulang: $('kjW').checked ? 'mingguan' : 'sekali', sampai });
+      m.className = 'msg ok'; m.textContent = `✅ Jadwal tersimpan.\nToken Peserta: ${r.jadwal.token}   ·   Kode Pengajar: ${r.jadwal.kode}\nBerikan kedua kode kepada pengajar; pengajar membagikan Token Peserta ke mahasiswa.`;
+      resetKj(); loadKls();
+    } catch (e) { m.className = 'msg bad'; m.textContent = '❌ ' + e.message; }
   };
 
   // mulai: coba sesi yang ada

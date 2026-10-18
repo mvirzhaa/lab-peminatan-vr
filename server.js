@@ -14,6 +14,9 @@ const { createPeminatan } = require('./peminatan');
 const { createBuku } = require('./buku');
 const { createKartu } = require('./kartu');
 const { createTim } = require('./tim');
+const { createSmartboard } = require('./smartboard');
+const { createKelas } = require('./kelas');
+const { createSfu } = require('./sfu');
 
 // baca file .env otomatis jika ada (memudahkan konfigurasi ADMIN_KEY, PEMINATAN_USER, dll tanpa terhambat cache PM2)
 try {
@@ -33,8 +36,8 @@ try {
 } catch {}
 
 const PORT = +process.env.PORT || 8080;
-const MAX_CLIENTS = +process.env.MAX_CLIENTS || 150;     // total koneksi
-const MAX_PER_ROOM = +process.env.MAX_PER_ROOM || 60;    // per ruang (?room=kelas-a)
+const MAX_CLIENTS = +process.env.MAX_CLIENTS || 300;     // total koneksi
+const MAX_PER_ROOM = +process.env.MAX_PER_ROOM || 200;   // per ruang (?room=kelas-a) — cukup untuk kelas 128 kursi + pengunjung lain
 const MAX_ROOMS = +process.env.MAX_ROOMS || 100;         // jumlah nama ruang berbeda (aktif + yang punya berkas catatan); cegah ?room= acak menghabiskan disk/memori
 const ROOM_IDLE_MS = 10 * 60e3;                          // ruang kosong dibuang dari memori setelah 10 menit
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean); // kosong = semua
@@ -84,6 +87,17 @@ const kartu = createKartu({ dataDir: DATA_DIR, pem });
 // ---- Tahap 8 · Kerjasama Tim (lobi tim, Game 1–3, Game 4 rahasia) ----
 const tim = createTim({ kartu, sendRaw: (ws, o) => send(ws, o), onWinner: (nama) => { for (const c of wss.clients) send(c, { type: 'tim_kabar', n: nama }); } });
 
+// ---- Smart board Kelas 1/2, Ruang Rapat & 4 lab + video sambutan (dikelola dari /admin) ----
+const sb = createSmartboard({ dataDir: DATA_DIR, pem, onCfg: (b) => {
+  for (const r of rooms.values()) if (r.sb) delete r.sb[b];        // konten baru → slide/coretan/pemutaran direset
+  for (const c of wss.clients) send(c, { type: 'sb_cfg', b });
+} });
+
+// ---- Kelas fungsional (jadwal, token, peran, presensi) + SFU suara/berbagi layar ----
+let kelas = null;
+const sfu = createSfu({ onSpeak: (key, ids) => { if (kelas) kelas.speak(key, ids); } });
+kelas = createKelas({ dataDir: DATA_DIR, pem, getRooms: () => rooms, sfu, sb });
+
 // ---- Papan Pesan IT'ers: disimpan permanen per ruang (?room=) di DATA_DIR/notes/<ruang>.json ----
 const NOTES_DIR = path.join(DATA_DIR, 'notes');
 fs.mkdirSync(NOTES_DIR, { recursive: true });
@@ -110,7 +124,12 @@ const server = http.createServer((req, res) => {
   const secHeaders = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'strict-origin-when-cross-origin', 'X-Frame-Options': 'SAMEORIGIN', 'Permissions-Policy': 'geolocation=(self), microphone=(self), xr-spatial-tracking=(self), autoplay=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com"), fullscreen=(self "https://www.youtube-nocookie.com" "https://www.youtube.com" "https://drive.google.com")' };
   let u, p; try { u = new URL(req.url, 'http://x'); p = decodeURIComponent(u.pathname); } catch { res.writeHead(400, secHeaders); return res.end(); }
   if (p.startsWith('/buku/') && (req.method === 'GET' || req.method === 'HEAD') && buku.serveFile(req, res, p)) return;
+  if (p.startsWith('/sb/') && (req.method === 'GET' || req.method === 'HEAD') && sb.serveFile(req, res, p)) return;
+  if (p === '/api/sb' || p.startsWith('/api/admin/sb')) return Promise.resolve(sb.handle(req, res, p, u)).then((done) => { if (done === false) pem.handle(req, res, p, u); });
   if (p.startsWith('/api/admin/notes')) return adminNotes(req, res, p, u);
+  if (p.startsWith('/api/admin/kelas')) return Promise.resolve(kelas.handle(req, res, p, u)).then((done) => { if (done === false) pem.handle(req, res, p, u); });
+  const vm = /^\/(?:admin|4adm1in)\/vendor\/(pdf\.min\.js|pdf\.worker\.min\.js)$/.exec(p);
+  if (vm) return fs.readFile(path.join(__dirname, 'node_modules', 'pdfjs-dist', 'build', vm[1]), (err, buf) => { if (err) { res.writeHead(404, secHeaders); return res.end(); } res.writeHead(200, { ...secHeaders, 'Content-Type': 'text/javascript', 'Cache-Control': 'public, max-age=86400' }); res.end(buf); });
   if (p.startsWith('/api/tim/')) { if (tim.handle(req, res, p, u)) return; res.writeHead(404, secHeaders); return res.end(); }
   if (p.startsWith('/api/kartu/') || p.startsWith('/api/admin/kartu')) return Promise.resolve(kartu.handle(req, res, p)).then((done) => { if (done === false) pem.handle(req, res, p, u); });
   if (p.startsWith('/api/buku') || p.startsWith('/api/admin/buku')) {
@@ -245,6 +264,7 @@ wss.on('connection', (ws, room) => {
     rooms.set(room, {
       members: new Set(),
       wb: [],
+      sb: sb.restore(room),
       notes: saved || [
         { id: 'seed-1', n: 'Kak Tias', t: 'Selamat datang di Lab Peminatan VR! Tulis pendapatmu mengenai lab pilihanmu di papan ini ya.', time: Date.now() },
         { id: 'seed-2', n: "IT'ers", t: 'Aku tertarik dengan KERIS karena fokus di Artificial Intelligence & Machine Learning!', time: Date.now() }
@@ -261,7 +281,9 @@ wss.on('connection', (ws, room) => {
     wb: rData.wb,
     notes: rData.notes.slice(-1000).map(notePublic),
     hof: HOF.map(hofPublic),
-    pem: pem.publicStats()
+    pem: pem.publicStats(),
+    sb: sb.stateFor(rData),
+    kls: kelas.jadwalPub()
   });
   members.add(ws);
 
@@ -275,6 +297,8 @@ wss.on('connection', (ws, room) => {
     let m; try { m = JSON.parse(buf.toString('utf8')); } catch { return; }
     if (!isPlainObj(m)) return;
     if (typeof m.type === 'string' && m.type.startsWith('tim_')) return tim.onMessage(ws, m);
+    if (typeof m.type === 'string' && m.type.startsWith('sb_')) return sb.onMessage(ws, m, rData, members, (w, b) => kelas.boardAllow(w, rData, b));
+    if (typeof m.type === 'string' && (m.type.startsWith('kls_') || m.type.startsWith('sfu_'))) return kelas.onMessage(ws, m, rData, members);
     if (m.type === 'auth') {
       // maks. 5 percobaan per koneksi untuk mencegah tebak-tebakan kunci
       ws.authTries = (ws.authTries || 0) + 1;
@@ -360,6 +384,7 @@ wss.on('connection', (ws, room) => {
   });
   ws.on('close', () => {
     tim.onClose(ws);
+    kelas.onClose(ws);
     members.delete(ws);
     if (!members.size) { // ruang kosong → buang dari memori setelah jeda (catatan sudah di disk; papan tulis ikut hilang)
       clearTimeout(rData.idleT);
