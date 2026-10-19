@@ -27,7 +27,12 @@ function createKartu({ dataDir, pem }) {
   // tahap 3: Gua Pustaka di balik rak buku Silvia → lencana Pengetahuan Umum (Teh Puspa)
   // tahap 6: Dunia Server Lab KERIS (6 babak coding) → lencana Pengetahuan Coding (Kang Sahid & Teh Gibhta)
   // tahap 7: Galeri Islam & Lembah Gurun → lencana Pengetahuan Agama Islam (Kang Fitrah & Teh Freza)
-  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam']);
+  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam', 'pohon', 'raptor']);
+  // Portal Ring 1 (khusus pemegang Black Card = lencana tim): batu bercahaya, berurutan
+  const BATU = { kuning: { ch: 'pohon', pre: null }, hijau: { ch: 'raptor', pre: 'kuning' }, merah: null, birutua: null, oranye: null, ungu: null, birulangit: null, putih: null, hitam: null };
+  const SIX = ['dasar', 'umum', 'iot', 'jari', 'coding', 'islam'];
+  // kode cepat tahap 8 (hanya hash yang disimpan)
+  const KODE8 = '084326aacdb1a8b12e294f1cc07125c3a864a46a2314dea5b143acfa4c7f14ce';
   // syarat tiap lencana: tantangan yang harus tercatat + lencana sebelumnya
   const LENCANA = { dasar: { ch: TAHAP2, pre: null }, umum: { ch: ['pustaka'], pre: 'dasar' }, iot: { ch: ['iot'], pre: 'umum' }, jari: { ch: ['jari'], pre: 'iot' }, coding: { ch: ['server'], pre: 'jari' }, islam: { ch: ['islam'], pre: 'coding' } }; // tim (Kerjasama Tim) TIDAK bisa dikirim klien: hanya diberikan server (tim.js) kepada pemenang Game 4
   const SEC = { 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' };
@@ -75,7 +80,7 @@ function createKartu({ dataDir, pem }) {
       const no = String(new URL(req.url, 'http://x').searchParams.get('no') || '').toUpperCase();
       const k = noOK(no) ? K.find((x) => x.no === no) : null;
       if (!k) return json(res, 200, { ok: true, ada: false });
-      return json(res, 200, { ok: true, ada: true, no: k.no, nama: k.nama, t: k.t, cabut: !!k.cabut, lencana: k.lb || {}, tantangan: k.ch || {}, hadiah: k.rw || {} });
+      return json(res, 200, { ok: true, ada: true, no: k.no, nama: k.nama, t: k.t, cabut: !!k.cabut, lencana: k.lb || {}, tantangan: k.ch || {}, hadiah: k.rw || {}, batu: k.bt || {} });
     }
     // papan rekor publik (mis. misi drone): 10 waktu tercepat jalur "main"
     if (p === '/api/kartu/rekor' && req.method === 'GET') {
@@ -84,6 +89,35 @@ function createKartu({ dataDir, pem }) {
       if (!TANTANGAN.includes(id)) return json(res, 400, { ok: false, err: 'Tantangan tidak dikenal.' });
       const list = K.filter((k) => !k.cabut && k.ch && k.ch[id] && k.ch[id].jalur === 'main' && k.ch[id].best > 0).map((k) => ({ nama: k.nama, best: k.ch[id].best, bintang: k.ch[id].bintang || 0 })).sort((a, b) => a.best - b.best).slice(0, 10);
       return json(res, 200, { ok: true, list });
+    }
+    // batu Portal Ring 1 & kode cepat tahap 8 (butuh token pemilik)
+    if ((p === '/api/kartu/batu' || p === '/api/kartu/kode') && req.method === 'POST') {
+      if (!pem.sameOrigin(req)) return json(res, 403, { ok: false, err: 'Permintaan ditolak.' });
+      if (limited(req, p === '/api/kartu/kode' ? 'q' : 'r', p === '/api/kartu/kode' ? 20 : 120)) return json(res, 429, { ok: false, err: 'Terlalu banyak percobaan. Coba lagi nanti.' });
+      const o = await readJson(req);
+      const no = String(o.no || '').toUpperCase(), tok = typeof o.tok === 'string' ? o.tok.slice(0, 64) : '', id = String(o.id || '');
+      const k = noOK(no) ? K.find((x) => x.no === no) : null;
+      if (!k || k.cabut || !(tok && eq(k.kh, sha(tok)))) return json(res, 403, { ok: false, err: 'Kartu tidak valid.' });
+      if (p === '/api/kartu/batu') {
+        const B = BATU[id];
+        if (!B) return json(res, 400, { ok: false, err: 'Batu tidak dikenal.' });
+        if (!(k.lb && k.lb.tim)) return json(res, 403, { ok: false, err: 'Khusus pemegang Black Card.' });
+        if (!(k.ch && k.ch[B.ch]) || (B.pre && !(k.bt && k.bt[B.pre]))) return json(res, 403, { ok: false, err: 'Syarat batu belum terpenuhi.' });
+        k.bt = k.bt || {};
+        if (!k.bt[id]) k.bt[id] = Date.now();
+        save();
+        return json(res, 200, { ok: true, batu: k.bt });
+      }
+      // kode cepat tahap 8: lencana Kerjasama Tim + skin Tentara Futuristik
+      const kode = typeof o.kode === 'string' ? o.kode.trim().toLowerCase().slice(0, 40) : '';
+      if (id !== 'tim' || !eq(sha('itlab8|' + kode), KODE8)) return json(res, 403, { ok: false, err: 'Ditolak.' });
+      if (!SIX.every((b) => k.lb && k.lb[b])) return json(res, 403, { ok: false, err: 'Syarat belum terpenuhi.' });
+      k.lb = k.lb || {}; k.ch = k.ch || {}; k.rw = k.rw || {};
+      if (!k.lb.tim) k.lb.tim = Date.now();
+      if (!k.ch.tim) k.ch.tim = { t: Date.now(), best: 0, jalur: 'kode', bintang: 0 };
+      if (!k.rw.trooper) k.rw.trooper = Date.now();
+      save();
+      return json(res, 200, { ok: true, lencana: k.lb, tantangan: k.ch, hadiah: k.rw });
     }
     // catat tantangan / lencana milik pemegang kartu (butuh token pemilik)
     if ((p === '/api/kartu/tantangan' || p === '/api/kartu/lencana') && req.method === 'POST') {
@@ -111,7 +145,7 @@ function createKartu({ dataDir, pem }) {
     }
     if (!p.startsWith('/api/admin/kartu')) return false;
     if (!pem.authed(req)) return json(res, 401, { ok: false, err: 'Sesi berakhir. Silakan login kembali.' });
-    if (p === '/api/admin/kartu' && req.method === 'GET') return json(res, 200, { ok: true, kartu: K.map((k) => ({ no: k.no, nama: k.nama, t: k.t, ver: k.ver || 0, lv: k.lv || 0, cabut: !!k.cabut, ch: k.ch || {}, lb: k.lb || {}, rw: k.rw || {}, tm: k.tm || {} })) });
+    if (p === '/api/admin/kartu' && req.method === 'GET') return json(res, 200, { ok: true, kartu: K.map((k) => ({ no: k.no, nama: k.nama, t: k.t, ver: k.ver || 0, lv: k.lv || 0, cabut: !!k.cabut, ch: k.ch || {}, lb: k.lb || {}, rw: k.rw || {}, tm: k.tm || {}, bt: k.bt || {} })) });
     if (p === '/api/admin/kartu/status' && req.method === 'POST') {
       if (!pem.sameOrigin(req)) return json(res, 403, { ok: false, err: 'Permintaan ditolak.' });
       const o = await readJson(req), k = K.find((x) => x.no === o.no);

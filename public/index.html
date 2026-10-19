@@ -805,6 +805,78 @@ body:not(.touch) #tmPanel{max-height:calc(100vh - 84px)}
 .iw-flow{stroke-dasharray:14 10;animation:iwflow .6s linear infinite}@keyframes iwflow{to{stroke-dashoffset:-24}}
 .iw-lit{filter:drop-shadow(0 0 14px #fde047)}.iw-spark{animation:iwsp .9s ease-out}@keyframes iwsp{0%{opacity:1;r:10}100%{opacity:0;r:60}}
 #iwPow:disabled{opacity:.45}
+
+/* ===== v17: Lemari Skin, Daftar NPC, Lembah Purba ===== */
+.skl-sub{margin:4px 0 10px;font-size:13px;opacity:.85}
+.skl-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.skl-bar input{flex:1 1 220px;min-width:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:12px;padding:9px 12px;font:inherit;font-size:14px}
+.skl-f{display:flex;flex-wrap:wrap;gap:6px}
+.skl-f button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#e9e5ff;border-radius:99px;padding:6px 11px;font:inherit;font-size:12px;cursor:pointer}
+.skl-f button.on{background:#7c3aed;border-color:#a78bfa;color:#fff}
+.skl-wrap{display:flex;align-items:stretch;gap:8px}
+.skl-track{flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;min-height:200px}
+.skl-nav{flex:none;width:38px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;font-size:26px;cursor:pointer}
+.skl-nav:disabled{opacity:.25;cursor:default}
+.skl-c img{aspect-ratio:3/4!important}
+.skl-c.locked img{filter:grayscale(1) brightness(.45)}
+.skl-c p{font-size:11.5px!important;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width:640px){.skl-c p{-webkit-line-clamp:2}}
+.skl-dots{display:flex;gap:6px;justify-content:center;align-items:center;margin-top:10px;font-size:12px;opacity:.8}
+.skl-dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;display:inline-block}
+.skl-dots i.on{background:#a78bfa;width:22px;border-radius:6px}
+.skl-dots span{margin-left:8px}
+.skl-empty{grid-column:1/-1;text-align:center;opacity:.7;padding:40px 0}
+@media (max-width:640px){.skl-track{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.skl-nav{width:28px;font-size:20px}.skl-c{padding:7px!important}.skl-c b{font-size:13px!important}}
+.nd-cnt{opacity:.7;font-size:12px}
+.nd-sec h4{margin:12px 0 8px;font-size:13px;letter-spacing:.04em;color:#c4b5fd}
+.nd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.nd-card{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-left:4px solid var(--nc,#7c3aed);border-radius:12px;padding:8px 10px}
+.nd-card.mys{opacity:.45;border-left-color:#52525b}
+.nd-ic{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:rgba(255,255,255,.08)}
+.nd-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.nd-tx b{font-size:13.5px}.nd-tx small{font-size:11px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nd-go{flex:none;padding:6px 10px!important;font-size:12px!important}
+.nd-list{max-height:min(58vh,520px);overflow:auto;padding-right:4px}
+#prHud{position:fixed;bottom:calc(76px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:30;width:min(660px,calc(100vw - 24px));background:rgba(32,22,8,.9);border:1px solid #ca8a04;border-radius:14px;padding:10px 12px;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#prHud .cvh-top{color:#fde68a}
+#prHud .pr-bar{position:relative;height:8px;background:#3a2a10;border-radius:6px;margin:6px 0}
+#prHud .pr-bar #prMe{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#facc15,#22c55e);border-radius:6px}
+#prHud .pr-bar #prAi{position:absolute;top:-4px;width:4px;height:16px;margin-left:-2px;background:#f97316;border-radius:2px;box-shadow:0 0 6px #f97316}
+body.touch #prHud{top:calc(92px + env(safe-area-inset-top,0px));bottom:auto;padding:6px 10px;font-size:12px;line-height:1.35;width:min(560px,calc(100vw - 16px));background:rgba(32,22,8,.8)}
+body.touch #prHud .cvh-top{font-size:11.5px;cursor:pointer}
+body.touch #prHud .cvh-top::after{content:"▴";margin-left:6px;opacity:.7}
+#prHud.mini .cvh-top::after{content:"▾"}
+#prHud.mini>:not(.cvh-top){display:none!important}
+body:has(#prHud) #questHud{display:none!important}
+body:has(#prHud) #mini{display:none}
+#prCd{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:9000;font:900 96px/1 Poppins,sans-serif;color:#fde68a;text-shadow:0 6px 30px rgba(0,0,0,.7);pointer-events:none;transition:transform .25s}
+#prCd.go{transform:translate(-50%,-50%) scale(1.4)}
+#prQz{position:fixed;inset:0;z-index:8000;display:grid;place-items:center;background:rgba(10,6,2,.55);padding:12px}
+.prq-card{width:min(560px,96vw);background:#1c1408;border:2px solid #ca8a04;border-radius:18px;padding:16px;color:#fff;box-shadow:0 20px 70px rgba(0,0,0,.7)}
+.prq-top{font-weight:800;color:#fde68a;letter-spacing:.04em;font-size:13px}
+.prq-note{font-size:12px;opacity:.75;margin:6px 0}
+.prq-q{white-space:pre-line;font-size:18px;font-weight:700;line-height:1.5;margin:10px 0 12px;font-family:"Cambria Math","STIX Two Math",Poppins,serif}
+.prq-o{display:grid;gap:8px}
+.prq-o button{text-align:left;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:12px;padding:11px 12px;font:inherit;font-size:15px;cursor:pointer}
+.prq-o button.ok{background:#166534;border-color:#22c55e}.prq-o button.bad{background:#7f1d1d;border-color:#ef4444}
+.prq-msg{min-height:20px;margin-top:8px;font-size:13.5px;color:#fde68a}
+#rrPad{position:fixed;left:0;right:0;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:31;display:none;justify-content:space-between;padding:0 18px;pointer-events:none}
+body.touch #rrPad{display:flex}
+#rrPad button{pointer-events:auto;width:76px;height:76px;border-radius:50%;border:2px solid rgba(255,255,255,.6);background:rgba(22,101,52,.55);color:#fff;font-size:30px;touch-action:none}
+#rrPad button[data-a=j]{background:rgba(234,88,12,.6)}
+body.rr-on #joy,body.rr-on #btnJump{display:none!important}
+.pr-pick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+.pr-sk{display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.15);border-radius:16px;padding:10px;color:#fff;font:inherit;cursor:pointer}
+.pr-sk img{width:100%;max-width:200px;aspect-ratio:3/4;object-fit:cover;border-radius:12px}
+.pr-sk.on,.pr-sk:hover{border-color:#facc15}
+.pr-sk small{font-size:11.5px;opacity:.75;line-height:1.4}
+.bt-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;margin:6px 0 12px}
+@media (max-width:640px){.bt-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.bt-slot{display:flex;flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.18);border-radius:12px;padding:4px 2px}
+.bt-slot.on{border:1px solid var(--bc);box-shadow:0 0 14px color-mix(in srgb,var(--bc) 45%,transparent);cursor:pointer}
+.bt-slot img{width:100%;max-width:64px}
+.bt-slot small{font-size:9.5px;opacity:.75;text-align:center;line-height:1.2}
+.bt-rev{text-align:center}.bt-rev img{width:180px}.bt-rev small{letter-spacing:.14em;color:#fde68a;font-weight:700;font-size:11px}
 </style>
 
 </head>
@@ -6225,17 +6297,7 @@ $("btnPeople").onclick = () => dropdown($("btnPeople"), (d) => {
     { const pf = document.createElement("span"); pf.className = "pfbtn"; pf.setAttribute("role", "button"); pf.textContent = "\u{1F464} Profil" + (r.ach && r.ach.b ? " " + r.ach.b.length + "\u{1F537}" : ""); pf.onclick = (ev) => { ev.stopPropagation(); hidePopups(); openProfile(r.id); }; b.style.display = "flex"; b.style.alignItems = "center"; b.style.gap = "6px"; b.appendChild(pf); }
     if (IS_MOD) modKickBtn(b, r);
   }
-  for (const n of Object.values(NPCS)) {
-    if (n.secret || (n.custom && (n.custom.secret || n.custom.hidden)) || n.id === "tama" || n.id === "fety" || n.id === "puspa" || n.id === "ritzkal" || n.id === "hendri" || n.id === "erwin" || n.id === "safar" || n.id === "berlin" || n.id === "sahid" || n.id === "gibhta" || n.id === "fitrah" || n.id === "freza" || n.id === "mila" || n.id === "dewi" || n.id === "eko") continue;
-    const dot = document.createElement("span");
-    dot.className = "dot";
-    dot.style.background = n.col;
-    const b = item(d, "", () => {
-      teleport(n.x + Math.sin(n.g.rotation.y) * 2.6, n.z + Math.cos(n.g.rotation.y) * 2.6 + (n.id === "tia" ? 2 : 0), n.id === "tia" ? 0 : void 0);
-      setTimeout(() => openNpc(n.id, "chat"), 300);
-    });
-    b.append(dot, `${n.name} \xB7 ${n.role} (NPC)`);
-  }
+  { const nb = item(d, "\u{1F465}", () => openNpcDir()); nb.append(" Daftar NPC · kunjungi cepat"); nb.classList.add("nd-item"); }
   if (net && net.mode === "offline") {
     const n = document.createElement("div");
     n.style.cssText = "font-size:11.5px;color:#9fa3ad;padding:6px 10px;line-height:1.5";
@@ -6249,6 +6311,7 @@ $("menuBtn").onclick = () => dropdown($("menuBtn"), (d) => {
   item(d, "\u2699", openSettings).append(" Pengaturan");
   item(d, "\u{1F455}", openSkins).append(skinsUnlocked() ? " Lemari Skin" : " Lemari Skin \u{1F512}");
   item(d, "\u{1F3C5}", openCapaian).append(" Capaian (sertifikat, kartu & lencana)");
+  item(d, "\u{1F465}", openNpcDir).append(" Daftar NPC (kunjungi cepat)");
   item(d, "\u2754", showHelp).append(" Bantuan & kontrol");
   item(d, "\u{1F5FA}", () => toggleMap(true)).append(" Denah lokasi");
   item(d, "\u26F6", toggleFull).append(" Layar penuh");
@@ -7039,7 +7102,7 @@ function applyPeers(list) {
     seen.add(pe.id);
     let r = remotes.get(pe.id);
     const name = cleanName(str(pr.n, 16)), color = /^#[0-9a-f]{6}$/i.test(pr.c) ? pr.c : "#888888";
-    const tgt = { x: num(pr.x, -240, 200), y: num(pr.y, -3, 3), z: num(pr.z, -245, 75) };
+    const tgt = { x: num(pr.x, -240, 600), y: num(pr.y, -3, 100), z: num(pr.z, -320, 440) };
     if (!r) {
       const av = makeAvatar(color, name);
       scene.add(av);
@@ -7494,6 +7557,7 @@ function update(dt) {
   const sp = (run ? 6.4 : 3.4) * S.speed;
   if (typeof snakeLock === "function" && snakeLock()) { mx = mz = 0; P.walkTo = null; }
   if (typeof IO !== "undefined" && IO.fly) { mx = mz = 0; P.walkTo = null; }
+  if (typeof PR !== "undefined" && (PR.lock || (typeof TRG !== "undefined" && TRG.quizOpen))) { mx = mz = 0; P.walkTo = null; }
   if (mx || mz) {
     if (P.sit) {
       P.sit = false;
@@ -7525,7 +7589,7 @@ function update(dt) {
   const fp = S.fp || P.camDist < 0.6;
   avatar.visible = !fp;
   const eyeH = P.sit ? 1.15 : 1.58;
-  camTarget.set(P.x, P.y + JY * 0.85 + (fp ? eyeH : 1.55), P.z);
+  camTarget.set(P.x, P.y + JY * (P.jcamK || 0.85) + (fp ? eyeH : 1.55), P.z);
   if (fp) {
     camera.position.copy(camTarget);
     camera.rotation.set(P.camPitch, P.camYaw, 0, "YXZ");
@@ -7723,7 +7787,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
 }
 boot().catch((err) => {
   console.error(err);
@@ -8185,7 +8249,7 @@ function rel(res, top) {
   return [["Lihat juga: " + p.title.slice(0, 26), () => openZoom(p.id)]];
 }
 function npcAnswer(npcId, q) {
-  const cheat = (typeof codyCheat === "function" ? codyCheat(npcId, q) : null) || (typeof sitCheat === "function" ? sitCheat(npcId, q) : null) || (typeof santoCheat === "function" ? santoCheat(npcId, q) : null) || (typeof replayIntent === "function" ? replayIntent(npcId, q) : null) || (typeof rahmanCheat === "function" ? rahmanCheat(npcId, q) : null) || (typeof harisCheat === "function" ? harisCheat(npcId, q) : null) || (typeof puspaCheat === "function" ? puspaCheat(npcId, q) : null) || (typeof jejenCheat === "function" ? jejenCheat(npcId, q) : null) || (typeof timNpcHook === "function" ? timNpcHook(npcId, q) : null);
+  const cheat = (typeof codyCheat === "function" ? codyCheat(npcId, q) : null) || (typeof sitCheat === "function" ? sitCheat(npcId, q) : null) || (typeof santoCheat === "function" ? santoCheat(npcId, q) : null) || (typeof replayIntent === "function" ? replayIntent(npcId, q) : null) || (typeof rahmanCheat === "function" ? rahmanCheat(npcId, q) : null) || (typeof harisCheat === "function" ? harisCheat(npcId, q) : null) || (typeof puspaCheat === "function" ? puspaCheat(npcId, q) : null) || (typeof jejenCheat === "function" ? jejenCheat(npcId, q) : null) || (typeof timNpcHook === "function" ? timNpcHook(npcId, q) : null) || (typeof aftafCheat === "function" ? aftafCheat(npcId, q) : null);
   if (cheat) return cheat;
   const spR = typeof spAnswer === "function" ? spAnswer(npcId, q) : null;
   if (spR) return spR;
@@ -8361,6 +8425,7 @@ function showNpcCard(id, e) {
   }
 }
 function openNpc(id, tab) {
+  if (typeof ndMark === "function") ndMark(id);
   if (id === "ritzkal") { if (typeof ritzkalSay === "function") ritzkalSay(); return; }
   if (id === "tama") questTalk(id);
   hidePopups();
@@ -10022,6 +10087,7 @@ function xHandleAct(act, hit, e) {
   if (typeof cvAct === "function" && cvAct(act, hit, e)) return;
   if (typeof ringAct === "function" && ringAct(act, hit, e)) return;
   if (typeof ioAct === "function" && ioAct(act, hit, e)) return;
+  if (typeof prAct === "function" && prAct(act, hit, e)) return;
   if (typeof kwAct === "function" && kwAct(act, hit, e)) return;
   if (typeof svAct === "function" && svAct(act, hit, e)) return;
   if (typeof isAct === "function" && isAct(act, hit, e)) return;
@@ -10153,6 +10219,7 @@ function buildExtras() {
     try { buildServer(); } catch (err) { console.error("Dunia Server gagal dibangun:", err); }
     try { buildIslam(); } catch (err) { console.error("Tahap Agama Islam gagal dibangun:", err); }
     try { buildTim(); } catch (err) { console.error("Tahap Kerjasama Tim gagal dibangun:", err); }
+    try { buildPurba(); } catch (err) { console.error("Lembah Purba gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -10312,7 +10379,7 @@ function applySkin(av, id, color) {
   av.add(s.group);
   ud.skinG = s.group; ud.body = s.body; ud.headG = s.headG; ud.mat = s.mat; ud.skinAnim = s.anim;
 }
-function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
+function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
 function refreshMySkin() { if (avatar && (avatar.userData.skinId || "default") !== mySkin()) applySkin(avatar, mySkin(), S.color); }
 function skinTick() {
   if (avatar && avatar.userData.skinAnim) avatar.userData.skinAnim(t);
@@ -10363,7 +10430,8 @@ function skinPreview(id) {
   av.traverse((o) => { o.geometry?.dispose?.(); });
   return skinPrevCache[key] = c.toDataURL("image/png");
 }
-function openSkins() {
+function openSkins() { return openSkinsV2(); }
+function openSkinsOld() {
   hidePopups();
   const open = skinsUnlocked(), cur = mySkin();
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👕 Lemari Skin</h2>
@@ -14376,6 +14444,8 @@ async function capSync() {
       const j = await xcPost("api/kartu/lencana", { no: q.card.no, tok: q.card.tok, id });
       if (j.ok) bd.srv = true; else err = j.err || "Server menolak data lencana.";
     }
+    { const BT = (S1 && S1.batu) || {}; q.batu = q.batu || {}; for (const id of Object.keys(BT)) if (!q.batu[id]) q.batu[id] = { t: BT[id], srv: true }; }
+    if (typeof prSync === "function" && q.badges.tim) prSync();
     saveQ();
     return err ? { ok: false, err, why: /tidak valid/.test(err) ? "device" : "reject" } : { ok: true };
   } catch { return { ok: false, err: "Server kartu tidak terhubung.", why: "offline" }; }
@@ -14732,12 +14802,14 @@ async function openCapaian() {
   </div>
   <h3 class="cap-h">Lencana <span class="pill">${owned.length}/7</span></h3>
   ${capBadgeGrid(owned, true)}
+  ${typeof batuGrid === "function" ? batuGrid() : ""}
   <div class="kbox"><b>TAHAP 2 · LANTAI 2 IT-MART (${a.ch}/4)</b><ul class="qlist">${CH_LIST.map((C) => `<li>${chDone(C.id) ? "✅" : "⬜"} Tantangan ${C.no} · ${C.nama}${q.chal[C.id] && q.chal[C.id].best ? ` <span style="color:var(--mut)">(rekor ${q.chal[C.id].best} dtk)</span>` : ""}</li>`).join("")}<li>${q.badges.dasar ? "✅" : "⬜"} Lencana Pengetahuan Dasar dari Teh Fety</li></ul><b style="display:block;margin-top:8px">TAHAP 3 · GUA PUSTAKA</b><ul class="qlist"><li>${q.chal.pustaka ? "✅" : "⬜"} Lolos 3 babak Gua Pustaka${q.chal.pustaka && q.chal.pustaka.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.pustaka.best / 60)}:${String(q.chal.pustaka.best % 60).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.umum ? "✅" : "⬜"} Lencana Pengetahuan Umum dari Teh Puspa</li></ul><b style="display:block;margin-top:8px">TAHAP 4 · HANGGAR DRONE</b><ul class="qlist"><li>${q.chal.iot ? "✅" : "⬜"} Misi Smart Farm${q.chal.iot && q.chal.iot.best ? ` <span style="color:var(--mut)">(rekor ${q.chal.iot.best} dtk ${"⭐".repeat(q.chal.iot.bintang || 0)})</span>` : ""}</li><li>${q.badges.iot ? "✅" : "⬜"} Lencana IoT & Drone dari Kang Hendri & Kang Erwin</li></ul><b style="display:block;margin-top:8px">TAHAP 5 · KAWAH API</b><ul class="qlist"><li>${q.chal.jari ? "✅" : "⬜"} Taklukkan 4 babak Kawah Api${q.chal.jari && q.chal.jari.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.jari.best / 60)}:${String(Math.round(q.chal.jari.best % 60)).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.jari ? "✅" : "⬜"} Lencana Keterampilan Jari dari Kang Safar & Teh Berlin</li></ul><b style="display:block;margin-top:8px">TAHAP 6 · DUNIA SERVER LAB KERIS</b><ul class="qlist"><li>${q.chal.server ? "✅" : "⬜"} Selamatkan 6 babak Dunia Server${q.chal.server && q.chal.server.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.server.best / 60)}:${String(Math.round(q.chal.server.best % 60)).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.coding ? "✅" : "⬜"} Lencana Pengetahuan Coding dari Kang Sahid & Teh Gibhta</li></ul><b style="display:block;margin-top:8px">TAHAP 7 · GALERI ISLAM & LEMBAH GURUN</b><ul class="qlist"><li>${q.islam && q.islam.wudhu ? "✅" : "⬜"} Berwudhu di Hanggar Drone</li><li>${q.islam && q.islam.tanya ? "✅" : "⬜"} Menjawab 4 pertanyaan Teh Mila</li><li>${q.chal.islam ? "✅" : "⬜"} Tuntaskan 4 babak Lembah Gurun${q.chal.islam && q.chal.islam.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.islam.best / 60)}:${String(Math.round(q.chal.islam.best % 60)).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.islam ? "✅" : "⬜"} Lencana Pengetahuan Agama Islam dari Kang Fitrah & Teh Freza</li></ul><b style="display:block;margin-top:8px">TAHAP 8 · KERJASAMA TIM</b><ul class="qlist"><li>${["dasar", "umum", "iot", "jari", "coding", "islam"].every((id) => q.badges[id]) ? "✅" : "⬜"} Memiliki 6 lencana (tercantum di papan Taman Apresiasi)</li><li>${q.skinTim ? "✅" : "⬜"} Mencapai babak terakhir · skin Tentara Futuristik</li><li>${q.badges.tim ? "✅" : "⬜"} Lencana Kerjasama Tim dari Teh Dewi & Kang Eko${q.chal.tim && q.chal.tim.best ? ` <span style="color:var(--mut)">(${Math.floor(q.chal.tim.best / 60)}:${String(Math.round(q.chal.tim.best % 60)).padStart(2, "0")})</span>` : ""}</li><li>${q.blackCard ? "✅" : "⬜"} Black Card dari Kang Santo${q.blackCard ? ` <button class="ghost" id="capBlack" style="height:26px;margin-left:6px">Lihat</button>` : ""}</li></ul></div>
   <label class="cap-sw"><input type="checkbox" id="capPub"${a.p ? " checked" : ""}> Tampilkan ikon capaian di atas kepalaku untuk semua pemain</label>`);
   $("genCard").classList.add("wide");
   $("capNm").textContent = S.name;
   if (a.c) { certRender({ nama: S.name, k: a.c.k, t: a.c.t, m: a.c.m }).then((c) => { const im = new Image(); im.src = capThumb(c, 520).toDataURL("image/jpeg", 0.88); im.alt = "Sertifikat"; $("capCert")?.appendChild(im); }); $("capCertV").onclick = openCertificate; $("capCertP").onclick = () => capPamer("cert"); }
   if (a.k) { xcRender().then((c) => { const im = new Image(); im.src = capThumb(c, 300).toDataURL("image/jpeg", 0.9); im.alt = "Explorer Card"; $("capCard")?.appendChild(im); }); $("capCardV").onclick = openExplorerCard; $("capCardP").onclick = () => capPamer("card"); }
+  document.querySelectorAll("#genCard .bt-slot.on").forEach((b) => { b.onclick = () => batuReveal(b.dataset.bt); });
   document.querySelectorAll("#genCard .cap-bd").forEach((b) => { b.onclick = () => (owned.includes(b.dataset.b) ? capPamer("b:" + b.dataset.b) : badgeReveal(b.dataset.b, false)); });
   $("capPub").onchange = (e) => { try { store.set("capPub", !!e.target.checked); } catch { /* */ } capPresDirty(); if (typeof mpPresence === "function") mpPresence(); toast(e.target.checked ? "Ikon capaian tampil di atas kepalamu." : "Ikon capaian disembunyikan (profil tetap bisa dilihat saat avatarmu diklik)."); };
 }
@@ -15568,6 +15640,7 @@ var RING = { x: -10.5, z: -231.2, guard: { x: -7.4, z: -229.6 } };
 var RITZKAL_LINE = "Anda hanya dapat mengakses portal ini jika memiliki Black Card";
 var hasBlackCard = () => !!chMigrate().blackCard;
 function ritzkalSay() {
+  if (hasBlackCard()) { sayBubble("Silakan masuk, pemegang Black Card. Lembah Purba menantimu.", "npc_ritzkal"); toast("◆ Kang Ritzkal: “Silakan masuk, pemegang Black Card.” Sentuh portal hitam untuk masuk.", 4500); return; }
   sayBubble(RITZKAL_LINE, "npc_ritzkal");
   toast("⛔ Kang Ritzkal: “" + RITZKAL_LINE + "”", 4500);
   if (typeof SFX !== "undefined") SFX.bloop(0.7);
@@ -15620,7 +15693,7 @@ function buildRing() {
 function ringAct(act) {
   if (act.type === "x_ritzkal") { ritzkalSay(); return true; }
   if (act.type === "x_ring") {
-    if (hasBlackCard()) { toast("◆ Portal Ring 1 sedang disiapkan — segera hadir.", 4000); return true; }
+    if (hasBlackCard()) { if (typeof prEnterAsk === "function") prEnterAsk(); return true; }
     const d = Math.hypot(P.x - RING.guard.x, P.z - RING.guard.z);
     ritzkalSay(); if (d > 8) toast("⛔ Portal ini dijaga Kang Ritzkal: “" + RITZKAL_LINE + "”", 4500);
     return true;
@@ -16689,6 +16762,7 @@ var AMB = (() => {
 // P.jy = tinggi loncatan di atas lantai, P.jv = kecepatan vertikal. P.jfx = sedang dikendalikan efek lain (mis. tenggelam di lava).
 var JUMP_V = 7.2, JUMP_G = 22;
 function doJump() {
+  if (typeof prJump === "function" && prJump()) return;
   if (P.sit || P.jfx || (typeof IO !== "undefined" && IO.fly) || renderer.xr.isPresenting) return;
   if ((P.jy || 0) > 0.001) { P.jbuf = 0.16; return; } // tekan sedikit sebelum mendarat tetap dihitung
   P.jv = JUMP_V; P.jy = 0.0001; P.jumps = (P.jumps || 0) + 1;
@@ -20583,14 +20657,14 @@ async function openBlackCard() {
   const c = await bcRender(q.blackCard);
   if (renderer.xr.isPresenting) { showVRPanel(c); return; }
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🖤 Black Card</h2>
-  <p>${fresh ? "Kang Santo menyerahkan" : "Ini"} <b>Black Card</b> milik <b id="bcN"></b> — kartu tertinggi para penjelajah: <b>7 lencana</b>, termasuk Lencana Kerjasama Tim. Kelak kartu ini membuka <b>Portal Ring 1</b> (segera hadir).</p>
+  <p>${fresh ? "Kang Santo menyerahkan" : "Ini"} <b>Black Card</b> milik <b id="bcN"></b> — kartu tertinggi para penjelajah: <b>7 lencana</b>, termasuk Lencana Kerjasama Tim. Kartu ini membuka <b>Portal Ring 1</b> di sudut barat laut Taman Apresiasi — Kang Ritzkal akan mempersilakanmu masuk ke Lembah Purba.</p>
   <div class="bc-wrap"><img id="bcImg" alt="Black Card"></div>
   <div class="rowf" style="justify-content:center;margin-top:10px"><button class="btn" id="bcDl" style="background:#a16207">⬇ Unduh Black Card (PNG)</button><button class="ghost" id="bcBd">🏅 Lencana Kerjasama</button></div>`);
   $("bcN").textContent = q.blackCard.nama;
   $("bcImg").src = c.toDataURL("image/jpeg", 0.92);
   $("bcDl").onclick = () => c.toBlob((b) => b && saveFile(`black-card-${String(q.blackCard.nama).replace(/[^a-z0-9]/gi, "_")}.png`, b), "image/png");
   $("bcBd").onclick = () => badgeReveal("tim", false);
-  if (fresh) { if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx(); toast("🖤 Black Card diterima! Akses Portal Ring 1 akan dibuka kelak.", 6500); }
+  if (fresh) { if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx(); toast("🖤 Black Card diterima! Portal Ring 1 kini terbuka untukmu.", 6500); }
 }
 
 // =====================================================================
@@ -20670,7 +20744,7 @@ function timNpcHook(npcId, q) {
     const qq = chMigrate();
     if (!qq.badges.tim) return { text: "Black Card hanya untuk pemenang Tantangan Kerjasama Tim — pemegang 7 lencana. Kumpulkan 6 lencana, bentuk tim bersama Kang Bayu di IT-Mart, lalu buktikan dirimu!" };
     setTimeout(openBlackCard, 500);
-    return { text: `Ini dia, ${S.name} — BLACK CARD milikmu 🖤 Kartu ini kelak membuka akses Portal Ring 1. Simpan baik-baik!` };
+    return { text: `Ini dia, ${S.name} — BLACK CARD milikmu 🖤 Kartu ini membuka Portal Ring 1 — Kang Ritzkal menunggumu di sudut barat laut taman. Simpan baik-baik!` };
   }
   return null;
 }
@@ -20746,6 +20820,1587 @@ function timAct(act) {
   if (ty === "x_tmtaman") { timToSanto(); return true; }
   return false;
 }
+
+
+
+// =====================================================================
+// src/ext_skinkat.js — KATALOG 60 SKIN (SKN-001 … SKN-060)
+//  • Data dari "Katalog 60 Skin Karakter VR" (10 tema × 6 skin), model 3D
+//    bergaya kotak (blocky) dibangun prosedural dari data: tipe tubuh,
+//    warna atasan/bawahan, rambut, penutup kepala, barang di tangan,
+//    aksesori punggung. Ilustrasi asli dipakai sebagai kartu pratinjau.
+//  • Skin katalog TIDAK ditampilkan sekaligus: hanya yang sudah dimiliki,
+//    ditambah skin Portal Ring 1 (Flinstone, Indian, Raptor) yang baru
+//    terlihat bagi pemegang Black Card.
+// =====================================================================
+var SKT_TONE = { L: "#f3cfb0", M: "#dca27a", T: "#b9794f", D: "#7d4b2c" };
+var SKT_TEMA = ["Pendidikan", "Islami", "Luar Angkasa", "Perang & Sejarah", "Zaman Purba", "Robot Masa Depan", "Bentuk Tubuh Manusia", "Fantasi", "Teknologi & IT", "Nusantara & Alam"];
+// b: N normal, S normal kecil, C chibi, T jangkung, B bulat, A atletis, L lansia, K anak, R robot, D kurcaci
+// hr: [gaya, warna] · hat: [jenis, warna, warna2] · it: barang tangan kanan · il: tangan kiri · bk: punggung · x: ekstra
+var SKT = [
+  { n: 1, nm: "Wisudawan Cemerlang", b: "N", tn: "M", top: "#1B1F3A", bot: "#1B1F3A", hr: ["short", "#1f1a17"], hat: ["toga", "#111111", "#f2c230"], it: "scroll", x: ["sash"], ds: "Lulusan baru dengan toga hitam, topi wisuda berumbai emas, dan selempang kehormatan." },
+  { n: 2, nm: "Profesor Bijak", b: "L", tn: "L", top: "#7A5A3A", bot: "#3B3B3B", hr: ["side", "#e8e8e8"], br: ["full", "#eeeeee"], gl: "round", it: "book", x: ["bowtie"], ds: "Dosen senior berjas tweed dengan dasi kupu-kupu, janggut putih, dan buku tebal." },
+  { n: 3, nm: "Guru Inspiratif", b: "N", tn: "M", top: "#2AA198", bot: "#33415C", hr: ["long", "#1f1a17"], gl: "round", it: "pointer", x: ["lanyard", "skirt"], ds: "Guru kelas yang ceria dengan blus teal, rok biru tua, tanda pengenal, dan penunjuk papan tulis." },
+  { n: 4, nm: "Ilmuwan Laboratorium", b: "N", tn: "T", top: "#F4F6FA", bot: "#3C4A6B", hr: ["spiky", "#1f1a17"], hat: ["goggles", "#22d3ee"], it: "flask", x: ["labcoat", "buttons"], ds: "Peneliti muda berjas lab putih dengan kacamata pelindung dan tabung reaksi hijau." },
+  { n: 5, nm: "Mahasiswa TI Ungu", b: "N", tn: "L", top: "#6D3FC7", bot: "#2A2F45", hr: ["short", "#1f1a17"], hat: ["headphone", "#111111"], it: "laptop", bk: ["backpack", "#3b2f6b"], x: ["pocket"], ds: "Mahasiswa Teknik Informatika berhoodie ungu, headphone, ransel, dan laptop berisi kode." },
+  { n: 6, nm: "Pustakawan Arsip", b: "N", tn: "L", top: "#7D8A4A", bot: "#4A3F35", hr: ["bun", "#6b4226"], gl: "round", it: "books", x: ["scarf:#c0392b", "buttons"], ds: "Penjaga perpustakaan yang tenang dengan kardigan zaitun, syal merah, dan setumpuk buku." },
+  { n: 7, nm: "Santri Berpeci", b: "N", tn: "T", top: "#F6F6F2", bot: "#2F6B4F", hr: ["short", "#1f1a17"], hat: ["peci", "#111111"], it: "tasbih:#2f6b4f", x: ["buttons", "plaid"], ds: "Santri rapi berbaju koko putih, bersarung kotak-kotak, dan berpeci hitam, membawa tasbih." },
+  { n: 8, nm: "Muslimah Gamis Hijau", b: "N", tn: "L", top: "#1F8A5F", bot: "#1F8A5F", hat: ["hijab", "#efe3c8"], it: "flower", x: ["gown"], ds: "Muslimah anggun berhijab krem dan gamis hijau zamrud, membawa bunga." },
+  { n: 9, nm: "Hafiz Penghafal Qur'an", b: "N", tn: "T", top: "#F8F8F4", bot: "#F8F8F4", hat: ["turban", "#ffffff"], br: ["full", "#1f1a17"], it: "mushaf", x: ["gown"], ds: "Penghafal Al-Qur'an berjubah putih bersorban rapi, membawa mushaf bersampul hijau." },
+  { n: 10, nm: "Jamaah Haji Ihram", b: "N", tn: "D", top: "#FBFBFB", bot: "#FBFBFB", hr: ["short", "#1f1a17"], br: ["full", "#1f1a17"], it: "tasbih:#d4a017", sh: "#8a5a2b", x: ["ihram"], ds: "Jamaah berkain ihram serba putih dan bersandal, membawa tasbih dengan wajah teduh." },
+  { n: 11, nm: "Takmir Masjid Batik", b: "N", tn: "T", top: "#8A5A2B", bot: "#222222", hr: ["short", "#1f1a17"], hat: ["peci", "#111111"], it: "lantern", x: ["batik"], ds: "Pengurus masjid berkemeja batik cokelat dan peci hitam, membawa lampu tradisional." },
+  { n: 12, nm: "Pelajar Madrasah", b: "N", tn: "L", top: "#FFFFFF", bot: "#6B7280", hat: ["hijab", "#ffffff"], it: "book", bk: ["backpack", "#dc2626"], x: ["tie:#1d4ed8", "skirtlong"], ds: "Pelajar berhijab putih dengan seragam putih-abu, dasi biru, dan ransel merah." },
+  { n: 13, nm: "Astronaut Bulan", b: "N", tn: "L", top: "#F2F4F8", bot: "#F2F4F8", hr: ["short", "#5b3a1e"], hat: ["glasshelm", "#cfe8ff"], bk: ["oxygen", "#cbd5e1"], x: ["panel"], ds: "Astronaut berhelm kaca dengan tabung oksigen, sarung tangan, dan bot antariksa." },
+  { n: 14, nm: "Alien Hijau Ramah", b: "T", tn: "#7ed957", top: "#9AA5B5", bot: "#5C6577", face: "alien", hat: ["antenna", "#7ed957"], x: ["core:#22d3ee"], ds: "Alien bertubuh jangkung berkulit hijau, dua antena, dan seragam perak." },
+  { n: 15, nm: "Kapten Kapal Antariksa", b: "N", tn: "T", top: "#1B2A5C", bot: "#14204A", hr: ["short", "#1f1a17"], hat: ["captain", "#ffffff", "#f2c230"], it: "tablet", bk: ["cape", "#b91c1c"], x: ["rank"], ds: "Kapten antariksa bertopi putih, jubah merah, pangkat emas, dan tablet navigasi." },
+  { n: 16, nm: "Penjelajah Mars", b: "N", tn: "D", top: "#E0662A", bot: "#B94F1D", hr: ["curly", "#1f1a17"], hat: ["goggles", "#f59e0b"], it: "pick", x: ["panel"], ds: "Penjelajah berseragam oranye dengan kacamata debu, kapak geologi, dan tabung sampel." },
+  { n: 17, nm: "Teknisi Stasiun", b: "N", tn: "L", top: "#F2C230", bot: "#2D3447", hat: ["hardhat", "#ffffff"], it: "wrench", bk: ["backpack", "#374151"], x: ["belt:#111827"], ds: "Teknisi stasiun berhelm proyek, seragam kuning, kunci pas, dan ransel perkakas." },
+  { n: 18, nm: "Penjaga Galaksi", b: "N", tn: "#efe2ff", top: "#3A2A7A", bot: "#241A55", hr: ["long", "#c4b5fd"], hat: ["crown", "#f2c230"], it: "orb", bk: ["cape", "#6d28d9"], x: ["sash:#c084fc", "gown", "stars"], ds: "Penjaga galaksi berjubah nebula dengan mahkota bintang dan bola cahaya." },
+  { n: 19, nm: "Ksatria Baja", b: "N", tn: "L", top: "#AAB4C2", bot: "#8A94A3", hat: ["knight", "#c0c8d4", "#dc2626"], it: "sword", il: "shield:#1d4ed8", x: ["armor"], ds: "Ksatria berzirah baja dengan helm berjumbai, pedang, dan perisai." },
+  { n: 20, nm: "Samurai Merah", b: "N", tn: "L", top: "#1F1F1F", bot: "#1F1F1F", hr: ["long", "#111111"], hat: ["kabuto", "#111111", "#d4a017"], it: "katana", x: ["trim:#8F1B1B"], ds: "Samurai berzirah merah-hitam dengan helm kabuto dan katana." },
+  { n: 21, nm: "Legiun Romawi", b: "N", tn: "T", top: "#C9A227", bot: "#C62828", hat: ["roman", "#c9a227", "#c62828"], it: "spear", il: "scutum:#c62828", x: ["armor", "skirt"], ds: "Legiun Romawi berhelm jambul, zirah perunggu, perisai, dan tombak." },
+  { n: 22, nm: "Viking Utara", b: "A", tn: "L", top: "#6B4A2B", bot: "#3A4A3A", hr: ["short", "#c2581f"], br: ["full", "#d2691e"], hat: ["viking", "#9ca3af"], it: "axe", il: "roundshield", x: ["fur"], ds: "Viking bertubuh atletis dengan helm bertanduk, rompi bulu, kapak, dan perisai bulat." },
+  { n: 23, nm: "Pemanah Hutan", b: "N", tn: "L", top: "#3F7D4A", bot: "#4A3B2A", hat: ["hood", "#2f6b3a"], it: "bow", bk: ["quiver", "#6b4226"], x: ["belt:#6b4226"], ds: "Pemanah berkerudung hijau dengan busur, tabung panah, dan bot kulit." },
+  { n: 24, nm: "Jenderal Strategis", b: "N", tn: "T", top: "#556B3A", bot: "#3E5128", br: ["mustache", "#1f1a17"], hat: ["general", "#556B3A", "#f2c230"], it: "map", x: ["medals", "belt:#3b2a1a"], ds: "Jenderal bertopi pet dengan medali, tanda pangkat, dan peta strategi." },
+  { n: 25, nm: "Flinstone", b: "A", tn: "T", top: "#8A5A2B", bot: "#8A5A2B", hr: ["messy", "#1f1a17"], br: ["full", "#1f1a17"], hat: ["bone", "#f5f0e1"], it: "club", x: ["spots", "jagged"], kat: "Manusia Gua", ds: "Penghuni gua berjubah bulu totol, berambut acak dengan tulang, dan membawa gada kayu." },
+  { n: 26, nm: "Pemburu Mammoth", b: "A", tn: "T", top: "#A77B52", bot: "#6B4A2B", hr: ["short", "#1f1a17"], hat: ["tusk", "#7a5230", "#f5f0e1"], it: "spear", x: ["necklace", "facepaint:#b91c1c", "jagged"], ds: "Pemburu perkasa bertopi bulu dengan gading mammoth, kalung tulang, dan tombak batu." },
+  { n: 27, nm: "Pelukis Gua", b: "N", tn: "D", top: "#D6B184", bot: "#B08A5A", hr: ["long", "#1f1a17"], hat: ["headband", "#dc2626"], it: "torch", x: ["handprints", "jagged"], ds: "Seniman purba berlumur cap tangan merah, berikat kepala, dan memegang obor." },
+  { n: 28, nm: "Raptor", b: "N", tn: "L", top: "#4F9F5B", bot: "#3A7D45", hat: ["dino", "#4F9F5B"], it: "egg", bk: ["tail", "#3f8f4a"], x: ["scales", "jagged"], kat: "Penjinak Dinosaurus", ds: "Pawang dinosaurus bertudung kepala dino, berekor hijau, dan membawa telur raksasa." },
+  { n: 29, nm: "Indian", b: "N", tn: "D", top: "#7A2E1B", bot: "#5A1F12", hr: ["long", "#111111"], hat: ["feathers", "#7a2e1b"], it: "torch", bk: ["cape", "#c2410c"], x: ["sash:#f97316", "facepaint:#ffffff", "gown"], kat: "Penjaga Api", ds: "Pelindung api suci berjubah merah, berhias bulu warna-warni, dan bercat wajah putih." },
+  { n: 30, nm: "Penggali Fosil", b: "N", tn: "L", top: "#C8A15A", bot: "#6B5A3A", hr: ["short", "#6b4226"], gl: "round", hat: ["safari", "#b08a4a"], it: "bone", il: "brush", x: ["suspenders", "pocket"], ds: "Arkeolog bertopi safari dengan rompi khaki, kuas kecil, dan tulang fosil." },
+  { n: 31, nm: "Robo-Guide Biru", b: "R", tn: "#f4f6fa", top: "#3D7FE0", bot: "#E8EEF7", face: "screen:#22d3ee", hat: ["antenna1", "#f2c230"], x: ["panel"], ds: "Robot pemandu berlayar wajah LED, antena, dan panel dada." },
+  { n: 32, nm: "Cyber Ninja Neon", b: "N", tn: "D", top: "#14141C", bot: "#14141C", face: "visor:#2dd4bf", hat: ["ninja", "#111111"], it: "esword:#2dd4bf", x: ["neon:#2dd4bf"], ds: "Ninja siber berkerudung hitam dengan visor neon dan pedang energi." },
+  { n: 33, nm: "Mecha Pilot", b: "A", tn: "#e5e7eb", top: "#E06A1A", bot: "#3A3F4B", face: "visor:#67e8f9", hat: ["mecha", "#E06A1A"], it: "gear", x: ["core:#38bdf8", "armor"], ds: "Pilot mecha berzirah oranye, helm visor, inti energi, dan roda gigi." },
+  { n: 34, nm: "Droid Teknisi", b: "R", tn: "#F2C230", top: "#F2C230", bot: "#7A7F8A", face: "cyclops:#ef4444", hat: ["antenna1", "#ef4444"], it: "wrench", x: ["panel"], ds: "Droid bermata tunggal dengan antena, panel mesin, dan kunci pas." },
+  { n: 35, nm: "Android Elegan", b: "N", tn: "#eef4ff", top: "#F4F6FA", bot: "#D4DAE4", hr: ["long", "#c7d7f5"], hat: ["tiara", "#93c5fd"], face: "android", x: ["neon:#60a5fa"], ds: "Android anggun berambut serat perak, mahkota kecil, dan garis neon." },
+  { n: 36, nm: "Robot Retro Kaleng", b: "R", tn: "#C9833A", top: "#C9833A", bot: "#8A5A2B", face: "retro", hat: ["antenna1", "#8a5a2b"], bk: ["windkey", "#a16207"], x: ["panel", "bolts"], ds: "Robot retro berbadan tembaga dengan baut, pegas, dan kunci putar." },
+  { n: 37, nm: "Si Mungil Chibi", b: "C", tn: "L", top: "#FF8FB8", bot: "#5A6BD6", hr: ["pigtails", "#6b4226"], it: "balloon", x: ["star:#ffffff", "pocket"], ds: "Si mungil berhoodie merah muda, rambut berkuncir, dan balon." },
+  { n: 38, nm: "Atletis Tangguh", b: "A", tn: "D", top: "#D92B2B", bot: "#1D1D28", hr: ["short", "#111111"], hat: ["headband", "#ffffff"], it: "ball", x: ["star:#ffffff", "stripe:#ffffff", "sleeveless"], ds: "Atlet bertubuh tangguh dengan kaus tanpa lengan, ikat kepala, dan bola basket." },
+  { n: 39, nm: "Jangkung Kurus", b: "T", tn: "L", top: "#E8E8E8", bot: "#3B3B3B", hr: ["spiky", "#6b4226"], gl: "round", it: "cup", x: ["stripes:#1e3a8a", "scarf:#dc2626"], ds: "Si jangkung berkaus garis dengan syal, kacamata, dan cangkir hangat." },
+  { n: 40, nm: "Bulat Ceria", b: "B", tn: "T", top: "#FFD84A", bot: "#3B6FD8", hr: ["short", "#1f1a17"], it: "icecream", x: ["overall"], ds: "Si bulat ceria berbaju kuning, celana kodok, dan es krim." },
+  { n: 41, nm: "Kakek Bijak", b: "L", tn: "T", top: "#8A7A5A", bot: "#4A4A4A", hr: ["side", "#e8e8e8"], br: ["full", "#f1f1f1"], gl: "round", it: "cane", x: ["buttons"], ds: "Kakek bijak berkardigan dengan kacamata dan tongkat." },
+  { n: 42, nm: "Anak Petualang", b: "K", tn: "T", top: "#2FA84F", bot: "#8A6A3B", hat: ["cap", "#dc2626"], it: "net", bk: ["backpack", "#8a5a2b"], x: ["shorts", "suspenders"], ds: "Anak petualang bertopi dengan ransel, celana pendek, dan jaring kupu-kupu." },
+  { n: 43, nm: "Penyihir Bintang", b: "S", tn: "L", top: "#2A3A8C", bot: "#2A3A8C", br: ["long", "#f5f5f5"], hat: ["wizard", "#2A3A8C", "#facc15"], it: "staff:star", x: ["gown", "stars"], ds: "Penyihir mungil bertopi runcing, jubah bintang, janggut panjang, dan tongkat sihir." },
+  { n: 44, nm: "Elf Hutan", b: "T", tn: "L", top: "#4A9F5A", bot: "#6B5A3A", hr: ["long", "#f2d27a"], hat: ["elfcrown", "#f2c230", "#22d3ee"], face: "elf", it: "staff:leaf", bk: ["cape", "#2f6b3a"], x: ["belt:#6b4226"], ds: "Elf hutan bertelinga runcing dengan mahkota emas, jubah daun, dan tongkat." },
+  { n: 45, nm: "Kurcaci Penambang", b: "D", tn: "L", top: "#9A4A2A", bot: "#4A3B2A", br: ["big", "#d2691e"], hat: ["miner", "#f2c230"], it: "pick", x: ["apron:#6b4226"], ds: "Kurcaci penambang berhelm lampu, janggut lebat, dan beliung." },
+  { n: 46, nm: "Ksatria Naga", b: "N", tn: "T", top: "#5B2A8C", bot: "#3A1F5C", hat: ["dragon", "#5B2A8C", "#f2c230"], it: "sword", bk: ["wings", "#7c3aed"], x: ["armor"], ds: "Ksatria naga berzirah ungu dengan tanduk naga, sayap, dan pedang." },
+  { n: 47, nm: "Peri Bunga", b: "S", tn: "L", top: "#FF9EC8", bot: "#FF9EC8", hr: ["long", "#f2d27a"], hat: ["flowers", "#f472b6"], it: "wand", bk: ["fairy", "#bfdbfe"], x: ["gown", "bowtie:#db2777"], ds: "Peri mungil bersayap bening, mahkota bunga, gaun, dan tongkat bintang." },
+  { n: 48, nm: "Alkemis Ramuan", b: "N", tn: "L", top: "#6B3FA0", bot: "#3A2A55", hr: ["spiky", "#b4472b"], hat: ["goggles", "#86efac"], it: "potion:#4ade80", il: "potion:#c084fc", x: ["apron:#c8a15a"], ds: "Alkemis berkacamata kuningan dan celemek, membawa botol ramuan." },
+  { n: 49, nm: "Pentester Hoodie Hitam", b: "N", tn: "L", top: "#15151C", bot: "#22222C", gl: "sun", hat: ["hood", "#15151c"], it: "laptop", x: ["pocket"], ds: "Pentester berhoodie hitam dengan kacamata gelap dan laptop." },
+  { n: 50, nm: "Full-Stack Developer", b: "N", tn: "T", top: "#2B6CB0", bot: "#2D3447", hr: ["short", "#1f1a17"], gl: "round", hat: ["headset", "#f2c230"], it: "cup", x: ["badge"], ds: "Developer berkaus biru dengan headset, kacamata, dan kopi." },
+  { n: 51, nm: "Data Scientist", b: "N", tn: "L", top: "#E6E6EF", bot: "#2D3447", hr: ["short", "#1f1a17"], gl: "round", it: "chart", x: ["tie:#2563eb", "collar"], ds: "Data scientist berkemeja dengan dasi, kacamata, dan tablet grafik." },
+  { n: 52, nm: "UI/UX Designer", b: "N", tn: "T", top: "#FF7A3D", bot: "#2B2B2B", hr: ["short", "#1f1a17"], gl: "round", hat: ["beret", "#c0392b"], it: "palette", x: ["stripe:#ffffff"], ds: "Desainer UI/UX berbaret merah, berbaju oranye, dengan palet warna." },
+  { n: 53, nm: "DevOps Engineer", b: "N", tn: "L", top: "#2B4A3F", bot: "#2D3447", hr: ["short", "#1f1a17"], hat: ["headset", "#111111"], it: "gear", x: ["vest:#f97316"], ds: "Insinyur DevOps berompi oranye dengan headset dan roda gigi." },
+  { n: 54, nm: "GIS Analyst", b: "N", tn: "T", top: "#1F8A8A", bot: "#3B3B3B", hat: ["cap", "#0f766e"], it: "map", bk: ["backpack", "#374151"], x: ["collar"], ds: "Analis GIS berpolo teal dengan topi, ransel, dan peta." },
+  { n: 55, nm: "Pendekar Silat", b: "A", tn: "T", top: "#14141C", bot: "#14141C", hr: ["short", "#111111"], hat: ["headband", "#dc2626"], x: ["sash:#dc2626", "belt:#dc2626"], ds: "Pendekar silat berseragam hitam dengan ikat kepala dan sabuk merah." },
+  { n: 56, nm: "Pria Batik Formal", b: "N", tn: "T", top: "#8A4B1F", bot: "#1D1D28", hat: ["blangkon", "#5b3414"], it: "fan:#dc2626", x: ["batik"], ds: "Pria berkemeja batik dengan blangkon dan kipas." },
+  { n: 57, nm: "Wanita Kebaya", b: "N", tn: "T", top: "#E8B6C8", bot: "#7A4B2B", hr: ["bun", "#111111"], hat: ["hairflower", "#f43f5e"], it: "fan:#d4a017", x: ["skirtlong", "batikbot"], ds: "Wanita berkebaya dengan kain batik, sanggul, bunga, dan kipas." },
+  { n: 58, nm: "Ranger Hutan", b: "N", tn: "L", top: "#7B8A4A", bot: "#4E5A2E", hat: ["ranger", "#6b4f2a"], it: "binoculars", x: ["pocket", "belt:#3b2a1a"], ds: "Ranger hutan bertopi lebar dengan seragam khaki, ransel, dan teropong." },
+  { n: 59, nm: "Nelayan Pesisir", b: "N", tn: "D", top: "#F8FAFC", bot: "#E8E0CC", hat: ["bucket", "#f5f5f4"], it: "rod", x: ["stripes:#1e40af"], ds: "Nelayan bertopi bucket, kaus bergaris, celana digulung, dan pancing." },
+  { n: 60, nm: "Petani Padi Modern", b: "N", tn: "T", top: "#3F8F4A", bot: "#6B5A3A", hat: ["caping", "#d9b86c"], it: "hoe", il: "rice", sh: "#166534", x: ["collar"], ds: "Petani modern bercaping dengan bot karet, cangkul, dan seikat padi." }
+];
+var sktId = (n) => "SKN-" + String(n).padStart(3, "0");
+var SKT_BY = {}; SKT.forEach((s) => { s.id = sktId(s.n); s.tema = SKT_TEMA[Math.floor((s.n - 1) / 6)]; SKT_BY[s.id] = s; });
+// skin Portal Ring 1 (terlihat hanya bagi pemegang Black Card)
+var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run" };
+
+// ---------- tekstur ----------
+function sktCanvas(w, h, fn) { const c = mkCanvas(w, h), x = c.getContext("2d"); fn(x, w, h); const t2 = new THREE2.CanvasTexture(c); t2.colorSpace = THREE2.SRGBColorSpace; t2.magFilter = THREE2.NearestFilter; return t2; }
+function sktFace(s) {
+  const f = s.face || "", tone = SKT_TONE[s.tn] || s.tn;
+  return sktCanvas(64, 64, (x, w, h) => {
+    x.fillStyle = tone; x.fillRect(0, 0, w, h);
+    const eye = (ex, ey, r = 4) => { x.fillStyle = "#1f1a17"; x.beginPath(); x.arc(ex, ey, r, 0, 7); x.fill(); x.fillStyle = "#fff"; x.beginPath(); x.arc(ex + 1.2, ey - 1.2, 1.3, 0, 7); x.fill(); };
+    if (f.startsWith("screen")) { x.fillStyle = "#0b1220"; x.fillRect(6, 10, 52, 40); x.fillStyle = f.split(":")[1]; x.fillRect(16, 22, 9, 12); x.fillRect(39, 22, 9, 12); x.fillRect(24, 40, 16, 3); return; }
+    if (f.startsWith("cyclops")) { x.fillStyle = "#374151"; x.fillRect(10, 12, 44, 30); x.fillStyle = "#111"; x.beginPath(); x.arc(32, 27, 12, 0, 7); x.fill(); x.fillStyle = f.split(":")[1]; x.beginPath(); x.arc(32, 27, 7, 0, 7); x.fill(); return; }
+    if (f === "retro") { x.fillStyle = "#3b2414"; x.fillRect(8, 12, 48, 34); x.fillStyle = "#facc15"; x.beginPath(); x.arc(22, 26, 6, 0, 7); x.arc(42, 26, 6, 0, 7); x.fill(); x.fillStyle = "#a16207"; x.fillRect(22, 38, 20, 3); return; }
+    if (f.startsWith("visor")) { x.fillStyle = "#111"; x.fillRect(0, 0, w, h); x.fillStyle = f.split(":")[1]; x.fillRect(8, 22, 48, 9); return; }
+    if (f === "alien") { x.fillStyle = "#111"; x.beginPath(); x.moveTo(12, 24); x.lineTo(28, 30); x.lineTo(26, 36); x.lineTo(12, 30); x.fill(); x.beginPath(); x.moveTo(52, 24); x.lineTo(36, 30); x.lineTo(38, 36); x.lineTo(52, 30); x.fill(); x.fillRect(26, 46, 12, 2); return; }
+    eye(22, 32); eye(42, 32);
+    if (f === "android") { x.fillStyle = "#60a5fa"; x.fillRect(14, 30, 14, 4); x.fillRect(36, 30, 14, 4); }
+    x.fillStyle = "rgba(244,114,182,.45)"; x.beginPath(); x.arc(15, 41, 4.5, 0, 7); x.arc(49, 41, 4.5, 0, 7); x.fill();
+    x.strokeStyle = "#7c2d12"; x.lineWidth = 2.2; x.beginPath(); x.arc(32, 41, 5, 0.15 * Math.PI, 0.85 * Math.PI); x.stroke();
+    for (const e of s.x || []) if (e.startsWith("facepaint")) { x.fillStyle = e.split(":")[1]; x.fillRect(10, 37, 8, 2); x.fillRect(10, 41, 8, 2); x.fillRect(46, 37, 8, 2); x.fillRect(46, 41, 8, 2); }
+  });
+}
+function sktTop(s) {
+  const X = s.x || [];
+  return sktCanvas(64, 64, (x, w, h) => {
+    x.fillStyle = s.top; x.fillRect(0, 0, w, h);
+    for (const e of X) {
+      const [k, c] = e.split(":");
+      if (k === "buttons") { x.fillStyle = "rgba(0,0,0,.35)"; for (let i = 0; i < 4; i++) x.fillRect(31, 10 + i * 13, 3, 3); }
+      if (k === "stripes") { x.fillStyle = c; for (let i = 0; i < 5; i++) x.fillRect(0, 6 + i * 12, w, 5); }
+      if (k === "stripe") { x.fillStyle = c; x.fillRect(0, 34, w, 5); }
+      if (k === "star") { x.fillStyle = c; x.beginPath(); for (let i = 0; i < 10; i++) { const r = i % 2 ? 4 : 9, a = -Math.PI / 2 + i * Math.PI / 5; x.lineTo(32 + Math.cos(a) * r, 22 + Math.sin(a) * r); } x.fill(); }
+      if (k === "handprints") { x.fillStyle = "#c0392b"; for (const [hx, hy] of [[16, 18], [44, 30], [22, 46]]) { x.fillRect(hx - 4, hy - 2, 8, 8); for (let f = 0; f < 4; f++) x.fillRect(hx - 4 + f * 2.4, hy - 7, 1.6, 5); } }
+      if (k === "spots") { x.fillStyle = "rgba(40,20,5,.55)"; for (let i = 0; i < 14; i++) { x.beginPath(); x.arc((i * 37) % 60 + 3, (i * 23) % 56 + 4, 2.5, 0, 7); x.fill(); } }
+      if (k === "scales") { x.strokeStyle = "rgba(255,255,255,.35)"; x.lineWidth = 1.5; for (let r = 0; r < 8; r++) for (let q = 0; q < 6; q++) { x.beginPath(); x.arc(q * 11 + (r % 2) * 5, r * 8 + 4, 5, 0, Math.PI); x.stroke(); } }
+      if (k === "batik") { x.fillStyle = "#e7c48a"; for (let r = 0; r < 4; r++) for (let q = 0; q < 4; q++) { const cx = q * 16 + 8, cy = r * 16 + 8; x.beginPath(); x.ellipse(cx, cy - 4, 2.4, 3.6, 0, 0, 7); x.ellipse(cx, cy + 4, 2.4, 3.6, 0, 0, 7); x.ellipse(cx - 4, cy, 3.6, 2.4, 0, 0, 7); x.ellipse(cx + 4, cy, 3.6, 2.4, 0, 0, 7); x.fill(); } }
+      if (k === "panel") { x.fillStyle = "rgba(15,23,42,.75)"; x.fillRect(14, 14, 36, 20); x.fillStyle = "#4ade80"; x.fillRect(18, 18, 4, 4); x.fillStyle = "#f87171"; x.fillRect(25, 18, 4, 4); x.fillStyle = "#60a5fa"; x.fillRect(32, 18, 4, 4); x.fillStyle = "#e5e7eb"; x.fillRect(18, 26, 26, 3); }
+      if (k === "medals") { for (const [mx, mc] of [[16, "#f2c230"], [22, "#dc2626"], [28, "#2563eb"]]) { x.fillStyle = mc; x.fillRect(mx, 16, 4, 6); x.fillStyle = "#f2c230"; x.beginPath(); x.arc(mx + 2, 25, 2.5, 0, 7); x.fill(); } }
+      if (k === "neon") { x.strokeStyle = c; x.lineWidth = 2.5; x.beginPath(); x.moveTo(12, 0); x.lineTo(12, 30); x.lineTo(24, 44); x.moveTo(52, 0); x.lineTo(52, 30); x.lineTo(40, 44); x.stroke(); }
+      if (k === "stars") { x.fillStyle = "#facc15"; for (let i = 0; i < 9; i++) x.fillRect((i * 29) % 58 + 3, (i * 17) % 56 + 4, 3, 3); }
+      if (k === "rank") { x.fillStyle = "#f2c230"; x.fillRect(0, 4, 10, 3); x.fillRect(54, 4, 10, 3); x.fillRect(20, 20, 6, 4); }
+      if (k === "armor") { x.strokeStyle = "rgba(0,0,0,.28)"; x.lineWidth = 2; for (let i = 0; i < 4; i++) { x.beginPath(); x.moveTo(6, 14 + i * 12); x.lineTo(58, 14 + i * 12); x.stroke(); } }
+      if (k === "core") { x.fillStyle = "#0f172a"; x.beginPath(); x.arc(32, 26, 9, 0, 7); x.fill(); x.fillStyle = c; x.beginPath(); x.arc(32, 26, 6, 0, 7); x.fill(); }
+      if (k === "pocket") { x.fillStyle = "rgba(0,0,0,.22)"; x.fillRect(18, 40, 28, 12); }
+      if (k === "badge") { x.fillStyle = "#e5e7eb"; x.fillRect(40, 16, 10, 5); }
+      if (k === "collar") { x.fillStyle = "rgba(255,255,255,.55)"; x.beginPath(); x.moveTo(20, 0); x.lineTo(32, 10); x.lineTo(44, 0); x.fill(); }
+      if (k === "trim") { x.fillStyle = c; x.fillRect(0, 0, 9, h); x.fillRect(55, 0, 9, h); x.fillRect(0, 50, w, 6); }
+      if (k === "bolts") { x.fillStyle = "#713f12"; for (const [bx, by] of [[6, 6], [56, 6], [6, 56], [56, 56]]) x.fillRect(bx - 2, by - 2, 4, 4); }
+      if (k === "jagged") { x.fillStyle = "rgba(0,0,0,.25)"; for (let i = 0; i < 8; i++) { x.beginPath(); x.moveTo(i * 8, 64); x.lineTo(i * 8 + 4, 56); x.lineTo(i * 8 + 8, 64); x.fill(); } }
+      if (k === "necklace") { x.fillStyle = "#f5f0e1"; for (let i = 0; i < 7; i++) { const a = 0.15 * Math.PI + i * 0.1 * Math.PI; x.fillRect(32 + Math.cos(a) * 18 - 1.5, 2 + Math.sin(a) * 12, 3, 5); } }
+      if (k === "overall") { x.fillStyle = s.bot; x.fillRect(14, 30, 36, 34); x.fillRect(16, 0, 6, 32); x.fillRect(42, 0, 6, 32); x.fillStyle = "#facc15"; x.fillRect(18, 30, 3, 3); x.fillRect(43, 30, 3, 3); }
+    }
+  });
+}
+function sktBotTex(s) {
+  const X = s.x || [];
+  if (X.includes("plaid")) return sktCanvas(32, 32, (x, w, h) => { x.fillStyle = s.bot; x.fillRect(0, 0, w, h); x.fillStyle = "rgba(255,255,255,.18)"; for (let i = 0; i < 4; i++) { x.fillRect(i * 8, 0, 3, h); x.fillRect(0, i * 8, w, 3); } });
+  if (X.includes("batikbot")) return sktCanvas(32, 32, (x, w, h) => { x.fillStyle = s.bot; x.fillRect(0, 0, w, h); x.fillStyle = "#e7c48a"; for (let r = 0; r < 4; r++) for (let q = 0; q < 4; q++) { x.beginPath(); x.arc(q * 8 + 4, r * 8 + 4, 2, 0, 7); x.fill(); } });
+  return null;
+}
+
+// ---------- pembangun model ----------
+var SKT_BODY = {
+  N: { leg: 0.6, tor: 0.6, tw: 0.48, td: 0.26, head: 0.46, arm: 0.13, s: 1 },
+  S: { leg: 0.5, tor: 0.52, tw: 0.44, td: 0.24, head: 0.44, arm: 0.12, s: 0.92 },
+  C: { leg: 0.36, tor: 0.42, tw: 0.44, td: 0.26, head: 0.56, arm: 0.12, s: 1 },
+  T: { leg: 0.82, tor: 0.68, tw: 0.4, td: 0.22, head: 0.42, arm: 0.11, s: 1 },
+  B: { leg: 0.48, tor: 0.6, tw: 0.66, td: 0.44, head: 0.46, arm: 0.15, s: 1 },
+  A: { leg: 0.62, tor: 0.64, tw: 0.58, td: 0.3, head: 0.46, arm: 0.16, s: 1 },
+  L: { leg: 0.56, tor: 0.58, tw: 0.48, td: 0.28, head: 0.46, arm: 0.13, s: 0.98, hunch: 0.12 },
+  K: { leg: 0.42, tor: 0.44, tw: 0.4, td: 0.22, head: 0.46, arm: 0.11, s: 0.95 },
+  R: { leg: 0.56, tor: 0.6, tw: 0.54, td: 0.34, head: 0.52, arm: 0.14, s: 1 },
+  D: { leg: 0.34, tor: 0.52, tw: 0.58, td: 0.34, head: 0.5, arm: 0.15, s: 1 }
+};
+function sktM(col, o) { return new THREE2.MeshStandardMaterial(Object.assign({ color: new THREE2.Color(col), roughness: 0.82, metalness: 0.02 }, o || {})); }
+function sktBox(w, h, d, mat, x, y, z, parent) { const m = new THREE2.Mesh(new THREE2.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); m.castShadow = true; parent.add(m); return m; }
+function sktCyl(rt, rb, h, mat, x, y, z, parent, seg = 14) { const m = new THREE2.Mesh(new THREE2.CylinderGeometry(rt, rb, h, seg), mat); m.position.set(x, y, z); parent.add(m); return m; }
+// barang di tangan (titik pegang di 0,0,0, mengarah ke depan = -z)
+function sktItem(kind, g) {
+  const [k, c] = String(kind).split(":");
+  const M = (col, o) => sktM(col, o), glow = (col) => new THREE2.MeshBasicMaterial({ color: new THREE2.Color(col), toneMapped: false });
+  switch (k) {
+    case "scroll": { const m = sktCyl(0.035, 0.035, 0.3, M("#f5f0e1"), 0, 0, -0.05, g); m.rotation.x = Math.PI / 2; sktCyl(0.037, 0.037, 0.04, M("#dc2626"), 0, 0, -0.05, g).rotation.x = Math.PI / 2; break; }
+    case "book": sktBox(0.2, 0.26, 0.06, M("#1e3a8a"), 0, 0, -0.06, g); sktBox(0.08, 0.08, 0.005, glow("#facc15"), 0, 0.02, -0.095, g); break;
+    case "mushaf": sktBox(0.2, 0.26, 0.06, M("#166534"), 0, 0, -0.06, g); sktBox(0.08, 0.08, 0.005, glow("#facc15"), 0, 0.02, -0.095, g); break;
+    case "books": for (let i = 0; i < 4; i++) sktBox(0.22, 0.05, 0.16, M(["#b91c1c", "#1d4ed8", "#ca8a04", "#15803d"][i]), 0, -0.05 + i * 0.052, -0.08, g); break;
+    case "pointer": { const m = sktCyl(0.012, 0.012, 0.6, M("#7c2d12"), 0, 0.1, -0.2, g, 8); m.rotation.x = 1.1; break; }
+    case "flask": { sktCyl(0.03, 0.08, 0.14, M("#bbf7d0", { transparent: true, opacity: 0.55 }), 0, -0.02, -0.06, g); sktCyl(0.02, 0.07, 0.08, glow("#4ade80"), 0, -0.05, -0.06, g); break; }
+    case "laptop": { const b = sktBox(0.36, 0.02, 0.24, M("#374151"), 0, -0.04, -0.14, g); const s = sktBox(0.36, 0.22, 0.015, M("#111827"), 0, 0.07, -0.025, g); s.rotation.x = -0.25; sktBox(0.3, 0.16, 0.004, glow("#22d3ee"), 0, 0.07, -0.035, g).rotation.x = -0.25; void b; break; }
+    case "tasbih": { const mm = M(c || "#2f6b4f"); for (let i = 0; i < 9; i++) { const a = i / 9 * Math.PI * 2; const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.018, 6, 5), mm); b.position.set(Math.cos(a) * 0.06, -0.08 + Math.sin(a) * 0.06, -0.03); g.add(b); } break; }
+    case "flower": { sktCyl(0.008, 0.008, 0.26, M("#15803d"), 0, 0.08, -0.03, g, 6); const f = new THREE2.Mesh(new THREE2.SphereGeometry(0.05, 8, 6), M("#f472b6")); f.position.set(0, 0.22, -0.03); g.add(f); break; }
+    case "lantern": { sktBox(0.12, 0.16, 0.12, M("#92400e"), 0, -0.1, -0.06, g); sktBox(0.09, 0.12, 0.13, glow("#fde68a"), 0, -0.1, -0.06, g); break; }
+    case "tablet": sktBox(0.2, 0.26, 0.02, M("#111827"), 0, 0.02, -0.05, g); sktBox(0.17, 0.22, 0.005, glow("#38bdf8"), 0, 0.02, -0.062, g); break;
+    case "chart": { sktBox(0.2, 0.26, 0.02, M("#f8fafc"), 0, 0.02, -0.05, g); [["#22c55e", 0.06], ["#3b82f6", 0.1], ["#f97316", 0.14]].forEach(([cc, hh], i) => sktBox(0.03, hh, 0.006, glow(cc), -0.05 + i * 0.05, -0.08 + hh / 2, -0.062, g)); break; }
+    case "pick": { const h = sktCyl(0.015, 0.015, 0.5, M("#7c2d12"), 0, 0.12, -0.04, g, 8); void h; const head = sktBox(0.32, 0.04, 0.04, M("#9ca3af", { metalness: 0.6 }), 0, 0.36, -0.04, g); head.rotation.z = 0.15; break; }
+    case "wrench": sktBox(0.04, 0.32, 0.02, M("#9ca3af", { metalness: 0.7 }), 0, 0.08, -0.04, g); sktBox(0.1, 0.06, 0.02, M("#9ca3af", { metalness: 0.7 }), 0, 0.24, -0.04, g); break;
+    case "orb": { const o = new THREE2.Mesh(new THREE2.SphereGeometry(0.1, 14, 10), glow("#a5b4fc")); o.position.set(0, 0.06, -0.08); g.add(o); break; }
+    case "sword": sktBox(0.05, 0.7, 0.02, M("#e5e7eb", { metalness: 0.8, roughness: 0.3 }), 0, 0.42, -0.04, g); sktBox(0.2, 0.04, 0.05, M("#a16207"), 0, 0.06, -0.04, g); break;
+    case "katana": sktBox(0.035, 0.75, 0.015, M("#e5e7eb", { metalness: 0.8, roughness: 0.3 }), 0, 0.45, -0.04, g); sktBox(0.05, 0.16, 0.04, M("#111827"), 0, 0.02, -0.04, g); break;
+    case "esword": { const c2 = c || "#2dd4bf"; sktBox(0.04, 0.72, 0.04, glow(c2), 0, 0.46, -0.04, g); sktBox(0.05, 0.14, 0.05, M("#111827"), 0, 0.04, -0.04, g); break; }
+    case "spear": sktCyl(0.016, 0.016, 1.3, M("#7c2d12"), 0, 0.35, -0.04, g, 8); { const t3 = new THREE2.Mesh(new THREE2.ConeGeometry(0.04, 0.16, 6), M("#9ca3af")); t3.position.set(0, 1.07, -0.04); g.add(t3); } break;
+    case "axe": sktCyl(0.018, 0.018, 0.6, M("#7c2d12"), 0, 0.16, -0.04, g, 8); sktBox(0.04, 0.18, 0.16, M("#9ca3af", { metalness: 0.6 }), 0, 0.4, -0.12, g); break;
+    case "bow": { const b = new THREE2.Mesh(new THREE2.TorusGeometry(0.42, 0.015, 6, 20, Math.PI * 0.9), M("#7c2d12")); b.rotation.set(0, Math.PI / 2, Math.PI / 2 - Math.PI * 0.45); b.position.set(0, 0.05, -0.02); g.add(b); break; }
+    case "map": sktBox(0.3, 0.22, 0.01, M("#fef3c7"), 0, 0.02, -0.08, g); sktBox(0.2, 0.012, 0.004, glow("#ef4444"), 0, 0.04, -0.087, g); break;
+    case "club": { const m = sktCyl(0.06, 0.03, 0.55, M("#7c4a1e"), 0, 0.2, -0.05, g, 8); m.rotation.x = -0.15; break; }
+    case "torch": { sktCyl(0.025, 0.02, 0.42, M("#7c2d12"), 0, 0.1, -0.04, g, 8); const fl = new THREE2.Mesh(new THREE2.ConeGeometry(0.06, 0.16, 8), glow("#f97316")); fl.position.set(0, 0.38, -0.04); g.add(fl); const f2 = new THREE2.Mesh(new THREE2.ConeGeometry(0.035, 0.1, 8), glow("#fde047")); f2.position.set(0, 0.36, -0.04); g.add(f2); g.userData.flame = fl; break; }
+    case "egg": { const e = new THREE2.Mesh(new THREE2.SphereGeometry(0.1, 12, 10), M("#f5f5dc")); e.scale.y = 1.3; e.position.set(0, 0.04, -0.09); g.add(e); break; }
+    case "bone": sktBox(0.04, 0.28, 0.04, M("#f5f0e1"), 0, 0.04, -0.04, g); for (const dy of [-0.1, 0.18]) for (const dx of [-0.03, 0.03]) sktBox(0.04, 0.04, 0.05, M("#f5f0e1"), dx, dy, -0.04, g); break;
+    case "brush": sktCyl(0.012, 0.012, 0.22, M("#a16207"), 0, 0.06, -0.04, g, 6); sktBox(0.05, 0.06, 0.03, M("#57534e"), 0, 0.19, -0.04, g); break;
+    case "gear": { const r2 = new THREE2.Mesh(new THREE2.TorusGeometry(0.08, 0.03, 6, 10), M("#9ca3af", { metalness: 0.7 })); r2.position.set(0, 0.02, -0.08); g.add(r2); break; }
+    case "balloon": { sktCyl(0.003, 0.003, 0.7, M("#e5e7eb"), 0, 0.35, -0.04, g, 4); const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.14, 14, 10), M("#ef4444", { roughness: 0.3 })); b.scale.y = 1.15; b.position.set(0, 0.8, -0.04); g.add(b); break; }
+    case "ball": { const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.11, 14, 10), M("#ea580c")); b.position.set(0, -0.04, -0.1); g.add(b); break; }
+    case "cup": sktCyl(0.04, 0.035, 0.09, M("#ffffff"), 0, -0.02, -0.06, g, 10); sktCyl(0.035, 0.035, 0.01, M("#78350f"), 0, 0.025, -0.06, g, 10); break;
+    case "icecream": { const cn = new THREE2.Mesh(new THREE2.ConeGeometry(0.045, 0.14, 8), M("#d97706")); cn.rotation.x = Math.PI; cn.position.set(0, 0.02, -0.06); g.add(cn); const sc = new THREE2.Mesh(new THREE2.SphereGeometry(0.05, 10, 8), M("#f9a8d4")); sc.position.set(0, 0.11, -0.06); g.add(sc); break; }
+    case "cane": { const c3 = sktCyl(0.016, 0.016, 0.85, M("#7c2d12"), 0, -0.36, -0.06, g, 8); void c3; break; }
+    case "net": { sktCyl(0.012, 0.012, 0.7, M("#a16207"), 0, 0.3, -0.04, g, 6); const r3 = new THREE2.Mesh(new THREE2.TorusGeometry(0.12, 0.01, 6, 14), M("#e5e7eb")); r3.position.set(0, 0.74, -0.04); g.add(r3); break; }
+    case "staff": { sktCyl(0.02, 0.02, 1.2, M("#7c2d12"), 0, 0.3, -0.04, g, 8); const tp = new THREE2.Mesh(c === "leaf" ? new THREE2.OctahedronGeometry(0.07) : new THREE2.OctahedronGeometry(0.08), glow(c === "leaf" ? "#86efac" : "#facc15")); tp.position.set(0, 0.95, -0.04); g.add(tp); break; }
+    case "wand": { sktCyl(0.01, 0.01, 0.3, M("#fef3c7"), 0, 0.12, -0.04, g, 6); const st = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.05), glow("#facc15")); st.position.set(0, 0.3, -0.04); g.add(st); break; }
+    case "potion": { const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.06, 10, 8), sktM(c || "#4ade80", { transparent: true, opacity: 0.85, emissive: new THREE2.Color(c || "#4ade80"), emissiveIntensity: 0.5 })); b.position.set(0, -0.02, -0.07); g.add(b); sktCyl(0.018, 0.018, 0.06, M("#e5e7eb"), 0, 0.06, -0.07, g, 6); break; }
+    case "palette": { const p = new THREE2.Mesh(new THREE2.CylinderGeometry(0.13, 0.13, 0.015, 16), M("#d6b184")); p.rotation.x = Math.PI / 2; p.position.set(0, 0, -0.06); g.add(p); ["#ef4444", "#3b82f6", "#facc15", "#22c55e"].forEach((cc, i) => sktBox(0.03, 0.03, 0.01, glow(cc), Math.cos(i * 1.4) * 0.07, Math.sin(i * 1.4) * 0.07, -0.07, g)); break; }
+    case "fan": { const f = new THREE2.Mesh(new THREE2.CircleGeometry(0.16, 12, 0, Math.PI), sktM(c || "#dc2626", { side: THREE2.DoubleSide })); f.position.set(0, 0.04, -0.06); g.add(f); break; }
+    case "binoculars": for (const dx of [-0.04, 0.04]) { const b = sktCyl(0.03, 0.03, 0.12, M("#111827"), dx, 0, -0.08, g, 10); b.rotation.x = Math.PI / 2; } break;
+    case "rod": { const r4 = sktCyl(0.01, 0.01, 1.4, M("#7c2d12"), 0, 0.55, -0.2, g, 6); r4.rotation.x = -0.35; break; }
+    case "hoe": sktCyl(0.016, 0.016, 1.0, M("#7c2d12"), 0, 0.25, -0.04, g, 8); sktBox(0.04, 0.12, 0.16, M("#6b7280", { metalness: 0.5 }), 0, 0.72, -0.12, g); break;
+    case "rice": for (let i = 0; i < 4; i++) { const r5 = sktCyl(0.006, 0.006, 0.34, M("#ca8a04"), (i - 1.5) * 0.02, 0.1, -0.05, g, 4); r5.rotation.z = (i - 1.5) * 0.12; } break;
+    case "shield": { sktBox(0.36, 0.42, 0.05, M(c || "#1d4ed8"), 0, 0, -0.06, g); sktBox(0.06, 0.3, 0.01, glow("#f8fafc"), 0, 0, -0.09, g); sktBox(0.2, 0.06, 0.01, glow("#f8fafc"), 0, 0.05, -0.09, g); break; }
+    case "scutum": { sktBox(0.36, 0.56, 0.05, M(c || "#c62828"), 0, 0, -0.06, g); const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.05, 8, 6), M("#f2c230", { metalness: 0.6 })); b.position.set(0, 0, -0.09); g.add(b); break; }
+    case "roundshield": { const s2 = new THREE2.Mesh(new THREE2.CylinderGeometry(0.24, 0.24, 0.04, 18), M("#7c4a1e")); s2.rotation.x = Math.PI / 2; s2.position.set(0, 0, -0.06); g.add(s2); const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.05, 8, 6), M("#9ca3af", { metalness: 0.6 })); b.position.set(0, 0, -0.09); g.add(b); break; }
+    default: break;
+  }
+}
+function sktBuild(s) {
+  return function (color) {
+    const B = SKT_BODY[s.b] || SKT_BODY.N, X = s.x || [];
+    const g = new THREE2.Group(), body = new THREE2.Group(), headG = new THREE2.Group(), inner = new THREE2.Group();
+    g.add(inner); g.add(headG);
+    inner.scale.setScalar(B.s);
+    const tone = SKT_TONE[s.tn] || s.tn, skinM = sktM(tone), topM = sktM(s.top), botM = sktM(s.bot), shoeM = sktM(s.sh || "#2b2b2b");
+    const robot = s.b === "R";
+    const gown = X.includes("gown") || X.includes("skirtlong"), shorts = X.includes("shorts");
+    // kaki
+    const legs = [];
+    const legW = Math.max(0.15, B.tw * 0.4), legX = B.tw * 0.24;
+    if (!gown) for (const sx of [-1, 1]) {
+      const lg = new THREE2.Group(); lg.position.set(sx * legX, B.leg, 0); inner.add(lg);
+      const bt = sktBotTex(s);
+      const legMat = bt ? sktM("#ffffff", { map: bt }) : botM;
+      if (shorts) { sktBox(legW, B.leg * 0.4, 0.2, legMat, 0, -B.leg * 0.2, 0, lg); sktBox(legW * 0.8, B.leg * 0.5, 0.17, skinM, 0, -B.leg * 0.68, 0, lg); }
+      else sktBox(legW, B.leg - 0.08, 0.2, legMat, 0, -(B.leg - 0.08) / 2, 0, lg);
+      sktBox(legW + 0.02, 0.09, 0.26, shoeM, 0, -B.leg + 0.045, -0.03, lg);
+      legs.push(lg);
+    }
+    else {
+      const bt = sktBotTex(s), gm = bt ? sktM("#ffffff", { map: bt }) : (X.includes("gown") ? topM : botM);
+      const gw = sktBox(B.tw * 0.92, B.leg - 0.06, B.td + 0.04, gm, 0, (B.leg - 0.06) / 2 + 0.06, 0, inner); void gw;
+      for (const sx of [-1, 1]) sktBox(0.14, 0.07, 0.22, shoeM, sx * legX * 0.8, 0.035, -0.04, inner);
+    }
+    if (X.includes("skirt")) sktBox(B.tw + 0.06, 0.24, B.td + 0.08, botM, 0, B.leg - 0.1, 0, inner);
+    if (X.includes("jagged")) { for (let i = 0; i < 6; i++) { const tri = new THREE2.Mesh(new THREE2.ConeGeometry(0.05, 0.12, 4), topM); tri.rotation.x = Math.PI; tri.position.set(-B.tw / 2 + 0.04 + i * (B.tw - 0.08) / 5, B.leg - 0.06, -B.td / 2 - 0.01); inner.add(tri); } }
+    // badan
+    const torY = B.leg + B.tor / 2;
+    const tTex = sktTop(s), side = topM, front = sktM("#ffffff", { map: tTex });
+    const torso = new THREE2.Mesh(new THREE2.BoxGeometry(B.tw, B.tor, B.td), [side, side, side, side, side, front]);
+    torso.position.y = torY; torso.castShadow = true; inner.add(torso);
+    if (B.hunch) torso.rotation.x = B.hunch;
+    if (X.includes("labcoat")) { sktBox(B.tw + 0.04, B.tor * 0.6, B.td + 0.03, topM, 0, B.leg - B.tor * 0.15, 0.005, inner); }
+    if (X.includes("fur")) sktBox(B.tw + 0.06, B.tor * 0.55, B.td + 0.06, sktM("#8b6a4a"), 0, torY + B.tor * 0.12, 0, inner);
+    for (const e of X) {
+      const [k, c] = e.split(":");
+      if (k === "sash") { const sm = c ? sktM(c) : sktM("#f2c230"); if (c) { const sb = sktBox(0.07, B.tor * 1.3, 0.02, sm, 0, torY, -B.td / 2 - 0.012, inner); sb.rotation.z = 0.7; } else for (const sx of [-1, 1]) sktBox(0.06, B.tor * 0.95, 0.015, sm, sx * B.tw * 0.18, torY, -B.td / 2 - 0.01, inner); }
+      if (k === "tie") sktBox(0.06, B.tor * 0.6, 0.012, sktM(c), 0, torY + B.tor * 0.08, -B.td / 2 - 0.008, inner);
+      if (k === "bowtie") { const bm = sktM(c || "#7f1d1d"); for (const sx of [-1, 1]) sktBox(0.07, 0.05, 0.02, bm, sx * 0.04, torY + B.tor / 2 - 0.05, -B.td / 2 - 0.012, inner); }
+      if (k === "scarf") { sktBox(B.tw * 0.75, 0.08, B.td + 0.04, sktM(c), 0, torY + B.tor / 2 - 0.02, 0, inner); sktBox(0.08, 0.26, 0.03, sktM(c), B.tw * 0.18, torY + B.tor / 2 - 0.16, -B.td / 2 - 0.02, inner); }
+      if (k === "belt") sktBox(B.tw + 0.02, 0.06, B.td + 0.02, sktM(c), 0, B.leg + 0.05, 0, inner);
+      if (k === "vest") for (const sx of [-1, 1]) sktBox(B.tw * 0.32, B.tor * 0.92, B.td + 0.02, sktM(c), sx * B.tw * 0.34, torY, 0, inner);
+      if (k === "apron") sktBox(B.tw * 0.7, B.tor * 0.9 + B.leg * 0.4, 0.02, sktM(c), 0, B.leg + B.tor * 0.35 - B.leg * 0.2, -B.td / 2 - 0.012, inner);
+      if (k === "suspenders") for (const sx of [-1, 1]) sktBox(0.04, B.tor, 0.01, sktM("#6b4226"), sx * B.tw * 0.22, torY, -B.td / 2 - 0.008, inner);
+      if (k === "lanyard") { sktBox(0.012, 0.22, 0.008, sktM("#dc2626"), -0.04, torY + 0.12, -B.td / 2 - 0.006, inner).rotation.z = 0.3; sktBox(0.08, 0.1, 0.01, sktM("#f8fafc"), 0, torY - 0.02, -B.td / 2 - 0.01, inner); }
+      if (k === "ihram") { const ih = sktBox(0.14, B.tor * 1.3, 0.02, sktM("#f3f4f6"), 0, torY, -B.td / 2 - 0.012, inner); ih.rotation.z = -0.7; }
+    }
+    // lengan
+    const arms = [];
+    const armL = B.tor * 0.92;
+    for (const sx of [-1, 1]) {
+      const sh = new THREE2.Group(); sh.position.set(sx * (B.tw / 2 + B.arm / 2 + 0.005), B.leg + B.tor - 0.06, 0); inner.add(sh);
+      const sleeve = X.includes("sleeveless") ? skinM : topM;
+      sktBox(B.arm, armL * 0.62, B.arm, sleeve, 0, -armL * 0.31, 0, sh);
+      sktBox(B.arm * 0.92, armL * 0.38, B.arm * 0.92, robot ? topM : skinM, 0, -armL * 0.81, 0, sh);
+      const hand = new THREE2.Group(); hand.position.set(0, -armL, -0.02); sh.add(hand);
+      arms.push({ sh, hand });
+    }
+    if (s.it) sktItem(s.it, arms[1].hand);
+    if (s.il) sktItem(s.il, arms[0].hand);
+    // punggung
+    if (s.bk) {
+      const [k, c] = s.bk, bm = sktM(c), bz = B.td / 2;
+      if (k === "backpack") sktBox(B.tw * 0.75, B.tor * 0.75, 0.16, bm, 0, torY, bz + 0.08, inner);
+      if (k === "oxygen") for (const sx of [-1, 1]) sktCyl(0.08, 0.08, B.tor * 0.9, bm, sx * 0.1, torY, bz + 0.09, inner);
+      if (k === "quiver") { const q = sktCyl(0.07, 0.07, 0.5, bm, 0.1, torY + 0.05, bz + 0.07, inner); q.rotation.z = -0.4; }
+      if (k === "cape") { const cp = new THREE2.Mesh(new THREE2.PlaneGeometry(B.tw + 0.1, B.tor + B.leg * 0.85), sktM(c, { side: THREE2.DoubleSide })); cp.position.set(0, B.leg + B.tor - (B.tor + B.leg * 0.85) / 2, bz + 0.03); cp.rotation.x = 0.06; inner.add(cp); }
+      if (k === "tail") { const tl = new THREE2.Mesh(new THREE2.ConeGeometry(0.11, 0.7, 6), bm); tl.rotation.x = -Math.PI / 2 - 0.5; tl.position.set(0, B.leg * 0.75, bz + 0.38); inner.add(tl); }
+      if (k === "wings" || k === "fairy") { for (const sx of [-1, 1]) { const w = new THREE2.Mesh(new THREE2.PlaneGeometry(0.55, 0.5), sktM(c, { side: THREE2.DoubleSide, transparent: k === "fairy", opacity: k === "fairy" ? 0.55 : 1 })); w.position.set(sx * 0.32, torY + 0.12, bz + 0.06); w.rotation.y = sx * 0.5; w.rotation.z = sx * 0.3; inner.add(w); } }
+      if (k === "windkey") { sktCyl(0.02, 0.02, 0.18, bm, 0, torY, bz + 0.09, inner).rotation.x = Math.PI / 2; sktBox(0.2, 0.08, 0.02, bm, 0, torY, bz + 0.19, inner); }
+    }
+    // kepala
+    const hs = B.head, headY = B.leg + B.tor + hs / 2 - 0.02;
+    const hG = new THREE2.Group(); hG.position.y = (headY * B.s) - 1.5; headG.add(hG);
+    hG.scale.setScalar(B.s);
+    const faceM = sktM("#ffffff", { map: sktFace(s) }), hm = robot ? topM : skinM;
+    const head = new THREE2.Mesh(new THREE2.BoxGeometry(hs, hs, hs * 0.92), [hm, hm, hm, hm, hm, faceM]);
+    head.castShadow = true; hG.add(head);
+    const top = hs / 2;
+    if (s.face === "elf") for (const sx of [-1, 1]) { const ear = new THREE2.Mesh(new THREE2.ConeGeometry(0.05, 0.2, 4), skinM); ear.rotation.z = -sx * 1.2; ear.position.set(sx * (hs / 2 + 0.06), 0.04, 0); hG.add(ear); }
+    // rambut
+    if (s.hr) {
+      const [st, c] = s.hr, hm2 = sktM(c);
+      sktBox(hs + 0.03, 0.1, hs * 0.95, hm2, 0, top - 0.02, 0.01, hG);
+      if (st !== "side") sktBox(hs + 0.03, hs * 0.55, 0.06, hm2, 0, top * 0.25, hs * 0.46, hG);
+      if (st === "side") { sktBox(0.05, hs * 0.4, hs * 0.8, hm2, -hs / 2 - 0.02, 0.02, 0.04, hG); sktBox(0.05, hs * 0.4, hs * 0.8, hm2, hs / 2 + 0.02, 0.02, 0.04, hG); hG.children[hG.children.length - 3].visible = false; }
+      if (st === "long") { sktBox(hs + 0.06, hs * 0.95, 0.08, hm2, 0, -0.06, hs * 0.47, hG); for (const sx of [-1, 1]) sktBox(0.05, hs * 0.9, hs * 0.6, hm2, sx * (hs / 2 + 0.02), -0.04, 0.12, hG); }
+      if (st === "spiky") for (let i = 0; i < 5; i++) { const sp = new THREE2.Mesh(new THREE2.ConeGeometry(0.05, 0.13, 4), hm2); sp.position.set(-hs / 2 + 0.05 + i * (hs - 0.1) / 4, top + 0.08, 0); hG.add(sp); }
+      if (st === "messy") for (let i = 0; i < 7; i++) { const sp = new THREE2.Mesh(new THREE2.ConeGeometry(0.06, 0.15, 4), hm2); sp.position.set(Math.cos(i * 1.7) * hs * 0.35, top + 0.06, Math.sin(i * 1.7) * hs * 0.35); sp.rotation.z = Math.cos(i) * 0.6; hG.add(sp); }
+      if (st === "curly") for (let i = 0; i < 10; i++) { const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.06, 6, 5), hm2); b.position.set(Math.cos(i * 2.4) * hs * 0.38, top + 0.03, Math.sin(i * 2.4) * hs * 0.38); hG.add(b); }
+      if (st === "bun") { const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.09, 10, 8), hm2); b.position.set(0, top + 0.08, 0.08); hG.add(b); }
+      if (st === "pigtails") for (const sx of [-1, 1]) { const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.08, 8, 6), hm2); b.position.set(sx * (hs / 2 + 0.06), 0.02, 0.06); hG.add(b); }
+    }
+    // jenggot
+    if (s.br) {
+      const [st, c] = s.br, bm = sktM(c);
+      if (st === "mustache") sktBox(0.16, 0.035, 0.02, bm, 0, -0.04, -hs * 0.47, hG);
+      else { const bh = st === "long" ? 0.36 : st === "big" ? 0.3 : 0.15, bw = hs * (st === "big" ? 1.02 : 0.8); sktBox(bw, bh, 0.07, bm, 0, -hs / 2 + bh / 2 - (st === "full" ? 0.03 : 0.08), -hs * 0.46, hG); for (const sx of [-1, 1]) sktBox(0.06, hs * 0.38, hs * 0.5, bm, sx * (hs / 2 + 0.005), -hs * 0.2, -hs * 0.2, hG); sktBox(0.16, 0.035, 0.02, bm, 0, -0.045, -hs * 0.475, hG); }
+    }
+    // kacamata
+    if (s.gl) { const gm = s.gl === "sun" ? sktM("#0b0b0b") : sktM("#1f2937"); for (const sx of [-1, 1]) { const r = new THREE2.Mesh(s.gl === "sun" ? new THREE2.BoxGeometry(0.12, 0.07, 0.01) : new THREE2.TorusGeometry(0.045, 0.008, 6, 14), gm); r.position.set(sx * 0.1, 0.02, -hs * 0.47); hG.add(r); } sktBox(0.06, 0.01, 0.01, gm, 0, 0.03, -hs * 0.47, hG); }
+    // penutup kepala
+    if (s.hat) sktHat(s.hat, hG, hs, top);
+    // kontrol animasi: langkah berdasarkan gerak dunia
+    const wp = new THREE2.Vector3(), lp = new THREE2.Vector3(); let lastT = 0, ph = 0, first = true, mv = 0;
+    const flameItem = arms[1].hand.userData.flame || arms[0].hand.userData.flame;
+    const anim = (tt) => {
+      g.getWorldPosition(wp);
+      const dt = Math.min(0.1, Math.max(0.001, tt - lastT)); lastT = tt;
+      const sp = first ? 0 : Math.hypot(wp.x - lp.x, wp.z - lp.z) / dt; first = false; lp.copy(wp);
+      mv += ((sp > 0.4 ? 1 : 0) - mv) * Math.min(1, dt * 8);
+      ph += dt * (5 + Math.min(6, sp) * 1.2);
+      const sw = Math.sin(ph) * 0.6 * mv;
+      if (legs.length) { legs[0].rotation.x = sw; legs[1].rotation.x = -sw; }
+      arms[0].sh.rotation.x = -sw * 0.8; arms[1].sh.rotation.x = s.it ? -0.5 + sw * 0.3 : sw * 0.8;
+      if (flameItem) flameItem.scale.y = 1 + Math.sin(tt * 18) * 0.15;
+    };
+    return { group: g, body, headG, mat: topM, anim };
+  };
+}
+function sktHat(h, hG, hs, top) {
+  const [k, c, c2] = h, M = (col, o) => sktM(col, o), glow = (col) => new THREE2.MeshBasicMaterial({ color: new THREE2.Color(col), toneMapped: false });
+  const B = (w, hh, d, m, x, y, z) => sktBox(w, hh, d, m, x, y, z, hG);
+  // penutup kepala terbuka di depan (wajah tetap terlihat)
+  const shell = (m, pad = 0.04) => { B(hs + pad * 2, pad + 0.03, hs + pad * 2, m, 0, top + pad / 2, 0); for (const sx of [-1, 1]) B(pad, hs + pad, hs + pad * 2, m, sx * (hs / 2 + pad / 2), pad / 2, 0); B(hs + pad * 2, hs + pad, pad, m, 0, pad / 2, hs * 0.46 + pad / 2); B(hs + pad * 2, 0.07, 0.025, m, 0, top - 0.03, -hs * 0.46 - 0.014); };
+  switch (k) {
+    case "toga": B(hs * 0.9, 0.08, hs * 0.85, M(c), 0, top + 0.04, 0); { const p = B(hs * 1.35, 0.03, hs * 1.35, M(c), 0, top + 0.1, 0); p.rotation.y = Math.PI / 4; } B(0.015, 0.2, 0.015, M(c2), hs * 0.5, top, -0.1); break;
+    case "peci": B(hs + 0.02, 0.13, hs * 0.94, M(c), 0, top + 0.06, 0); break;
+    case "turban": { const t1 = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * 0.62, hs * 0.6, 0.18, 16), M(c)); t1.position.y = top + 0.06; hG.add(t1); const t2 = new THREE2.Mesh(new THREE2.SphereGeometry(hs * 0.52, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), M(c)); t2.position.y = top + 0.12; hG.add(t2); B(0.1, hs * 0.9, 0.05, M(c), hs * 0.4, -0.02, hs * 0.45); break; }
+    case "hijab": { shell(M(c), 0.045); B(hs + 0.18, 0.26, hs + 0.12, M(c), 0, -hs / 2 - 0.07, 0.02); break; }
+    case "glasshelm": { const gh = new THREE2.Mesh(new THREE2.SphereGeometry(hs * 0.9, 18, 14), M(c, { transparent: true, opacity: 0.25, roughness: 0.05, metalness: 0.2 })); gh.position.y = 0.02; hG.add(gh); const ring = new THREE2.Mesh(new THREE2.TorusGeometry(hs * 0.62, 0.04, 8, 20), M("#cbd5e1")); ring.rotation.x = Math.PI / 2; ring.position.y = -hs / 2 - 0.05; hG.add(ring); break; }
+    case "antenna": for (const sx of [-1, 1]) { const a = sktCyl(0.012, 0.012, 0.26, M(c), sx * 0.12, top + 0.13, 0, hG, 6); a.rotation.z = -sx * 0.3; const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.035, 8, 6), M(c)); b.position.set(sx * 0.16, top + 0.27, 0); hG.add(b); } break;
+    case "antenna1": { sktCyl(0.012, 0.012, 0.2, M("#9ca3af"), 0, top + 0.1, 0, hG, 6); const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.035, 8, 6), glow(c)); b.position.set(0, top + 0.22, 0); hG.add(b); break; }
+    case "captain": B(hs * 0.98, 0.12, hs * 0.98, M(c), 0, top + 0.06, 0); B(hs * 0.98, 0.03, 0.16, M("#111827"), 0, top + 0.01, -hs / 2 - 0.06); B(0.08, 0.06, 0.01, glow(c2), 0, top + 0.07, -hs / 2 - 0.005); break;
+    case "hardhat": { const hh = new THREE2.Mesh(new THREE2.SphereGeometry(hs * 0.6, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), M(c)); hh.position.y = top - 0.04; hG.add(hh); B(hs * 1.2, 0.03, hs * 1.2, M(c), 0, top - 0.03, -0.03); break; }
+    case "crown": for (let i = 0; i < 5; i++) { const sp = new THREE2.Mesh(new THREE2.ConeGeometry(0.05, 0.14, 4), M(c, { metalness: 0.7, roughness: 0.3 })); sp.position.set(-0.16 + i * 0.08, top + 0.1, 0); hG.add(sp); } B(hs * 0.85, 0.06, hs * 0.85, M(c, { metalness: 0.7, roughness: 0.3 }), 0, top + 0.03, 0); break;
+    case "knight": { const km = M(c, { metalness: 0.7, roughness: 0.35 }); shell(km, 0.05); B(0.05, hs * 0.5, 0.03, km, 0, 0, -hs * 0.46 - 0.03); const pl = new THREE2.Mesh(new THREE2.SphereGeometry(0.08, 8, 6), M(c2)); pl.scale.y = 1.6; pl.position.set(0, top + 0.18, 0); hG.add(pl); break; }
+    case "kabuto": B(hs + 0.08, 0.16, hs + 0.06, M(c, { metalness: 0.4 }), 0, top + 0.03, 0.02); for (const sx of [-1, 1]) { const cr = B(0.04, 0.26, 0.02, M(c2, { metalness: 0.7 }), sx * 0.1, top + 0.2, -hs / 2); cr.rotation.z = -sx * 0.6; } B(hs + 0.12, 0.2, 0.06, M(c), 0, -0.06, hs / 2 + 0.03); break;
+    case "roman": B(hs + 0.06, 0.18, hs + 0.04, M(c, { metalness: 0.6, roughness: 0.35 }), 0, top + 0.02, 0.02); B(0.08, 0.16, hs + 0.1, M(c2), 0, top + 0.16, 0.02); for (const sx of [-1, 1]) B(0.04, hs * 0.6, 0.12, M(c, { metalness: 0.6 }), sx * (hs / 2 + 0.02), -0.04, -hs * 0.3); break;
+    case "viking": { const vh = new THREE2.Mesh(new THREE2.SphereGeometry(hs * 0.6, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), M(c, { metalness: 0.6, roughness: 0.4 })); vh.position.y = top - 0.06; hG.add(vh); for (const sx of [-1, 1]) { const hn = new THREE2.Mesh(new THREE2.ConeGeometry(0.05, 0.24, 8), M("#f5f0e1")); hn.position.set(sx * (hs / 2 + 0.06), top + 0.06, 0); hn.rotation.z = -sx * 1.0; hG.add(hn); } B(0.04, 0.16, 0.02, M(c, { metalness: 0.6 }), 0, 0.02, -hs / 2 - 0.02); break; }
+    case "hood": case "ninja": shell(M(c), 0.05); B(hs + 0.14, 0.2, hs + 0.1, M(c), 0, -hs / 2 - 0.05, 0.02); { const tp = new THREE2.Mesh(new THREE2.ConeGeometry(0.14, 0.2, 4), M(c)); tp.position.set(0, top + 0.12, 0.08); tp.rotation.x = 0.4; hG.add(tp); } hG.userData.hood = true; break;
+    case "general": B(hs * 1.02, 0.14, hs * 1.02, M(c), 0, top + 0.07, 0); B(hs * 0.98, 0.03, 0.16, M("#111827"), 0, top + 0.01, -hs / 2 - 0.06); { const st = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.04), glow(c2)); st.position.set(0, top + 0.08, -hs / 2 - 0.02); hG.add(st); } break;
+    case "bone": { const bn = sktBox(0.3, 0.04, 0.04, M(c), 0, top + 0.07, 0, hG); bn.rotation.z = 0.3; for (const sx of [-1, 1]) { const k2 = new THREE2.Mesh(new THREE2.SphereGeometry(0.035, 6, 5), M(c)); k2.position.set(sx * 0.15, top + 0.07 + sx * 0.045, 0); hG.add(k2); } break; }
+    case "tusk": B(hs + 0.06, 0.14, hs + 0.04, M(c), 0, top + 0.03, 0.01); for (const sx of [-1, 1]) { const tk = new THREE2.Mesh(new THREE2.ConeGeometry(0.04, 0.3, 8), M(c2)); tk.position.set(sx * (hs / 2 + 0.06), top + 0.1, -0.02); tk.rotation.z = -sx * 0.9; hG.add(tk); } break;
+    case "headband": B(hs + 0.03, 0.06, hs * 0.94, M(c), 0, top - 0.1, 0); B(0.05, 0.14, 0.03, M(c), hs * 0.42, top - 0.16, hs * 0.48); break;
+    case "dino": { shell(M(c), 0.05); const sn = B(hs * 0.8, 0.12, 0.2, M(c), 0, top - 0.02, -hs / 2 - 0.1); void sn; for (const sx of [-1, 1]) { const ey = new THREE2.Mesh(new THREE2.SphereGeometry(0.035, 8, 6), M("#ffffff")); ey.position.set(sx * 0.12, top + 0.1, -hs / 2 - 0.06); hG.add(ey); } for (let i = 0; i < 4; i++) { const sp = new THREE2.Mesh(new THREE2.ConeGeometry(0.04, 0.1, 4), M("#86efac")); sp.position.set(0, top + 0.27 - i * 0.03, -0.12 + i * 0.1); hG.add(sp); } break; }
+    case "feathers": B(hs + 0.03, 0.06, hs * 0.94, M(c), 0, top - 0.1, 0); ["#ef4444", "#facc15", "#3b82f6", "#22c55e"].forEach((fc, i) => { const f = new THREE2.Mesh(new THREE2.ConeGeometry(0.03, 0.28, 4), M(fc)); f.position.set(-0.06 + i * 0.04, top + 0.06, hs * 0.38); f.rotation.z = (i - 1.5) * 0.15; hG.add(f); }); break;
+    case "safari": case "ranger": B(hs * 0.98, 0.14, hs * 0.98, M(c), 0, top + 0.06, 0); { const br2 = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * (k === "ranger" ? 0.95 : 0.85), hs * (k === "ranger" ? 0.95 : 0.85), 0.02, 20), M(c)); br2.position.y = top; hG.add(br2); } B(hs * 0.99, 0.03, hs * 0.99, M("#3b2a1a"), 0, top + 0.02, 0); break;
+    case "goggles": B(hs + 0.04, 0.05, hs * 0.94, M("#3b2a1a"), 0, top - 0.02, 0); for (const sx of [-1, 1]) { const gg = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.06, 0.05, 12), M(c, { transparent: true, opacity: 0.85, emissive: new THREE2.Color(c), emissiveIntensity: 0.4 })); gg.rotation.x = Math.PI / 2; gg.position.set(sx * 0.1, top + 0.03, -hs / 2 + 0.02); hG.add(gg); } break;
+    case "headphone": { const hb = new THREE2.Mesh(new THREE2.TorusGeometry(hs * 0.56, 0.025, 6, 16, Math.PI), M(c)); hb.position.y = 0.02; hG.add(hb); for (const sx of [-1, 1]) B(0.07, 0.14, 0.14, M(c), sx * (hs / 2 + 0.04), 0.0, 0); break; }
+    case "headset": { const hb = new THREE2.Mesh(new THREE2.TorusGeometry(hs * 0.56, 0.02, 6, 16, Math.PI), M(c)); hb.position.y = 0.02; hG.add(hb); for (const sx of [-1, 1]) B(0.06, 0.11, 0.11, M(c), sx * (hs / 2 + 0.03), 0.0, 0); const mic = B(0.02, 0.02, 0.18, M("#111827"), hs / 2 + 0.01, -0.08, -hs * 0.3); void mic; break; }
+    case "mecha": B(hs + 0.08, hs + 0.06, hs + 0.06, M(c, { metalness: 0.4 }), 0, 0.03, 0.03); B(hs * 0.82, 0.12, 0.02, glow("#67e8f9"), 0, 0.02, -hs / 2 - 0.035); { const fin = B(0.04, 0.16, 0.2, M(c), 0, top + 0.1, 0); void fin; } break;
+    case "tiara": B(hs * 0.9, 0.04, 0.02, M("#e5e7eb", { metalness: 0.8 }), 0, top - 0.04, -hs / 2 - 0.01); { const gem = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.035), glow(c)); gem.position.set(0, top, -hs / 2 - 0.02); hG.add(gem); } break;
+    case "cap": B(hs * 0.98, 0.12, hs * 0.98, M(c), 0, top + 0.05, 0); B(hs * 0.9, 0.025, 0.18, M(c), 0, top, -hs / 2 - 0.08); break;
+    case "wizard": { const wz = new THREE2.Mesh(new THREE2.ConeGeometry(hs * 0.55, 0.55, 12), M(c)); wz.position.set(0, top + 0.27, 0); wz.rotation.z = 0.15; hG.add(wz); const br3 = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * 0.85, hs * 0.85, 0.03, 18), M(c)); br3.position.y = top; hG.add(br3); for (let i = 0; i < 3; i++) { const st = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.025), glow(c2)); st.position.set(Math.cos(i * 2) * 0.1, top + 0.15 + i * 0.1, -0.12 + i * 0.02); hG.add(st); } break; }
+    case "elfcrown": B(hs * 0.96, 0.05, hs * 0.94, M(c, { metalness: 0.7 }), 0, top - 0.04, 0); { const gem = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.04), glow(c2)); gem.position.set(0, top + 0.02, -hs / 2 - 0.01); hG.add(gem); } break;
+    case "miner": { const mh = new THREE2.Mesh(new THREE2.SphereGeometry(hs * 0.6, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), M(c)); mh.position.y = top - 0.05; hG.add(mh); const lamp = sktCyl(0.05, 0.05, 0.05, glow("#fef9c3"), 0, top + 0.06, -hs / 2 - 0.01, hG, 10); lamp.rotation.x = Math.PI / 2; break; }
+    case "dragon": shell(M(c, { metalness: 0.4 }), 0.05); for (const sx of [-1, 1]) { const hn = new THREE2.Mesh(new THREE2.ConeGeometry(0.05, 0.3, 6), M(c2, { metalness: 0.7 })); hn.position.set(sx * 0.18, top + 0.14, 0.02); hn.rotation.z = -sx * 0.5; hG.add(hn); } break;
+    case "flowers": ["#f472b6", "#facc15", "#a78bfa", "#fb7185", "#34d399"].forEach((fc, i) => { const f = new THREE2.Mesh(new THREE2.SphereGeometry(0.04, 8, 6), M(fc)); f.position.set(-0.16 + i * 0.08, top + 0.03, -0.02); hG.add(f); }); break;
+    case "beret": { const bt = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * 0.62, hs * 0.55, 0.1, 16), M(c)); bt.position.set(0.03, top + 0.04, 0); bt.rotation.z = -0.15; hG.add(bt); break; }
+    case "blangkon": { B(hs + 0.04, 0.16, hs + 0.02, M(c), 0, top + 0.0, 0.01); const mb = new THREE2.Mesh(new THREE2.SphereGeometry(0.08, 8, 6), M(c)); mb.position.set(0, top - 0.05, hs / 2 + 0.06); hG.add(mb); break; }
+    case "hairflower": { const f = new THREE2.Mesh(new THREE2.SphereGeometry(0.05, 8, 6), M(c)); f.position.set(0.12, top + 0.06, 0.08); hG.add(f); break; }
+    case "bucket": { const bk = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * 0.5, hs * 0.58, 0.14, 16), M(c)); bk.position.y = top + 0.04; hG.add(bk); const brm = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * 0.8, hs * 0.8, 0.02, 18), M(c)); brm.position.y = top - 0.02; hG.add(brm); break; }
+    case "caping": { const cp = new THREE2.Mesh(new THREE2.ConeGeometry(hs * 1.3, 0.28, 18), M(c)); cp.position.y = top + 0.1; hG.add(cp); break; }
+    default: break;
+  }
+}
+// daftarkan ke sistem skin bawaan
+SKT.forEach((s) => {
+  SKINS.push({ id: s.id, name: s.nm, desc: s.ds, tag: s.tema.toUpperCase(), kat: true, tema: s.tema, no: s.n });
+  SKIN_IDS.push(s.id);
+  SKIN_BUILD[s.id] = sktBuild(s);
+});
+// kepemilikan skin katalog (per nama pemain)
+function sktOwned(id) { const q = Q(); return !!(q.skinKat && q.skinKat[id]); }
+function sktGrant(ids, silent) {
+  const q = Q(); q.skinKat = q.skinKat || {}; const fresh = [];
+  for (const id of ids) if (SKT_BY[id] && !q.skinKat[id]) { q.skinKat[id] = Date.now(); fresh.push(id); }
+  if (fresh.length) { saveQ(); if (!silent) toast(`👕 Skin baru: ${fresh.map((id) => SKT_BY[id].nm).join(", ")}! Lihat di Lemari Skin.`, 5000); }
+  return fresh;
+}
+// skin katalog di tubuh NPC (wajah menghadap +z seperti NPC lain)
+function sktOnNpc(n, id) {
+  const s = SKIN_BUILD[id]("#ffffff");
+  s.headG.position.y = 1.5; s.group.rotation.y = Math.PI;
+  n.rig.visible = false; n.g.add(s.group);
+  s.group.traverse((o) => { if (o.isMesh) { o.userData.act = { type: "npc", id: n.id }; } });
+  world.interact.push(s.group);
+  n.skinAnim = s.anim;
+  XT.anim.push(() => { if (n.g.visible) s.anim(t); });
+  return s;
+}
+
+// ---------- LEMARI SKIN baru: pencarian + carousel 4 kartu ----------
+var SKL = { page: 0, q: "", f: "all" };
+function sktVisible() {
+  const open = skinsUnlocked(), bc = typeof hasBlackCard === "function" && hasBlackCard();
+  const out = [];
+  for (const sk of SKINS) {
+    if (sk.kat) {
+      const own = sktOwned(sk.id), portal = !!SKT_PORTAL[sk.id];
+      if (!own && !(portal && bc)) continue;      // skin katalog lain disembunyikan
+      out.push({ sk, locked: !own, hint: portal ? `🔒 Dapatkan di ${SKT_PORTAL[sk.id]} (Portal Ring 1)` : "🔒 Terkunci", grp: portal ? "portal" : "kat" });
+    } else {
+      const locked = sk.id === "trooper" ? !Q().skinTim : sk.id !== "default" && !open;
+      if (sk.id === "trooper" && locked) continue;
+      out.push({ sk, locked, hint: sk.id === "trooper" ? "🔒 Hadiah Kerjasama Tim" : "🔒 Taklukkan 4 lorong rahasia", grp: "ex" });
+    }
+  }
+  return out;
+}
+function openSkinsV2() {
+  hidePopups();
+  const cur = mySkin();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👕 Lemari Skin</h2>
+  <p class="skl-sub">Pilih tampilan avatarmu — terlihat oleh semua pemain. Skin baru terbuka lewat tantangan.</p>
+  <div class="skl-bar"><input id="sklQ" type="search" placeholder="🔍 Cari skin, tema…" autocomplete="off"><div class="skl-f" id="sklF"></div></div>
+  <div class="skl-wrap"><button class="skl-nav" id="sklPrev" aria-label="Sebelumnya">‹</button><div class="skl-track" id="sklT"></div><button class="skl-nav" id="sklNext" aria-label="Berikutnya">›</button></div>
+  <div class="skl-dots" id="sklD"></div>`);
+  $("genCard").classList.add("wide");
+  const fs = [["all", "Semua"], ["ex", "Eksklusif"]];
+  if (sktVisible().some((v) => v.grp === "portal")) fs.push(["portal", "◆ Portal Ring 1"]);
+  if (sktVisible().some((v) => v.grp === "kat")) fs.push(["kat", "Katalog"]);
+  $("sklF").innerHTML = fs.map(([k, l]) => `<button data-f="${k}" class="${SKL.f === k ? "on" : ""}">${l}</button>`).join("");
+  $("sklF").querySelectorAll("button").forEach((b) => b.onclick = () => { SKL.f = b.dataset.f; SKL.page = 0; openSkinsV2(); });
+  const qi = $("sklQ"); qi.value = SKL.q;
+  qi.oninput = () => { SKL.q = qi.value; SKL.page = 0; draw(); };
+  const draw = () => {
+    const qq = norm(SKL.q).trim();
+    let list = sktVisible().filter((v) => SKL.f === "all" || v.grp === SKL.f);
+    if (qq) list = list.filter((v) => norm(`${v.sk.name} ${v.sk.tag} ${v.sk.desc} ${v.sk.tema || ""} ${v.sk.id}`).includes(qq));
+    const pages = Math.max(1, Math.ceil(list.length / 4));
+    SKL.page = Math.max(0, Math.min(pages - 1, SKL.page));
+    const T = $("sklT"); T.innerHTML = "";
+    if (!list.length) T.innerHTML = `<p class="skl-empty">Tidak ada skin yang cocok.</p>`;
+    for (const v of list.slice(SKL.page * 4, SKL.page * 4 + 4)) {
+      const sk = v.sk, d = document.createElement("div");
+      d.className = "skin skl-c" + (sk.id === cur ? " on" : "") + (v.locked ? " locked" : "");
+      const im = document.createElement("img"); im.alt = sk.name; im.loading = "lazy";
+      if (sk.kat) im.src = `assets/skins/${sk.id}.jpg`; else { try { im.src = skinPreview(sk.id); } catch { /* pratinjau opsional */ } }
+      const tg = document.createElement("span"); tg.className = "stag"; tg.textContent = v.locked ? "🔒 TERKUNCI" : sk.tag;
+      const h = document.createElement("b"); h.textContent = sk.name;
+      const p = document.createElement("p"); p.textContent = v.locked ? v.hint : sk.desc;
+      const btn = document.createElement("button");
+      btn.className = sk.id === cur ? "btn sec" : "btn";
+      btn.textContent = v.locked ? "Terkunci" : sk.id === cur ? "Dipakai" : "Pakai";
+      btn.disabled = v.locked || sk.id === cur || !!(typeof PR !== "undefined" && PR.forceSkin) || !!(typeof TIM !== "undefined" && TIM.forceSkin);
+      btn.onclick = () => { S.skin = sk.id; saveS(); applySkin(avatar, mySkin(), S.color); if (typeof mpPresence === "function") mpPresence(true); spawnSparkle(); if (typeof mpFx === "function") mpFx(); toast(`Skin “${sk.name}” dipakai ✨`); openSkins(); };
+      d.append(im, tg, h, p, btn); T.appendChild(d);
+    }
+    $("sklD").innerHTML = pages > 1 ? Array.from({ length: pages }, (_, i) => `<i class="${i === SKL.page ? "on" : ""}" data-p="${i}"></i>`).join("") + `<span>${SKL.page + 1}/${pages}</span>` : "";
+    $("sklD").querySelectorAll("i").forEach((el) => el.onclick = () => { SKL.page = +el.dataset.p; draw(); });
+    $("sklPrev").disabled = SKL.page <= 0; $("sklNext").disabled = SKL.page >= pages - 1;
+  };
+  $("sklPrev").onclick = () => { SKL.page--; draw(); };
+  $("sklNext").onclick = () => { SKL.page++; draw(); };
+  let sx0 = null;
+  $("sklT").addEventListener("touchstart", (e) => { sx0 = e.touches[0].clientX; }, { passive: true });
+  $("sklT").addEventListener("touchend", (e) => { if (sx0 === null) return; const dx = e.changedTouches[0].clientX - sx0; sx0 = null; if (Math.abs(dx) > 40) { SKL.page += dx < 0 ? 1 : -1; draw(); } });
+  draw();
+  if (typeof PR !== "undefined" && PR.forceSkin) toast("Di Lembah Purba kamu memakai skin tantangan — Lemari Skin bisa dipakai lagi setelah keluar.", 4000);
+}
+
+
+// =====================================================================
+// src/ext_npcdir.js — DAFTAR NPC (kunjungi cepat) + kode cepat tahap 8
+//  • Setiap NPC yang pernah diajak bicara tercatat. NPC tersembunyi/rahasia
+//    (Kang Santo, Teh Fety, Teh Puspa, …) baru muncul di daftar setelah
+//    ditemui. Panel: pencarian, kelompok, kartu NPC, tombol Kunjungi
+//    (langsung ke NPC, termasuk yang ada di dalam area tantangan).
+//  • Kang Aftaf menerima kode tahap 8 (diverifikasi server).
+// =====================================================================
+var ND_GROUPS = [
+  ["sambut", "🏛 Penyambut & Pemandu Lab", ["tia", "kuri", "vir", "keris", "git", "se", "csn"]],
+  ["mart", "☕ IT-Mart & Kafe", ["rahman", "sit", "ivy", "jejen", "bayu", "aftaf", "nan", "haryani"]],
+  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azka"]],
+  ["lencana", "🏅 Pemberi Lencana & Hadiah", ["tama", "fety", "puspa", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "dewi", "eko"]]
+];
+var ND = { q: "", g: "all" };
+function ndMet() { const q = Q(); q.npcMet = q.npcMet || {}; return q.npcMet; }
+function ndMark(id) {
+  if (!id || !NPCS[id]) return;
+  const m = ndMet();
+  if (!m[id]) { m[id] = Date.now(); saveQ(); }
+}
+// pemain lama: anggap sudah bertemu NPC yang tak mungkin terlewat dalam progresnya
+function ndSeed() {
+  const q = chMigrate(), b = q.badges || {}, add = [];
+  if (q.card) add.push("tama", "se");
+  if (b.dasar) add.push("fety", "nan");
+  if (b.umum) add.push("puspa", "ivy");
+  if (b.iot) add.push("hendri", "erwin", "haryani");
+  if (b.jari) add.push("safar", "berlin", "sugiarti");
+  if (b.coding) add.push("sahid", "gibhta", "hartono");
+  if (b.islam) add.push("fitrah", "freza", "mila");
+  if (b.tim) add.push("dewi", "eko", "bayu");
+  const m = ndMet(); let ch = false;
+  for (const id of add) if (NPCS[id] && !m[id]) { m[id] = 1; ch = true; }
+  if (ch) saveQ();
+}
+function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
+function ndGroupOf(id) { for (const [k, , ids] of ND_GROUPS) if (ids.includes(id)) return k; return "lain"; }
+var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)" };
+function ndWhere(n) { const r = n.custom && n.custom.room || n.room; return ND_ZONE_NAME[r] || (ROOMS[r] && ROOMS[r].name) || (XROOMS[r] && (XROOMS[r].short || XROOMS[r].name)) || ""; }
+function openNpcDir() {
+  hidePopups(); ndSeed();
+  const all = Object.values(NPCS), shown = all.filter(ndListed), hiddenN = all.length - shown.length;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👥 Daftar NPC</h2>
+  <p class="skl-sub">Kunjungi cepat NPC yang sudah kamu kenal. <span class="nd-cnt">${shown.length} dikenal${hiddenN ? ` · ${hiddenN} masih misterius` : ""}</span></p>
+  <div class="skl-bar"><input id="ndQ" type="search" placeholder="🔍 Cari nama, peran, tempat…" autocomplete="off"><div class="skl-f" id="ndF"></div></div>
+  <div class="nd-list" id="ndL"></div>`);
+  $("genCard").classList.add("wide");
+  const fs = [["all", "Semua"]].concat(ND_GROUPS.map(([k, l]) => [k, l]), [["lain", "Lainnya"]]);
+  $("ndF").innerHTML = fs.map(([k, l]) => `<button data-g="${k}" class="${ND.g === k ? "on" : ""}">${l}</button>`).join("");
+  $("ndF").querySelectorAll("button").forEach((b) => b.onclick = () => { ND.g = b.dataset.g; $("ndF").querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); draw(); });
+  const qi = $("ndQ"); qi.value = ND.q; qi.oninput = () => { ND.q = qi.value; draw(); };
+  const draw = () => {
+    const L = $("ndL"); L.innerHTML = "";
+    const qq = norm(ND.q).trim();
+    const groups = ND_GROUPS.map(([k, l]) => [k, l]).concat([["lain", "✨ Lainnya"]]);
+    let any = false;
+    for (const [gk, gl] of groups) {
+      if (ND.g !== "all" && ND.g !== gk) continue;
+      const mem = all.filter((n) => ndGroupOf(n.id) === gk);
+      const vis = mem.filter((n) => ndListed(n) && (!qq || norm(`${n.name} ${n.role} ${ndWhere(n)}`).includes(qq)));
+      const mystery = qq ? 0 : mem.length - mem.filter(ndListed).length;
+      if (!vis.length && !mystery) continue;
+      any = true;
+      const sec = document.createElement("div"); sec.className = "nd-sec";
+      sec.innerHTML = `<h4>${gl}</h4><div class="nd-grid"></div>`;
+      const G = sec.querySelector(".nd-grid");
+      for (const n of vis) {
+        const c = document.createElement("div"); c.className = "nd-card"; c.style.setProperty("--nc", n.col || "#7c3aed");
+        const ic = (n.custom && n.custom.icon) || (n.kind === "robot" ? "🤖" : "🙂");
+        c.innerHTML = `<div class="nd-ic"></div><div class="nd-tx"><b></b><small class="nd-role"></small><small class="nd-where"></small></div><button class="btn nd-go">Kunjungi</button>`;
+        c.querySelector(".nd-ic").textContent = ic; c.querySelector("b").textContent = n.name;
+        c.querySelector(".nd-role").textContent = n.role || ""; c.querySelector(".nd-where").textContent = "📍 " + (ndWhere(n) || "Galeri");
+        c.querySelector(".nd-go").onclick = () => { closeGen(); npcVisit(n.id); };
+        G.appendChild(c);
+      }
+      for (let i = 0; i < mystery; i++) { const c = document.createElement("div"); c.className = "nd-card mys"; c.innerHTML = `<div class="nd-ic">❔</div><div class="nd-tx"><b>???</b><small class="nd-role">Belum ditemui</small></div>`; G.appendChild(c); }
+      L.appendChild(sec);
+    }
+    if (!any) L.innerHTML = `<p class="skl-empty">Tidak ada NPC yang cocok.</p>`;
+  };
+  draw();
+}
+// persiapan area tantangan agar penjaga area tidak memulangkan pemain
+function ndZonePrep(room, n) {
+  const now = performance.now(), msg = `👋 Berkunjung ke ${n.name}. Tekan tombol keluar di panel ini untuk kembali.`;
+  try {
+    if (room === "cave") { CV.on = true; cvReset(); CV.won = true; cvSetWon(); CV.grace = now + 3500; cvHud(true); cvHudUpd(msg, null); return true; }
+    if (room === "hangar") { IO.liftOk = true; IO.liftName = S.name; IO.on = true; ioReset(); IO.won = true; IO.babak = 4; IO.grace = now + 3500; ioHud(true); ioHudUpd(msg, null); return true; }
+    if (room === "k_final") { KW.ok = true; KW.okName = S.name; KW.on = true; kwReset(); KW.won = true; KW.stage = 5; KW.grace = now + 3500; kwHud(true); kwHudUpd(msg, null); return true; }
+    if (room === "s_final") { SV.ok = true; SV.okName = S.name; SV.on = true; svReset(); SV.won = true; SV.stage = 7; SV.grace = now + 3500; svHud(true); svHudUpd(msg, null); return true; }
+    if (room === "d_lembah") { isReset(); IS.on = true; IS.won = true; IS.babak = 5; if (typeof ISD !== "undefined") { if (ISD.barrier3) ISD.barrier3.off = true; if (ISD.barrier4) ISD.barrier4.off = true; } IS.grace = now + 3500; isHud(true); isHudUpd(msg, null); return true; }
+    if (room === "t_aula") { TIM.aula = true; TIM.grace = now + 3500; return true; }
+    if (room === "p_valley" && typeof prVisitPrep === "function") { prVisitPrep(); return true; }
+  } catch (e) { console.error("persiapan kunjungan gagal:", e); }
+  return false;
+}
+function npcVisit(id) {
+  const n = NPCS[id]; if (!n) return;
+  if (id === "mila" && n.g && !n.g.visible) { toast("Teh Mila baru muncul di samping Sudut Al-Qur'an bagi pemegang Lencana Pengetahuan Coding."); return; }
+  const room = (n.custom && n.custom.room) || n.room;
+  const gx = n.g ? n.g.position.x : n.x, gz = n.g ? n.g.position.z : n.z;
+  const ry = n.g ? n.g.rotation.y : 0;
+  let x = gx + Math.sin(ry) * 2.2, z = gz + Math.cos(ry) * 2.2;
+  if (id === "tia") { x = gx; z = gz + 2.4; }
+  const yaw = Math.atan2(-(gx - x), -(gz - z));
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  setTimeout(() => {
+    ndZonePrep(room, n);
+    xTeleport(x, z, yaw);
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => { if (id === "ritzkal") ritzkalSay(); else openNpc(id, "chat"); }, 1300);
+  }, 450);
+}
+
+// ---------- kode cepat tahap 8 (Kang Aftaf) — diverifikasi server ----------
+var AFTAF_CODE = "19nm86q";
+function aftafCheat(npcId, q) {
+  if (npcId !== "aftaf") return null;
+  const w = String(q || "").trim().toLowerCase();
+  if (!w || w.length > 40 || /\s/.test(w)) return null;
+  let h = 2166136261; for (const ch of "itlab8|" + w) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  if (h.toString(36) !== AFTAF_CODE) return null;
+  const qs = chMigrate();
+  if (!TIM_SIX.every((id) => qs.badges[id]) || !qs.card || !qs.card.no) return null;
+  const later = (async () => {
+    try { await capSync(); } catch { /* lanjut */ }
+    let j = null;
+    try { j = await xcPost("api/kartu/kode", { no: qs.card.no, tok: qs.card.tok, id: "tim", kode: w }); } catch { j = null; }
+    if (!j || !j.ok) return { text: "Hmm… sepertinya belum saatnya. Ngopi dulu yuk ☕" };
+    const q2 = chMigrate(), now = Date.now(), fresh = !q2.badges.tim;
+    if (!q2.chal.tim) q2.chal.tim = { t: now, best: 0, kode: true, srv: true };
+    q2.badges.tim = q2.badges.tim || { t: now, srv: true };
+    if (j.hadiah && j.hadiah.trooper) q2.skinTim = j.hadiah.trooper;
+    saveQ(); capPresDirty();
+    if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle();
+    setTimeout(() => {
+      const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+      setTimeout(() => {
+        TIM.aula = true; TIM.grace = performance.now() + 3500;
+        const Z = TIM_Z.t_aula; xTeleport((Z.x0 + Z.x1) / 2, Z.z1 - 3.2, 0);
+        setTimeout(() => f.remove(), 900);
+        setTimeout(() => { if (fresh) badgeReveal("tim", true); else openNpc("dewi", "chat"); }, 1500);
+        setTimeout(() => toast("🪖 Skin Tentara Futuristik terbuka! Pakai dari Lemari Skin.", 6000), 3200);
+      }, 650);
+    }, 1400);
+    return { text: `☕🔓 Wah, ${S.name}! Tantangan Kerjasama Tim dinyatakan tuntas. Habiskan kopinya… aku antar kamu ke Aula Kerjasama — Teh Dewi & Kang Eko sudah menunggu, lalu temui Kang Santo untuk Black Card-mu.` };
+  })();
+  return { text: "Sebentar, kuperiksa dulu… ☕", later };
+}
+
+
+// =====================================================================
+// src/ext_purba.js — PORTAL RING 1 · LEMBAH PURBA
+//  • Kang Ritzkal membuka Portal Ring 1 bagi pemegang Black Card. Di gerbang
+//    pemain memilih skin Flinstone atau Indian (keduanya masuk koleksi).
+//  • Tantangan 1 · POHON PURBA (Jurassic Tree, 80 m): balapan memanjat
+//    melawan Andrian (skin Pelukis Gua). Pijakan: tanjakan dahan, jamur,
+//    celah, kulit kayu lapuk, daun pengangkat. Jatuh > 4 m → nyawa −1.
+//    3 batu prasasti (±20, 45, 65 m): soal persamaan, pertidaksamaan,
+//    integral (pilihan ganda, dibangkitkan acak). Salah → nyawa −1.
+//    Andrian ikut berhenti saat pemain menjawab. Puncak → Batu Kuning.
+//  • Tantangan 2 · RAPTOR RUN: lari otomatis 3 jalur menunggang raptor
+//    melawan Azka (skin Raptor). Rintangan kecil = melambat, besar = nyawa
+//    −1. Booster ⚡ kecepatan & 🛡 perisai (Azka juga bisa mengambil).
+//    Menang → Batu Hijau, salam penghormatan Andrian & Azka.
+//  • Batu Portal (9 slot) tampil di Capaian bagi pemegang Black Card.
+// =====================================================================
+var PR_Z = { p_valley: { x0: 380, x1: 560, z0: -112, z1: 92, h: 120, name: "Lembah Purba · Portal Ring 1", short: "Lembah Purba" } };
+Object.assign(XROOMS, PR_Z);
+var PRV = PR_Z.p_valley;
+var prZone = (x, z) => x > PRV.x0 && x < PRV.x1 && z > PRV.z0 && z < PRV.z1;
+var PR_TC = { x: 470, z: -20 };
+var PR_SPAWN = { x: 470, z: 80, yaw: 0 };
+var PR_EXIT = { x: 481, z: 86 };
+var PR_LIVES = 3;
+var PR = { on: false, grace: 0, forceSkin: null, lock: false, own: null, ownW: null, hidden: null, fogged: false, prevSkin: null, arrive: null };
+var BATU = [
+  { id: "kuning", nama: "Batu Kuning", c: "#facc15", c2: "#a16207", dari: "Pohon Purba" },
+  { id: "hijau", nama: "Batu Hijau", c: "#22c55e", c2: "#14532d", dari: "Raptor Run" },
+  { id: "merah", nama: "Batu Merah", c: "#ef4444", c2: "#7f1d1d" },
+  { id: "birutua", nama: "Batu Biru Tua", c: "#1d4ed8", c2: "#172554" },
+  { id: "oranye", nama: "Batu Oranye", c: "#f97316", c2: "#7c2d12" },
+  { id: "ungu", nama: "Batu Ungu", c: "#a855f7", c2: "#3b0764" },
+  { id: "birulangit", nama: "Batu Biru Langit", c: "#38bdf8", c2: "#0c4a6e" },
+  { id: "putih", nama: "Batu Putih", c: "#f8fafc", c2: "#94a3b8" },
+  { id: "hitam", nama: "Batu Hitam", c: "#27272a", c2: "#000000" }
+];
+var batuQ = () => { const q = chMigrate(); q.batu = q.batu || {}; return q.batu; };
+
+// ---------- suara lembah (Web Audio sendiri) ----------
+var PRS = (() => {
+  let ac = null, out = null, wind = null, nb = null, nextChirp = 0, nextRoar = 0;
+  const ctx = () => { if (!ac) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ac = new AC(); out = ac.createGain(); out.gain.value = 0.7; out.connect(ac.destination); } if (ac.state === "suspended") ac.resume().catch(() => {}); return ac; };
+  const noise = () => { if (nb) return nb; nb = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate); const d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return nb; };
+  const chirp = () => { const now = ac.currentTime, f0 = 1800 + Math.random() * 2200; for (let i = 0; i < 2 + Math.floor(Math.random() * 3); i++) { const o = ac.createOscillator(), g = ac.createGain(), s = now + i * 0.13; o.type = "sine"; o.frequency.setValueAtTime(f0, s); o.frequency.exponentialRampToValueAtTime(f0 * (0.6 + Math.random() * 0.8), s + 0.09); g.gain.setValueAtTime(0.0001, s); g.gain.exponentialRampToValueAtTime(0.05, s + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, s + 0.11); o.connect(g); g.connect(out); o.start(s); o.stop(s + 0.12); } };
+  const roar = () => { const now = ac.currentTime, o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain(); o.type = "sawtooth"; o.frequency.setValueAtTime(95, now); o.frequency.linearRampToValueAtTime(60, now + 1.6); f.type = "lowpass"; f.frequency.value = 380; g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.16, now + 0.3); g.gain.exponentialRampToValueAtTime(0.0001, now + 1.8); o.connect(f); f.connect(g); g.connect(out); o.start(now); o.stop(now + 1.9); };
+  return {
+    tick(on) {
+      if (!on) { if (wind) { wind.g.gain.setTargetAtTime(0, ac.currentTime, 0.5); } return; }
+      if (!ctx()) return;
+      if (!wind) { const src = ac.createBufferSource(); src.buffer = noise(); src.loop = true; const f = ac.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 420; f.Q.value = 0.7; const g = ac.createGain(); g.gain.value = 0; src.connect(f); f.connect(g); g.connect(out); src.start(); wind = { g, f }; }
+      wind.g.gain.setTargetAtTime(0.09 + Math.min(0.12, (P.jy || 0) / 600), ac.currentTime, 0.6);
+      const now = ac.currentTime;
+      if (now > nextChirp) { chirp(); nextChirp = now + 1.5 + Math.random() * 4; }
+      if (now > nextRoar) { if (nextRoar) roar(); nextRoar = now + 18 + Math.random() * 25; }
+    },
+    thump(v) { if (!ctx()) return; const now = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = "sine"; o.frequency.setValueAtTime(70, now); o.frequency.exponentialRampToValueAtTime(40, now + 0.12); g.gain.setValueAtTime(v || 0.12, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.15); o.connect(g); g.connect(out); o.start(now); o.stop(now + 0.16); },
+    boost() { if (!ctx()) return; const now = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = "triangle"; o.frequency.setValueAtTime(400, now); o.frequency.exponentialRampToValueAtTime(1400, now + 0.35); g.gain.setValueAtTime(0.12, now); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.4); o.connect(g); g.connect(out); o.start(now); o.stop(now + 0.42); },
+    roar() { if (ctx()) roar(); }
+  };
+})();
+
+// ---------- tekstur & bahan ----------
+function prTex(w, h, fn, rep) { const c = mkCanvas(w, h); fn(c.getContext("2d"), w, h); return xTex(c, rep); }
+function prBark(rep) { return prTex(256, 256, (x, w, h) => { const R = rndGen(77); x.fillStyle = "#5b3a1e"; x.fillRect(0, 0, w, h); for (let i = 0; i < 70; i++) { x.strokeStyle = `rgba(${R() < 0.5 ? "30,18,8" : "120,84,50"},${0.35 + R() * 0.4})`; x.lineWidth = 2 + R() * 5; x.beginPath(); const xx = R() * w; x.moveTo(xx, 0); x.bezierCurveTo(xx + (R() - 0.5) * 30, h * 0.3, xx + (R() - 0.5) * 30, h * 0.7, xx + (R() - 0.5) * 20, h); x.stroke(); } for (let i = 0; i < 30; i++) { x.fillStyle = `rgba(74,124,58,${0.25 + R() * 0.3})`; x.beginPath(); x.ellipse(R() * w, R() * h, 4 + R() * 12, 2 + R() * 6, 0, 0, 7); x.fill(); } }, rep); }
+function prGrass(rep) { return prTex(256, 256, (x, w, h) => { const R = rndGen(5); x.fillStyle = "#5f7d36"; x.fillRect(0, 0, w, h); for (let i = 0; i < 2600; i++) { x.fillStyle = `rgba(${R() < 0.5 ? "40,70,20" : "140,170,70"},${R() * 0.35})`; x.fillRect(R() * w, R() * h, 2, 3 + R() * 4); } for (let i = 0; i < 12; i++) { x.fillStyle = "rgba(120,90,50,.25)"; x.beginPath(); x.ellipse(R() * w, R() * h, 10 + R() * 26, 6 + R() * 14, R() * 3, 0, 7); x.fill(); } }, rep); }
+function prDirt(rep) { return prTex(256, 256, (x, w, h) => { const R = rndGen(9); x.fillStyle = "#a9794b"; x.fillRect(0, 0, w, h); for (let i = 0; i < 1800; i++) { x.fillStyle = `rgba(${R() < 0.5 ? "90,60,30" : "210,170,120"},${R() * 0.35})`; x.fillRect(R() * w, R() * h, 2 + R() * 3, 2 + R() * 3); } x.fillStyle = "rgba(255,240,200,.55)"; for (const lx of [w / 3, (2 * w) / 3]) for (let y = 0; y < h; y += 32) x.fillRect(lx - 2, y, 4, 18); }, rep); }
+function prSign(text, sub, col, w = 5) { return xPlane(l2Canvas(1200, 260, (x, W, H) => { x.fillStyle = "rgba(30,18,6,.9)"; rr(x, 0, 0, W, H, 28); x.fill(); x.strokeStyle = col || "#facc15"; x.lineWidth = 8; rr(x, 6, 6, W - 12, H - 12, 24); x.stroke(); x.textAlign = "center"; x.fillStyle = "#fff7ed"; x.font = `900 80px ${FONT}`; x.fillText(text, W / 2, 116); x.fillStyle = col || "#fde68a"; x.font = `600 40px ${FONT}`; x.fillText(sub || "", W / 2, 198); }), w, w * 260 / 1200); }
+function prGem(col, col2, size = 0.5) {
+  const g = new THREE2.Group();
+  const m = new THREE2.Mesh(new THREE2.OctahedronGeometry(size, 0), new THREE2.MeshStandardMaterial({ color: new THREE2.Color(col), emissive: new THREE2.Color(col), emissiveIntensity: 0.9, roughness: 0.15, metalness: 0.2, flatShading: true }));
+  m.scale.y = 1.35; g.add(m);
+  const gl = world.glowSprite(col, size * 7, 0.75); g.add(gl);
+  g.userData.gem = m; g.userData.glow = gl;
+  return g;
+}
+// gambar batu (kartu & capaian)
+var BATU_IMG = {};
+function batuImg(b, owned, px = 160) {
+  const k = b.id + (owned ? 1 : 0) + px; if (BATU_IMG[k]) return BATU_IMG[k];
+  const c = mkCanvas(px, px), x = c.getContext("2d"), s = px / 160;
+  x.scale(s, s);
+  if (owned) { const gr = x.createRadialGradient(80, 80, 6, 80, 80, 78); gr.addColorStop(0, b.c + "cc"); gr.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = gr; x.fillRect(0, 0, 160, 160); }
+  x.save(); x.translate(80, 82);
+  const pts = [[0, -58], [36, -18], [26, 46], [0, 60], [-26, 46], [-36, -18]];
+  x.beginPath(); pts.forEach(([a, bb], i) => (i ? x.lineTo(a, bb) : x.moveTo(a, bb))); x.closePath();
+  if (owned) { const lg = x.createLinearGradient(-36, -58, 36, 60); lg.addColorStop(0, "#ffffff"); lg.addColorStop(0.25, b.c); lg.addColorStop(1, b.c2); x.fillStyle = lg; x.fill(); x.strokeStyle = "rgba(255,255,255,.7)"; x.lineWidth = 2; x.stroke(); x.fillStyle = "rgba(255,255,255,.35)"; x.beginPath(); x.moveTo(0, -58); x.lineTo(12, -16); x.lineTo(0, 10); x.lineTo(-12, -16); x.closePath(); x.fill(); }
+  else { x.fillStyle = "rgba(255,255,255,.05)"; x.fill(); x.setLineDash([6, 6]); x.strokeStyle = "rgba(255,255,255,.35)"; x.lineWidth = 2; x.stroke(); x.setLineDash([]); x.fillStyle = "rgba(255,255,255,.4)"; x.font = `700 40px ${FONT}`; x.textAlign = "center"; x.fillText("?", 0, 14); }
+  x.restore();
+  return BATU_IMG[k] = c.toDataURL("image/png");
+}
+function batuGrid() {
+  if (!(typeof hasBlackCard === "function" && hasBlackCard())) return "";
+  const own = batuQ();
+  return `<h3 class="cap-h">Batu Portal Ring 1 <span class="pill">${BATU.filter((b) => own[b.id]).length}/9</span></h3><div class="bt-grid">${BATU.map((b) => `<div class="bt-slot${own[b.id] ? " on" : ""}" data-bt="${b.id}" style="--bc:${b.c}"><img alt="" src="${batuImg(b, !!own[b.id], 96)}"><small>${own[b.id] ? b.nama : b.dari ? b.dari : "???"}</small></div>`).join("")}</div>`;
+}
+function batuReveal(id) {
+  const b = BATU.find((x) => x.id === id); if (!b) return;
+  hidePopups();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bt-rev"><img alt="${b.nama}" src="${batuImg(b, true, 220)}"><small>BATU PORTAL RING 1</small><h2>${b.nama}</h2><p>Didapat dari tantangan <b>${b.dari || ""}</b> di Lembah Purba. Batu-batu ini kelak membuka gerbang-gerbang berikutnya di balik Portal Ring 1.</p><div class="rowf"><button class="btn" id="btCap">🏅 Lihat Capaian</button></div></div>`);
+  $("btCap").onclick = () => openCapaian();
+  if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+}
+async function prSync() {
+  const q = chMigrate(); if (!q.card || !q.card.no || !q.card.tok) return;
+  for (const id of ["pohon", "raptor"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
+  const B2 = batuQ();
+  for (const id of Object.keys(B2)) { const b = B2[id]; if (b.srv) continue; try { const j = await xcPost("api/kartu/batu", { no: q.card.no, tok: q.card.tok, id }); if (j.ok) b.srv = true; } catch { /* nanti */ } }
+  saveQ();
+}
+function prAwardBatu(id) {
+  const B2 = batuQ(), fresh = !B2[id];
+  if (fresh) { B2[id] = { t: Date.now() }; saveQ(); capPresDirty(); }
+  prSync();
+  setTimeout(() => batuReveal(id), 900);
+  return fresh;
+}
+
+// =====================================================================
+// POHON PURBA — fisika panjat
+// =====================================================================
+var TR = { pieces: [], route: [], quiz: [], top: 82, R: 6.4, trunkR: 4.4, built: false };
+var PH = { active: false, y: 0, vy: 0, ground: true, standY: 0, standPiece: null, cp: null, px: 0, pz: 0, coyote: 0, buf: 0 };
+var TRG = { on: false, lives: PR_LIVES, t0: 0, cd: 0, won: false, lost: false, ai: { s: 0, y: 0, pause: 0, slipT: 0 }, quizOpen: false, solved: [false, false, false], qGen: [], busy: false };
+// sektor polar: { a0, a1 (sudut), r0, r1, y0, y1, k: jenis, ... }
+function trBuildPath() {
+  const R = TR.R, P0 = [];
+  let th = 0, y = 0.0;
+  const push = (o) => { o.i = P0.length; P0.push(o); return o; };
+  const plank = (len, rise, k = "plank", w = 2.4) => { const a1 = th + len / R; const o = push({ a0: th, a1, r0: R - w / 2, r1: R + w / 2, y0: y, y1: y + rise, k }); th = a1; y += rise; return o; };
+  const gap = (len, rise) => { th += len / R; y += rise; };
+  // akar: tanjakan dari tanah
+  plank(9, 1.6, "root", 2.8);
+  plank(4, 0, "rest", 3.0).cp = true;
+  const quizH = [20, 45, 65]; let qi = 0, cyc = 0;
+  while (y < TR.top - 3) {
+    const pat = cyc % 5; cyc++;
+    if (pat === 0) { const o = plank(6.5, 2.2); if (cyc % 2 === 0 && y > 6) o.rapuh = true; }
+    else if (pat === 1) { for (let i = 0; i < 3; i++) { gap(0.7, 0.9); const o = plank(1.25, 0, "mush", 2.0); o.cx = true; } }
+    else if (pat === 2) { gap(1.7, 0.35); plank(2.6, 0, "ledge").rapuh = y > 6; gap(1.9, 0.35); plank(2.6, 0, "ledge"); }
+    else if (pat === 3) { for (let i = 0; i < 3; i++) { gap(1.0, 0.5); plank(1.3, 0, "crumble", 2.0); } }
+    else if (pat === 4) { gap(0.9, 0); const o = plank(2.2, 0, "lift", 2.4); o.lift = 3.0; o.ly = y; y += 3.0; gap(1.0, 0.25); plank(2.6, 0, "ledge"); }
+    if (qi < quizH.length && y >= quizH[qi]) { gap(0.6, 0.3); const o = plank(4.2, 0, "quiz", 3.0); o.cp = true; o.qz = qi; TR.quiz.push(o); qi++; }
+    else if (cyc % 3 === 0) { plank(3.4, 0, "rest", 2.8).cp = true; }
+  }
+  // tanjakan terakhir ke sarang puncak
+  const dy = TR.top - y; plank(Math.max(4, dy * 3.2), dy, "plank");
+  TR.endA = th;
+  TR.pieces = P0;
+  // rute Andrian: titik-titik (jarak tempuh, sudut, tinggi)
+  const route = []; let s = 0, last = null;
+  for (const p of P0) {
+    const n = Math.max(2, Math.ceil(((p.a1 - p.a0) * R) / 0.5));
+    for (let i = 0; i <= n; i++) {
+      const u = i / n, a = p.a0 + (p.a1 - p.a0) * u, yy = p.lift ? p.ly + (i === n ? p.lift : 0) : p.y0 + (p.y1 - p.y0) * u;
+      if (last) { s += Math.hypot((a - last.a) * R, (yy - last.y) * 0.6); }
+      const jump = last && i === 0 && (a - last.a) * R > 0.3;
+      route.push({ s, a, y: yy, jump, from: jump ? last.y : 0 });
+      last = { a, y: yy };
+    }
+  }
+  // sarang puncak
+  s += 3; route.push({ s, a: last.a + 3 / R, y: TR.top, jump: false });
+  TR.route = route; TR.len = s;
+}
+function trPolar(x, z) { const dx = x - PR_TC.x, dz = z - PR_TC.z; return { a: Math.atan2(dx, dz), r: Math.hypot(dx, dz) }; }
+function trXZ(a, r) { return { x: PR_TC.x + Math.sin(a) * r, z: PR_TC.z + Math.cos(a) * r }; }
+function trPieceY(p) { if (p.k === "lift") return p.ly + p.lift * p.lk; return null; }
+function trTopAt(p, a) {
+  if (p.k === "lift") return p.ly + p.lift * (p.lk || 0);
+  if (p.st === 2) return -99;
+  const u = (a - p.a0) / (p.a1 - p.a0); return p.y0 + (p.y1 - p.y0) * Math.max(0, Math.min(1, u));
+}
+// tinggi pijakan tertinggi di bawah kaki (toleransi naik 0,45 m)
+function trSupport(x, z, feet) {
+  const pol = trPolar(x, z); let best = 0, bp = null, block = false;
+  if (pol.r < 6.5 && feet > TR.top - 1.5) { if (TR.top <= feet + 0.45) return { y: TR.top, p: "top" }; }
+  const mr = 0.22 / Math.max(3, pol.r);
+  for (const p of TR.pieces) {
+    if (pol.r < p.r0 - 0.22 || pol.r > p.r1 + 0.22) continue;
+    const k = Math.round(((p.a0 + p.a1) / 2 - pol.a) / (Math.PI * 2)), a = pol.a + k * Math.PI * 2;
+    if (a < p.a0 - mr || a > p.a1 + mr) continue;
+    const top = trTopAt(p, a);
+    if (top <= feet + 0.45) { if (top > best) { best = top; bp = p; } }
+    else if (top < feet + 2.1) block = true;
+  }
+  return { y: best, p: bp, block };
+}
+function trPlace(x, z, y, yaw) {
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  setTimeout(() => { P.x = x; P.z = z; PH.y = y; PH.vy = 0; PH.standY = y; PH.px = x; PH.pz = z; P.yaw = yaw; P.camYaw = yaw; P.walkTo = null; setTimeout(() => f.remove(), 500); }, 250);
+}
+function trCheckpointPos(p) { const a = (p.a0 + p.a1) / 2, q = trXZ(a, TR.R); return { x: q.x, z: q.z, y: trTopAt(p, a), yaw: a - Math.PI / 2 }; }
+function phJumpTry() {
+  if (!PH.active) return false;
+  if (TRG.quizOpen) return true;
+  if (PH.ground || PH.coyote > 0) { PH.vy = 7.6; PH.ground = false; PH.coyote = 0; if (typeof SFX !== "undefined") SFX.step(); }
+  else PH.buf = 0.16;
+  return true;
+}
+function phTick(dt) {
+  // aktif bila berada di sekitar pohon (dalam lembah)
+  const pol = trPolar(P.x, P.z), near = PR.on && prZone(P.x, P.z) && pol.r < 16 && !RR.on;
+  if (!near) { if (PH.active) { PH.active = false; P.jfx = false; P.jy = 0; P.jcamK = 0; } return; }
+  if (!PH.active) { PH.active = true; PH.y = P.jy > 0 ? P.jy : 0; PH.vy = 0; PH.px = P.x; PH.pz = P.z; PH.standY = PH.y; }
+  P.jfx = true; P.jcamK = 1;
+  // lantai / pijakan
+  let sup = trSupport(P.x, P.z, PH.y);
+  if (sup.block) { P.x = PH.px; P.z = PH.pz; sup = trSupport(P.x, P.z, PH.y); }
+  // pijakan bergerak (daun) menggendong pemain naik/turun
+  const prevGround = PH.ground;
+  PH.vy -= 22 * dt; PH.y += PH.vy * dt;
+  if (PH.y <= sup.y) {
+    PH.y = sup.y; if (PH.vy < -2 && !prevGround && typeof SFX !== "undefined") SFX.step();
+    PH.vy = 0; PH.ground = true; PH.coyote = 0.1;
+    // jatuh terlalu jauh?
+    if (PH.standY - PH.y > 4.0 && !TRG.busy) { trFall(); return; }
+    PH.standY = PH.y; PH.standPiece = sup.p;
+    if (PH.buf > 0) { PH.buf = 0; PH.vy = 7.6; PH.ground = false; }
+    const p = sup.p;
+    if (p && p !== "top") {
+      if (p.k === "crumble" && !p.st) { p.st = 1; p.tm = 0.8; AMB && AMB.rumble && AMB.rumble(0.15); }
+      if (p.rapuh && !p.st) {
+        p.rt = (p.rt || 0) + dt; p.onT = performance.now();
+        if (p.rt > 0.7 && !p.warn) { p.warn = true; if (typeof SFX !== "undefined") SFX.bloop(0.5); toast("⚠️ Dahan rapuh berderak — cepat pindah!", 1500); }
+        if (p.rt > 1.9) { p.st = 2; p.tm = 4.5; p.warn = false; if (typeof xShake === "function") xShake(0.3, 0.05); AMB && AMB.rumble && AMB.rumble(0.35); toast("💥 Dahan rapuh patah!", 1800); }
+      }
+      if (p.cp && TRG.on) { if (TRG.cp !== p) { TRG.cp = p; if (p.i > 2) toast("🌿 Titik simpan tercatat.", 1600); } }
+      if (p.k === "quiz" && TRG.on && !TRG.solved[p.qz] && !TRG.quizOpen && !TRG.busy) trQuizOpen(p.qz);
+    }
+    if (p === "top" && TRG.on && !TRG.won && !TRG.lost) trWin();
+  } else {
+    PH.ground = false; PH.coyote = Math.max(0, PH.coyote - dt);
+    if (PH.standY - PH.y > 4.0 && !TRG.busy && PH.y > sup.y + 0.2) { trFall(); return; }
+  }
+  // penghalang batu prasasti (belum dijawab → tidak bisa melewati ujung sektor)
+  if (TRG.on) for (const q of TR.quiz) {
+    if (TRG.solved[q.qz]) continue;
+    if (Math.abs(PH.y - q.y0) > 1.2) continue;
+    const pp = trPolar(P.x, P.z), k = Math.round(((q.a0 + q.a1) / 2 - pp.a) / (Math.PI * 2)), a = pp.a + k * Math.PI * 2;
+    if (a > q.a1 - 0.25 / TR.R && a < q.a1 + 1.2 / TR.R) { const b = trXZ(q.a1 - 0.3 / TR.R, pp.r); P.x = b.x; P.z = b.z; }
+  }
+  PH.px = P.x; PH.pz = P.z;
+  P.jy = PH.y;
+}
+function trFall() {
+  if (!TRG.on) { // bukan saat balapan: cukup kembali ke titik terakhir tanpa hukuman
+    const p = TRG.cp || TR.pieces[1], c = trCheckpointPos(p); trPlace(c.x, c.z, c.y, c.yaw); PH.standY = c.y; return;
+  }
+  TRG.busy = true;
+  if (typeof cvFlash === "function") cvFlash("rgba(120,60,20,.45)"); if (typeof xShake === "function") xShake(0.4, 0.05);
+  TRG.lives--; trHudUpd(); toast(`💔 Terjatuh dari pohon! Nyawa tersisa ${Math.max(0, TRG.lives)}.`, 3000);
+  if (TRG.lives <= 0) { setTimeout(() => trLose("Nyawamu habis — kamu terjatuh terlalu sering."), 600); return; }
+  const p = TRG.cp || TR.pieces[1], c = trCheckpointPos(p);
+  PH.standY = 999;
+  trPlace(c.x, c.z, c.y, c.yaw);
+  setTimeout(() => { PH.standY = c.y; TRG.busy = false; }, 600);
+}
+// ---------- soal kalkulus (dibangkitkan acak) ----------
+function prRi(a, b) { return a + Math.floor(Math.random() * (b - a + 1)); }
+function prPick(a) { return a[Math.floor(Math.random() * a.length)]; }
+function prPoly(terms) { // [[koef, "x²"], …]
+  let s = ""; for (const [c, v] of terms) { if (!c) continue; const sg = c < 0 ? " − " : s ? " + " : "", ab = Math.abs(c); s += (s ? sg : c < 0 ? "−" : "") + (ab === 1 && v ? "" : ab) + v; }
+  return s || "0";
+}
+function prFrac(n, d) { if (d < 0) { n = -n; d = -d; } const g = (a, b) => (b ? g(b, a % b) : Math.abs(a)); const k = g(n, d) || 1; n /= k; d /= k; return d === 1 ? String(n).replace("-", "−") : `${n < 0 ? "−" : ""}${Math.abs(n)}/${d}`; }
+function prMC(q, ans, wrong) { const opts = [ans]; for (const w of wrong) if (!opts.includes(w) && opts.length < 4) opts.push(w); let k = 1; while (opts.length < 4) { const f = `${ans} (${k++})`; opts.push(f); } const sh = cogShuffle(opts); return { q, opts: sh, ans: sh.indexOf(ans) }; }
+var PR_QGEN = [
+  // 0: persamaan
+  () => prPick([
+    () => { const a = prRi(2, 9), x = prRi(-9, 9), b = prRi(-15, 15), c = a * x + b; return prMC(`Tentukan nilai x yang memenuhi:\n${prPoly([[a, "x"], [b, ""]])} = ${String(c).replace("-", "−")}`, `x = ${String(x).replace("-", "−")}`, [`x = ${String(-x).replace("-", "−")}`, `x = ${prFrac(c + b, a)}`, `x = ${String(x + prPick([1, -1, 2])).replace("-", "−")}`]); },
+    () => { let p = prRi(-7, 6), q = prRi(p + 1, 8); const fmt = (a, b) => `x = ${String(a).replace("-", "−")} atau x = ${String(b).replace("-", "−")}`; return prMC(`Himpunan penyelesaian dari:\n${prPoly([[1, "x²"], [-(p + q), "x"], [p * q, ""]])} = 0`, fmt(p, q), [fmt(-p, -q), fmt(p, -q), fmt(-p, q), fmt(p + 1, q - 1)]); },
+    () => { const a = prRi(-6, 6), b = prRi(1, 8); const fmt = (u, v) => `x = ${String(u).replace("-", "−")} atau x = ${String(v).replace("-", "−")}`; return prMC(`Penyelesaian persamaan nilai mutlak:\n|x ${a < 0 ? "+ " + (-a) : "− " + a}| = ${b}`, fmt(a - b, a + b), [fmt(-a - b, -a + b), fmt(b - a, a + b), `x = ${String(a + b).replace("-", "−")} saja`]); }
+  ])(),
+  // 1: pertidaksamaan
+  () => prPick([
+    () => { const a = -prRi(2, 7), x0 = prRi(-6, 6), b = prRi(-10, 10), c = a * x0 + b, gt = Math.random() < 0.5; const sgn = gt ? ">" : "<", flip = gt ? "<" : ">", same = gt ? ">" : "<"; const f = (s, v) => `x ${s} ${String(v).replace("-", "−")}`; return prMC(`Penyelesaian pertidaksamaan:\n${prPoly([[a, "x"], [b, ""]])} ${sgn} ${String(c).replace("-", "−")}`, f(flip, x0), [f(same, x0), f(flip, -x0), f(same, -x0)]); },
+    () => { const p = prRi(-6, 4), q = prRi(p + 2, 8), lt = Math.random() < 0.5; const P1 = String(p).replace("-", "−"), Q1 = String(q).replace("-", "−"); const inside = `${P1} < x < ${Q1}`, outside = `x < ${P1} atau x > ${Q1}`; return prMC(`Himpunan penyelesaian dari:\n${prPoly([[1, "x²"], [-(p + q), "x"], [p * q, ""]])} ${lt ? "<" : ">"} 0`, lt ? inside : outside, [lt ? outside : inside, `${P1} ≤ x ≤ ${Q1}`, `x ≤ ${P1} atau x ≥ ${Q1}`]); },
+    () => { const a = prRi(-5, 3), b = prRi(a + 1, 7); const A = String(a).replace("-", "−"), B = String(b).replace("-", "−"); return prMC(`Penyelesaian pertidaksamaan pecahan:\n(x ${a < 0 ? "+ " + (-a) : "− " + a}) / (x ${b < 0 ? "+ " + (-b) : "− " + b}) ≥ 0`, `x ≤ ${A} atau x > ${B}`, [`x ≤ ${A} atau x ≥ ${B}`, `${A} ≤ x < ${B}`, `x < ${A} atau x > ${B}`]); }
+  ])(),
+  // 2: integral
+  () => prPick([
+    () => { const p = prRi(1, 3), q = prRi(-3, 4), r = prRi(-5, 6), a = prRi(0, 1), b = prRi(a + 1, 3); const F = (x) => p * x ** 3 + q * x * x + r * x; const ans = F(b) - F(a), W = (x) => 3 * p * x ** 3 + 2 * q * x * x + r * x; return prMC(`Hitung integral tentu:\n∫ dari ${a} sampai ${b} (${prPoly([[3 * p, "x²"], [2 * q, "x"], [r, ""]])}) dx`, String(ans).replace("-", "−"), [String(F(a) - F(b)).replace("-", "−"), String(F(b)).replace("-", "−"), String(W(b) - W(a)).replace("-", "−"), String(ans + r).replace("-", "−")]); },
+    () => { const m = prRi(1, 4), c = prRi(-4, 6), b = prRi(2, 4); const F = (x) => m * x * x + c * x; const ans = F(b); return prMC(`Luas daerah di bawah kurva y = ${prPoly([[2 * m, "x"], [c, ""]])} dari x = 0 sampai x = ${b} (dihitung dengan integral) adalah …`, String(ans).replace("-", "−"), [String(2 * m * b * b + c * b).replace("-", "−"), String(F(b) - c * b).replace("-", "−"), String(ans * 2).replace("-", "−"), String(2 * m * b + c).replace("-", "−")]); }
+  ])()
+];
+var PR_QNAME = ["Persamaan", "Pertidaksamaan", "Integral"];
+function trQuizOpen(i) {
+  TRG.quizOpen = true;
+  const Qz = TRG.qGen[i] || (TRG.qGen[i] = PR_QGEN[i]());
+  const ov = document.createElement("div"); ov.id = "prQz";
+  ov.innerHTML = `<div class="prq-card"><div class="prq-top">🪨 BATU PRASASTI ${i + 1}/3 · ${PR_QNAME[i].toUpperCase()}</div><p class="prq-note">Andrian ikut berhenti selama kamu menjawab. Jawaban salah → nyawa −1 dan soal baru.</p><div class="prq-q"></div><div class="prq-o"></div><div class="prq-msg" id="prqMsg"></div></div>`;
+  ov.querySelector(".prq-q").textContent = Qz.q;
+  const O = ov.querySelector(".prq-o");
+  Qz.opts.forEach((o, k) => { const b = document.createElement("button"); b.textContent = `${"ABCD"[k]}. ${o}`; b.onclick = () => trQuizAns(i, k); O.appendChild(b); });
+  document.body.appendChild(ov);
+}
+function trQuizAns(i, k) {
+  const Qz = TRG.qGen[i], ov = $("prQz"); if (!ov || TRG.busy) return;
+  const btns = ov.querySelectorAll(".prq-o button");
+  if (k === Qz.ans) {
+    btns[k].classList.add("ok"); if (typeof SFX !== "undefined") SFX.chime();
+    TRG.solved[i] = true;
+    $("prqMsg").textContent = "✅ Benar! Akar-akar penghalang menyingkir.";
+    const q = TR.quiz[i]; if (q && q.bar) { q.bar.visible = false; }
+    setTimeout(() => { ov.remove(); TRG.quizOpen = false; trHudUpd(); }, 900);
+  } else {
+    btns[k].classList.add("bad"); btns[Qz.ans].classList.add("ok");
+    TRG.lives--; trHudUpd(); if (typeof SFX !== "undefined") SFX.bloop(0.6); if (typeof xShake === "function") xShake(0.3, 0.04);
+    $("prqMsg").textContent = TRG.lives > 0 ? `❌ Kurang tepat. Nyawa tersisa ${TRG.lives}. Soal baru…` : "❌ Kurang tepat — nyawamu habis.";
+    btns.forEach((b) => b.disabled = true);
+    setTimeout(() => { ov.remove(); TRG.quizOpen = false; if (TRG.lives <= 0) { trLose("Nyawamu habis di batu prasasti."); return; } TRG.qGen[i] = PR_QGEN[i](); trQuizOpen(i); }, 1900);
+  }
+}
+// ---------- HUD & alur balapan pohon ----------
+function prHud(show) {
+  let el = $("prHud");
+  if (!show) { el?.remove(); return; }
+  if (!el) { el = document.createElement("div"); el.id = "prHud"; el.innerHTML = `<div class="cvh-top"><b id="prB"></b><span id="prL"></span></div><div id="prT" class="cvh-txt"></div><div class="cvh-bar pr-bar"><i id="prMe"></i><i id="prAi"></i></div><div class="cvh-btn"><button class="ghost" id="prOut">⟲ Keluar Lembah</button></div>`; document.body.appendChild(el); $("prOut").onclick = () => { if ((TRG.on || RR.on) && !confirm("Keluar dari Lembah Purba? Tantangan yang sedang berjalan akan berhenti.")) return; prExit(); }; }
+}
+function prHudSet(title, lives, txt, me, ai) {
+  if (!$("prHud")) prHud(true);
+  $("prB").textContent = title; $("prL").textContent = lives === null ? "" : "❤".repeat(Math.max(0, lives)) + "🖤".repeat(Math.max(0, PR_LIVES - lives));
+  if (txt !== undefined) $("prT").textContent = txt;
+  const bar = $("prMe").parentElement; bar.style.visibility = me === null || me === undefined ? "hidden" : "";
+  if (me !== null && me !== undefined) { $("prMe").style.width = Math.max(0, Math.min(1, me)) * 100 + "%"; $("prAi").style.left = Math.max(0, Math.min(1, ai)) * 100 + "%"; }
+}
+function trHudUpd() {
+  if (!TRG.on) { prHudSet("🌳 LEMBAH PURBA · Portal Ring 1", null, "Bicara dengan Andrian di kaki Pohon Purba untuk memulai balapan memanjat.", null); return; }
+  const tm = (performance.now() - TRG.t0) / 1000, solved = TRG.solved.filter(Boolean).length;
+  prHudSet(`🌳 POHON PURBA · ⏱ ${Math.floor(tm / 60)}:${String(Math.floor(tm % 60)).padStart(2, "0")}`, TRG.lives, `Kamu ${PH.y.toFixed(0)} m · Andrian ${TRG.ai.y.toFixed(0)} m · prasasti ${solved}/3${TRG.ai.pause > 0 ? " · Andrian terpeleset!" : ""}`, PH.y / TR.top, TRG.ai.y / TR.top);
+}
+function trReset() {
+  TRG.lives = PR_LIVES; TRG.won = false; TRG.lost = false; TRG.solved = [false, false, false]; TRG.qGen = []; TRG.cp = TR.pieces[1]; TRG.busy = false; TRG.quizOpen = false;
+  TRG.ai = { s: 0, y: 0, pause: 0, slipT: performance.now() + 22000 + Math.random() * 12000, x: 0, z: 0 };
+  for (const q of TR.quiz) if (q.bar) q.bar.visible = true;
+  for (const p of TR.pieces) { if (p.k === "crumble" || p.rapuh) { p.st = 0; p.rt = 0; p.warn = false; if (p.m) p.m.position.y = p.baseY; } }
+  if (TR.stone) { TR.stone.visible = true; TR.stone.userData.gem.scale.setScalar(1); }
+  $("prQz")?.remove();
+}
+function trStart() {
+  if (TRG.on || RR.on) return;
+  $("sashaDr")?.classList.remove("show");
+  trReset();
+  const c = trCheckpointPos(TR.pieces[0]);
+  const st = trXZ(TR.pieces[0].a0 + 0.05, TR.R + 1.4);
+  trPlace(st.x, st.z, 0, TR.pieces[0].a0 - Math.PI / 2);
+  void c;
+  if (NPCS.andrian) NPCS.andrian.g.visible = false;
+  TR.racer.visible = true;
+  prCountdown(() => { TRG.on = true; TRG.t0 = performance.now(); trHudUpd(); toast("🌳 Panjat secepatnya! Loncat: Spasi / ⤒", 3500); });
+}
+function prCountdown(fn) {
+  const el = document.createElement("div"); el.id = "prCd"; document.body.appendChild(el);
+  let n = 3; const step = () => { if (n > 0) { el.textContent = n; el.className = "go"; void el.offsetWidth; el.className = ""; if (typeof SFX !== "undefined") SFX.bloop(1 + (3 - n) * 0.2); n--; setTimeout(step, 800); } else { el.textContent = "MULAI!"; if (typeof SFX !== "undefined") SFX.chime(); setTimeout(() => el.remove(), 700); fn(); } };
+  step();
+}
+function trAiTick(dt) {
+  const A = TRG.ai, now = performance.now();
+  if (!TRG.on || TRG.won || TRG.lost) return;
+  if (TRG.quizOpen) return; // Andrian ikut berhenti
+  if (A.pause > 0) { A.pause -= dt; }
+  else {
+    if (now > A.slipT) { A.pause = 1.6; A.slipT = now + 20000 + Math.random() * 15000; sayBubble("Waduh, licin!", "npc_andrian"); }
+    let v = 2.75;
+    const gapH = A.y - PH.y;
+    if (gapH > 8) v = 2.2; else if (gapH < -8) v = 3.35;
+    // prasasti Andrian: berhenti sejenak "menjawab"
+    A.s = Math.min(TR.len, A.s + v * dt);
+  }
+  // posisi pada rute
+  const R2 = TR.route; let i = A.idx || 0;
+  while (i < R2.length - 2 && R2[i + 1].s < A.s) i++;
+  while (i > 0 && R2[i].s > A.s) i--;
+  A.idx = i;
+  const p0 = R2[i], p1 = R2[Math.min(R2.length - 1, i + 1)], u = p1.s > p0.s ? (A.s - p0.s) / (p1.s - p0.s) : 0;
+  const a = p0.a + (p1.a - p0.a) * u;
+  let y = p0.y + (p1.y - p0.y) * u;
+  if (p1.jump) y += Math.sin(Math.PI * u) * 0.9;
+  A.y = y;
+  const r = i >= R2.length - 2 ? Math.max(0, TR.R * (1 - u)) : TR.R;
+  const q = trXZ(a, r);
+  TR.racer.position.set(q.x, y, q.z);
+  TR.racer.rotation.y = a + Math.PI / 2 + Math.PI;
+  if (A.s >= TR.len - 0.01) trLose("Andrian tiba di puncak lebih dulu dan mengambil Batu Kuning.");
+}
+function trWin() {
+  TRG.won = true; TRG.on = false;
+  const secs = (performance.now() - TRG.t0) / 1000;
+  const q = chMigrate(), prev = q.chal.pohon;
+  q.chal.pohon = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, secs).toFixed(1), bintang: TRG.lives };
+  saveQ();
+  if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+  if (TR.stone) TR.stone.userData.gem.scale.setScalar(1.6);
+  prHudSet("🏆 PUNCAK POHON PURBA!", TRG.lives, `Kamu menaklukkan 80 m dalam ${Math.floor(secs / 60)} mnt ${Math.round(secs % 60)} dtk dan mengalahkan Andrian!`, 1, TRG.ai.y / TR.top);
+  sayBubble(`Luar biasa, ${S.name}! Batu Kuning milikmu.`, "npc_andrian");
+  setTimeout(() => { if (TR.stone) TR.stone.visible = false; prAwardBatu("kuning"); trRekorLoad(); }, 1200);
+  setTimeout(() => { trEndRacer(); }, 2500);
+}
+function trLose(why) {
+  if (TRG.lost) return;
+  TRG.lost = true; TRG.on = false; $("prQz")?.remove(); TRG.quizOpen = false;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🌳</div><h2>Belum berhasil…</h2><p id="trWhy"></p><div class="rowf"><button class="btn" id="trAgain">🔁 Coba lagi</button><button class="ghost" id="trDown">⬇ Turun ke tanah</button></div></div>`);
+  $("trWhy").textContent = why;
+  $("trAgain").onclick = () => { closeGen(); trEndRacer(); trStart(); };
+  $("trDown").onclick = () => { closeGen(); trEndRacer(); const s = trXZ(TR.pieces[0].a0, TR.R + 6); trPlace(s.x, s.z, 0, 0); trHudUpd(); };
+}
+function trEndRacer() { TR.racer.visible = false; if (NPCS.andrian) NPCS.andrian.g.visible = true; trHudUpd(); }
+async function trRekorLoad() { try { const j = await (await fetch("api/kartu/rekor?id=pohon", { credentials: "same-origin" })).json(); if (j.ok) prBoardDraw(TR.board, "🌳 REKOR POHON PURBA", j.list); } catch { /* */ } }
+function prBoardDraw(B, title, list) {
+  if (!B) return;
+  B.draw((x, w, h) => { x.fillStyle = "rgba(30,18,6,.94)"; rr(x, 0, 0, w, h, 26); x.fill(); x.strokeStyle = "#facc15"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 22); x.stroke(); x.textAlign = "center"; x.fillStyle = "#fde68a"; x.font = `800 50px ${FONT}`; x.fillText(title, w / 2, 76); x.font = `600 34px ${FONT}`; const L = (list || []).slice(0, 8); if (!L.length) { x.fillStyle = "#d6c4a8"; x.fillText("Belum ada juara — jadilah yang pertama!", w / 2, 300); return; } L.forEach((r, i) => { const y = 146 + i * 62; x.textAlign = "left"; x.fillStyle = i === 0 ? "#fde68a" : "#fff7ed"; x.fillText(`${i + 1}. ${String(r.nama).slice(0, 18)}`, 50, y); x.textAlign = "right"; x.fillText(`${Math.floor(r.best / 60)}:${String(Math.round(r.best % 60)).padStart(2, "0")}`, w - 50, y); }); });
+}
+function trTick(dt) {
+  // pijakan lapuk & daun pengangkat
+  for (const p of TR.pieces) {
+    if (p.k === "crumble" && p.m) {
+      if (p.st === 1) { p.tm -= dt; p.m.position.y = p.baseY + Math.sin(t * 60) * 0.03; if (p.tm <= 0) { p.st = 2; p.tm = 3.5; } }
+      else if (p.st === 2) { p.tm -= dt; p.m.position.y -= dt * 6; if (p.tm <= 0) { p.st = 0; p.m.position.y = p.baseY; } }
+    }
+    if (p.k === "lift") { p.lk = (1 - Math.cos(t * 0.9 + p.i)) / 2; if (p.m) p.m.position.y = p.ly + p.lift * p.lk - 0.08; }
+    if (p.rapuh && p.m) {
+      if (!p.st) { if (p.rt > 0 && performance.now() - (p.onT || 0) > 120) { p.rt = Math.max(0, p.rt - dt * 0.6); if (!p.rt) p.warn = false; } p.m.position.y = p.rt > 0.7 ? Math.sin(t * 50) * 0.025 * Math.min(1, p.rt - 0.6) : 0; p.m.position.x = 0; }
+      else if (p.st === 2) { p.tm -= dt; p.m.position.y -= dt * 7; if (p.tm <= 0) { p.st = 0; p.rt = 0; p.m.position.y = 0; } }
+    }
+  }
+  if (TR.stone) { TR.stone.rotation.y += dt; TR.stone.userData.gem.position.y = Math.sin(t * 2) * 0.15; }
+  trAiTick(dt);
+  if (TRG.on && Math.floor(performance.now() / 300) !== TRG.hudT) { TRG.hudT = Math.floor(performance.now() / 300); trHudUpd(); }
+}
+
+// =====================================================================
+// RAPTOR RUN
+// =====================================================================
+var RR = { on: false, cd: false, lock: false, D: 0, me: null, az: null, obs: [], items: [], built: false, lap: 0 };
+var RT = { pts: [], S: [], L: 0, N: 1440 };
+function rtBuild() {
+  const N = RT.N; let s = 0, prev = null;
+  for (let i = 0; i <= N; i++) {
+    const th = (i / N) * Math.PI * 2, r = 72 + 7 * Math.sin(3 * th) + 4 * Math.sin(5 * th + 1.3);
+    const p = { x: PR_TC.x + Math.sin(th) * r, z: PR_TC.z + Math.cos(th) * r };
+    if (prev) s += Math.hypot(p.x - prev.x, p.z - prev.z);
+    RT.pts.push(p); RT.S.push(s); prev = p;
+  }
+  RT.L = s;
+}
+function rtAt(s) {
+  const L = RT.L; s = ((s % L) + L) % L;
+  let lo = 0, hi = RT.N;
+  while (hi - lo > 1) { const m = (lo + hi) >> 1; if (RT.S[m] <= s) lo = m; else hi = m; }
+  const a = RT.pts[lo], b = RT.pts[lo + 1], u = (s - RT.S[lo]) / Math.max(1e-6, RT.S[lo + 1] - RT.S[lo]);
+  const fx = b.x - a.x, fz = b.z - a.z, fl = Math.hypot(fx, fz) || 1;
+  return { x: a.x + fx * u, z: a.z + fz * u, fx: fx / fl, fz: fz / fl, rx: -fz / fl, rz: fx / fl };
+}
+var RR_LANE = 2.7;
+function mkRaptor(col, col2) {
+  const g = new THREE2.Group(), M = (c, o) => new THREE2.MeshStandardMaterial(Object.assign({ color: new THREE2.Color(c), roughness: 0.75, flatShading: true }, o || {}));
+  const skin = M(col), belly = M(col2), dark = M("#1f2937");
+  const body = new THREE2.Mesh(new THREE2.SphereGeometry(0.55, 10, 8), skin); body.scale.set(0.8, 0.7, 1.5); body.position.y = 1.15; g.add(body);
+  const bl = new THREE2.Mesh(new THREE2.SphereGeometry(0.45, 10, 8), belly); bl.scale.set(0.7, 0.55, 1.2); bl.position.set(0, 1.0, -0.05); g.add(bl);
+  const neck = new THREE2.Mesh(new THREE2.CylinderGeometry(0.17, 0.24, 0.7, 8), skin); neck.position.set(0, 1.55, -0.72); neck.rotation.x = 0.7; g.add(neck);
+  const head = new THREE2.Group(); head.position.set(0, 1.85, -1.0); g.add(head);
+  const sk = new THREE2.Mesh(new THREE2.BoxGeometry(0.32, 0.3, 0.6), skin); head.add(sk);
+  const jaw = new THREE2.Mesh(new THREE2.BoxGeometry(0.26, 0.1, 0.5), belly); jaw.position.set(0, -0.17, -0.06); head.add(jaw);
+  for (const sx of [-1, 1]) { const e = new THREE2.Mesh(new THREE2.SphereGeometry(0.05, 8, 6), M("#facc15", { emissive: new THREE2.Color("#a16207"), emissiveIntensity: 0.5 })); e.position.set(sx * 0.15, 0.07, -0.12); head.add(e); }
+  for (let i = 0; i < 5; i++) { const tth = new THREE2.Mesh(new THREE2.ConeGeometry(0.02, 0.06, 4), M("#f5f5f4")); tth.rotation.x = Math.PI; tth.position.set(-0.1 + i * 0.05, -0.12, -0.28); head.add(tth); }
+  const tail = new THREE2.Mesh(new THREE2.ConeGeometry(0.28, 1.8, 8), skin); tail.rotation.x = -Math.PI / 2 - 0.15; tail.position.set(0, 1.25, 1.55); g.add(tail);
+  for (let i = 0; i < 6; i++) { const sp = new THREE2.Mesh(new THREE2.ConeGeometry(0.05, 0.16, 4), dark); sp.position.set(0, 1.55 - i * 0.03, -0.3 + i * 0.32); g.add(sp); }
+  const legs = [];
+  for (const sx of [-1, 1]) {
+    const hip = new THREE2.Group(); hip.position.set(sx * 0.32, 1.05, 0.15); g.add(hip);
+    const th2 = new THREE2.Mesh(new THREE2.BoxGeometry(0.2, 0.55, 0.3), skin); th2.position.y = -0.25; hip.add(th2);
+    const knee = new THREE2.Group(); knee.position.set(0, -0.5, 0.05); hip.add(knee);
+    const sh2 = new THREE2.Mesh(new THREE2.BoxGeometry(0.12, 0.5, 0.12), skin); sh2.position.y = -0.24; knee.add(sh2);
+    const foot = new THREE2.Mesh(new THREE2.BoxGeometry(0.2, 0.06, 0.32), dark); foot.position.set(0, -0.5, -0.1); knee.add(foot);
+    legs.push({ hip, knee });
+    const arm = new THREE2.Mesh(new THREE2.BoxGeometry(0.06, 0.28, 0.06), skin); arm.position.set(sx * 0.3, 1.1, -0.65); arm.rotation.x = -0.6; g.add(arm);
+  }
+  // pelana
+  const sad = new THREE2.Mesh(new THREE2.BoxGeometry(0.62, 0.12, 0.6), M("#7c2d12")); sad.position.set(0, 1.55, 0.05); g.add(sad);
+  g.userData.run = (ph, k) => { legs[0].hip.rotation.x = Math.sin(ph) * 0.9 * k; legs[1].hip.rotation.x = -Math.sin(ph) * 0.9 * k; legs[0].knee.rotation.x = Math.max(0, -Math.cos(ph)) * 0.9 * k; legs[1].knee.rotation.x = Math.max(0, Math.cos(ph)) * 0.9 * k; body.position.y = 1.15 + Math.abs(Math.sin(ph)) * 0.08 * k; tail.rotation.y = Math.sin(ph * 0.5) * 0.15; head.rotation.x = Math.sin(ph) * 0.05; };
+  g.scale.setScalar(1.15);
+  return g;
+}
+function rrMakeCourse() {
+  const D = RR.D = RT.L * 2;
+  RR.obs.forEach((o) => scene.remove(o.m)); RR.items.forEach((o) => scene.remove(o.m));
+  RR.obs = []; RR.items = [];
+  const R = rndGen((Date.now() & 0xffff) + 7);
+  const M = (c, o) => new THREE2.MeshStandardMaterial(Object.assign({ color: new THREE2.Color(c), roughness: 0.85, flatShading: true }, o || {}));
+  const addObs = (s, lane, kind) => {
+    const p = rtAt(s), cx = p.x + p.rx * lane * RR_LANE, cz = p.z + p.rz * lane * RR_LANE, g = new THREE2.Group(); g.position.set(cx, 0, cz); g.rotation.y = Math.atan2(p.fx, p.fz);
+    let big = true, w = 1.2;
+    if (kind === "rock") { const m = new THREE2.Mesh(new THREE2.DodecahedronGeometry(1.0, 0), M("#78716c")); m.scale.set(1.1, 1.2, 1); m.position.y = 0.9; g.add(m); }
+    else if (kind === "foot") { const m = new THREE2.Mesh(new THREE2.CylinderGeometry(0.9, 1.1, 2.6, 10), M("#6b7280")); m.position.y = 1.3; g.add(m); for (let i = 0; i < 3; i++) { const c2 = new THREE2.Mesh(new THREE2.ConeGeometry(0.2, 0.5, 6), M("#e7e5e4")); c2.rotation.x = Math.PI / 2; c2.position.set(-0.5 + i * 0.5, 0.2, -1.1); g.add(c2); } }
+    else if (kind === "tri") { const b = new THREE2.Mesh(new THREE2.SphereGeometry(1, 10, 8), M("#a16207")); b.scale.set(1.2, 0.9, 1.6); b.position.y = 1.1; g.add(b); const fr = new THREE2.Mesh(new THREE2.CircleGeometry(0.9, 10), M("#78350f", { side: THREE2.DoubleSide })); fr.position.set(0, 1.5, -1.2); g.add(fr); for (const sx of [-0.3, 0.3]) { const h = new THREE2.Mesh(new THREE2.ConeGeometry(0.1, 0.8, 6), M("#f5f5f4")); h.rotation.x = -Math.PI / 2 + 0.3; h.position.set(sx, 1.4, -1.6); g.add(h); } g.rotation.y += Math.PI / 2; w = 1.4; }
+    else if (kind === "ptero") { const b = new THREE2.Group(); const bd = new THREE2.Mesh(new THREE2.ConeGeometry(0.25, 1.4, 6), M("#7c2d12")); bd.rotation.x = Math.PI / 2; b.add(bd); for (const sx of [-1, 1]) { const wg = new THREE2.Mesh(new THREE2.PlaneGeometry(2.2, 0.9), M("#9a3412", { side: THREE2.DoubleSide })); wg.position.set(sx * 1.1, 0, 0); wg.rotation.x = Math.PI / 2; b.add(wg); } b.position.y = 9; g.add(b); g.userData.pt = b; const sh = new THREE2.Mesh(new THREE2.CircleGeometry(1.2, 16), new THREE2.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.0 })); sh.rotation.x = -Math.PI / 2; sh.position.y = 0.04; g.add(sh); g.userData.sh = sh; }
+    else if (kind === "log") { big = false; const m = new THREE2.Mesh(new THREE2.CylinderGeometry(0.32, 0.32, RR_LANE * 3.1, 10), M("#6b4423")); m.rotation.z = Math.PI / 2; m.position.y = 0.32; g.add(m); g.position.set(p.x, 0, p.z); w = 99; }
+    else if (kind === "lava") { big = false; const m = new THREE2.Mesh(new THREE2.PlaneGeometry(RR_LANE * 3.1, 1.2), new THREE2.MeshBasicMaterial({ color: 0xff5a1f, toneMapped: false })); m.rotation.x = -Math.PI / 2; m.position.y = 0.05; g.add(m); g.position.set(p.x, 0, p.z); w = 99; }
+    else if (kind === "mud") { big = false; const m = new THREE2.Mesh(new THREE2.CircleGeometry(1.25, 14), M("#3f2a17")); m.rotation.x = -Math.PI / 2; m.position.y = 0.04; m.scale.y = 1.4; g.add(m); }
+    scene.add(g); PR.own.add(g);
+    const o = { s, lane, kind, big, w, m: g, hitBy: new Set() };
+    if (kind === "tri") { o.l0 = lane; o.l1 = lane === 1 ? -1 : lane === -1 ? 1 : prPick([-1, 1]); o.lane = o.l0; }
+    RR.obs.push(o); return o;
+  };
+  const addItem = (s, lane, kind) => {
+    const p = rtAt(s), g = new THREE2.Group(); g.position.set(p.x + p.rx * lane * RR_LANE, 1.2, p.z + p.rz * lane * RR_LANE);
+    if (kind === "speed") { const m = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.35), new THREE2.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xf59e0b, emissiveIntensity: 1, roughness: 0.2 })); m.scale.y = 1.5; g.add(m); g.add(world.glowSprite("#fbbf24", 2.4, 0.8)); }
+    else { const m = new THREE2.Mesh(new THREE2.SphereGeometry(0.33, 14, 10), new THREE2.MeshStandardMaterial({ color: 0xbfdbfe, emissive: 0x60a5fa, emissiveIntensity: 0.6, roughness: 0.3 })); m.scale.y = 1.3; g.add(m); g.add(world.glowSprite("#60a5fa", 2.4, 0.8)); }
+    scene.add(g); PR.own.add(g);
+    RR.items.push({ s, lane, kind, m: g, taken: false });
+  };
+  let s = 70;
+  while (s < D - 45) {
+    const k = s / D, gapS = 34 - k * 14 + R() * 6;
+    const roll = R();
+    if (roll < 0.22) { addObs(s, prPick([-1, 0, 1]), prPick(["rock", "foot"])); }
+    else if (roll < 0.38) { const free = prPick([-1, 0, 1]); for (const l of [-1, 0, 1]) if (l !== free) addObs(s, l, "rock"); }
+    else if (roll < 0.52) addObs(s, 0, "log");
+    else if (roll < 0.62) addObs(s, 0, "lava");
+    else if (roll < 0.74) { addObs(s, prPick([-1, 0, 1]), "mud"); }
+    else if (roll < 0.86) addObs(s, prPick([-1, 0, 1]), "tri");
+    else addObs(s, prPick([-1, 0, 1]), "ptero");
+    if (R() < 0.62) addItem(s + gapS * 0.5, prPick([-1, 0, 1]), R() < 0.6 ? "speed" : "shield");
+    s += gapS;
+  }
+}
+function rrRacer(isMe) { return { s: 0, lane: 0, lx: 0, y: 0, vy: 0, v: 0, boostT: 0, slowT: 0, invT: 0, shield: false, lives: PR_LIVES, ph: 0, done: false, me: isMe, jumpAt: null }; }
+function rrJumpTry() { if (!RR.on) return false; const m = RR.me; if (!m || m.done || RR.cd) return true; if (m.y <= 0.001) { m.vy = 7.2; if (typeof SFX !== "undefined") SFX.step(); } return true; }
+function prJump() { return phJumpTry() || rrJumpTry(); }
+function rrLane(d) { if (!RR.on || !RR.me || RR.cd) return; RR.me.lane = Math.max(-1, Math.min(1, RR.me.lane + d)); }
+function rrStart() {
+  if (RR.on || TRG.on) return;
+  if (!batuQ().kuning) { toast("Raptor Run terbuka setelah kamu merebut Batu Kuning di Pohon Purba."); return; }
+  $("sashaDr")?.classList.remove("show");
+  sktGrant(["SKN-028"]);
+  PR.forceSkin = "SKN-028"; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+  rrMakeCourse();
+  RR.me = rrRacer(true); RR.az = rrRacer(false); RR.me.lane = 0; RR.az.lane = 1; RR.az.lx = 1; RR.me.lx = 0; RR.az.s = 0;
+  RR.on = true; RR.lock = true; PR.lock = true; RR.cd = true; RR.t0 = 0; RR.res = null;
+  document.body.classList.add("rr-on"); rrPad(true);
+  RR.meRap.visible = true; RR.azRap.visible = true; RR.azRider.visible = true; if (NPCS.azka) NPCS.azka.g.visible = false;
+  RR.prevDist = P.camDist; RR.prevPitch = P.camPitch; P.camPitch = 0.34; P.camDist = 7.2;
+  rrPlace(RR.me, RR.meRap, 0); rrPlace(RR.az, RR.azRap, 0);
+  prHudSet("🦖 RAPTOR RUN", RR.me.lives, "Bersiap… ←/→ (A/D) pindah jalur · Spasi/↑ loncat · HP: geser layar atau tombol.", 0, 0);
+  prCountdown(() => { RR.cd = false; RR.t0 = performance.now(); PRS.roar(); });
+}
+function rrPlace(r, rap, dt) {
+  const p = rtAt(r.s); r.lx += (r.lane - r.lx) * Math.min(1, dt * 9);
+  const x = p.x + p.rx * r.lx * RR_LANE, z = p.z + p.rz * r.lx * RR_LANE, yaw = Math.atan2(-p.fx, -p.fz);
+  rap.position.set(x, r.y, z); rap.rotation.y = yaw;
+  r.ph += dt * (4 + r.v * 0.75); rap.userData.run(r.ph, Math.min(1, r.v / 6) * (r.y > 0.05 ? 0.3 : 1));
+  return { x, z, yaw, p };
+}
+function rrHit(r, o) {
+  if (r.invT > 0) return;
+  if (r.shield) { r.shield = false; r.invT = 1.0; if (r.me) { toast("🛡 Perisai cangkang telur menahan tabrakan!", 2000); PRS.thump(0.2); } return; }
+  if (o.big) {
+    r.v *= 0.25; r.slowT = 1.4; r.invT = 1.6;
+    if (r.me) { r.lives--; if (typeof xShake === "function") xShake(0.45, 0.08); if (typeof cvFlash === "function") cvFlash("rgba(255,60,20,.35)"); toast(`💥 Menabrak ${o.kind === "rock" ? "batu" : o.kind === "foot" ? "kaki dinosaurus" : o.kind === "tri" ? "triceratops" : "pterosaurus"}! Nyawa −1`, 2200); if (r.lives <= 0) rrEnd(false, "Nyawamu habis di lintasan."); }
+  } else { r.slowT = 1.2; r.invT = 0.8; if (r.me) { toast(o.kind === "mud" ? "🟤 Terjebak lumpur — melambat!" : "😵 Tersandung — melambat!", 1600); PRS.thump(0.18); } }
+}
+function rrStep(r, rap, dt, aiFn) {
+  if (r.done) return rrPlace(r, rap, dt);
+  if (aiFn) aiFn(r, dt);
+  const k = Math.min(1, r.s / RR.D), base = 10.2 + k * 2.6;
+  let target = base;
+  target *= r.mul || 1;
+  if (r.boostT > 0) { r.boostT -= dt; target *= 1.45; }
+  if (r.slowT > 0) { r.slowT -= dt; target *= 0.5; }
+  r.invT = Math.max(0, r.invT - dt);
+  r.v += (target - r.v) * Math.min(1, dt * (r.v < target ? 1.6 : 3));
+  r.s += r.v * dt;
+  if (r.y > 0 || r.vy > 0) { r.vy -= 20 * dt; r.y += r.vy * dt; if (r.y <= 0) { r.y = 0; r.vy = 0; if (r.me) PRS.thump(0.1); } }
+  // tabrakan
+  for (const o of RR.obs) {
+    if (o.hitBy.has(r)) continue;
+    const ds = r.s - o.s; if (ds < -0.9 || ds > 0.9) continue;
+    const ol = o.kind === "tri" ? o.lane : o.lane;
+    const laneHit = o.w > 50 || Math.abs(r.lx - ol) < 0.62;
+    if (!laneHit) continue;
+    if (o.kind === "ptero" && !(o.dive > 0.6)) continue;
+    if (!o.big && r.y > 0.55 && o.kind !== "mud") { o.hitBy.add(r); continue; }
+    if (o.kind === "mud" && r.y > 0.7) { o.hitBy.add(r); continue; }
+    o.hitBy.add(r); rrHit(r, o);
+  }
+  for (const it of RR.items) {
+    if (it.taken) continue;
+    const ds = r.s - it.s; if (ds < -1 || ds > 1) continue;
+    if (Math.abs(r.lx - it.lane) > 0.6) continue;
+    it.taken = true; it.m.visible = false;
+    if (it.kind === "speed") { r.boostT = 3; if (r.me) { toast("⚡ Booster! Raptor melesat!", 1600); PRS.boost(); } else sayBubble("Hehe, booster-ku!", "npc_azka"); }
+    else { r.shield = true; if (r.me) { toast("🛡 Perisai cangkang telur aktif (menahan 1 tabrakan).", 2000); PRS.boost(); } }
+  }
+  if (r.s >= RR.D) { r.done = true; r.s = RR.D; }
+  return rrPlace(r, rap, dt);
+}
+function rrAi(r, dt) {
+  r.mul = 0.985 + 0.045 * Math.sin(r.s * 0.013 + 0.7);
+  // lihat ke depan: hindari rintangan besar, loncati yang kecil, kejar booster
+  const look = 24, laneFree = (l, a, b) => !RR.obs.some((o) => o.big && o.s > a && o.s < b && (o.w > 50 || Math.abs((o.kind === "tri" ? o.lane : o.lane) - l) < 0.7) && !(o.kind === "ptero" && o.lane !== l));
+  if (!r.think || r.think <= 0) {
+    r.think = 0.18;
+    if (!laneFree(r.lane, r.s, r.s + look)) { const c = [-1, 0, 1].filter((l) => l !== r.lane && Math.abs(l - r.lane) === 1 && laneFree(l, r.s - 2, r.s + look)); if (c.length && Math.random() < 0.93) r.lane = prPick(c); }
+    else { const it = RR.items.find((i) => !i.taken && i.s > r.s + 4 && i.s < r.s + 30 && Math.abs(i.lane - r.lane) === 1 && laneFree(i.lane, r.s - 2, i.s + 6)); if (it && Math.random() < 0.7) r.lane = it.lane; }
+  } else r.think -= dt;
+  // loncat
+  const nx = RR.obs.find((o) => !o.big && o.kind !== "mud" && o.s > r.s && o.s - r.s < r.v * 0.36 + 0.6 && (o.w > 50 || Math.abs(o.lane - r.lane) < 0.7));
+  if (nx && r.y <= 0.001 && !nx.aiDone) { nx.aiDone = true; if (Math.random() < 0.85) r.vy = 7.2; }
+  // karet gelang: Azka tak terlalu jauh dari pemain
+  const gap = r.s - RR.me.s;
+  if (gap > 35 && r.slowT <= 0) r.v *= 1 - dt * 0.12; else if (gap < -35) r.v *= 1 + dt * 0.1;
+}
+function rrTick(dt) {
+  if (!RR.on) return;
+  // pterosaurus menukik & triceratops menyeberang ketika pembalap mendekat
+  const front = Math.max(RR.me.s, RR.az.s);
+  for (const o of RR.obs) {
+    if (o.kind === "ptero") { const d = o.s - Math.min(RR.me.s, RR.az.s); const near = Math.min(...[RR.me, RR.az].map((r) => o.s - r.s).filter((v) => v > -3)); o.dive = near < 30 ? Math.min(1, (30 - near) / 18) : 0; const pt = o.m.userData.pt; pt.position.y = 9 - o.dive * 7.6; pt.rotation.z = Math.sin(t * 6) * 0.2; o.m.userData.sh.material.opacity = 0.2 + o.dive * 0.45; void d; }
+    if (o.kind === "tri") { const near = o.s - front; const u = near < 34 && near > 4 ? Math.min(1, (34 - near) / 22) : near <= 4 ? 1 : 0; o.lane = o.l0 + (o.l1 - o.l0) * u; const p = rtAt(o.s); o.m.position.set(p.x + p.rx * o.lane * RR_LANE, 0, p.z + p.rz * o.lane * RR_LANE); o.m.children.forEach((c) => { c.position.y += Math.sin(t * 8) * 0.002; }); }
+  }
+  for (const it of RR.items) if (!it.taken) { it.m.rotation.y += dt * 2; it.m.position.y = 1.2 + Math.sin(t * 3 + it.s) * 0.2; }
+  if (RR.cd) { rrPlace(RR.me, RR.meRap, dt); rrPlace(RR.az, RR.azRap, dt); rrPutRider(); return; }
+  if (RR.res) { rrPutRider(); return; }
+  rrStep(RR.me, RR.meRap, dt, null);
+  rrStep(RR.az, RR.azRap, dt, rrAi);
+  rrPutRider();
+  if (RR.me.done && !RR.res) rrEnd(true);
+  else if (RR.az.done && !RR.res) rrEnd(false, "Azka melintasi garis finis lebih dulu.");
+  if (Math.floor(performance.now() / 250) !== RR.hudT && !RR.res) {
+    RR.hudT = Math.floor(performance.now() / 250);
+    const lap = Math.min(2, Math.floor(RR.me.s / RT.L) + 1), gap = RR.me.s - RR.az.s, tm = (performance.now() - RR.t0) / 1000;
+    prHudSet(`🦖 RAPTOR RUN · Putaran ${lap}/2 · ⏱ ${Math.floor(tm / 60)}:${String(Math.floor(tm % 60)).padStart(2, "0")}`, RR.me.lives, `${gap >= 0 ? `Unggul ${gap.toFixed(0)} m` : `Tertinggal ${(-gap).toFixed(0)} m`} dari Azka · ${Math.round(RR.me.v * 3.6)} km/j${RR.me.boostT > 0 ? " · ⚡" : ""}${RR.me.shield ? " · 🛡" : ""}`, RR.me.s / RR.D, RR.az.s / RR.D);
+  }
+}
+function rrPutRider() {
+  const m = RR.me, rap = RR.meRap;
+  P.x = rap.position.x; P.z = rap.position.z; P.jfx = true; P.jy = m.y + 1.62; P.jcamK = 0.7;
+  P.yaw = rap.rotation.y; P.camYaw = lerpAngle(P.camYaw, rap.rotation.y, 0.2); P.walkTo = null; P.camDist = 7.2; P.camPitch = 0.34;
+  RR.azRider.position.set(RR.azRap.position.x, RR.az.y + 1.62, RR.azRap.position.z); RR.azRider.rotation.y = RR.azRap.rotation.y;
+}
+function rrEnd(win, why) {
+  if (RR.res) return;
+  RR.res = win ? "win" : "lose";
+  const secs = (performance.now() - RR.t0) / 1000;
+  if (win) {
+    const q = chMigrate(), prev = q.chal.raptor;
+    q.chal.raptor = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, secs).toFixed(1), bintang: RR.me.lives };
+    saveQ();
+    if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+    prHudSet("🏆 JUARA RAPTOR RUN!", RR.me.lives, `Kamu mengalahkan Azka dalam ${Math.floor(secs / 60)} mnt ${Math.round(secs % 60)} dtk!`, 1, RR.az.s / RR.D);
+    setTimeout(() => { rrStop(); rrSalute(); }, 1800);
+  } else {
+    setTimeout(() => {
+      rrStop();
+      genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🦖</div><h2>Belum menang…</h2><p id="rrWhy"></p><div class="rowf"><button class="btn" id="rrAgain">🔁 Balapan lagi</button><button class="ghost" id="rrNo">Nanti saja</button></div></div>`);
+      $("rrWhy").textContent = why || "";
+      $("rrAgain").onclick = () => { closeGen(); rrStart(); };
+      $("rrNo").onclick = () => closeGen();
+    }, 1200);
+  }
+}
+function rrStop() {
+  RR.on = false; RR.lock = false; PR.lock = false; RR.cd = false;
+  document.body.classList.remove("rr-on"); rrPad(false);
+  P.jfx = false; P.jy = 0; P.jcamK = 0; if (RR.prevDist !== undefined) { P.camDist = RR.prevDist; P.camPitch = RR.prevPitch; }
+  RR.meRap.visible = false; RR.azRap.visible = false; RR.azRider.visible = false; if (NPCS.azka) NPCS.azka.g.visible = true;
+  PR.forceSkin = PR.chosen || null; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+  const p = rtAt(0); xTeleport(p.x + p.rx * 6, p.z + p.rz * 6 - 2, 0);
+  prHudSet("🌳 LEMBAH PURBA · Portal Ring 1", null, "Bicara dengan Andrian (Pohon Purba) atau Azka (Raptor Run).", null);
+}
+// salam penghormatan Andrian & Azka + gerbang berikutnya
+function rrSalute() {
+  const p = rtAt(0), fx = p.x + p.rx * 6, fz = p.z + p.rz * 6 - 2;
+  const place = (id, dx) => { const n = NPCS[id]; if (!n) return; n.g.visible = true; n.g.position.set(fx + dx, 0, fz - 3.2); n.x = fx + dx; n.z = fz - 3.2; n.g.rotation.y = 0; };
+  setTimeout(() => {
+    place("andrian", -1.2); place("azka", 1.2);
+    PR.salute = performance.now();
+    sayBubble(`Salam hormat, ${S.name}! Pendaki tercepat Pohon Purba 🙇`, "npc_andrian");
+    setTimeout(() => sayBubble(`Salam hormat, Juara Raptor Run! 🦖🙇`, "npc_azka"), 1800);
+    prAwardBatu("hijau");
+    if (PR.next) { PR.next.visible = true; spawnSparkle(); }
+    setTimeout(() => toast("✨ Gerbang berikutnya di Lembah Purba terlihat bercahaya… segera dibuka!", 6000), 5200);
+  }, 1500);
+}
+function rrPad(on) {
+  let el = $("rrPad");
+  if (!on) { el?.remove(); return; }
+  if (el) return;
+  el = document.createElement("div"); el.id = "rrPad";
+  el.innerHTML = `<button data-a="l" aria-label="Kiri">◀</button><button data-a="j" aria-label="Loncat">⤒</button><button data-a="r" aria-label="Kanan">▶</button>`;
+  el.querySelectorAll("button").forEach((b) => b.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); const a = b.dataset.a; if (a === "l") rrLane(-1); else if (a === "r") rrLane(1); else rrJumpTry(); }));
+  document.body.appendChild(el);
+}
+addEventListener("keydown", (e) => {
+  if (!RR.on || e.repeat) return;
+  if (e.target && e.target.closest && e.target.closest("input,textarea,select")) return;
+  if (e.code === "ArrowLeft" || e.code === "KeyA") { rrLane(-1); e.preventDefault(); }
+  else if (e.code === "ArrowRight" || e.code === "KeyD") { rrLane(1); e.preventDefault(); }
+  else if (e.code === "ArrowUp" || e.code === "KeyW") { rrJumpTry(); e.preventDefault(); }
+});
+(() => { let sx = null, sy = null; addEventListener("touchstart", (e) => { if (!RR.on || e.target.closest("button,#genOv,.pop")) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true }); addEventListener("touchend", (e) => { if (!RR.on || sx === null) return; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null; if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) rrLane(dx > 0 ? 1 : -1); else if (dy < -40) rrJumpTry(); }, { passive: true }); })();
+async function rrRekorLoad() { try { const j = await (await fetch("api/kartu/rekor?id=raptor", { credentials: "same-origin" })).json(); if (j.ok) prBoardDraw(RR.board, "🦖 REKOR RAPTOR RUN", j.list); } catch { /* */ } }
+
+// =====================================================================
+// NPC: Andrian & Azka
+// =====================================================================
+function andrianAns(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), bt = batuQ();
+  const go = ["🌳 Tantang memanjat!", () => { closeGen(); hidePopups(); trStart(); }];
+  if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama! Jaga pijakanmu ya 🌿" };
+  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Kita balapan memanjat Pohon Purba setinggi 80 meter. Ada tanjakan dahan, jamur, celah yang harus diloncati, kulit kayu lapuk yang runtuh, dahan rapuh yang patah bila diinjak terlalu lama, dan daun pengangkat. Makin tinggi, kabut makin tebal — jarak pandang makin pendek. Jatuh lebih dari 4 meter = nyawa berkurang 1 (ada 3 nyawa). Di tiga batu prasasti kamu harus menjawab soal kalkulus — aku akan menunggu selama kamu menjawab. Yang pertama tiba di puncak mendapat Batu Kuning!", acts: [go] };
+  if (/tantang|mulai|main|balap|panjat|ulang|siap/.test(ql)) { if (TRG.on || RR.on) return { text: "Tantangan sedang berjalan!" }; setTimeout(trStart, 400); return { text: bt.kuning ? `Main ulang? Ayo, ${S.name}! Kali ini aku tidak akan kalah!` : `Siap, ${S.name}? Hitungan mundur… yang pertama sampai puncak mengambil Batu Kuning!` }; }
+  return { text: bt.kuning ? `Hai, ${S.name}! Batu Kuning sudah milikmu. Mau balapan memanjat lagi? Lalu tantang Azka di Raptor Run!` : `Aku Andrian, pelukis gua penjaga Pohon Purba. Pohon ini 80 meter tingginya. Berani balapan memanjat denganku? Di puncaknya ada Batu Kuning yang bercahaya.`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "andrian")]] };
+}
+function azkaAns(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), bt = batuQ();
+  const go = ["🦖 Tantang balapan!", () => { closeGen(); hidePopups(); rrStart(); }];
+  if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama! Raptor-mu sudah lapar lari 🦖" };
+  if (!bt.kuning) return { text: `Aku Azka, penjinak raptor. Raptor Run hanya untuk penjelajah yang sudah merebut Batu Kuning dari puncak Pohon Purba. Kalahkan Andrian dulu ya, ${S.name}!` };
+  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Raptor berlari sendiri dua putaran mengelilingi lembah. Pindah jalur dengan ←/→ (A/D) atau geser layar, loncat dengan Spasi/↑ atau ⤒. Rintangan kecil (batang kayu, retakan lava, lumpur) cuma memperlambat; rintangan besar (batu, kaki dinosaurus, triceratops, pterosaurus) mengurangi nyawa. Ambil ⚡ untuk melesat dan 🛡 untuk perisai — aku juga akan mengincarnya!", acts: [go] };
+  if (/tantang|mulai|main|balap|ulang|siap|raptor/.test(ql)) { if (TRG.on || RR.on) return { text: "Tantangan sedang berjalan!" }; setTimeout(rrStart, 400); return { text: bt.hijau ? "Main ulang? Ayo, raptor-ku sudah siap!" : `Naik ke raptormu, ${S.name}! Pemenang membawa pulang Batu Hijau!` }; }
+  return { text: bt.hijau ? `Juara! Batu Hijau sudah milikmu. Mau balapan lagi?` : `Aku Azka, penjinak raptor. Berani adu cepat menunggang raptor denganku? Pemenangnya mendapat Batu Hijau!`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "azka")]] };
+}
+
+// =====================================================================
+// MASUK / KELUAR LEMBAH
+// =====================================================================
+function prEnterAsk() {
+  hidePopups();
+  const cur = PR.chosen || "SKN-025";
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>◆ Portal Ring 1 · Lembah Purba</h2>
+  <p>Black Card-mu diterima. Sebelum melangkah ke zaman purba, kenakan pakaian penghuni lembah. Keduanya masuk koleksi Lemari Skin-mu.</p>
+  <div class="pr-pick">${["SKN-025", "SKN-029"].map((id) => `<button class="pr-sk${id === cur ? " on" : ""}" data-id="${id}"><img alt="" src="assets/skins/${id}.jpg"><b>${SKT_BY[id].nm}</b><small>${SKT_BY[id].ds}</small></button>`).join("")}</div>
+  <p style="font-size:12.5px;color:var(--mut)">Tantangan 1: <b>Pohon Purba</b> melawan Andrian · Tantangan 2: <b>Raptor Run</b> melawan Azka.</p>`);
+  document.querySelectorAll(".pr-sk").forEach((b) => b.onclick = () => { closeGen(); prEnter(b.dataset.id); });
+}
+function prEnter(skinId) {
+  sktGrant(["SKN-025", "SKN-029"]);
+  PR.chosen = skinId; PR.forceSkin = skinId; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  setTimeout(() => {
+    PR.on = true; PR.grace = performance.now() + 3500; PR.arrive = { x: PR_SPAWN.x, z: PR_SPAWN.z, t0: performance.now() };
+    xTeleport(PR_SPAWN.x, PR_SPAWN.z, PR_SPAWN.yaw);
+    prHud(true); trHudUpd(); trRekorLoad(); rrRekorLoad();
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => { PRS.roar(); toast("🦕 Selamat datang di Lembah Purba! Andrian menunggu di kaki Pohon Purba.", 5000); }, 1400);
+  }, 650);
+}
+function prVisitPrep() { if (!PR.on) { sktGrant(["SKN-025", "SKN-029"], true); PR.chosen = PR.chosen || "SKN-025"; PR.forceSkin = PR.chosen; refreshMySkin(); PR.on = true; PR.grace = performance.now() + 3500; prHud(true); trHudUpd(); } }
+function prExit() {
+  if (RR.on) { RR.res = "quit"; rrStop(); }
+  TRG.on = false; $("prQz")?.remove(); TRG.quizOpen = false; trEndRacer();
+  PR.on = false; PR.forceSkin = null; PR.lock = false; PR.grace = performance.now() + 3500;
+  PH.active = false; P.jfx = false; P.jy = 0; P.jcamK = 0;
+  refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+  prHud(false);
+  xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI);
+  toast("◆ Kamu kembali ke Taman Apresiasi.", 3000);
+}
+function prIsolate(on) {
+  if (on === !!PR.hidden) return;
+  if (on) { const keep = new Set([avatar, camera].filter(Boolean)); for (const r of remotes.values()) keep.add(r.av); PR.hidden = []; for (const o of scene.children) if (o.visible && !PR.own.has(o) && !keep.has(o) && !o.isLight && !o.isCamera) { o.visible = false; PR.hidden.push(o); } for (const o of world.walls.children) if (o.visible && !PR.ownW.has(o)) { o.visible = false; PR.hidden.push(o); } }
+  else { for (const o of PR.hidden) o.visible = true; PR.hidden = null; }
+}
+function prTick(dt) {
+  const now = performance.now(), here = prZone(P.x, P.z), grace = now < PR.grace;
+  if (PR.arrive) { if (Math.hypot(P.x - PR.arrive.x, P.z - PR.arrive.z) < 2 || now - PR.arrive.t0 > 6000) PR.arrive = null; }
+  prIsolate(here);
+  if (here) {
+    const h = PH.active ? PH.y : 0, k = Math.max(0, Math.min(1, (h - 6) / 62)), kk = Math.pow(k, 1.25);
+    scene.fog.color.setRGB(0.91 + (0.86 - 0.91) * kk, 0.70 + (0.88 - 0.70) * kk, 0.48 + (0.9 - 0.48) * kk);
+    scene.fog.density = 0.0042 + kk * 0.105;
+    if (PR.cloud) { PR.cloud.material.opacity = Math.min(1, kk * 1.4); PR.cloud.material.color.copy(scene.fog.color); PR.cloud.visible = kk > 0.01; }
+    if (PR.sun) PR.sun.material.opacity = 0.9 * (1 - kk);
+    PR.fogged = true;
+  }
+  else if (PR.fogged && typeof xFogBase !== "undefined" && xFogBase) { scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; PR.fogged = false; }
+  PRS.tick(here && PR.on);
+  if (here && !PR.on && !grace && !PR.arrive) { xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Lembah Purba hanya bisa dimasuki lewat Portal Ring 1 dengan Black Card."); }
+  if (!here && PR.on && !grace && !PR.arrive && roomAt(P.x, P.z)) { PR.on = false; PR.forceSkin = null; refreshMySkin(); prHud(false); TRG.on = false; if (RR.on) rrStop(); }
+  if (!here) { if (PH.active) { PH.active = false; P.jfx = false; P.jy = 0; P.jcamK = 0; } return; }
+  phTick(dt);
+  trTick(dt);
+  rrTick(dt);
+  // keluar lewat portal
+  if (PR.on && !RR.on && !TRG.on && !grace && Math.hypot(P.x - PR_EXIT.x, P.z - PR_EXIT.z) < 1.3) prExit();
+  // NPC membungkuk saat salam penghormatan
+  if (PR.salute) { const k = Math.max(0, 1 - Math.abs((now - PR.salute) / 1000 - 1.6) / 1.4); for (const id of ["andrian", "azka"]) { const n = NPCS[id]; if (n && n.skinG) n.skinG.rotation.x = k * 0.45; } if (now - PR.salute > 6000) PR.salute = 0; }
+  for (const e of PR.anims) e(dt);
+}
+
+// =====================================================================
+// PEMBANGUNAN LEMBAH
+// =====================================================================
+function buildPurba() {
+  const before = new Set(scene.children), wBefore = new Set(world.walls.children);
+  PR.anims = [];
+  trBuildPath(); rtBuild();
+  const TC = PR_TC, R0 = rndGen(1234);
+  // langit (kubah gradien) & tanah
+  const sky = new THREE2.Mesh(new THREE2.SphereGeometry(420, 24, 16), new THREE2.MeshBasicMaterial({ side: THREE2.BackSide, fog: false, depthWrite: false, map: prTex(16, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#2c6e8f"); g.addColorStop(0.45, "#f0b06a"); g.addColorStop(0.55, "#f6c48a"); g.addColorStop(1, "#c98a52"); x.fillStyle = g; x.fillRect(0, 0, w, h); }) }));
+  sky.position.set(TC.x, 0, TC.z); sky.renderOrder = -10; scene.add(sky);
+  const ground = new THREE2.Mesh(new THREE2.PlaneGeometry(700, 700), new THREE2.MeshStandardMaterial({ map: prGrass([70, 70]), roughness: 1 }));
+  ground.rotation.x = -Math.PI / 2; ground.position.set(TC.x, 0.0, TC.z); ground.receiveShadow = true; scene.add(ground); world.floors.push(ground);
+  // matahari senja & gunung api
+  const sun = world.glowSprite("#fff1c1", 60, 0.9); sun.material.fog = false; sun.position.set(TC.x - 160, 90, TC.z - 330); scene.add(sun); PR.sun = sun;
+  // selubung awan: menutup langit saat kabut tebal di ketinggian
+  const cloud = new THREE2.Mesh(new THREE2.SphereGeometry(400, 20, 12), new THREE2.MeshBasicMaterial({ side: THREE2.BackSide, fog: false, transparent: true, opacity: 0, depthWrite: false, color: 0xdfe4e8 })); cloud.position.set(TC.x, 0, TC.z); cloud.renderOrder = -9; cloud.visible = false; scene.add(cloud); PR.cloud = cloud;
+  const volc = new THREE2.Mesh(new THREE2.ConeGeometry(70, 95, 18, 1, true), new THREE2.MeshStandardMaterial({ color: 0x5b4636, roughness: 1, flatShading: true })); volc.position.set(TC.x + 120, 40, TC.z - 260); scene.add(volc);
+  const crater = world.glowSprite("#ff6a00", 34, 0.85); crater.position.set(TC.x + 120, 92, TC.z - 260); scene.add(crater);
+  const smokes = []; for (let i = 0; i < 10; i++) { const s = world.glowSprite("#6b5a4e", 26, 0.35); s.position.set(TC.x + 120, 95 + i * 9, TC.z - 260); scene.add(s); smokes.push(s); }
+  PR.anims.push((dt) => { smokes.forEach((s, i) => { s.position.y += dt * 3; s.position.x += dt * 1.2; if (s.position.y > 190) { s.position.y = 95; s.position.x = TC.x + 120; } s.material.opacity = 0.35 * (1 - (s.position.y - 95) / 95); void i; }); crater.material.opacity = 0.7 + Math.sin(t * 3) * 0.15; });
+  // bukit melingkar
+  const hillM = new THREE2.MeshStandardMaterial({ color: 0x6f8a45, roughness: 1, flatShading: true });
+  for (let i = 0; i < 26; i++) { const a = (i / 26) * Math.PI * 2, r = 135 + R0() * 40, h = 20 + R0() * 35; const hl = new THREE2.Mesh(new THREE2.ConeGeometry(28 + R0() * 22, h, 7), hillM); hl.position.set(TC.x + Math.sin(a) * r, h / 2 - 2, TC.z + Math.cos(a) * r); scene.add(hl); }
+  // sungai
+  const river = new THREE2.Mesh(new THREE2.PlaneGeometry(14, 300), new THREE2.MeshStandardMaterial({ color: 0x3b9fbf, roughness: 0.15, metalness: 0.3, transparent: true, opacity: 0.85 })); river.rotation.x = -Math.PI / 2; river.rotation.z = 0.5; river.position.set(TC.x - 105, 0.03, TC.z - 10); scene.add(river);
+  // pakis & sikas (instanced) — hindari lintasan & pohon
+  const okSpot = (x, z) => { const d = Math.hypot(x - TC.x, z - TC.z); return d > 18 && (d < 58 || d > 90) && !(Math.abs(x - PR_SPAWN.x) < 8 && z > 60); };
+  const fernG = new THREE2.PlaneGeometry(1.6, 1.4), fernM = new THREE2.MeshStandardMaterial({ color: 0x3f7a2e, side: THREE2.DoubleSide, roughness: 0.9, map: prTex(64, 64, (x) => { x.clearRect(0, 0, 64, 64); x.strokeStyle = "#e7f5d0"; x.fillStyle = "#e7f5d0"; x.lineWidth = 3; x.beginPath(); x.moveTo(32, 64); x.quadraticCurveTo(30, 30, 40, 2); x.stroke(); for (let i = 0; i < 9; i++) { const y = 58 - i * 6; x.beginPath(); x.ellipse(32 - 9 + i * 0.6, y, 9 - i * 0.6, 2.2, -0.4, 0, 7); x.ellipse(32 + 9 - i * 0.2, y - 2, 9 - i * 0.6, 2.2, 0.4, 0, 7); x.fill(); } }), transparent: true, alphaTest: 0.4 });
+  const NF = 520, fern = new THREE2.InstancedMesh(fernG, fernM, NF * 2), o3 = new THREE2.Object3D(); let fi = 0;
+  for (let i = 0; i < NF; i++) { let x, z, tries = 0; do { x = TC.x + (R0() - 0.5) * 230; z = TC.z + (R0() - 0.5) * 230; tries++; } while (!okSpot(x, z) && tries < 20); const sc = 0.8 + R0() * 1.8, ry = R0() * 3; for (const k of [0, Math.PI / 2]) { o3.position.set(x, 0.65 * sc, z); o3.rotation.set(0, ry + k, 0); o3.scale.set(sc, sc, sc); o3.updateMatrix(); fern.setMatrixAt(fi++, o3.matrix); } }
+  scene.add(fern);
+  const cyc = (x, z, s) => { const g = new THREE2.Group(); g.position.set(x, 0, z); g.scale.setScalar(s); scene.add(g); const tr = new THREE2.Mesh(new THREE2.CylinderGeometry(0.35, 0.5, 4, 8), new THREE2.MeshStandardMaterial({ map: prBark([1, 2]), roughness: 1 })); tr.position.y = 2; g.add(tr); const lm = new THREE2.MeshStandardMaterial({ color: 0x4d7c2a, roughness: 0.9, side: THREE2.DoubleSide, flatShading: true }); for (let i = 0; i < 9; i++) { const lf = new THREE2.Mesh(new THREE2.PlaneGeometry(0.7, 3.4), lm); lf.position.set(0, 4.1, 0); lf.rotation.set(-1.0, (i / 9) * Math.PI * 2, 0, "YXZ"); lf.translateY(1.4); g.add(lf); } };
+  for (let i = 0; i < 46; i++) { let x, z, tries = 0; do { x = TC.x + (R0() - 0.5) * 240; z = TC.z + (R0() - 0.5) * 240; tries++; } while (!okSpot(x, z) && tries < 20); cyc(x, z, 0.9 + R0() * 1.3); }
+  // dinosaurus raksasa di kejauhan (siluet) & pterosaurus berputar
+  const brM = new THREE2.MeshStandardMaterial({ color: 0x4b5a3c, roughness: 1, flatShading: true });
+  const brach = (x, z, s, ry) => { const g = new THREE2.Group(); g.position.set(x, 0, z); g.scale.setScalar(s); g.rotation.y = ry; scene.add(g); const b = new THREE2.Mesh(new THREE2.SphereGeometry(3, 10, 8), brM); b.scale.set(1, 0.8, 1.8); b.position.y = 6; g.add(b); const n = new THREE2.Mesh(new THREE2.CylinderGeometry(0.7, 1.2, 11, 8), brM); n.position.set(0, 12, -5.5); n.rotation.x = -0.55; g.add(n); const hd = new THREE2.Mesh(new THREE2.SphereGeometry(1, 8, 6), brM); hd.scale.z = 1.6; hd.position.set(0, 17, -8.7); g.add(hd); const tl = new THREE2.Mesh(new THREE2.ConeGeometry(1.2, 12, 8), brM); tl.rotation.x = Math.PI / 2 + 0.2; tl.position.set(0, 5, 10); g.add(tl); const legs = []; for (const [lx, lz] of [[-1.6, -3], [1.6, -3], [-1.6, 3], [1.6, 3]]) { const l = new THREE2.Mesh(new THREE2.CylinderGeometry(0.8, 0.9, 5, 8), brM); l.position.set(lx, 2.5, lz); g.add(l); legs.push(l); } return { g, legs }; };
+  const B1 = brach(TC.x - 150, TC.z - 120, 1.4, 0.6), B2 = brach(TC.x + 170, TC.z + 40, 1.2, -1.2);
+  PR.anims.push((dt) => { for (const [B, sp] of [[B1, 0.6], [B2, -0.5]]) { B.g.translateZ(-dt * 0.8); B.legs.forEach((l, i) => { l.rotation.x = Math.sin(t * 1.4 * Math.abs(sp) * 2 + i * 1.6) * 0.18; }); if (Math.hypot(B.g.position.x - TC.x, B.g.position.z - TC.z) > 230) B.g.rotation.y += Math.PI; } });
+  const pts = [];
+  for (let i = 0; i < 5; i++) { const g = new THREE2.Group(), m = new THREE2.MeshStandardMaterial({ color: 0x7c2d12, roughness: 0.9, side: THREE2.DoubleSide, flatShading: true }); const bd = new THREE2.Mesh(new THREE2.ConeGeometry(0.4, 2.4, 6), m); bd.rotation.x = Math.PI / 2; g.add(bd); const wl = new THREE2.Mesh(new THREE2.PlaneGeometry(3.6, 1.4), m); wl.rotation.x = Math.PI / 2; wl.position.x = -1.9; g.add(wl); const wr = wl.clone(); wr.position.x = 1.9; g.add(wr); scene.add(g); pts.push({ g, wl, wr, r: 40 + i * 18, h: 45 + i * 9, sp: 0.15 + i * 0.03, ph: i * 1.3 }); }
+  PR.anims.push(() => { for (const p of pts) { const a = t * p.sp + p.ph; p.g.position.set(TC.x + Math.sin(a) * p.r, p.h + Math.sin(t + p.ph) * 3, TC.z + Math.cos(a) * p.r); p.g.rotation.y = a + Math.PI / 2; p.g.rotation.z = 0.3; p.wl.rotation.z = Math.sin(t * 4 + p.ph) * 0.35; p.wr.rotation.z = -Math.sin(t * 4 + p.ph) * 0.35; } });
+  // ---------- POHON PURBA ----------
+  const bark = new THREE2.MeshStandardMaterial({ map: prBark([6, 20]), roughness: 1 });
+  const trunk = new THREE2.Mesh(new THREE2.CylinderGeometry(2.7, 4.3, TR.top + 2, 20, 8), bark); trunk.position.set(TC.x, (TR.top + 2) / 2 - 1, TC.z); scene.add(trunk);
+  world.circles.push({ x: TC.x, z: TC.z, r: 4.4 });
+  for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2 + 0.3, rt = new THREE2.Mesh(new THREE2.ConeGeometry(1.2, 7, 6), bark); rt.position.set(TC.x + Math.sin(a) * 4.6, 1.2, TC.z + Math.cos(a) * 4.6); rt.rotation.set(Math.cos(a) * 1.15, 0, -Math.sin(a) * 1.15); scene.add(rt); }
+  // sarang puncak + tajuk
+  const nest = new THREE2.Mesh(new THREE2.CylinderGeometry(6.4, 5.2, 0.8, 24), new THREE2.MeshStandardMaterial({ map: prBark([8, 1]), roughness: 1 })); nest.position.set(TC.x, TR.top - 0.4, TC.z); scene.add(nest);
+  const leafM = new THREE2.MeshStandardMaterial({ color: 0x2f6b2a, roughness: 0.95, flatShading: true });
+  for (let i = 0; i < 16; i++) { const a = R0() * Math.PI * 2, r = 4 + R0() * 9; const lf = new THREE2.Mesh(new THREE2.IcosahedronGeometry(4 + R0() * 3.5, 0), leafM); lf.position.set(TC.x + Math.sin(a) * r, TR.top + 8 + R0() * 7, TC.z + Math.cos(a) * r); scene.add(lf); }
+  for (let i = 0; i < 18; i++) { const a = R0() * Math.PI * 2, r = 8 + R0() * 6, len = 6 + R0() * 14; const v = new THREE2.Mesh(new THREE2.CylinderGeometry(0.05, 0.05, len, 4), new THREE2.MeshStandardMaterial({ color: 0x3f6212 })); v.position.set(TC.x + Math.sin(a) * r, TR.top + 6 - len / 2, TC.z + Math.cos(a) * r); scene.add(v); }
+  // batu kuning di puncak
+  TR.stone = prGem("#facc15", "#a16207", 0.45); TR.stone.position.set(TC.x, TR.top + 1.4, TC.z); scene.add(TR.stone);
+  const ped = new THREE2.Mesh(new THREE2.CylinderGeometry(0.5, 0.7, 0.9, 8), new THREE2.MeshStandardMaterial({ color: 0x78716c, roughness: 0.9 })); ped.position.set(TC.x, TR.top + 0.45, TC.z); scene.add(ped);
+  // pijakan
+  const wood = new THREE2.MeshStandardMaterial({ map: prBark([1, 1]), roughness: 1, color: 0xb08860 });
+  const crumbleM = new THREE2.MeshStandardMaterial({ map: prBark([1, 1]), roughness: 1, color: 0xd6b27a, emissive: 0x3a1a00, emissiveIntensity: 0.25 });
+  const mushM = new THREE2.MeshStandardMaterial({ color: 0xe0782f, roughness: 0.6 }), mushS = new THREE2.MeshStandardMaterial({ color: 0xfef3c7, roughness: 0.8 });
+  const leafLift = new THREE2.MeshStandardMaterial({ color: 0x4ade80, roughness: 0.6, emissive: 0x14532d, emissiveIntensity: 0.4, side: THREE2.DoubleSide });
+  const restM = new THREE2.MeshStandardMaterial({ map: prBark([2, 1]), roughness: 1, color: 0x9a7650 });
+  const rapuhM = new THREE2.MeshStandardMaterial({ roughness: 1, map: prTex(128, 128, (x, w, h) => { const R = rndGen(31); x.fillStyle = "#8a6a46"; x.fillRect(0, 0, w, h); x.strokeStyle = "#2b1a0b"; x.lineWidth = 3; for (let i = 0; i < 7; i++) { x.beginPath(); let px = R() * w, py = R() * h; x.moveTo(px, py); for (let k = 0; k < 5; k++) { px += (R() - 0.5) * 40; py += (R() - 0.5) * 40; x.lineTo(px, py); } x.stroke(); } x.fillStyle = "rgba(160,190,120,.45)"; for (let i = 0; i < 14; i++) { x.beginPath(); x.arc(R() * w, R() * h, 3 + R() * 6, 0, 7); x.fill(); } }, [2, 1]) });
+  for (const p of TR.pieces) {
+    const g = new THREE2.Group(); scene.add(g); p.m = g; p.baseY = 0;
+    const len = (p.a1 - p.a0) * TR.R, segs = Math.max(1, Math.ceil(len / 0.9)), w = p.r1 - p.r0;
+    if (p.k === "mush") {
+      const am = (p.a0 + p.a1) / 2, c = trXZ(am, TR.R), cap = new THREE2.Mesh(new THREE2.CylinderGeometry(w * 0.55, w * 0.5, 0.3, 14), mushM); cap.position.set(c.x, p.y0 - 0.15, c.z); g.add(cap);
+      const st2 = new THREE2.Mesh(new THREE2.CylinderGeometry(0.2, 0.3, 1.4, 8), mushS); st2.position.set(c.x, p.y0 - 0.85, c.z); g.add(st2);
+      for (let i = 0; i < 5; i++) { const d = new THREE2.Mesh(new THREE2.SphereGeometry(0.08, 6, 4), mushS); d.position.set(c.x + Math.sin(i * 1.3) * 0.5, p.y0 + 0.02, c.z + Math.cos(i * 1.3) * 0.5); g.add(d); }
+      continue;
+    }
+    const mat = p.rapuh ? rapuhM : p.k === "crumble" ? crumbleM : p.k === "lift" ? leafLift : p.k === "rest" || p.k === "quiz" ? restM : wood;
+    for (let i = 0; i < segs; i++) {
+      const u0 = i / segs, u1 = (i + 1) / segs, a0 = p.a0 + (p.a1 - p.a0) * u0, a1 = p.a0 + (p.a1 - p.a0) * u1, am = (a0 + a1) / 2;
+      const y0 = p.k === "lift" ? 0 : p.y0 + (p.y1 - p.y0) * u0, y1 = p.k === "lift" ? 0 : p.y0 + (p.y1 - p.y0) * u1;
+      const c = trXZ(am, TR.R), sl = (a1 - a0) * TR.R + 0.06;
+      const th = p.k === "lift" ? 0.12 : 0.36;
+      const b = new THREE2.Mesh(new THREE2.BoxGeometry(sl, th, w), mat);
+      b.position.set(c.x, (y0 + y1) / 2 - th / 2, c.z);
+      b.rotation.order = "YXZ"; b.rotation.y = am; b.rotation.z = Math.atan2(y1 - y0, sl);
+      b.castShadow = true; g.add(b);
+    }
+    // dahan penyangga ke batang
+    if (p.k !== "lift" && (p.k !== "crumble")) { const am = (p.a0 + p.a1) / 2, c = trXZ(am, TR.R - w / 2 - 0.2), ci = trXZ(am, 3.4), ym = (p.y0 + p.y1) / 2 - 0.6; const br = new THREE2.Mesh(new THREE2.CylinderGeometry(0.18, 0.32, Math.hypot(c.x - ci.x, c.z - ci.z) + 0.6, 6), bark); br.position.set((c.x + ci.x) / 2, ym, (c.z + ci.z) / 2); br.rotation.set(0, am, Math.PI / 2, "YXZ"); br.rotation.order = "YXZ"; br.rotation.set(0, am, 0); br.rotateX(Math.PI / 2); g.add(br); }
+    if (p.k === "lift") { p.lk = 0; g.position.y = 0; p.m = g; }
+    if (p.k === "quiz") {
+      const am = p.a0 + (p.a1 - p.a0) * 0.45, c = trXZ(am, TR.R + 0.9);
+      const tab = new THREE2.Mesh(new THREE2.BoxGeometry(1.3, 1.6, 0.3), new THREE2.MeshStandardMaterial({ color: 0x78716c, roughness: 0.9, emissive: 0x3f2a00, emissiveIntensity: 0.3 })); tab.position.set(c.x, p.y0 + 0.8, c.z); tab.rotation.y = am; g.add(tab);
+      const sg = prSign(`PRASASTI ${p.qz + 1}`, ["persamaan", "pertidaksamaan", "integral"][p.qz], "#facc15", 1.6); sg.position.set(c.x, p.y0 + 2.0, c.z); sg.rotation.y = am + Math.PI / 2; g.add(sg); world.billboards && world.billboards.push(sg);
+      const bc = trXZ(p.a1 - 0.1 / TR.R, TR.R);
+      const bar = new THREE2.Group(); bar.position.set(bc.x, p.y0, bc.z); bar.rotation.y = p.a1 + Math.PI / 2; g.add(bar);
+      for (let i = 0; i < 5; i++) { const rt = new THREE2.Mesh(new THREE2.CylinderGeometry(0.08, 0.14, 2.4, 6), new THREE2.MeshStandardMaterial({ color: 0x4d3a1f, emissive: 0xfacc15, emissiveIntensity: 0.35 })); rt.position.set(-1.2 + i * 0.6, 1.2, 0); rt.rotation.z = Math.sin(i * 2) * 0.25; bar.add(rt); }
+      p.bar = bar;
+    }
+    if (p.cp && p.k === "rest") { const am = (p.a0 + p.a1) / 2, c = trXZ(am, TR.R + 1.0); const fl = world.glowSprite("#86efac", 1.2, 0.8); fl.position.set(c.x, p.y0 + 1.0, c.z); g.add(fl); }
+  }
+  // papan & tanda di kaki pohon
+  const st = trXZ(0, TR.R + 9);
+  const sgn = prSign("🌳 POHON PURBA · 80 m", "Tantangan 1 Portal Ring 1 · balapan memanjat melawan Andrian", "#facc15", 6.2); sgn.position.set(st.x - 4, 4.4, st.z + 2); scene.add(sgn);
+  TR.board = cvScreen(3.4, 2.8, 900, 750); TR.board.m.position.set(st.x - 7.5, 2.3, st.z - 1); TR.board.m.rotation.y = 0.35; scene.add(TR.board.m); prBoardDraw(TR.board, "🌳 REKOR POHON PURBA", []);
+  // racer Andrian (salinan model untuk balapan)
+  const racerB = SKIN_BUILD["SKN-027"]("#ffffff"); racerB.headG.position.y = 1.5; TR.racer = racerB.group; TR.racer.visible = false; scene.add(TR.racer); PR.anims.push(() => { if (TR.racer.visible) racerB.anim(t); });
+  // ---------- RAPTOR RUN: lintasan ----------
+  const W = RR_LANE * 3 + 1.2, N = RT.N, pos = [], uv = [], idx = [];
+  for (let i = 0; i <= N; i++) { const p = RT.pts[i], q = RT.pts[Math.min(N, i + 1)], pr2 = RT.pts[Math.max(0, i - 1)], fx = q.x - pr2.x, fz = q.z - pr2.z, fl = Math.hypot(fx, fz) || 1, rx = -fz / fl, rz = fx / fl; pos.push(p.x - rx * W / 2, 0.02, p.z - rz * W / 2, p.x + rx * W / 2, 0.02, p.z + rz * W / 2); const v = RT.S[i] / 6; uv.push(0, v, 1, v); if (i < N) { const a = i * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); } }
+  const tg = new THREE2.BufferGeometry(); tg.setAttribute("position", new THREE2.Float32BufferAttribute(pos, 3)); tg.setAttribute("uv", new THREE2.Float32BufferAttribute(uv, 2)); tg.setIndex(idx); tg.computeVertexNormals();
+  const dirt = prDirt([1, 1]); dirt.wrapS = dirt.wrapT = THREE2.RepeatWrapping;
+  const track = new THREE2.Mesh(tg, new THREE2.MeshStandardMaterial({ map: dirt, roughness: 1, side: THREE2.DoubleSide })); track.receiveShadow = true; scene.add(track);
+  // gerbang start/finis
+  const sp0 = rtAt(0), gate = new THREE2.Group(); gate.position.set(sp0.x, 0, sp0.z); gate.rotation.y = Math.atan2(sp0.fx, sp0.fz); scene.add(gate);
+  const stoneM = new THREE2.MeshStandardMaterial({ color: 0x78716c, roughness: 0.9, flatShading: true });
+  for (const sx of [-1, 1]) { const pl = new THREE2.Mesh(new THREE2.BoxGeometry(1.2, 6, 1.2), stoneM); pl.position.set(sx * (W / 2 + 0.8), 3, 0); gate.add(pl); const fire = world.glowSprite("#ff7a18", 2.6, 0.9); fire.position.set(sx * (W / 2 + 0.8), 6.6, 0); gate.add(fire); }
+  const ban = prSign("🏁 START · FINIS", "Raptor Run · 2 putaran", "#22c55e", W + 2); ban.position.set(0, 5.4, 0); ban.rotation.y = Math.PI; gate.add(ban);
+  const ban2 = ban.clone(); ban2.rotation.y = 0; gate.add(ban2);
+  // raptor pemain & Azka
+  RR.meRap = mkRaptor("#3f8f4a", "#d9f99d"); RR.meRap.visible = false; scene.add(RR.meRap);
+  RR.azRap = mkRaptor("#c2410c", "#fed7aa"); RR.azRap.visible = false; scene.add(RR.azRap);
+  const azB = SKIN_BUILD["SKN-028"]("#ffffff"); azB.headG.position.y = 1.5; RR.azRider = azB.group; RR.azRider.visible = false; scene.add(RR.azRider); PR.anims.push(() => { if (RR.azRider.visible) azB.anim(t); });
+  RR.board = cvScreen(3.4, 2.8, 900, 750); RR.board.m.position.set(sp0.x + 9, 2.3, sp0.z + 6); RR.board.m.rotation.y = -0.5; scene.add(RR.board.m); prBoardDraw(RR.board, "🦖 REKOR RAPTOR RUN", []);
+  // gerbang berikutnya (tersegel)
+  const nx = new THREE2.Group(); nx.position.set(sp0.x - 10, 0, sp0.z + 9); nx.rotation.y = 0.4; scene.add(nx);
+  const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.8, 0.25, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x14532d, emissive: 0x22c55e, emissiveIntensity: 0.7, metalness: 0.5 })); nr.position.y = 2.3; nx.add(nr);
+  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#22c55e", 3); ns.position.y = 4.8; nx.add(ns);
+  PR.next = nx; nx.visible = !!batuQ().hijau; PR.anims.push((dt) => { nr.rotation.z += dt * 0.7; });
+  xAct(nr, { type: "x_prnext" }); xAct(ns, { type: "x_prnext" });
+  // portal kembali
+  const ex = new THREE2.Group(); ex.position.set(PR_EXIT.x, 0, PR_EXIT.z); ex.rotation.y = Math.PI; scene.add(ex);
+  const er = new THREE2.Mesh(new THREE2.TorusGeometry(1.2, 0.12, 10, 36), new THREE2.MeshBasicMaterial({ color: 0x7c3aed, toneMapped: false })); er.position.y = 1.6; ex.add(er);
+  const ed = new THREE2.Mesh(new THREE2.CircleGeometry(1.1, 30), new THREE2.MeshBasicMaterial({ color: 0x1e0b3a, transparent: true, opacity: 0.85, side: THREE2.DoubleSide })); ed.position.y = 1.6; ex.add(ed);
+  const es = prSign("⟲ TAMAN APRESIASI", "keluar Lembah Purba", "#a78bfa", 2.6); es.position.y = 3.3; ex.add(es);
+  xAct(ed, { type: "x_prexit" }); xAct(es, { type: "x_prexit" });
+  PR.anims.push((dt) => { er.rotation.z += dt; });
+  // batas lembah (tak terlihat)
+  for (const [ax, az, bx, bz] of [[PRV.x0 + 1, PRV.z0 + 1, PRV.x1 - 1, PRV.z0 + 1], [PRV.x1 - 1, PRV.z0 + 1, PRV.x1 - 1, PRV.z1 - 1], [PRV.x1 - 1, PRV.z1 - 1, PRV.x0 + 1, PRV.z1 - 1], [PRV.x0 + 1, PRV.z1 - 1, PRV.x0 + 1, PRV.z0 + 1]]) xCol(ax, az, bx, bz, 0.3);
+  // NPC
+  const st2 = trXZ(-0.25, TR.R + 3.2);
+  makeCustomHuman("andrian", { code: "PURBA", name: "Andrian", role: "Pelukis Gua · Penjaga Pohon Purba", col: "#b45309", icon: "🌳", hint: "🌳", x: st2.x, z: st2.z, room: "p_valley", secret: true, hidden: true, tag: "ANDRIAN · POHON PURBA",
+    look: { shirt: "#D6B184", apron: "#D6B184", glasses: false, noApron: true }, chips: ["Tantang memanjat!", "Aturannya?", "Main ulang"], roleNote: "Tantangan Pohon Purba (Portal Ring 1)",
+    knowText: "Andrian, pelukis gua, menantang pemain balapan memanjat Pohon Purba setinggi 80 meter. Pemenangnya mendapat Batu Kuning.", greetActs: () => andrianAns("halo").acts, answer: andrianAns });
+  const az0 = rtAt(6);
+  makeCustomHuman("azka", { code: "RAPTOR", name: "Azka", role: "Penjinak Raptor · Raptor Run", col: "#15803d", icon: "🦖", hint: "🦖", x: az0.x + az0.rx * 7.5, z: az0.z + az0.rz * 7.5, room: "p_valley", secret: true, hidden: true, tag: "AZKA · RAPTOR RUN",
+    look: { shirt: "#4F9F5B", apron: "#4F9F5B", glasses: false, noApron: true }, chips: ["Tantang balapan!", "Aturannya?", "Main ulang"], roleNote: "Tantangan Raptor Run (Portal Ring 1)",
+    knowText: "Azka, penjinak dinosaurus, menantang pemain balapan menunggang raptor di Raptor Run. Pemenangnya mendapat Batu Hijau.", greetActs: () => azkaAns("halo").acts, answer: azkaAns });
+  for (const [id, sk] of [["andrian", "SKN-027"], ["azka", "SKN-028"]]) { const n = NPCS[id]; const s = sktOnNpc(n, sk); n.skinG = s.group; n.pitch = id === "andrian" ? 0.95 : 1.1; n.tag.position.y = 2.2; }
+  // kendaraan Azka yang diparkir di samping NPC
+  const parked = mkRaptor("#c2410c", "#fed7aa"); parked.position.set(az0.x + az0.rx * 10, 0, az0.z + az0.rz * 10); parked.rotation.y = Math.atan2(-az0.fx, -az0.fz); scene.add(parked); PR.anims.push(() => { parked.userData.run(t * 1.2, 0.08); });
+  PR.own = new Set(scene.children.filter((o) => !before.has(o))); PR.own.add(world.walls);
+  PR.ownW = new Set(world.walls.children.filter((o) => !wBefore.has(o)));
+  XT.anim.push((dt) => prTick(dt));
+}
+function prAct(act) {
+  const ty = act.type;
+  if (ty === "x_prexit") { if ((TRG.on || RR.on) && !confirm("Keluar dari Lembah Purba? Tantangan yang sedang berjalan akan berhenti.")) return true; prExit(); return true; }
+  if (ty === "x_prnext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
+  return false;
+}
+
+// panel Lembah Purba bisa diciutkan (HP)
+document.addEventListener("click", (e) => { const top = e.target.closest && e.target.closest("#prHud .cvh-top"); if (top && document.body.classList.contains("touch")) top.parentElement.classList.toggle("mini"); });
 
 </script>
 </body>

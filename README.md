@@ -304,3 +304,29 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
 - **Unggah PDF & PowerPoint ke smart board:** di tab "Smart Board & Video", file PDF diubah menjadi slide (satu halaman = satu slide) langsung di browser admin; file .pptx diubah ke PDF dulu di server dengan LibreOffice (`sudo apt install libreoffice-impress`), bila belum terpasang admin diminta mengunggah PDF.
 - **Slide & coretan smart board tersimpan** (`DATA_DIR/smartboard-live.json`) sehingga tidak hilang saat server di-restart.
 - Setelah deploy: `npm install` (memasang mediasoup), atur `SFU_ANNOUNCED_IP`, buka port 44444, lalu `pm2 restart`.
+
+## Pembaruan v17 — Portal Ring 1 · Lembah Purba, 60 skin, Daftar NPC
+- **Kode cepat tahap 8:** `butnavudivoxyziz8` diketik ke **Kang Aftaf** (IT-Mart). Kode ini diverifikasi **server** (`POST /api/kartu/kode`, hanya hash yang disimpan) dan hanya berlaku bagi pemegang 6 lencana. Pemain langsung mendapat Lencana Kerjasama Tim + skin **Tentara Futuristik**, diantar ke Aula Kerjasama (Teh Dewi & Kang Eko), lalu menerima Black Card dari Kang Santo. Kang Aftaf tetap tidak pernah menyebut kode.
+- **Daftar NPC (kunjungi cepat):** menu PEOPLE → "Daftar NPC", atau menu ☰.
+  - Setiap NPC yang pernah diajak bicara tercatat. NPC tersembunyi (Kang Santo, Teh Fety, Teh Puspa, penguji lencana, dll.) baru muncul setelah ditemui; sisanya tampil sebagai "??? · belum ditemui". Pemain lama otomatis dianggap sudah bertemu NPC sesuai progres lencananya.
+  - Panel berisi pencarian, kelompok (Penyambut & Pemandu Lab, IT-Mart & Kafe, Penjaga Tantangan, Pemberi Lencana & Hadiah), dan kartu NPC dengan tombol **Kunjungi**.
+  - Tombol Kunjungi langsung mengantar ke NPC, termasuk yang berada di dalam area tantangan (Gua Pustaka, Hanggar, Aula Juara Kawah Api, Dunia Server, Serambi Masjid, Aula Kerjasama, Lembah Purba). Untuk mengulang tantangan, pemain mendatangi penjaga awal dan memilih "main ulang" di chat.
+- **Katalog 60 skin (SKN-001…SKN-060):** model 3D bergaya kotak dibangun dari data katalog (tipe tubuh, warna, rambut, penutup kepala, barang di tangan, aksesori punggung). Ilustrasi katalog disimpan di `public/assets/skins/` (240×320) sebagai kartu pratinjau.
+  - Skin katalog **tidak** ditampilkan sekaligus: hanya yang sudah dimiliki. Skin Portal Ring 1 (**Flinstone**, **Indian**, **Raptor**) terlihat — terkunci — hanya bagi pemegang Black Card.
+  - Skin lain dibuka satu per satu oleh tantangan-tantangan berikutnya (cukup `sktGrant(["SKN-0xx"])` di kode tantangan).
+- **Lemari Skin baru:** pencarian, filter (Semua / Eksklusif / Portal Ring 1 / Katalog), dan carousel 4 kartu per halaman (◀ ▶, titik halaman, geser di HP; di HP 2×2).
+- **Portal Ring 1 terbuka** bagi pemegang Black Card. Kang Ritzkal mempersilakan masuk. Di gerbang pemain memilih **Flinstone** atau **Indian** (keduanya masuk koleksi). Selama di **Lembah Purba** skin tantangan dipakai otomatis dan kembali ke skin semula saat keluar.
+- **Lembah Purba:** pakis, sikas, gunung api berasap, brachiosaurus berjalan di kejauhan, pterosaurus berputar, sungai, langit senja, suara alam purba (Web Audio).
+- **Tantangan 1 · Pohon Purba (80 m) melawan Andrian** (skin Pelukis Gua):
+  - Jalur melingkari batang: tanjakan dahan, jamur, celah yang harus diloncati, kulit kayu lapuk yang runtuh, **dahan rapuh** yang berderak lalu patah bila diinjak terlalu lama (±2 detik), dan daun pengangkat. Ada titik simpan.
+  - **Kabut makin tebal saat makin tinggi** — di puncak jarak pandang tinggal belasan meter.
+  - Jatuh lebih dari 4 m → nyawa −1 (3 nyawa) dan kembali ke titik simpan.
+  - **3 batu prasasti** (±22, 46, 67 m): soal persamaan, pertidaksamaan, dan integral — pilihan ganda, dibangkitkan acak sehingga tiap percobaan berbeda. Salah → nyawa −1 dan soal baru. Andrian ikut berhenti selama pemain menjawab.
+  - Tiba di puncak lebih dulu → **Batu Kuning**. Papan rekor `GET /api/kartu/rekor?id=pohon`.
+- **Tantangan 2 · Raptor Run melawan Azka** (skin Raptor; pemain juga mendapat skin Raptor dan memakainya selama balapan). Terbuka setelah Batu Kuning.
+  - Raptor berlari otomatis 2 putaran (±940 m) di 3 jalur. Laptop: ←/→ atau A/D, Spasi/↑ loncat. HP: geser layar atau tombol ◀ ⤒ ▶.
+  - Rintangan kecil (batang kayu, retakan lava, lumpur) hanya memperlambat; rintangan besar (batu, kaki dinosaurus, triceratops menyeberang, pterosaurus menukik) mengurangi nyawa (3).
+  - Booster ⚡ (kecepatan) dan 🛡 (perisai cangkang telur) — Azka juga mengincarnya.
+  - Menang → **Batu Hijau**, Andrian & Azka memberi salam penghormatan, dan gerbang berikutnya tampak (masih tersegel). Papan rekor `?id=raptor`.
+- **Batu Portal Ring 1:** 9 slot di Capaian (kuning, hijau, merah, biru tua, oranye, ungu, biru langit, putih, hitam), hanya tampil bagi pemegang Black Card. Server: `POST /api/kartu/batu` (wajib lencana tim + tantangan terkait, berurutan), `GET /api/kartu/cek` kini memuat `batu`. Admin menampilkan "Pohon Purba ✓", "Raptor ✓", dan "Batu: 🟡🟢".
+- Server: tantangan baru `pohon`, `raptor`; endpoint `/api/kartu/batu` dan `/api/kartu/kode`. Setelah deploy: `pm2 restart`.

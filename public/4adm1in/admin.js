@@ -208,7 +208,7 @@
       const tr = el('tr'), td = el('td', 'nw'), b = el('button', k.cabut ? 'ghost' : 'del', k.cabut ? 'Aktifkan' : 'Cabut');
       b.onclick = async () => { try { await post('/api/admin/kartu/status', { no: k.no, cabut: !k.cabut }); toast(k.cabut ? 'Kartu diaktifkan kembali.' : 'Kartu dicabut — Nan tidak akan membuka gerbang untuknya.'); loadCards(); } catch (e) { toast(e.message); } };
       td.appendChild(b);
-      tr.append(el('td', 'nw', k.no), el('td', '', k.nama), el('td', 'nw', fmt(k.t)), el('td', 'nw', k.ver ? k.ver + '× · ' + fmt(k.lv) : '-'), el('td', 'nw', ['kognitif', 'inggris', 'sahabat', 'coding'].filter((c) => (k.ch || {})[c]).length + '/4' + ((k.ch || {}).pustaka ? ' · Gua ✓' : '') + ((k.ch || {}).iot ? ' · Hanggar ✓' + ((k.ch.iot.bintang) ? ' ' + '⭐'.repeat(k.ch.iot.bintang) : '') : '') + ((k.ch || {}).jari ? ' · Kawah ✓' : '') + ((k.ch || {}).server ? ' · Server ✓' : '') + ((k.ch || {}).islam ? ' · Lembah ✓' : '') + ((k.tm || {}).ikut ? ' · Tim ' + k.tm.ikut + '×' : '') + ((k.rw || {}).trooper ? ' 🪖' : '') + (Object.values(k.ch || {}).some((c) => c.jalur === 'kode') ? ' (kode)' : '')), el('td', 'nw', Object.keys(k.lb || {}).map((b) => ({ dasar: '🔷 Dasar', umum: '💡 Umum', iot: '🛸 IoT & Drone', jari: '👆 Jari', coding: '💻 Coding', islam: '🕌 Agama Islam', tim: '🤝 Kerjasama Tim' })[b] || b).join(', ') || '-'), el('td', 'nw', k.cabut ? '⛔ dicabut' : '✅ aktif'), td);
+      tr.append(el('td', 'nw', k.no), el('td', '', k.nama), el('td', 'nw', fmt(k.t)), el('td', 'nw', k.ver ? k.ver + '× · ' + fmt(k.lv) : '-'), el('td', 'nw', ['kognitif', 'inggris', 'sahabat', 'coding'].filter((c) => (k.ch || {})[c]).length + '/4' + ((k.ch || {}).pustaka ? ' · Gua ✓' : '') + ((k.ch || {}).iot ? ' · Hanggar ✓' + ((k.ch.iot.bintang) ? ' ' + '⭐'.repeat(k.ch.iot.bintang) : '') : '') + ((k.ch || {}).jari ? ' · Kawah ✓' : '') + ((k.ch || {}).server ? ' · Server ✓' : '') + ((k.ch || {}).islam ? ' · Lembah ✓' : '') + ((k.ch || {}).pohon ? ' · Pohon Purba ✓' : '') + ((k.ch || {}).raptor ? ' · Raptor ✓' : '') + ((k.tm || {}).ikut ? ' · Tim ' + k.tm.ikut + '×' : '') + ((k.rw || {}).trooper ? ' 🪖' : '') + (Object.values(k.ch || {}).some((c) => c.jalur === 'kode') ? ' (kode)' : '')), el('td', 'nw', Object.keys(k.lb || {}).map((b) => ({ dasar: '🔷 Dasar', umum: '💡 Umum', iot: '🛸 IoT & Drone', jari: '👆 Jari', coding: '💻 Coding', islam: '🕌 Agama Islam', tim: '🤝 Kerjasama Tim' })[b] || b).join(', ') + (Object.keys(k.bt || {}).length ? ' · Batu: ' + Object.keys(k.bt).map((b) => ({ kuning: '🟡', hijau: '🟢', merah: '🔴', birutua: '🔵', oranye: '🟠', ungu: '🟣', birulangit: '🩵', putih: '⚪', hitam: '⚫' })[b] || b).join('') : '') || '-'), el('td', 'nw', k.cabut ? '⛔ dicabut' : '✅ aktif'), td);
       tb.appendChild(tr);
     }
   }
@@ -348,7 +348,7 @@
   // PDF/PPTX → gambar per halaman (dirender di browser admin dengan pdf.js; PPTX diubah ke PDF dulu di server)
   async function pdfToImages(buf, name, m) {
     if (!window.pdfjsLib) throw new Error('Pembaca PDF belum termuat — muat ulang halaman admin.');
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '/admin/vendor/pdf.worker.min.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/4adm1in/vendor/pdf.worker.min.js';
     const doc = await pdfjsLib.getDocument({ data: buf }).promise, out = [];
     const n = Math.min(doc.numPages, 80);
     for (let i = 1; i <= n; i++) {
