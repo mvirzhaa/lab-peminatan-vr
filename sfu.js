@@ -28,7 +28,7 @@ function localIp() {
 function createSfu({ onSpeak, onProducer }) {
   if (process.env.SFU === '0') { console.log('SFU dimatikan (SFU=0) — suara kelas memakai peer-to-peer.'); return null; }
   let ms;
-  try { ms = require('mediasoup'); } catch { console.log('SFU tidak aktif: paket "mediasoup" belum terpasang (npm install). Suara kelas memakai peer-to-peer.'); return null; }
+  try { ms = require('mediasoup'); } catch (err) { console.log('SFU tidak aktif: ' + (err && err.message ? err.message : 'paket "mediasoup" belum terpasang') + '. Suara kelas memakai peer-to-peer.'); return null; }
   const PORT = +process.env.SFU_PORT || 44444;
   const LISTEN = process.env.SFU_LISTEN_IP || '0.0.0.0';
   const ANNOUNCED = process.env.SFU_ANNOUNCED_IP || localIp();
