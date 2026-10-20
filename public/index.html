@@ -7635,6 +7635,7 @@ function update(dt) {
   if (typeof PR !== "undefined" && (PR.lock || (typeof TRG !== "undefined" && TRG.quizOpen))) { mx = mz = 0; P.walkTo = null; }
   if (typeof SA !== "undefined" && (SA.lock || SA.cd && SA.on)) { mx = mz = 0; P.walkTo = null; }
   if (typeof TY !== "undefined" && TY.lock) { mx = mz = 0; P.walkTo = null; }
+  if (typeof KP !== "undefined" && KP.lock) { mx = mz = 0; P.walkTo = null; }
   if (mx || mz) {
     if (P.sit) {
       P.sit = false;
@@ -7864,7 +7865,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, __saVis: () => saPlatVis(), ADZ, adzanLock, adzanUnlock, VT, KLS, SB, TY, tyStart, tyEnter, tyEnterAsk, tySubmit, tyEnd, tyExit, TY_KATA, cht, chtTry, CHT, CV, IO, SV, IS, stgRestart, kwLose, svLose, isLose, cvLoseLife, ioLose, svBegin, isBegin, svGoStage, isGoStage, cvB1Start, ioBegin, kwBegin, chtFly, SA, SAG, SAP, SAE, SA_PL, SA_BANK, saEnter, saEnterAsk, saStart, saQuizAns, saExit, saOff, buildSeni, saBack, openCapaian, capMine, openProfile, mkRaptor, mkSauropod, mkTrike, mkPtero, KWF, KWR, kwfxTick, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, KP, KP_FLEET, KP_AI, kpStart, kpBattle, kpShoot, kpAiPick, kpFire, kpRandom, kpBoard, kpAlive, kpEnd, kpEnter, kpEnterAsk, kpExit, kpPlaceAt, ISN, isnaGive, prAwardBatu, __saVis: () => saPlatVis(), ADZ, adzanLock, adzanUnlock, VT, KLS, SB, TY, tyStart, tyEnter, tyEnterAsk, tySubmit, tyEnd, tyExit, TY_KATA, cht, chtTry, CHT, CV, IO, SV, IS, stgRestart, kwLose, svLose, isLose, cvLoseLife, ioLose, svBegin, isBegin, svGoStage, isGoStage, cvB1Start, ioBegin, kwBegin, chtFly, SA, SAG, SAP, SAE, SA_PL, SA_BANK, saEnter, saEnterAsk, saStart, saQuizAns, saExit, saOff, buildSeni, saBack, openCapaian, capMine, openProfile, mkRaptor, mkSauropod, mkTrike, mkPtero, KWF, KWR, kwfxTick, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
 }
 boot().catch((err) => {
   console.error(err);
@@ -9051,6 +9052,7 @@ function zoneTick(dt) {
   }
 }
 function npcBubblePos(id) {
+  if (id === "isna") return typeof ISN !== "undefined" && ISN.g && ISN.g.visible ? { x: ISN.g.position.x, y: ISN.g.position.y, z: ISN.g.position.z, h: 3.0 } : null;
   const n = NPCS[id];
   return n ? { x: n.x, y: n.by || 0, z: n.z, h: n.kind === "robot" ? 3.05 : 2.9 } : null;
 }
@@ -10167,6 +10169,7 @@ function xHandleAct(act, hit, e) {
   if (typeof prAct === "function" && prAct(act, hit, e)) return;
   if (typeof saAct === "function" && saAct(act, hit, e)) return;
   if (typeof tyAct === "function" && tyAct(act, hit, e)) return;
+  if (typeof kpAct === "function" && kpAct(act, hit, e)) return;
   if (typeof kwAct === "function" && kwAct(act, hit, e)) return;
   if (typeof svAct === "function" && svAct(act, hit, e)) return;
   if (typeof isAct === "function" && isAct(act, hit, e)) return;
@@ -10302,6 +10305,7 @@ function buildExtras() {
     try { kwUpgrade(); } catch (err) { console.error("Percantik Kawah Api gagal:", err); }
     try { buildSeni(); } catch (err) { console.error("Dunia Seni & Desain gagal dibangun:", err); }
     try { buildKetik(); } catch (err) { console.error("Arena Mengetik gagal dibangun:", err); }
+    try { buildKapal(); } catch (err) { console.error("Ruang Komando gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -10461,7 +10465,7 @@ function applySkin(av, id, color) {
   av.add(s.group);
   ud.skinG = s.group; ud.body = s.body; ud.headG = s.headG; ud.mat = s.mat; ud.skinAnim = s.anim;
 }
-function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof TY !== "undefined" && TY.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TY.forceSkin) ? S.skin : TY.forceSkin; if (typeof SA !== "undefined" && SA.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === SA.forceSkin) ? S.skin : SA.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === PR.forceSkin) ? S.skin : PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
+function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof KP !== "undefined" && KP.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === KP.forceSkin) ? S.skin : KP.forceSkin; if (typeof TY !== "undefined" && TY.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TY.forceSkin) ? S.skin : TY.forceSkin; if (typeof SA !== "undefined" && SA.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === SA.forceSkin) ? S.skin : SA.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === PR.forceSkin) ? S.skin : PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
 function refreshMySkin() { if (avatar && (avatar.userData.skinId || "default") !== mySkin()) applySkin(avatar, mySkin(), S.color); }
 function skinTick() {
   if (avatar && avatar.userData.skinAnim) avatar.userData.skinAnim(t);
@@ -21161,7 +21165,7 @@ var SKT = [
 var sktId = (n) => "SKN-" + String(n).padStart(3, "0");
 var SKT_BY = {}; SKT.forEach((s) => { s.id = sktId(s.n); s.tema = SKT_TEMA[Math.floor((s.n - 1) / 6)]; SKT_BY[s.id] = s; });
 // skin Portal Ring 1 (terlihat hanya bagi pemegang Black Card)
-var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run", "SKN-052": "Dunia Seni & Desain", "SKN-049": "Arena Mengetik" };
+var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run", "SKN-052": "Dunia Seni & Desain", "SKN-049": "Arena Mengetik", "SKN-024": "Ruang Komando" };
 
 // ---------- tekstur ----------
 function sktCanvas(w, h, fn) { const c = mkCanvas(w, h), x = c.getContext("2d"); fn(x, w, h); const t2 = new THREE2.CanvasTexture(c); t2.colorSpace = THREE2.SRGBColorSpace; t2.magFilter = THREE2.NearestFilter; return t2; }
@@ -21602,7 +21606,7 @@ function openSkinsV2() {
 var ND_GROUPS = [
   ["sambut", "🏛 Penyambut & Pemandu Lab", ["tia", "kuri", "vir", "keris", "git", "se", "csn"]],
   ["mart", "☕ IT-Mart & Kafe", ["rahman", "sit", "ivy", "jejen", "bayu", "aftaf", "nan", "haryani"]],
-  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azis", "eq", "azka"]],
+  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azis", "eq", "azka", "guido"]],
   ["lencana", "🏅 Pemberi Lencana & Hadiah", ["tama", "fety", "puspa", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "dewi", "eko"]]
 ];
 var ND = { q: "", g: "all" };
@@ -21627,9 +21631,9 @@ function ndSeed() {
   for (const id of add) if (NPCS[id] && !m[id]) { m[id] = 1; ch = true; }
   if (ch) saveQ();
 }
-function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka", "azis", "eq"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
+function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka", "azis", "eq", "guido", "isna"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
 function ndGroupOf(id) { for (const [k, , ids] of ND_GROUPS) if (ids.includes(id)) return k; return "lain"; }
-var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)" };
+var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)", m_kapal: "Ruang Komando (Portal Ring 1)" };
 function ndWhere(n) { const r = n.custom && n.custom.room || n.room; return ND_ZONE_NAME[r] || (ROOMS[r] && ROOMS[r].name) || (XROOMS[r] && (XROOMS[r].short || XROOMS[r].name)) || ""; }
 function openNpcDir() {
   hidePopups(); ndSeed();
@@ -21686,7 +21690,8 @@ function ndZonePrep(room, n) {
     if (room === "t_aula") { TIM.aula = true; TIM.grace = now + 3500; return true; }
     if (room === "p_valley" && typeof prVisitPrep === "function") { if (typeof SA !== "undefined" && SA.on) saOff(); prVisitPrep(); return true; }
     if (room === "s_art" && typeof saVisitPrep === "function") { if (typeof TY !== "undefined" && TY.on) tyOff(); saVisitPrep(); return true; }
-    if (room === "m_ketik" && typeof tyVisitPrep === "function") { tyVisitPrep(); return true; }
+    if (room === "m_ketik" && typeof tyVisitPrep === "function") { if (typeof KP !== "undefined" && KP.on) kpOff(); tyVisitPrep(); return true; }
+    if (room === "m_kapal" && typeof kpVisitPrep === "function") { kpVisitPrep(); return true; }
   } catch (e) { console.error("persiapan kunjungan gagal:", e); }
   return false;
 }
@@ -21775,7 +21780,7 @@ var BATU = [
   { id: "hijau", nama: "Batu Hijau", c: "#22c55e", c2: "#14532d", dari: "Raptor Run" },
   { id: "merah", nama: "Batu Merah", c: "#ef4444", c2: "#7f1d1d", dari: "Anti-Gravitasi", tempat: "Dunia Seni & Desain" },
   { id: "birutua", nama: "Batu Biru Tua", c: "#1d4ed8", c2: "#172554", dari: "Typing Master", tempat: "Arena Mengetik" },
-  { id: "oranye", nama: "Batu Oranye", c: "#f97316", c2: "#7c2d12" },
+  { id: "oranye", nama: "Batu Oranye", c: "#f97316", c2: "#7c2d12", dari: "Tembak Kapal", tempat: "Ruang Komando" },
   { id: "ungu", nama: "Batu Ungu", c: "#a855f7", c2: "#3b0764" },
   { id: "birulangit", nama: "Batu Biru Langit", c: "#38bdf8", c2: "#0c4a6e" },
   { id: "putih", nama: "Batu Putih", c: "#f8fafc", c2: "#94a3b8" },
@@ -21840,16 +21845,17 @@ function batuGrid() {
   const own = batuQ();
   return `<h3 class="cap-h">Batu Portal Ring 1 <span class="pill">${BATU.filter((b) => own[b.id]).length}/9</span></h3><div class="bt-grid">${BATU.map((b) => `<div class="bt-slot${own[b.id] ? " on" : ""}" data-bt="${b.id}" style="--bc:${b.c}"><img alt="" src="${batuImg(b, !!own[b.id], 96)}"><small>${own[b.id] ? b.nama : b.dari ? b.dari : "???"}</small></div>`).join("")}</div>`;
 }
-function batuReveal(id) {
+function batuReveal(id, isna) {
   const b = BATU.find((x) => x.id === id); if (!b) return;
   hidePopups();
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bt-rev"><img alt="${b.nama}" src="${batuImg(b, true, 220)}"><small>BATU PORTAL RING 1</small><h2>${b.nama}</h2><p>Didapat dari tantangan <b>${b.dari || ""}</b> di ${b.tempat || "Lembah Purba"}. Batu-batu ini kelak membuka gerbang-gerbang berikutnya di balik Portal Ring 1.</p><div class="rowf"><button class="btn" id="btCap">🏅 Lihat Capaian</button></div></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bt-rev"><img alt="${b.nama}" src="${batuImg(b, true, 220)}"><small>BATU PORTAL RING 1</small><h2>${b.nama}</h2><p>Didapat dari tantangan <b>${b.dari || ""}</b> di ${b.tempat || "Lembah Purba"}. Batu-batu ini kelak membuka gerbang-gerbang berikutnya di balik Portal Ring 1.</p>${isna ? `<div class="isna-say"><b>🪽 Teh Isna</b><p></p></div>` : ""}<div class="rowf"><button class="btn" id="btCap">🏅 Lihat Capaian</button></div></div>`);
   $("btCap").onclick = () => openCapaian();
+  if (isna) document.querySelector("#genCard .isna-say p").textContent = "“" + isna + "”";
   if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
 }
 async function prSync() {
   const q = chMigrate(); if (!q.card || !q.card.no || !q.card.tok) return;
-  for (const id of ["pohon", "raptor", "gravitasi", "ketik"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
+  for (const id of ["pohon", "raptor", "gravitasi", "ketik", "kapal"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
   const B2 = batuQ();
   for (const id of Object.keys(B2)) { const b = B2[id]; if (b.srv) continue; try { const j = await xcPost("api/kartu/batu", { no: q.card.no, tok: q.card.tok, id }); if (j.ok) b.srv = true; } catch { /* nanti */ } }
   saveQ();
@@ -21858,7 +21864,7 @@ function prAwardBatu(id) {
   const B2 = batuQ(), fresh = !B2[id];
   if (fresh) { B2[id] = { t: Date.now() }; saveQ(); capPresDirty(); }
   prSync();
-  setTimeout(() => batuReveal(id), 900);
+  if (typeof isnaGive === "function") isnaGive(id, fresh); else setTimeout(() => batuReveal(id), 900);
   return fresh;
 }
 
@@ -22913,6 +22919,104 @@ function prAct(act) {
   if (ty === "x_prnext") { if (batuQ().hijau && typeof saEnterAsk === "function") { if (TRG.on || RR.on) { toast("Selesaikan dulu tantangan yang sedang berjalan."); return true; } saEnterAsk(); } else toast("◆ Gerbang ini terbuka bagi pemegang Batu Hijau (juara Raptor Run).", 4000); return true; }
   return false;
 }
+
+
+
+// =====================================================================
+// src/ext_isna.js — TEH ISNA · penyerah Batu Portal Ring 1
+//  • Setiap kali pemain memenangi tantangan Portal Ring 1, Teh Isna
+//    (berkerudung, bersayap, bertubuh agak gemuk) turun melayang di dekat
+//    pemain, menyerahkan batunya, lalu berpesan: bila seluruh 9 batu
+//    terkumpul, sesuatu yang besar akan terjadi.
+// =====================================================================
+SKT_BODY.G = { leg: 0.56, tor: 0.62, tw: 0.6, td: 0.38, head: 0.47, arm: 0.155, s: 1 };
+var ISNA_SPEC = { n: 0, nm: "Teh Isna", b: "G", tn: "L", top: "#FBF7EE", bot: "#F3E7CC", sh: "#c9a94e", hat: ["hijab", "#F7F0DF"], x: ["gown", "sash:#e8c46a"], ds: "" };
+var ISN = { g: null, wings: [], gem: null, seq: null, built: false, glow: null };
+
+function isnaWingTex() {
+  return xTex(l2Canvas(512, 448, (x, w, h) => {
+    // sayap malaikat kanan: pangkal di kiri (bahu), tepi depan melengkung ke atas-kanan,
+    // bulu-bulu terbang menjuntai ke bawah dan makin panjang ke arah ujung sayap
+    const px = 14, py = 250, tipX = w - 18, tipY = 26;
+    const edge = (f) => { const u = 1 - f; return [u * u * px + 2 * u * f * (w * 0.42) + f * f * tipX, u * u * py + 2 * u * f * 40 + f * f * tipY]; };
+    const feather = (bx, by, ang, L, wd, c0, c1) => {
+      x.save(); x.translate(bx, by); x.rotate(ang);
+      const g = x.createLinearGradient(0, 0, L, 0); g.addColorStop(0, c0); g.addColorStop(1, c1);
+      x.fillStyle = g; x.beginPath(); x.moveTo(0, -wd * 0.5); x.quadraticCurveTo(L * 0.6, -wd * 0.6, L, 0); x.quadraticCurveTo(L * 0.6, wd * 0.6, 0, wd * 0.5); x.closePath(); x.fill();
+      x.strokeStyle = "rgba(202,150,30,.45)"; x.lineWidth = 2; x.stroke();
+      x.strokeStyle = "rgba(202,150,30,.3)"; x.lineWidth = 1.2; x.beginPath(); x.moveTo(2, 0); x.lineTo(L * 0.9, 0); x.stroke();
+      x.restore();
+    };
+    // bulu terbang (primer & sekunder)
+    const N = 11;
+    for (let k = N - 1; k >= 0; k--) {
+      const f = 0.08 + k / (N - 1) * 0.86, [bx, by] = edge(f);
+      const L = 120 + f * 210, ang = Math.PI / 2 - 0.25 - f * 0.95;
+      feather(bx, by, ang, L, 38 - f * 8, "rgba(255,255,255,.98)", "rgba(254,236,180,.95)");
+    }
+    // bulu penutup (lebih pendek, dekat tepi depan)
+    for (let k = 0; k < 9; k++) { const f = 0.04 + k / 8 * 0.8, [bx, by] = edge(f); feather(bx, by, Math.PI / 2 - 0.15 - f * 0.9, 70 + f * 60, 34, "rgba(255,255,255,1)", "rgba(255,248,225,.98)"); }
+    // tepi depan sayap
+    x.strokeStyle = "rgba(255,255,255,1)"; x.lineWidth = 16; x.lineCap = "round"; x.beginPath(); for (let k = 0; k <= 30; k++) { const [a, b] = edge(k / 30); k ? x.lineTo(a, b) : x.moveTo(a, b); } x.stroke();
+    x.strokeStyle = "rgba(234,179,8,.55)"; x.lineWidth = 3; x.stroke();
+  }));
+}
+function isnaBuild() {
+  if (ISN.built) return; ISN.built = true;
+  const g = new THREE2.Group(); g.visible = false; scene.add(g); ISN.g = g;
+  const s = sktBuild(ISNA_SPEC)("#ffffff"); s.headG.position.y = 1.5; g.add(s.group); ISN.sk = s;
+  const mat = new THREE2.MeshBasicMaterial({ map: isnaWingTex(), transparent: true, side: THREE2.DoubleSide, depthWrite: false, toneMapped: false, fog: false });
+  ISN.wings = [];
+  for (const sx of [-1, 1]) {
+    const pv = new THREE2.Group(); pv.position.set(sx * 0.14, 1.32, 0.2); g.add(pv);
+    const geo = new THREE2.PlaneGeometry(1.75, 1.53); geo.translate(0.86, 0.05, 0);
+    const m = new THREE2.Mesh(geo, mat); m.scale.x = sx; pv.add(m);
+    ISN.wings.push({ pv, sx });
+  }
+  ISN.glow = world.glowSprite("#fde68a", 3.2, 0.4); ISN.glow.position.set(0, 1.3, 0.3); g.add(ISN.glow);
+  const pl = new THREE2.PointLight(0xfff1c2, 6, 9, 1.6); pl.position.set(0, 2.2, -1.2); g.add(pl);
+  const tag = saLabel("TEH ISNA", "Penjaga Batu Portal Ring 1", "#b8860b", 0.62); tag.position.set(0, 2.32, 0); g.add(tag); ISN.tag = tag;
+  XT.anim.push((dt) => isnaTick(dt));
+}
+function isnaMsg(b, fresh) {
+  const own = batuQ(), n = BATU.filter((x) => own[x.id]).length;
+  const lead = fresh ? `${b.nama} kini milikmu, ${S.name}.` : `${b.nama} memang sudah ada padamu, ${S.name} — kemenanganmu tetap kucatat.`;
+  return { n, card: n >= BATU.length
+    ? `${lead} Kesembilan batu telah lengkap di tanganmu… bersiaplah. Sesuatu yang besar akan segera terjadi.`
+    : `${lead} Kini kamu memegang ${n} dari ${BATU.length} batu. Kumpulkan seluruhnya… bila kesembilan batu bersatu, sesuatu yang besar akan terjadi.` };
+}
+function isnaGive(id, fresh) {
+  const b = BATU.find((x) => x.id === id); if (!b) return;
+  try { isnaBuild(); } catch (e) { console.error("Teh Isna gagal dibangun:", e); setTimeout(() => batuReveal(id), 900); return; }
+  if (ISN.gem) ISN.g.remove(ISN.gem);
+  ISN.gem = prGem(b.c, b.c2, 0.17); ISN.gem.position.set(0, 0.92, -0.55); ISN.g.add(ISN.gem);
+  const ap = new THREE2.Vector3(), cp = new THREE2.Vector3(); avatar.getWorldPosition(ap); camera.getWorldPosition(cp);
+  let fx = ap.x - cp.x, fz = ap.z - cp.z; const L = Math.hypot(fx, fz) || 1; fx /= L; fz /= L;
+  const tx = ap.x + fx * 1.3 - fz * 1.25, tz = ap.z + fz * 1.3 + fx * 1.25;
+  ISN.seq = { t0: performance.now(), id, b, fresh, tx, tz, by: ap.y, step: 0, msg: isnaMsg(b, fresh) };
+  ISN.g.position.set(tx, ap.y + 6, tz); ISN.g.visible = true; ISN.gem.visible = true;
+  if (typeof SFX !== "undefined") SFX.whoosh && SFX.whoosh();
+}
+function isnaTick(dt) {
+  const Q2 = ISN.seq, g = ISN.g; if (!Q2 || !g) return;
+  const now = performance.now(), e = (now - Q2.t0) / 1000;
+  for (const W of ISN.wings) W.pv.rotation.y = -W.sx * (0.42 + Math.sin(t * (e < 1.8 ? 9 : 4.5)) * 0.32);
+  const ap = new THREE2.Vector3(), cp = new THREE2.Vector3(); avatar.getWorldPosition(ap); camera.getWorldPosition(cp);
+  g.rotation.y = Math.atan2(-(cp.x - g.position.x), -(cp.z - g.position.z));
+  const hover = Q2.by + 0.45 + Math.sin(t * 2) * 0.08;
+  if (e < 1.8) { const k = 1 - Math.pow(1 - e / 1.8, 3); g.position.y = Q2.by + 6 - (6 - (hover - Q2.by)) * k; }
+  else if (e < 10) g.position.y = hover;
+  if (Q2.step === 0 && e > 0.3) { Q2.step = 1; spawnSparkle({ x: Q2.tx, y: Q2.by + 1.5, z: Q2.tz }); if (typeof SFX !== "undefined") SFX.chime(); }
+  if (Q2.step === 1 && e > 1.9) { Q2.step = 2; sayBubble(Q2.fresh ? `Assalamu'alaikum, ${S.name}! Aku Isna, penjaga batu Portal Ring 1. Terimalah ${Q2.b.nama} ini ✨` : `Hebat lagi, ${S.name}! ${Q2.b.nama} sudah ada padamu ✨`, "npc_isna"); }
+  // batu melayang dari tangan Teh Isna ke pemain
+  if (e > 3.2 && e < 4.1 && ISN.gem) { const k = (e - 3.2) / 0.9, hx = g.position.x, hz = g.position.z; const lp = new THREE2.Vector3(hx + (ap.x - hx) * k, g.position.y + 1.08 + ((ap.y + 1.1) - (g.position.y + 1.08)) * k + Math.sin(k * Math.PI) * 0.6, hz + (ap.z - hz) * k); g.worldToLocal(lp); ISN.gem.position.copy(lp); }
+  if (Q2.step === 2 && e > 4.1) { Q2.step = 3; if (ISN.gem) ISN.gem.visible = false; spawnSparkle(); setTimeout(() => batuReveal(Q2.id, Q2.msg.card), 250); }
+  if (Q2.step === 3 && e > 6.2) { Q2.step = 4; sayBubble(Q2.msg.n >= BATU.length ? "Kesembilan batu telah bersatu… sesuatu yang besar akan segera terjadi." : `${Q2.msg.n}/${BATU.length} batu. Kumpulkan semuanya… sesuatu yang besar menanti 🌙`, "npc_isna"); }
+  if (e >= 11) { const k = Math.min(1, (e - 11) / 1.4); g.position.y = hover + k * k * 7; if (k >= 1) { g.visible = false; ISN.seq = null; } }
+  if (e > 4 && e < 11 && Math.hypot(ap.x - Q2.tx, ap.z - Q2.tz) > 14) Q2.t0 = now - 11000;
+}
+(() => { const st = document.createElement("style"); st.textContent = `.bt-rev .isna-say{margin:10px 0 4px;padding:10px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(253,230,138,.18),rgba(255,255,255,.06));border:1px solid rgba(253,224,140,.55);text-align:left}
+.bt-rev .isna-say b{display:block;color:#fcd34d;font-size:13px;letter-spacing:.04em;margin-bottom:4px}.bt-rev .isna-say p{margin:0;font-style:italic;line-height:1.5}`; document.head.appendChild(st); })();
 
 
 // =====================================================================
@@ -24090,7 +24194,7 @@ function tyEnd() {
     tyHudSet(`🏆 TYPING MASTER! ${me} vs ${az} kata`, `Kamu mengetik ${me} kata benar dalam 60 detik dan mengalahkan Azka (${az}).`);
     sayBubble(`Luar biasa, ${S.name}! Jarimu lebih cepat dariku ⌨🙇`, "npc_azka");
     setTimeout(() => { if (TY.stone) TY.stone.visible = false; prAwardBatu("birutua"); tyRekorLoad(); if (TY.next) { TY.next.visible = true; spawnSparkle(); } }, 1400);
-    setTimeout(() => toast("✨ Sebuah gerbang baru muncul di arena… segera dibuka!", 6000), 5200);
+    setTimeout(() => toast("✨ Gerbang Ruang Komando terbuka di sudut arena — Guido menunggumu!", 6000), 13000);
   } else {
     sayBubble(me === az ? "Seri! Tapi juara harus lebih banyak 😉" : "Keyboard-ku masih lebih cepat! Coba lagi ya ⌨", "npc_azka");
     genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">⌨</div><h2>Belum menang…</h2><p id="tyWhy"></p><div class="rowf"><button class="btn" id="tyAgain">🔁 Tanding lagi</button><button class="ghost" id="tyNo">Nanti saja</button></div></div>`);
@@ -24173,6 +24277,7 @@ function tyEnter() {
     TY.on = true; TY.forceSkin = TY_SKIN; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
     TY.grace = performance.now() + 3500; TY.arrive = { x: TY_SPAWN.x, z: TY_SPAWN.z, t0: performance.now() };
     xTeleport(TY_SPAWN.x, TY_SPAWN.z, TY_SPAWN.yaw);
+    if (TY.next) TY.next.visible = !!batuQ().birutua; if (TY.stone) TY.stone.visible = !batuQ().birutua;
     tyHud(true); tyHudUpd(); tyRekorLoad(); tyWallDraw(TY_DUR);
     setTimeout(() => f.remove(), 900);
     setTimeout(() => toast("⌨ Selamat datang di Arena Mengetik! Azka menunggumu di mejanya.", 5000), 1400);
@@ -24208,6 +24313,7 @@ function tyTickAll(dt) {
   if (!here) return;
   tyTick(dt);
   if (TY.on && !TY.race && !TY.cd && !grace && Math.hypot(P.x - TY_EXIT.x, P.z - TY_EXIT.z) < 1.2) tyToArt();
+  if (TY.on && !TY.race && !TY.cd && TY.next && TY.next.visible && batuQ().birutua && typeof kpEnterAsk === "function" && Math.hypot(P.x - TY.next.position.x, P.z - TY.next.position.z) < 1.8 && now > (TY.askNextT || 0)) { TY.askNextT = now + 8000; kpEnterAsk(); }
   for (const e of TY.anims) e(dt);
 }
 
@@ -24302,7 +24408,7 @@ function buildKetik() {
   // gerbang berikutnya (tersegel)
   const nx = new THREE2.Group(); nx.position.set(TYV.x1 - 5, 0, TYV.z1 - 7); nx.rotation.y = -Math.PI / 2 - 0.5; root.add(nx);
   const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.6, 0.22, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x172554, emissive: 0x1d4ed8, emissiveIntensity: 0.9, metalness: 0.5 })); nr.position.y = 2.1; nx.add(nr);
-  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#3b82f6", 2.8); ns.position.y = 4.4; nx.add(ns);
+  const ns = prSign("◆ RUANG KOMANDO", "tantangan 5 · Guido", "#3b82f6", 2.8); ns.position.y = 4.4; nx.add(ns);
   TY.next = nx; nx.visible = !!batuQ().birutua; TY.anims.push((dt) => { nr.rotation.z += dt * 0.7; });
   xAct(nr, { type: "x_tynext" }); xAct(ns, { type: "x_tynext" });
   // keyboard berkedip saat lomba
@@ -24332,7 +24438,567 @@ function azkaKetikAns(q) {
 function tyAct(act) {
   const ty = act.type;
   if (ty === "x_tyexit") { tyToArt(); return true; }
-  if (ty === "x_tynext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
+  if (ty === "x_tynext") { if (batuQ().birutua && typeof kpEnterAsk === "function") { if (TY.race) { toast("Selesaikan dulu lomba yang sedang berjalan."); return true; } kpEnterAsk(); } else toast("◆ Gerbang ini terbuka bagi pemegang Batu Biru Tua (juara Typing Master).", 4000); return true; }
+  return false;
+}
+
+
+
+// =====================================================================
+// src/ext_kapal.js — PORTAL RING 1 · RUANG KOMANDO (Guido)
+//  • Gerbang di Arena Mengetik (terbuka setelah Batu Biru Tua) membawa
+//    pemain ke ruang komando angkatan laut. Penjaga: Guido, ahli GIS &
+//    militer (skin "Jenderal Strategis", SKN-024) — pemain ikut memakainya.
+//  • Tantangan 5 · TEMBAK KAPAL: laut 12×12 (kolom A–L, baris 1–12).
+//    Masing-masing memasang 5 kapal: Induk 6, Tempur 5, Selam 4,
+//    Perusak 3, Patroli 2. Menembak bergantian satu kali per giliran;
+//    titik yang mengenai kapal berwarna MERAH. Yang lebih dulu
+//    menenggelamkan semua kapal lawan menang → Batu Oranye (diserahkan
+//    Teh Isna). Kalah → ulang dari awal (pasang kapal lagi).
+// =====================================================================
+var KP_Z = { m_kapal: { x0: 610, x1: 656, z0: 354, z1: 398, h: 12, name: "Ruang Komando · Portal Ring 1", short: "Ruang Komando" } };
+Object.assign(XROOMS, KP_Z);
+var KPV = KP_Z.m_kapal;
+var kpZone = (x, z) => x > KPV.x0 && x < KPV.x1 && z > KPV.z0 && z < KPV.z1;
+var KP_SPAWN = { x: 633, z: 391, yaw: 0 };
+var KP_EXIT = { x: 614.5, z: 391 };
+var KP_SKIN = "SKN-024";
+var KP_N = 12, KP_COLS = "ABCDEFGHIJKL";
+var KP_FLEET = [{ k: "induk", nm: "Kapal Induk", n: 6 }, { k: "tempur", nm: "Kapal Tempur", n: 5 }, { k: "selam", nm: "Kapal Selam", n: 4 }, { k: "perusak", nm: "Kapal Perusak", n: 3 }, { k: "patroli", nm: "Kapal Patroli", n: 2 }];
+var KP_AI = { follow: 0.7, parity: 0.5, delay: 1100 };
+var KP_TABLE = { x: 633, z: 377 };
+var KP = { on: false, grace: 0, arrive: null, forceSkin: null, lock: false, root: null, hidden: null, fogged: false, built: false,
+  phase: "idle", me: null, gu: null, sel: 0, horiz: true, hover: -1, turn: "me", aiAt: 0, shots: 0, guShots: 0, last: { g: -1, m: -1 }, msg: "", won: false, anims: [], next: null };
+var kpName = (i) => KP_COLS[i % KP_N] + (Math.floor(i / KP_N) + 1);
+
+// ---------- suara laut ----------
+var KPS = (() => {
+  let ac = null, out = null;
+  const ctx = () => { if (!ac) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ac = new AC(); out = ac.createGain(); out.gain.value = 0.55; out.connect(ac.destination); } if (ac.state === "suspended") ac.resume().catch(() => {}); return ac; };
+  const noise = (dur, f0, f1, vol, type) => { if (!ctx()) return; const now = ac.currentTime, n = Math.floor(ac.sampleRate * dur), buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2); const s = ac.createBufferSource(); s.buffer = buf; const fl = ac.createBiquadFilter(); fl.type = type || "lowpass"; fl.frequency.setValueAtTime(f0, now); fl.frequency.exponentialRampToValueAtTime(f1, now + dur); const g = ac.createGain(); g.gain.value = vol; s.connect(fl); fl.connect(g); g.connect(out); s.start(now); };
+  const tone = (f, dur, type, vol, f2) => { if (!ctx()) return; const now = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = type || "sine"; o.frequency.setValueAtTime(f, now); if (f2) o.frequency.exponentialRampToValueAtTime(f2, now + dur); g.gain.setValueAtTime(vol || 0.05, now); g.gain.exponentialRampToValueAtTime(0.0001, now + dur); o.connect(g); g.connect(out); o.start(now); o.stop(now + dur + 0.02); };
+  return { fire() { noise(0.35, 900, 120, 0.5); tone(90, 0.3, "sine", 0.18, 40); }, splash() { noise(0.6, 2400, 500, 0.22, "bandpass"); }, hit() { noise(0.7, 1400, 80, 0.6); tone(70, 0.5, "sawtooth", 0.1, 30); }, sink() { tone(220, 1.2, "triangle", 0.08, 55); noise(1.2, 600, 60, 0.4); }, click() { tone(1200, 0.04, "square", 0.025); }, horn() { tone(196, 0.9, "sawtooth", 0.05); tone(247, 0.9, "sawtooth", 0.04); } };
+})();
+
+// ---------- gaya ----------
+(() => {
+  const st = document.createElement("style");
+  st.textContent = `
+#kpOv{position:fixed;inset:0;z-index:8000;display:flex;align-items:flex-start;justify-content:center;background:rgba(2,6,23,.5);padding:calc(8px + env(safe-area-inset-top,0px)) 8px 8px;overflow:auto}
+.kp-card{background:rgba(5,18,34,.97);border:1px solid #38bdf8;border-radius:18px;padding:12px 14px;color:#e2e8f0;width:min(980px,100%);box-shadow:0 0 0 1px rgba(56,189,248,.2),0 20px 60px rgba(0,0,0,.6);margin:auto 0}
+.kp-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font:800 14px/1.25 Poppins,sans-serif;letter-spacing:.04em;color:#7dd3fc}
+.kp-top .kp-x{flex:0 0 auto;padding:4px 12px}
+.kp-msg{min-height:22px;margin:6px 2px 8px;font-size:14px;line-height:1.4}
+.kp-msg b.hit{color:#f87171}.kp-msg b.miss{color:#7dd3fc}.kp-msg b.sunk{color:#fca5a5}
+.kp-boards{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.kp-side{flex:1 1 300px;max-width:440px;border-radius:14px;padding:8px;background:rgba(255,255,255,.03);border:2px solid transparent;transition:border-color .2s,box-shadow .2s}
+.kp-side.turn{border-color:#f97316;box-shadow:0 0 18px rgba(249,115,22,.35)}
+.kp-side h4{margin:0 0 6px;font:800 13px Poppins,sans-serif;color:#bae6fd;letter-spacing:.05em}
+.kp-side h4 small{font-weight:600;color:#94a3b8;letter-spacing:0}
+.kp-grid{display:grid;grid-template-columns:repeat(13,1fr);gap:1px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.kp-grid div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font:700 11px Poppins,sans-serif;border-radius:3px}
+.kp-grid .lb{color:#7dd3fc}
+.kp-grid .c{background:#0b3a5e;box-shadow:inset 0 0 0 1px rgba(125,211,252,.16)}
+#kpGridG .c,.kp-place #kpGridM .c{cursor:crosshair}
+.kp-grid .c.s{background:#94a3b8;box-shadow:inset 0 0 0 1px rgba(15,23,42,.5)}
+.kp-grid .c.m::after{content:"";width:30%;height:30%;border-radius:50%;background:#e0f2fe;opacity:.9}
+.kp-grid .c.h{background:#ef4444}
+.kp-grid .c.h::after{content:"✕";color:#fff;font-size:1.15em;line-height:1}
+.kp-grid .c.x{background:#991b1b}
+.kp-grid .c.rv{background:#475569}
+.kp-grid .c.last{outline:2px solid #facc15;outline-offset:-2px;animation:kpPulse 1s ease-in-out infinite}
+.kp-grid .c.g.ok{background:#22c55e}.kp-grid .c.g.bad{background:rgba(185,28,28,.75)}
+@media (hover:hover){#kpGridG.live .c:not(.m):not(.h):hover{background:#0e7490}}
+@keyframes kpPulse{50%{outline-color:rgba(250,204,21,.25)}}
+.kp-fleet{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.kp-fleet span{font-size:11.5px;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.08)}
+.kp-fleet span.dead{text-decoration:line-through;color:#f87171;background:rgba(239,68,68,.14)}
+.kp-tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center;justify-content:center}
+.kp-tools .kp-ship{border:2px solid rgba(125,211,252,.35);background:rgba(255,255,255,.05);color:#e2e8f0;border-radius:12px;padding:6px 10px;font:600 12.5px Poppins,sans-serif;cursor:pointer}
+.kp-tools .kp-ship i{font-style:normal;letter-spacing:-1px;color:#94a3b8;margin-left:4px}
+.kp-tools .kp-ship.on{border-color:#f97316;background:rgba(249,115,22,.15)}
+.kp-tools .kp-ship.done{opacity:.55}
+.kp-tools .sep{flex-basis:100%;height:0}
+.kp-hint{font-size:12px;color:#94a3b8;margin:8px 2px 0;text-align:center}
+@media (max-width:700px){.kp-boards{gap:8px}.kp-side{padding:6px}.kp-boards.battle #kpSideG{max-width:330px}.kp-boards.battle #kpSideM{max-width:215px}.kp-grid div{font-size:9px}.kp-card{padding:10px}.kp-msg{font-size:13px;margin:4px 2px 6px}.kp-boards.battle~.kp-hint{display:none}.kp-fleet span{font-size:10px;padding:1px 6px}}
+#kpHud{position:fixed;bottom:calc(76px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:30;width:min(620px,calc(100vw - 24px));background:rgba(5,18,34,.93);border:1px solid #0284c7;border-radius:14px;padding:10px 12px;color:#fff;font-size:13.5px}
+#kpHud .cvh-top{color:#7dd3fc;font-weight:800}
+#kpHud .cvh-btn{display:flex;justify-content:flex-end;margin-top:6px}
+body.touch #kpHud{top:calc(92px + env(safe-area-inset-top,0px));bottom:auto;font-size:12px;padding:6px 10px}
+body:has(#kpHud) #questHud{display:none!important}
+body:has(#kpHud) #mini{display:none}
+body:has(#kpOv) #kpHud{display:none}
+`;
+  document.head.appendChild(st);
+})();
+
+// =====================================================================
+// PAPAN & ATURAN
+// =====================================================================
+function kpBoard() { return { ships: KP_FLEET.map((f) => ({ k: f.k, nm: f.nm, n: f.n, cells: [], hits: 0, h: true })), at: new Int8Array(KP_N * KP_N), shot: new Int8Array(KP_N * KP_N) }; }
+function kpFits(B, n, r, c, h, self) {
+  for (let i = 0; i < n; i++) { const rr = r + (h ? 0 : i), cc = c + (h ? i : 0); if (r < 0 || c < 0 || rr >= KP_N || cc >= KP_N) return false; const v = B.at[rr * KP_N + cc]; if (v && v - 1 !== self) return false; }
+  return true;
+}
+function kpLift(B, si) { const S = B.ships[si]; for (const i of S.cells) B.at[i] = 0; S.cells = []; }
+function kpPut(B, si, r, c, h) { kpLift(B, si); const S = B.ships[si]; for (let i = 0; i < S.n; i++) { const idx = (r + (h ? 0 : i)) * KP_N + c + (h ? i : 0); B.at[idx] = si + 1; S.cells.push(idx); } S.h = h; }
+function kpRandom(B) {
+  for (let si = 0; si < B.ships.length; si++) kpLift(B, si);
+  for (let si = 0; si < B.ships.length; si++) {
+    const n = B.ships[si].n;
+    for (let tries = 0; tries < 800; tries++) { const h = Math.random() < 0.5, r = Math.floor(Math.random() * (h ? KP_N : KP_N - n + 1)), c = Math.floor(Math.random() * (h ? KP_N - n + 1 : KP_N)); if (kpFits(B, n, r, c, h, si)) { kpPut(B, si, r, c, h); break; } }
+  }
+}
+var kpPlaced = (B) => B.ships.every((S) => S.cells.length === S.n);
+var kpAlive = (B) => B.ships.filter((S) => S.hits < S.n).length;
+function kpFire(B, i) {
+  if (B.shot[i]) return null;
+  const v = B.at[i];
+  if (!v) { B.shot[i] = 1; return { res: "miss" }; }
+  B.shot[i] = 2; const S = B.ships[v - 1]; S.hits++;
+  return { res: S.hits >= S.n ? "sunk" : "hit", ship: S };
+}
+// Guido: berburu acak (pola papan catur) → setelah kena, memburu kotak di sekitarnya
+function kpAiPick(B) {
+  const ID = (r, c) => (r < 0 || c < 0 || r >= KP_N || c >= KP_N) ? -1 : r * KP_N + c;
+  const open = [];
+  for (let i = 0; i < KP_N * KP_N; i++) if (B.shot[i] === 2) { const S = B.ships[B.at[i] - 1]; if (S.hits < S.n) open.push(i); }
+  if (open.length && Math.random() < KP_AI.follow) {
+    let best = [], bp = 0;
+    for (const i of open) {
+      const r = Math.floor(i / KP_N), c = i % KP_N;
+      for (const [dr, dc] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+        const back = ID(r - dr, c - dc), lined = back >= 0 && B.shot[back] === 2;
+        let rr = r + dr, cc = c + dc, j = ID(rr, cc);
+        while (j >= 0 && B.shot[j] === 2) { rr += dr; cc += dc; j = ID(rr, cc); }
+        if (j < 0 || B.shot[j]) continue;
+        const p = lined ? 2 : 1;
+        if (p > bp) { bp = p; best = [j]; } else if (p === bp) best.push(j);
+      }
+    }
+    if (best.length) return best[Math.floor(Math.random() * best.length)];
+  }
+  const free = [], par = [];
+  for (let i = 0; i < KP_N * KP_N; i++) if (!B.shot[i]) { free.push(i); if ((Math.floor(i / KP_N) + i % KP_N) % 2 === 0) par.push(i); }
+  const pool = par.length && Math.random() < KP_AI.parity ? par : free;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+// =====================================================================
+// LAYAR PERMAINAN
+// =====================================================================
+function kpOverlay() {
+  $("kpOv")?.remove();
+  const ov = document.createElement("div"); ov.id = "kpOv";
+  ov.innerHTML = `<div class="kp-card"><div class="kp-top"><span id="kpTitle"></span><button class="ghost kp-x" id="kpStopB">✕ Hentikan</button></div>
+  <div class="kp-msg" id="kpMsg"></div>
+  <div class="kp-boards" id="kpBoards">
+    <div class="kp-side" id="kpSideG"><h4>🎯 LAUT GUIDO <small>— ketuk kotak untuk menembak</small></h4><div class="kp-grid" id="kpGridG"></div><div class="kp-fleet" id="kpFleetG"></div></div>
+    <div class="kp-side" id="kpSideM"><h4>🛡 LAUT KAMU <small id="kpMineSub"></small></h4><div class="kp-grid" id="kpGridM"></div><div class="kp-fleet" id="kpFleetM"></div></div>
+  </div>
+  <div class="kp-tools" id="kpTools"></div><p class="kp-hint" id="kpHint"></p></div>`;
+  document.body.appendChild(ov);
+  for (const [id, mine] of [["kpGridG", false], ["kpGridM", true]]) {
+    const G = $(id);
+    for (let r = -1; r < KP_N; r++) for (let c = -1; c < KP_N; c++) {
+      const d = document.createElement("div");
+      if (r < 0 && c < 0) d.className = "lb";
+      else if (r < 0) { d.className = "lb"; d.textContent = KP_COLS[c]; }
+      else if (c < 0) { d.className = "lb"; d.textContent = r + 1; }
+      else { const i = r * KP_N + c; d.className = "c"; d.dataset.i = i; }
+      G.appendChild(d);
+    }
+    G.addEventListener("click", (e) => { const el = e.target.closest(".c"); if (!el) return; const i = +el.dataset.i; if (mine) kpPlaceAt(i); else kpShoot(i); });
+    if (mine) {
+      G.addEventListener("pointerover", (e) => { const el = e.target.closest(".c"); KP.hover = el ? +el.dataset.i : -1; if (KP.phase === "place") kpRender(); });
+      G.addEventListener("pointerleave", () => { KP.hover = -1; if (KP.phase === "place") kpRender(); });
+      G.addEventListener("contextmenu", (e) => { if (KP.phase === "place") { e.preventDefault(); kpRotate(); } });
+    }
+  }
+  $("kpStopB").onclick = () => { if (KP.phase === "battle" && !confirm("Hentikan pertempuran melawan Guido? Permainan akan diulang dari awal.")) return; kpStop(); };
+}
+function kpTools() {
+  const T = $("kpTools"); if (!T) return;
+  if (KP.phase !== "place") { T.innerHTML = ""; return; }
+  T.innerHTML = KP.me.ships.map((S, si) => `<button class="kp-ship${si === KP.sel ? " on" : ""}${S.cells.length ? " done" : ""}" data-si="${si}">${S.cells.length ? "✓ " : ""}${S.nm}<i>${"■".repeat(S.n)}</i></button>`).join("") +
+    `<span class="sep"></span><button class="ghost" id="kpRot">↻ Putar (${KP.horiz ? "mendatar" : "tegak"})</button><button class="ghost" id="kpRnd">🎲 Acak</button><button class="ghost" id="kpClr">🧹 Kosongkan</button><button class="btn" id="kpGo"${kpPlaced(KP.me) ? "" : " disabled"}>⚔ Siap Bertempur!</button>`;
+  T.querySelectorAll(".kp-ship").forEach((b) => { b.onclick = () => { const si = +b.dataset.si; if (KP.me.ships[si].cells.length) kpLift(KP.me, si); KP.sel = si; KPS.click(); kpRender(); }; });
+  $("kpRot").onclick = kpRotate;
+  $("kpRnd").onclick = () => { kpRandom(KP.me); KP.sel = -1; KPS.click(); kpRender(); };
+  $("kpClr").onclick = () => { for (let si = 0; si < KP.me.ships.length; si++) kpLift(KP.me, si); KP.sel = 0; kpRender(); };
+  $("kpGo").onclick = kpBattle;
+}
+function kpRotate() { if (KP.phase !== "place") return; KP.horiz = !KP.horiz; KPS.click(); kpRender(); }
+function kpPlaceAt(i) {
+  if (KP.phase !== "place") return;
+  const B = KP.me, v = B.at[i];
+  if (v && (KP.sel < 0 || v - 1 !== KP.sel)) { kpLift(B, v - 1); KP.sel = v - 1; KPS.click(); kpRender(); return; }
+  if (KP.sel < 0) return;
+  const S = B.ships[KP.sel], r = Math.floor(i / KP_N), c = i % KP_N;
+  if (!kpFits(B, S.n, r, c, KP.horiz, KP.sel)) { KP.msg = `⚠ ${S.nm} (${S.n} kotak) tidak muat di ${kpName(i)} — coba titik lain atau putar arahnya.`; kpRender(); return; }
+  kpPut(B, KP.sel, r, c, KP.horiz); KPS.click();
+  const nx = B.ships.findIndex((s) => !s.cells.length); KP.sel = nx;
+  KP.msg = nx < 0 ? "✅ Semua kapal terpasang. Tekan <b>⚔ Siap Bertempur!</b>" : `Pasang <b>${B.ships[nx].nm}</b> (${B.ships[nx].n} kotak).`;
+  kpRender();
+}
+function kpRender() {
+  if (!$("kpOv")) return;
+  const place = KP.phase === "place", battle = KP.phase === "battle", over = KP.phase === "over";
+  $("kpOv").classList.toggle("kp-place", place);
+  $("kpTitle").textContent = place ? "⚓ TEMBAK KAPAL · Fase 1: pasang 5 kapalmu" : over ? "⚓ TEMBAK KAPAL · Pertempuran selesai" : `⚓ TEMBAK KAPAL · Tembakanmu: ${KP.shots}`;
+  $("kpMsg").innerHTML = KP.msg;
+  $("kpSideG").style.display = place ? "none" : "";
+  $("kpBoards").classList.toggle("battle", !place);
+  $("kpSideG").classList.toggle("turn", battle && KP.turn === "me");
+  $("kpSideM").classList.toggle("turn", battle && KP.turn === "gu");
+  $("kpGridG").classList.toggle("live", battle && KP.turn === "me");
+  $("kpMineSub").textContent = place ? "— ketuk untuk memasang (klik kanan / R = putar)" : "— tembakan Guido";
+  // papan Guido
+  if (KP.gu) {
+    const B = KP.gu, cells = $("kpGridG").querySelectorAll(".c");
+    cells.forEach((el) => { const i = +el.dataset.i, sh = B.shot[i], v = B.at[i], sunk = v && B.ships[v - 1].hits >= B.ships[v - 1].n; let k = "c"; if (sh === 1) k += " m"; else if (sh === 2) k += " h" + (sunk ? " x" : ""); else if (over && v) k += " rv"; if (i === KP.last.g) k += " last"; el.className = k; });
+    $("kpFleetG").innerHTML = B.ships.map((S) => `<span class="${S.hits >= S.n ? "dead" : ""}">${S.nm} ${S.n}</span>`).join("");
+  }
+  // papan pemain
+  const B = KP.me, cells = $("kpGridM").querySelectorAll(".c");
+  let ghost = null;
+  if (place && KP.sel >= 0 && KP.hover >= 0) { const S = B.ships[KP.sel], r = Math.floor(KP.hover / KP_N), c = KP.hover % KP_N, ok = kpFits(B, S.n, r, c, KP.horiz, KP.sel); ghost = new Map(); for (let k = 0; k < S.n; k++) { const rr = r + (KP.horiz ? 0 : k), cc = c + (KP.horiz ? k : 0); if (rr < KP_N && cc < KP_N) ghost.set(rr * KP_N + cc, ok); } }
+  cells.forEach((el) => { const i = +el.dataset.i, sh = B.shot[i], v = B.at[i], sunk = v && B.ships[v - 1].hits >= B.ships[v - 1].n; let k = "c"; if (v) k += " s"; if (sh === 1) k += " m"; else if (sh === 2) k += " h" + (sunk ? " x" : ""); if (ghost && ghost.has(i)) k += " g " + (ghost.get(i) ? "ok" : "bad"); if (i === KP.last.m) k += " last"; el.className = k; });
+  $("kpFleetM").innerHTML = place ? "" : B.ships.map((S) => `<span class="${S.hits >= S.n ? "dead" : ""}">${S.nm} ${S.n}</span>`).join("");
+  $("kpHint").innerHTML = place ? "Pilih kapal, lalu ketuk kotak di laut untuk menaruh ujungnya. Ketuk kapal yang sudah terpasang untuk memindahkannya." : battle ? "Giliran bergantian, satu tembakan setiap giliran. Kotak <b style=\"color:#f87171\">merah</b> = kapal tertembak · titik putih = meleset." : "";
+  kpTools();
+  kpWallDraw();
+}
+
+// =====================================================================
+// ALUR PERTEMPURAN
+// =====================================================================
+function kpStart() {
+  if (KP.phase === "place" || KP.phase === "battle") return;
+  hidePopups(); if (typeof closeGen === "function") closeGen();
+  KP.me = kpBoard(); KP.gu = null; KP.sel = 0; KP.horiz = true; KP.hover = -1; KP.shots = 0; KP.guShots = 0; KP.last = { g: -1, m: -1 }; KP.won = false;
+  KP.phase = "place"; KP.lock = true;
+  KP.msg = `Pasang <b>${KP.me.ships[0].nm}</b> (6 kotak) terlebih dahulu — atau tekan <b>🎲 Acak</b>.`;
+  xTeleport(KP_TABLE.x, KP_TABLE.z + 3.4, 0); KP.grace = performance.now() + 2000;
+  P.camDist = 6; P.camPitch = 0.3;
+  kpOverlay(); kpRender();
+}
+function kpBattle() {
+  if (KP.phase !== "place" || !kpPlaced(KP.me)) return;
+  KP.gu = kpBoard(); kpRandom(KP.gu);
+  KP.phase = "battle"; KP.turn = "me"; KP.hover = -1;
+  KP.msg = "📡 Armada Guido tersembunyi di lautnya. <b>Giliranmu menembak!</b>";
+  KPS.horn(); sayBubble(`Armadaku sudah siap, ${S.name}. Tembakan pertama untukmu — semoga koordinatmu tepat!`, "npc_guido");
+  kpRender();
+}
+function kpResText(r, who) {
+  if (r.res === "miss") return `<b class="miss">💧 meleset</b>`;
+  if (r.res === "hit") return `<b class="hit">💥 KENA!</b>`;
+  return `<b class="sunk">💥 ${r.ship.nm} ${who} TENGGELAM!</b>`;
+}
+function kpShoot(i) {
+  if (KP.phase !== "battle" || KP.turn !== "me") return;
+  if (KP.gu.shot[i]) { KP.msg = `Kotak ${kpName(i)} sudah pernah ditembak — pilih koordinat lain.`; kpRender(); return; }
+  if (cht("benar") && !KP.gu.at[i]) { const t2 = []; for (let k = 0; k < KP_N * KP_N; k++) if (KP.gu.at[k] && !KP.gu.shot[k]) t2.push(k); if (t2.length) i = t2[Math.floor(Math.random() * t2.length)]; }
+  const r = kpFire(KP.gu, i); KP.shots++; KP.last.g = i;
+  KPS.fire(); setTimeout(() => (r.res === "miss" ? KPS.splash() : r.res === "sunk" ? KPS.sink() : KPS.hit()), 220);
+  KP.msg = `Kamu menembak <b>${kpName(i)}</b> — ${kpResText(r, "Guido")}`;
+  if (r.res === "sunk") sayBubble(prPick([`Aduh! ${r.ship.nm}-ku karam…`, "Analisis spasialmu tajam juga!", "Hmm, koordinatmu akurat sekali."]), "npc_guido");
+  if (kpAlive(KP.gu) === 0) { kpRender(); kpEnd(true); return; }
+  KP.turn = "gu"; KP.aiAt = performance.now() + KP_AI.delay;
+  KP.msg += " · <i>Giliran Guido…</i>";
+  kpRender();
+}
+function kpAiTurn() {
+  const i = kpAiPick(KP.me), r = kpFire(KP.me, i); KP.guShots++; KP.last.m = i;
+  KPS.fire(); setTimeout(() => (r.res === "miss" ? KPS.splash() : r.res === "sunk" ? KPS.sink() : KPS.hit()), 220);
+  KP.msg = `Guido menembak <b>${kpName(i)}</b> — ${kpResText(r, "-mu")}`.replace(" -mu", "-mu");
+  if (r.res === "sunk" && Math.random() < 0.7) sayBubble(prPick(["Sasaran tenggelam! Peta tidak pernah bohong 🗺", `Satu kapalmu karam, ${S.name}.`, "Koordinat terkunci… tembak!"]), "npc_guido");
+  if (kpAlive(KP.me) === 0) { kpRender(); kpEnd(false); return; }
+  KP.turn = "me"; KP.msg += " · <b>Giliranmu!</b>";
+  kpRender();
+}
+function kpEnd(win) {
+  KP.phase = "over"; KP.lock = false; KP.won = win;
+  const left = kpAlive(KP.me), guLeft = kpAlive(KP.gu);
+  KP.msg = win ? `🏆 <b>MENANG!</b> Seluruh armada Guido tenggelam dalam ${KP.shots} tembakan. Kapalmu tersisa ${left} dari 5.` : `☠ <b>Armadamu tenggelam.</b> Kapal Guido yang tersisa: ${guLeft}.`;
+  kpRender();
+  if (win) {
+    const q = chMigrate(), prev = q.chal.kapal, bintang = left >= 4 ? 3 : left >= 2 ? 2 : 1;
+    q.chal.kapal = { t: (prev && prev.t) || Date.now(), best: Math.min(prev && prev.best ? prev.best : 1e9, KP.shots), bintang: Math.max(bintang, (prev && prev.bintang) || 0) };
+    if (prev && prev.srv && (KP.shots < (prev.best || 1e9) || bintang > (prev.bintang || 0))) q.chal.kapal.srv = false;
+    saveQ();
+    if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+    sayBubble(`Luar biasa, ${S.name}! Kau membaca laut seperti membaca peta. Armadaku menyerah ⚓`, "npc_guido");
+    setTimeout(() => { $("kpOv")?.remove(); kpHudSet(`🏆 TEMBAK KAPAL! ${KP.shots} tembakan`, `Seluruh armada Guido tenggelam. Kapalmu tersisa ${left} dari 5.`); }, 2600);
+    setTimeout(() => { if (KP.stone) KP.stone.visible = false; prAwardBatu("oranye"); kpRekorLoad(); if (KP.next) KP.next.visible = true; }, 3000);
+  } else {
+    sayBubble("Laut ini milikku hari ini. Susun ulang armadamu dan tantang aku lagi!", "npc_guido");
+    setTimeout(() => {
+      $("kpOv")?.remove(); kpHudUpd();
+      genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">⚓</div><h2>Belum menang…</h2><p id="kpWhy"></p><div class="rowf"><button class="btn" id="kpAgain">🔁 Main lagi dari awal</button><button class="ghost" id="kpNo">Nanti saja</button></div></div>`);
+      $("kpWhy").textContent = `Guido menenggelamkan seluruh armadamu dalam ${KP.guShots} tembakan. Kapal Guido yang masih tersisa: ${guLeft}.`;
+      $("kpAgain").onclick = () => { closeGen(); KP.phase = "idle"; kpStart(); };
+      $("kpNo").onclick = () => { closeGen(); KP.phase = "idle"; kpWallDraw(); };
+    }, 3200);
+  }
+}
+function kpStop() { KP.phase = "idle"; KP.lock = false; $("kpOv")?.remove(); kpWallDraw(); }
+function kpTick() {
+  if (KP.phase === "battle" && KP.turn === "gu" && performance.now() >= KP.aiAt) kpAiTurn();
+}
+
+// ---------- layar dinding & papan rekor ----------
+function kpDrawGrid(x, B, ox, oy, cs, reveal) {
+  x.fillStyle = "#06284a"; x.fillRect(ox, oy, cs * KP_N, cs * KP_N);
+  for (let i = 0; i < KP_N * KP_N; i++) {
+    const px = ox + (i % KP_N) * cs, py = oy + Math.floor(i / KP_N) * cs, v = B ? B.at[i] : 0, sh = B ? B.shot[i] : 0;
+    if (reveal && v) { x.fillStyle = "#64748b"; x.fillRect(px + 1, py + 1, cs - 2, cs - 2); }
+    if (sh === 2) { const S = B.ships[v - 1]; x.fillStyle = S.hits >= S.n ? "#991b1b" : "#ef4444"; x.fillRect(px + 1, py + 1, cs - 2, cs - 2); }
+    else if (sh === 1) { x.fillStyle = "#e0f2fe"; x.beginPath(); x.arc(px + cs / 2, py + cs / 2, cs * 0.16, 0, Math.PI * 2); x.fill(); }
+  }
+  x.strokeStyle = "rgba(125,211,252,.35)"; x.lineWidth = 1.5;
+  for (let k = 0; k <= KP_N; k++) { x.beginPath(); x.moveTo(ox + k * cs, oy); x.lineTo(ox + k * cs, oy + cs * KP_N); x.stroke(); x.beginPath(); x.moveTo(ox, oy + k * cs); x.lineTo(ox + cs * KP_N, oy + k * cs); x.stroke(); }
+}
+function kpWallDraw() {
+  const B = KP.wall; if (!B) return;
+  B.draw((x, w, h) => {
+    const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#020b1a"); g.addColorStop(1, "#04223f"); x.fillStyle = g; x.fillRect(0, 0, w, h);
+    x.textAlign = "center"; x.fillStyle = "#7dd3fc"; x.font = `900 58px ${FONT}`; x.fillText("⚓ TEMBAK KAPAL · RUANG KOMANDO", w / 2, 72);
+    const live = KP.phase === "battle" || KP.phase === "over";
+    if (!live) {
+      kpDrawGrid(x, null, w / 2 - 180, 105, 30, false);
+      x.fillStyle = "#e2e8f0"; x.font = `600 30px ${FONT}`; x.fillText("Laut 12×12 · 5 kapal: Induk 6 · Tempur 5 · Selam 4 · Perusak 3 · Patroli 2", w / 2, 595);
+      x.fillStyle = "#fdba74"; x.font = `700 30px ${FONT}`; x.fillText(KP.phase === "place" ? "Penantang sedang memasang armadanya…" : "Bicara dengan Guido untuk memulai pertempuran", w / 2, 530);
+      return;
+    }
+    const cs = 32, gy = 140;
+    x.font = `800 30px ${FONT}`; x.fillStyle = "#fca5a5"; x.fillText(`LAUT GUIDO · sisa ${kpAlive(KP.gu)}/5`, w * 0.27, gy - 14);
+    kpDrawGrid(x, KP.gu, w * 0.27 - cs * 6, gy, cs, KP.phase === "over");
+    x.fillStyle = "#93c5fd"; x.fillText(`LAUT ${String(S.name).slice(0, 12).toUpperCase()} · sisa ${kpAlive(KP.me)}/5`, w * 0.73, gy - 14);
+    kpDrawGrid(x, KP.me, w * 0.73 - cs * 6, gy, cs, true);
+    x.font = `900 40px ${FONT}`; x.fillStyle = KP.phase === "over" ? "#facc15" : KP.turn === "me" ? "#f97316" : "#f87171";
+    x.fillText(KP.phase === "over" ? (KP.won ? "🏆 " + String(S.name).toUpperCase() + " MENANG!" : "GUIDO MENANG") : KP.turn === "me" ? "▶ GILIRAN PENANTANG" : "◀ GILIRAN GUIDO", w / 2, 580);
+  });
+}
+async function kpRekorLoad() { try { const j = await (await fetch("api/kartu/rekor?id=kapal", { credentials: "same-origin" })).json(); if (j.ok) kpBoardDraw(j.list); } catch { /* */ } }
+function kpBoardDraw(list) {
+  const B = KP.board; if (!B) return;
+  B.draw((x, w, h) => {
+    x.fillStyle = "#020b1a"; rr(x, 0, 0, w, h, 26); x.fill(); x.strokeStyle = "#38bdf8"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 22); x.stroke();
+    x.textAlign = "center"; x.fillStyle = "#7dd3fc"; x.font = `800 50px ${FONT}`; x.fillText("⚓ REKOR TEMBAK KAPAL", w / 2, 76);
+    x.fillStyle = "#94a3b8"; x.font = `500 28px ${FONT}`; x.fillText("menang dengan tembakan paling sedikit", w / 2, 116);
+    x.font = `600 34px ${FONT}`; const L = (list || []).slice(0, 8);
+    if (!L.length) { x.fillStyle = "#94a3b8"; x.fillText("Belum ada juara — jadilah yang pertama!", w / 2, 320); return; }
+    L.forEach((r, i) => { const y = 176 + i * 62; x.textAlign = "left"; x.fillStyle = i === 0 ? "#7dd3fc" : "#e2e8f0"; x.fillText(`${i + 1}. ${String(r.nama).slice(0, 18)}`, 50, y); x.textAlign = "right"; x.fillText(`${r.best} tembakan`, w - 50, y); });
+  });
+}
+
+// ---------- HUD ----------
+function kpHud(show) {
+  let el = $("kpHud");
+  if (!show) { el?.remove(); return; }
+  if (!el) {
+    el = document.createElement("div"); el.id = "kpHud";
+    el.innerHTML = `<div class="cvh-top" id="kpHB"></div><div id="kpHT" class="cvh-txt"></div><div class="cvh-btn"><button class="ghost" id="kpOut">⟲ Keluar Ruang Komando</button></div>`;
+    document.body.appendChild(el);
+    $("kpOut").onclick = () => kpExit();
+  }
+}
+function kpHudSet(t2, txt) { if (!$("kpHud")) kpHud(true); $("kpHB").textContent = t2; $("kpHT").textContent = txt; }
+function kpHudUpd() { kpHudSet("⚓ RUANG KOMANDO · Portal Ring 1", batuQ().oranye ? "Batu Oranye sudah milikmu. Bicara dengan Guido untuk bertempur lagi." : "Bicara dengan Guido di meja peta untuk memulai Tembak Kapal — tenggelamkan seluruh armadanya!"); }
+
+// =====================================================================
+// MASUK / KELUAR
+// =====================================================================
+function kpEnterAsk() {
+  hidePopups();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>⚓ Gerbang Ruang Komando</h2>
+  <p>Di balik gerbang ini ada ruang komando angkatan laut tempat <b>Guido</b>, ahli GIS dan strategi militer, menunggu penantangnya. Kamu akan mengenakan skin <b>${SKT_BY[KP_SKIN].nm}</b> (masuk koleksi Lemari Skin-mu).</p>
+  <div class="pr-pick"><button class="pr-sk on" id="kpGo1"><img alt="" src="assets/skins/${KP_SKIN}.jpg"><b>${SKT_BY[KP_SKIN].nm}</b><small>${SKT_BY[KP_SKIN].ds}</small></button></div>
+  <p style="font-size:12.5px;color:var(--mut)">Tantangan 5: <b>Tembak Kapal</b> melawan Guido · hadiah <b>Batu Oranye</b>.</p>
+  <div class="rowf"><button class="btn" id="kpGo2">⚓ Masuk</button><button class="ghost" id="kpNo2">Nanti saja</button></div>`);
+  $("kpGo1").onclick = $("kpGo2").onclick = () => { closeGen(); kpEnter(); };
+  $("kpNo2").onclick = () => closeGen();
+}
+function kpLeaveOthers() {
+  if (typeof TY !== "undefined" && TY.on) tyOff();
+  if (typeof saOff === "function" && SA.on) saOff();
+  if (typeof saLeaveValley === "function") saLeaveValley();
+}
+function kpEnter() {
+  sktGrant([KP_SKIN]);
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  setTimeout(() => {
+    kpLeaveOthers();
+    KP.on = true; KP.forceSkin = KP_SKIN; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+    KP.grace = performance.now() + 3500; KP.arrive = { x: KP_SPAWN.x, z: KP_SPAWN.z, t0: performance.now() };
+    xTeleport(KP_SPAWN.x, KP_SPAWN.z, KP_SPAWN.yaw);
+    if (KP.next) KP.next.visible = !!batuQ().oranye; if (KP.stone) KP.stone.visible = !batuQ().oranye;
+    kpHud(true); kpHudUpd(); kpRekorLoad(); kpWallDraw();
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => toast("⚓ Selamat datang di Ruang Komando! Guido menunggumu di meja peta.", 5000), 1400);
+  }, 650);
+}
+function kpVisitPrep() { if (!KP.on) { sktGrant([KP_SKIN], true); kpLeaveOthers(); KP.on = true; KP.forceSkin = KP_SKIN; refreshMySkin(); KP.grace = performance.now() + 3500; kpHud(true); kpHudUpd(); } }
+function kpOff() {
+  kpStop();
+  KP.on = false; KP.forceSkin = null; KP.grace = performance.now() + 3500;
+  refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+  kpHud(false);
+}
+function kpExit() { if (KP.phase === "battle" && !confirm("Keluar dari Ruang Komando? Pertempuran akan berhenti.")) return; kpOff(); xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Kamu kembali ke Taman Apresiasi.", 3000); }
+function kpToKetik() { if (KP.phase === "battle" && !confirm("Kembali ke Arena Mengetik? Pertempuran akan berhenti.")) return; kpOff(); if (typeof tyEnter === "function") tyEnter(); }
+function kpIsolate(on) {
+  if (on === !!KP.hidden) return;
+  if (on) {
+    KP.root.visible = true;
+    const keep = new Set([avatar, camera, KP.root, typeof ISN !== "undefined" ? ISN.g : null].filter(Boolean)); for (const r of remotes.values()) keep.add(r.av);
+    KP.hidden = [];
+    for (const o of scene.children) if (o.visible && !keep.has(o) && !o.isLight && !o.isCamera) { o.visible = false; KP.hidden.push(o); }
+    for (const o of world.walls.children) if (o.visible && !KP.ownW.has(o)) { o.visible = false; KP.hidden.push(o); }
+  } else { for (const o of KP.hidden) o.visible = true; KP.hidden = null; KP.root.visible = false; }
+}
+function kpTickAll(dt) {
+  const now = performance.now(), here = kpZone(P.x, P.z), grace = now < KP.grace;
+  if (KP.arrive) { if (Math.hypot(P.x - KP.arrive.x, P.z - KP.arrive.z) < 2 || now - KP.arrive.t0 > 6000) KP.arrive = null; }
+  kpIsolate(here);
+  if (here) { scene.fog.color.setRGB(0.01, 0.025, 0.05); scene.fog.density = 0.012; KP.fogged = true; }
+  else if (KP.fogged && typeof xFogBase !== "undefined" && xFogBase) { scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; KP.fogged = false; }
+  if (here && !KP.on && !grace && !KP.arrive) { xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Ruang Komando hanya bisa dimasuki lewat gerbang di Arena Mengetik."); return; }
+  if (!here && KP.on && !grace && !KP.arrive && roomAt(P.x, P.z)) kpOff();
+  if (!here) return;
+  kpTick();
+  if (KP.on && KP.phase !== "battle" && KP.phase !== "place" && !grace && Math.hypot(P.x - KP_EXIT.x, P.z - KP_EXIT.z) < 1.2) kpToKetik();
+  for (const e of KP.anims) e(dt);
+}
+document.addEventListener("keydown", (e) => { if (KP.phase === "place" && $("kpOv") && (e.key === "r" || e.key === "R")) { e.preventDefault(); e.stopPropagation(); kpRotate(); } }, true);
+
+// =====================================================================
+// PEMBANGUNAN RUANG KOMANDO
+// =====================================================================
+function kpShipModel(len, col) {
+  const g = new THREE2.Group(), hullM = new THREE2.MeshStandardMaterial({ color: col || 0x64748b, metalness: 0.5, roughness: 0.45 }), deckM = new THREE2.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 });
+  const L = len * 0.22;
+  const hull = new THREE2.Mesh(new THREE2.BoxGeometry(L, 0.09, 0.16), hullM); hull.position.y = 0.045; g.add(hull);
+  const bow = new THREE2.Mesh(new THREE2.ConeGeometry(0.08, 0.2, 4), hullM); bow.rotation.z = -Math.PI / 2; bow.rotation.x = Math.PI / 4; bow.position.set(L / 2 + 0.09, 0.045, 0); bow.scale.set(1, 1, 0.75); g.add(bow);
+  const deck = new THREE2.Mesh(new THREE2.BoxGeometry(L * 0.96, 0.02, 0.14), deckM); deck.position.y = 0.1; g.add(deck);
+  const tw = new THREE2.Mesh(new THREE2.BoxGeometry(Math.min(0.22, L * 0.25), 0.12, 0.09), hullM); tw.position.set(len >= 6 ? L * 0.25 : -L * 0.1, 0.17, len >= 6 ? 0.04 : 0); g.add(tw);
+  if (len >= 3) { const gun = new THREE2.Mesh(new THREE2.CylinderGeometry(0.01, 0.01, 0.16, 6), deckM); gun.rotation.z = Math.PI / 2; gun.position.set(L * 0.3, 0.14, 0); g.add(gun); }
+  return g;
+}
+function buildKapal() {
+  if (KP.built) return; KP.built = true;
+  const root = new THREE2.Group(); root.visible = false; scene.add(root); KP.root = root;
+  const wBefore = new Set(world.walls.children);
+  const CX = (KPV.x0 + KPV.x1) / 2, CZ = (KPV.z0 + KPV.z1) / 2, W = KPV.x1 - KPV.x0 - 4, D = KPV.z1 - KPV.z0 - 4, H = 8;
+  // lantai pelat baja
+  const fl = l2Canvas(512, 512, (x, w, h) => { x.fillStyle = "#1c2633"; x.fillRect(0, 0, w, h); for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { x.fillStyle = (i + j) % 2 ? "#212d3b" : "#1a2430"; x.fillRect(i * 128 + 2, j * 128 + 2, 124, 124); x.fillStyle = "rgba(148,163,184,.35)"; for (const [a, b] of [[10, 10], [114, 10], [10, 114], [114, 114]]) { x.beginPath(); x.arc(i * 128 + a, j * 128 + b, 3, 0, 7); x.fill(); } } x.strokeStyle = "rgba(0,0,0,.4)"; x.lineWidth = 3; for (let i = 0; i <= w; i += 128) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, h); x.stroke(); x.beginPath(); x.moveTo(0, i); x.lineTo(w, i); x.stroke(); } });
+  const ft = xTex(fl); ft.wrapS = ft.wrapT = THREE2.RepeatWrapping; ft.repeat.set(W / 5, D / 5);
+  const floor = new THREE2.Mesh(new THREE2.PlaneGeometry(W, D), new THREE2.MeshStandardMaterial({ map: ft, roughness: 0.55, metalness: 0.4, color: 0xc4ccd8 })); floor.rotation.x = -Math.PI / 2; floor.position.set(CX, 0.01, CZ); floor.receiveShadow = true; root.add(floor);
+  // langit-langit + lampu strip merah-biru
+  const ceil = new THREE2.Mesh(new THREE2.PlaneGeometry(W, D), new THREE2.MeshStandardMaterial({ color: 0x0b1220, roughness: 0.9 })); ceil.rotation.x = Math.PI / 2; ceil.position.set(CX, H, CZ); root.add(ceil);
+  for (let i = 0; i < 4; i++) { const p = new THREE2.Mesh(new THREE2.PlaneGeometry(W - 8, 0.3), new THREE2.MeshBasicMaterial({ color: i % 2 ? 0x38bdf8 : 0xe0f2fe, toneMapped: false })); p.rotation.x = Math.PI / 2; p.position.set(CX, H - 0.02, KPV.z0 + 8 + i * 9); root.add(p); }
+  { const hl = new THREE2.HemisphereLight(0xcfe8ff, 0x1e293b, 1.15); hl.position.set(CX, H, CZ); root.add(hl);
+    for (const [x, z, col, k] of [[CX, KP_TABLE.z, 0x38bdf8, 22], [CX - 12, CZ, 0xffffff, 16], [CX + 12, CZ, 0xffffff, 16], [CX, KPV.z0 + 8, 0xf97316, 10]]) { const pl = new THREE2.PointLight(col, k, 26, 1.6); pl.position.set(x, 6, z); root.add(pl); } }
+  // dinding: panel baja + jendela laut malam
+  const sea = l2Canvas(2048, 512, (x, w, h) => {
+    const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#020617"); g.addColorStop(0.55, "#0c1e3d"); g.addColorStop(0.56, "#04162c"); g.addColorStop(1, "#010a18"); x.fillStyle = g; x.fillRect(0, 0, w, h);
+    const R = rndGen(41); for (let i = 0; i < 160; i++) { x.fillStyle = `rgba(255,255,255,${0.3 + R() * 0.6})`; x.fillRect(R() * w, R() * h * 0.5, 2, 2); }
+    x.fillStyle = "#fef9c3"; x.beginPath(); x.arc(w * 0.72, h * 0.2, 26, 0, 7); x.fill();
+    x.fillStyle = "rgba(254,249,195,.25)"; for (let k = 0; k < 18; k++) x.fillRect(w * 0.72 - 30 + R() * 60, h * 0.58 + k * 11, 20 + R() * 40, 2);
+    for (let k = 0; k < 6; k++) { const sx = R() * w, sy = h * 0.555, L2 = 40 + R() * 80; x.fillStyle = "#0b1220"; x.fillRect(sx, sy - 8, L2, 8); x.fillRect(sx + L2 * 0.4, sy - 18, L2 * 0.2, 10); x.fillStyle = "rgba(250,204,21,.8)"; x.fillRect(sx + L2 * 0.45, sy - 14, 3, 3); }
+  });
+  const seaM = new THREE2.MeshBasicMaterial({ map: xTex(sea), toneMapped: false, fog: false });
+  const panelM = new THREE2.MeshStandardMaterial({ color: 0x334155, metalness: 0.6, roughness: 0.45 });
+  for (const [x, z, ry, len] of [[KPV.x0 + 2, CZ, Math.PI / 2, D], [KPV.x1 - 2, CZ, -Math.PI / 2, D]]) {
+    const win = new THREE2.Mesh(new THREE2.PlaneGeometry(len, 3.2), seaM); win.position.set(x, 3.6, z); win.rotation.y = ry; root.add(win);
+    for (const [y, hh] of [[1.0, 2.0], [6.6, 2.8]]) { const p = new THREE2.Mesh(new THREE2.PlaneGeometry(len, hh), panelM); p.position.set(x + Math.sin(ry) * 0.01, y, z); p.rotation.y = ry; root.add(p); }
+    for (let k = -len / 2 + 3; k < len / 2; k += 5) { const mu = new THREE2.Mesh(new THREE2.BoxGeometry(0.25, H, 0.25), panelM); mu.position.set(x + Math.sin(ry) * 0.1, H / 2, z + k); root.add(mu); }
+  }
+  for (const [z, ry] of [[KPV.z0 + 2, 0], [KPV.z1 - 2, Math.PI]]) { const m = new THREE2.Mesh(new THREE2.PlaneGeometry(W, H), panelM); m.position.set(CX, H / 2, z); m.rotation.y = ry; root.add(m); }
+  // layar dinding utama
+  KP.wall = cvScreen(17, 6.4, 1700, 640); KP.wall.m.position.set(CX, 4.3, KPV.z0 + 2.15); root.add(KP.wall.m);
+  { const fr = new THREE2.Mesh(new THREE2.BoxGeometry(17.6, 7.0, 0.2), new THREE2.MeshStandardMaterial({ color: 0x020617, metalness: 0.6, roughness: 0.3, emissive: 0x0369a1, emissiveIntensity: 0.25 })); fr.position.set(CX, 4.3, KPV.z0 + 2.05); root.add(fr); }
+  kpWallDraw();
+  // meja peta holografis
+  const T = KP_TABLE;
+  { const tb = new THREE2.Mesh(new THREE2.BoxGeometry(6.2, 0.9, 3.8), new THREE2.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.7, roughness: 0.35 })); tb.position.set(T.x, 0.45, T.z); root.add(tb);
+    const rim = new THREE2.Mesh(new THREE2.BoxGeometry(6.3, 0.06, 3.9), new THREE2.MeshBasicMaterial({ color: 0x38bdf8, toneMapped: false })); rim.position.set(T.x, 0.92, T.z); root.add(rim);
+    KP.holo = cvScreen(5.8, 3.4, 1160, 680); KP.holo.m.rotation.x = -Math.PI / 2; KP.holo.m.position.set(T.x, 0.96, T.z); root.add(KP.holo.m);
+    KP.holo.draw((x, w, h) => {
+      x.fillStyle = "#03203d"; x.fillRect(0, 0, w, h);
+      // peta pesisir bergaya GIS: kontur & garis koordinat
+      x.strokeStyle = "rgba(56,189,248,.25)"; x.lineWidth = 2; for (let i = 0; i <= w; i += 58) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, h); x.stroke(); } for (let j = 0; j <= h; j += 58) { x.beginPath(); x.moveTo(0, j); x.lineTo(w, j); x.stroke(); }
+      for (let k = 0; k < 6; k++) { x.strokeStyle = `rgba(74,222,128,${0.7 - k * 0.1})`; x.lineWidth = 3; x.beginPath(); for (let a = 0; a <= 64; a++) { const th = a / 64 * Math.PI * 2, rr2 = 120 + k * 34 + Math.sin(th * 3 + k) * 18; const px = 170 + Math.cos(th) * rr2 * 1.3, py = 150 + Math.sin(th) * rr2 * 0.8; a ? x.lineTo(px, py) : x.moveTo(px, py); } x.stroke(); }
+      x.fillStyle = "rgba(34,197,94,.35)"; x.beginPath(); x.ellipse(170, 150, 150, 90, 0.2, 0, 7); x.fill();
+      x.fillStyle = "#7dd3fc"; x.font = `700 26px ${FONT}`; x.textAlign = "left"; for (let i = 0; i < KP_N; i++) x.fillText(KP_COLS[i], 34 + i * 92, 30);
+      x.fillStyle = "#fde68a"; x.font = `800 34px ${FONT}`; x.textAlign = "right"; x.fillText("06°35′ LS · 106°48′ BT", w - 30, h - 30);
+      x.strokeStyle = "#f97316"; x.lineWidth = 4; for (const [cx, cy] of [[760, 420], [930, 210], [520, 560]]) { x.beginPath(); x.arc(cx, cy, 28, 0, 7); x.stroke(); x.beginPath(); x.moveTo(cx - 44, cy); x.lineTo(cx + 44, cy); x.moveTo(cx, cy - 44); x.lineTo(cx, cy + 44); x.stroke(); }
+    });
+    const hg = world.glowSprite("#38bdf8", 7, 0.22); hg.position.set(T.x, 1.3, T.z); root.add(hg);
+    // miniatur armada di atas meja
+    const fleet = [[6, 0x94a3b8, -1.8, -0.9], [5, 0x64748b, 0.9, -1.1], [4, 0x475569, -1.6, 0.6], [3, 0x94a3b8, 1.4, 0.7], [2, 0x64748b, 0.2, 1.25]];
+    for (const [n, col, dx, dz] of fleet) { const s = kpShipModel(n, col); s.position.set(T.x + dx, 0.97, T.z + dz); s.rotation.y = (dx > 0 ? 0.4 : -0.3); root.add(s); }
+  }
+  xCol(T.x - 3.2, T.z - 2, T.x + 3.2, T.z - 2, 0.3); xCol(T.x - 3.2, T.z + 2, T.x + 3.2, T.z + 2, 0.3); xCol(T.x - 3.2, T.z - 2, T.x - 3.2, T.z + 2, 0.3); xCol(T.x + 3.2, T.z - 2, T.x + 3.2, T.z + 2, 0.3);
+  // konsol radar di dua sisi
+  const radTex = () => xTex(l2Canvas(256, 256, (x, w, h) => { x.fillStyle = "#021a12"; x.fillRect(0, 0, w, h); x.strokeStyle = "rgba(74,222,128,.6)"; x.lineWidth = 2; for (let r = 30; r < 128; r += 30) { x.beginPath(); x.arc(128, 128, r, 0, 7); x.stroke(); } x.beginPath(); x.moveTo(128, 0); x.lineTo(128, 256); x.moveTo(0, 128); x.lineTo(256, 128); x.stroke(); x.fillStyle = "#4ade80"; for (const [a, b] of [[80, 60], [170, 150], [110, 190]]) { x.beginPath(); x.arc(a, b, 4, 0, 7); x.fill(); } }));
+  KP.sweeps = [];
+  for (const [x, z, ry] of [[KPV.x0 + 4.2, CZ - 6, Math.PI / 2], [KPV.x0 + 4.2, CZ + 2, Math.PI / 2], [KPV.x1 - 4.2, CZ - 6, -Math.PI / 2], [KPV.x1 - 4.2, CZ + 2, -Math.PI / 2]]) {
+    const g = new THREE2.Group(); g.position.set(x, 0, z); g.rotation.y = ry; root.add(g);
+    const body = new THREE2.Mesh(new THREE2.BoxGeometry(2.6, 1.0, 0.9), panelM); body.position.y = 0.5; g.add(body);
+    const slope = new THREE2.Mesh(new THREE2.BoxGeometry(2.6, 0.08, 0.7), new THREE2.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 })); slope.position.set(0, 1.08, 0.05); slope.rotation.x = -0.5; g.add(slope);
+    for (let k = 0; k < 8; k++) { const b = new THREE2.Mesh(new THREE2.BoxGeometry(0.1, 0.03, 0.08), new THREE2.MeshBasicMaterial({ color: [0x22c55e, 0xef4444, 0xfacc15, 0x38bdf8][k % 4], toneMapped: false })); b.position.set(-1.1 + k * 0.3, 1.11, 0.12); b.rotation.x = -0.5; g.add(b); }
+    const scr = new THREE2.Mesh(new THREE2.CircleGeometry(0.55, 40), new THREE2.MeshBasicMaterial({ map: radTex(), toneMapped: false })); scr.position.set(0, 1.85, -0.3); g.add(scr);
+    const ring = new THREE2.Mesh(new THREE2.TorusGeometry(0.58, 0.04, 8, 40), panelM); ring.position.copy(scr.position); g.add(ring);
+    const sw = new THREE2.Mesh(new THREE2.CircleGeometry(0.54, 24, 0, 0.6), new THREE2.MeshBasicMaterial({ color: 0x4ade80, transparent: true, opacity: 0.35, toneMapped: false, depthWrite: false })); sw.position.set(0, 1.85, -0.29); g.add(sw); KP.sweeps.push(sw);
+    const post = new THREE2.Mesh(new THREE2.BoxGeometry(0.12, 0.9, 0.12), panelM); post.position.set(0, 1.4, -0.32); g.add(post);
+    xCol(x, z - 1.4, x, z + 1.4, 0.6);
+  }
+  KP.anims.push((dt) => { for (const s of KP.sweeps) s.rotation.z -= dt * 1.8; });
+  // papan tanda, rekor, batu, portal
+  const sg = prSign("⚓ TEMBAK KAPAL · Tantangan 5", "laut 12×12 · 5 kapal · lawan: Guido, ahli GIS & militer", "#38bdf8", 6.4); sg.position.set(CX, 2.6, KPV.z1 - 2.3); sg.rotation.y = Math.PI; root.add(sg);
+  KP.board = cvScreen(3.2, 2.6, 900, 750); KP.board.m.position.set(KPV.x1 - 2.6, 2.0, CZ + 10); KP.board.m.rotation.y = -Math.PI / 2; root.add(KP.board.m); kpBoardDraw([]);
+  const ped = new THREE2.Mesh(new THREE2.CylinderGeometry(0.6, 0.75, 1.0, 24), new THREE2.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.7, roughness: 0.2, emissive: 0xf97316, emissiveIntensity: 0.3 })); ped.position.set(CX, 0.5, KPV.z0 + 8); root.add(ped);
+  const gem = prGem("#f97316", "#7c2d12", 0.5); gem.position.set(CX, 0, KPV.z0 + 8); root.add(gem); KP.stone = gem; gem.visible = !batuQ().oranye;
+  KP.anims.push((dt) => { gem.rotation.y += dt; gem.userData.gem.position.y = 1.15 + Math.sin(t * 2) * 0.12; });
+  xCol(CX - 0.8, KPV.z0 + 8, CX + 0.8, KPV.z0 + 8, 0.7);
+  const ex = new THREE2.Group(); ex.position.set(KP_EXIT.x, 0, KP_EXIT.z); ex.rotation.y = Math.PI / 2; root.add(ex);
+  const er = new THREE2.Mesh(new THREE2.TorusGeometry(1.2, 0.12, 10, 36), new THREE2.MeshBasicMaterial({ color: 0x22d3ee, toneMapped: false })); er.position.y = 1.6; ex.add(er);
+  const ed = new THREE2.Mesh(new THREE2.CircleGeometry(1.1, 30), new THREE2.MeshBasicMaterial({ color: 0x083344, transparent: true, opacity: 0.85, side: THREE2.DoubleSide })); ed.position.y = 1.6; ex.add(ed);
+  const es = prSign("⟲ ARENA MENGETIK", "kembali ke tantangan 4", "#22d3ee", 2.6); es.position.y = 3.3; ex.add(es);
+  xAct(ed, { type: "x_kpexit" }); xAct(es, { type: "x_kpexit" });
+  KP.anims.push((dt) => { er.rotation.z += dt; });
+  const nx = new THREE2.Group(); nx.position.set(KPV.x1 - 5, 0, KPV.z1 - 7); nx.rotation.y = -Math.PI / 2 - 0.5; root.add(nx);
+  const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.6, 0.22, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x7c2d12, emissive: 0xf97316, emissiveIntensity: 0.9, metalness: 0.5 })); nr.position.y = 2.1; nx.add(nr);
+  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#f97316", 2.8); ns.position.y = 4.4; nx.add(ns);
+  KP.next = nx; nx.visible = !!batuQ().oranye; KP.anims.push((dt) => { nr.rotation.z += dt * 0.7; });
+  xAct(nr, { type: "x_kpnext" }); xAct(ns, { type: "x_kpnext" });
+  // batas ruangan
+  for (const [ax, az, bx, bz] of [[KPV.x0 + 2.4, KPV.z0 + 2.4, KPV.x1 - 2.4, KPV.z0 + 2.4], [KPV.x1 - 2.4, KPV.z0 + 2.4, KPV.x1 - 2.4, KPV.z1 - 2.4], [KPV.x1 - 2.4, KPV.z1 - 2.4, KPV.x0 + 2.4, KPV.z1 - 2.4], [KPV.x0 + 2.4, KPV.z1 - 2.4, KPV.x0 + 2.4, KPV.z0 + 2.4]]) xCol(ax, az, bx, bz, 0.3);
+  // Guido di sisi utara meja peta
+  makeCustomHuman("guido", { code: "KAPAL", name: "Guido", role: "Ahli GIS & Militer · Ruang Komando", col: "#4d7c0f", icon: "⚓", hint: "⚓", x: T.x + 1.2, z: T.z - 2.8, room: "m_kapal", secret: true, hidden: true, tag: "GUIDO · KOMANDAN GIS",
+    look: { shirt: "#556B3A", apron: "#556B3A", noApron: true }, chips: ["Tantang perang laut!", "Aturannya?", "Main ulang"], roleNote: "Tantangan Tembak Kapal (Portal Ring 1)",
+    knowText: "Guido, ahli GIS dan strategi militer, menantang pemain bermain tembak kapal di laut 12×12. Masing-masing memasang 5 kapal (Induk 6, Tempur 5, Selam 4, Perusak 3, Patroli 2), lalu menembak koordinat lawan bergantian. Yang lebih dulu menenggelamkan semua kapal lawan menang dan mendapat Batu Oranye.", greetActs: () => guidoAns("halo").acts, answer: guidoAns });
+  { const n = NPCS.guido; const s = sktOnNpc(n, KP_SKIN); n.skinG = s.group; n.pitch = 0.92; n.tag.position.y = 2.25; root.add(n.g); }
+  KP.own = new Set([root]); KP.ownW = new Set(world.walls.children.filter((o) => !wBefore.has(o)));
+  XT.anim.push((dt) => kpTickAll(dt));
+}
+function guidoAns(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), bt = batuQ();
+  const go = ["⚓ Tantang perang laut!", () => { closeGen(); hidePopups(); kpStart(); }];
+  if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama. Ingat: peta yang baik memenangkan pertempuran 🗺" };
+  if (!bt.birutua) return { text: `Aku Guido, komandan ruang ini. Pertempuran hanya untuk penjelajah yang sudah membawa Batu Biru Tua dari Arena Mengetik, ${S.name}.` };
+  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Laut kita berukuran 12×12 — kolom A sampai L, baris 1 sampai 12, seperti grid koordinat pada peta GIS. Pasang 5 kapalmu: Kapal Induk 6 kotak, Kapal Tempur 5, Kapal Selam 4, Kapal Perusak 3, dan Kapal Patroli 2 (mendatar atau tegak). Lalu kita menembak bergantian, satu tembakan per giliran. Titik yang mengenai kapal berubah MERAH; titik putih berarti meleset. Kapal tenggelam bila seluruh kotaknya kena. Siapa yang lebih dulu menenggelamkan semua kapal lawan, dialah pemenangnya — dan Batu Oranye untukmu bila kau menang!", acts: [go] };
+  if (/tantang|mulai|main|perang|ulang|siap|tembak|kapal|tanding/.test(ql)) { if (KP.phase === "place" || KP.phase === "battle") return { text: "Pertempuran sedang berjalan!" }; setTimeout(kpStart, 400); return { text: bt.oranye ? `Pertempuran ulang? Siapkan armadamu, ${S.name}!` : `Bagus, ${S.name}! Pasang armadamu di laut 12×12 — aku tidak akan mengintip 😉` }; }
+  return { text: bt.oranye ? `Selamat datang kembali, Laksamana ${S.name}! Batu Oranye sudah milikmu. Mau bertempur lagi?` : `Selamat datang di Ruang Komando. Aku Guido — ahli GIS dan strategi militer. Bagiku laut adalah peta koordinat. Berani adu strategi dalam pertempuran Tembak Kapal?`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "guido")]] };
+}
+function kpAct(act) {
+  const ty = act.type;
+  if (ty === "x_kpexit") { kpToKetik(); return true; }
+  if (ty === "x_kpnext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
   return false;
 }
 

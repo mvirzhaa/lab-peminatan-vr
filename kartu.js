@@ -27,9 +27,9 @@ function createKartu({ dataDir, pem }) {
   // tahap 3: Gua Pustaka di balik rak buku Silvia → lencana Pengetahuan Umum (Teh Puspa)
   // tahap 6: Dunia Server Lab KERIS (6 babak coding) → lencana Pengetahuan Coding (Kang Sahid & Teh Gibtha)
   // tahap 7: Galeri Islam & Lembah Gurun → lencana Pengetahuan Agama Islam (Kang Fitrah & Teh Freza)
-  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam', 'pohon', 'raptor', 'gravitasi', 'ketik']);
+  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam', 'pohon', 'raptor', 'gravitasi', 'ketik', 'kapal']);
   // Portal Ring 1 (khusus pemegang Black Card = lencana tim): batu bercahaya, berurutan
-  const BATU = { kuning: { ch: 'pohon', pre: null }, hijau: { ch: 'raptor', pre: 'kuning' }, merah: { ch: 'gravitasi', pre: 'hijau' }, birutua: { ch: 'ketik', pre: 'merah' }, oranye: null, ungu: null, birulangit: null, putih: null, hitam: null };
+  const BATU = { kuning: { ch: 'pohon', pre: null }, hijau: { ch: 'raptor', pre: 'kuning' }, merah: { ch: 'gravitasi', pre: 'hijau' }, birutua: { ch: 'ketik', pre: 'merah' }, oranye: { ch: 'kapal', pre: 'birutua' }, ungu: null, birulangit: null, putih: null, hitam: null };
   const SKOR_NAIK = ['ketik']; // nilai = jumlah kata benar (makin besar makin baik)
   const SIX = ['dasar', 'umum', 'iot', 'jari', 'coding', 'islam'];
   // kode cepat tahap 8 (hanya hash yang disimpan)

@@ -396,3 +396,17 @@ Setelah memperbarui berkas: `pm2 restart all`.
 - Setelah 15 menit, tombol **▶ Lanjutkan bermain** aktif. Permainan baru berjalan lagi setelah tombol itu ditekan.
 - Halaman login tetap terkunci selama jeda adzan seperti sebelumnya.
 - Game Kerjasama Tim berjalan di server, jadi waktunya tidak ikut berhenti.
+
+## Pembaruan v19 — Teh Isna & Ruang Komando (Tembak Kapal)
+- **Teh Isna** menyerahkan batu di setiap kemenangan tantangan Portal Ring 1. Ia berkerudung, bersayap, dan bertubuh agak gemuk.
+  - Ia turun melayang di dekat pemain, memberikan batunya, lalu mengingatkan jumlah batu yang sudah terkumpul.
+  - Pesannya selalu sama: bila kesembilan batu terkumpul, sesuatu yang besar akan terjadi.
+  - Ia juga muncul saat pemain memenangi ulang tantangan yang batunya sudah dimiliki.
+- **Tantangan 5 · Tembak Kapal** melawan **Guido**, ahli GIS dan militer, di **Ruang Komando**.
+  - Masuk lewat gerbang di sudut Arena Mengetik, yang terbuka untuk pemegang Batu Biru Tua.
+  - Guido dan pemain memakai skin **Jenderal Strategis** (SKN-024) selama di ruangan.
+  - Laut berukuran 12×12 (kolom A–L, baris 1–12). Masing-masing memasang 5 kapal: Induk 6, Tempur 5, Selam 4, Perusak 3, Patroli 2. Kapal dipasang manual (ketuk, putar dengan R atau klik kanan) atau dengan tombol 🎲 Acak.
+  - Menembak bergantian satu kali per giliran. Kotak yang mengenai kapal berwarna merah; titik putih berarti meleset.
+  - Yang lebih dulu menenggelamkan semua kapal lawan menang. Kalah berarti diulang dari awal (pasang kapal lagi).
+  - Menang memberi **Batu Oranye**. Rekor dihitung dari jumlah tembakan paling sedikit.
+- Server: tantangan `kapal` dan syarat Batu Oranye (setelah Batu Biru Tua) ditambahkan di `kartu.js`. Admin menampilkan "Tembak Kapal N tembakan ✓".
