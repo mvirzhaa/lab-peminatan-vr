@@ -377,7 +377,7 @@ function createTim({ kartu, sendRaw, allClients, onWinner }) {
     const order = shuffle(act(T));
     order.forEach((m, i) => {
       const s = map.spawns[i % map.spawns.length];
-      Object.assign(m, { x: LAY.g4.cx + s[0], z: LAY.g4.cz + s[1], lives: 3, inv: 0, sh: 0, w: 'pistol', ammo: { pistol: Infinity, cepat: 0, jauh: 0, sebar: 0 }, cdT: 0, storm: 0, hitN: 0, alive: true, lastP: Date.now() });
+      Object.assign(m, { x: LAY.g4.cx + s[0], z: LAY.g4.cz + s[1], lives: 6, inv: 0, sh: 0, w: 'pistol', ammo: { pistol: Infinity, cepat: 0, jauh: 0, sebar: 0 }, cdT: 0, storm: 0, hitN: 0, alive: true, lastP: Date.now() });
       m.sp = i;
     });
     for (const m of act(T)) if (m.ws) send(m.ws, { type: 'tim_g', g: 4, map, me: m.slot, sp: m.sp, lay: LAY, limit: G4_LIMIT, W: Object.fromEntries(Object.entries(W).map(([k, v]) => [k, { cd: v.cd, sp: v.sp, rg: v.rg, n: v.n, fan: v.fan, ammo: v.ammo === Infinity ? -1 : v.ammo, nama: v.nama }])), zone: ZONE });
@@ -418,7 +418,7 @@ function createTim({ kartu, sendRaw, allClients, onWinner }) {
       if (k) {
         k.lb = k.lb || {}; k.ch = k.ch || {};
         if (!k.lb.tim) k.lb.tim = Date.now();
-        k.ch.tim = { t: Date.now(), best: secs, jalur: 'main', bintang: Math.max(0, Math.min(3, win.lives)) };
+        k.ch.tim = { t: Date.now(), best: secs, jalur: 'main', bintang: Math.max(0, Math.min(3, Math.ceil(win.lives / 2))) };
         k.tm = k.tm || {}; k.tm.ikut = (k.tm.ikut || 0) + 1; k.tm.t = Date.now();
         kartu.save();
       }

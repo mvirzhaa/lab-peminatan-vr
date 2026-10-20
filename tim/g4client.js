@@ -10,7 +10,7 @@ export default function (A) {
   const T3 = A.THREE, TIM = A.TIM, P = A.P, S = A.S;
   const st = {
     L: null, map: null, W: null, me: -1, root: null, opp: new Map(), bolts: new Map(), picks: [], cols: [], circles: [], hidden: [],
-    started: false, ended: false, lives: 3, sh: 0, inv: false, w: "pistol", ammo: { pistol: -1, cepat: 0, jauh: 0, sebar: 0 }, al: 6, t: 0, limit: 420,
+    started: false, ended: false, lives: 6, sh: 0, inv: false, w: "pistol", ammo: { pistol: -1, cepat: 0, jauh: 0, sebar: 0 }, al: 6, t: 0, limit: 420,
     zone: { x: 0, z: 0, r: 52 }, next: null, stormSt: 0, hits: 0, pT: 0, fireHeld: false, lastFire: 0, phase: 0, speed0: S.speed, cam0: null, dom: {}, fx: [], anims: [], snapT: 0
   };
   const WCOL = { pistol: 0x22d3ee, cepat: 0xa3e635, jauh: 0xe879f9, sebar: 0xfb923c };
@@ -126,7 +126,7 @@ body.g4 #chatDr,body.g4 #btnChat,body.g4 #questHud,body.g4 #mini{display:none!im
   }
   function hudTop() {
     if (!$h("g4Lives")) return;
-    $h("g4Lives").innerHTML = [0, 1, 2].map((i) => `<span class="${i < st.lives ? "" : "x"}">⚡</span>`).join("");
+    $h("g4Lives").innerHTML = [0, 1, 2, 3, 4, 5].map((i) => `<span class="${i < st.lives ? "" : "x"}">⚡</span>`).join("");
     $h("g4Sh").textContent = st.sh ? "🛡".repeat(st.sh) : "";
     const left = Math.max(0, st.limit - st.t);
     $h("g4Info").textContent = `👥 ${st.al}  ⏱ ${Math.floor(left / 60)}:${String(Math.floor(left % 60)).padStart(2, "0")}`;
@@ -209,16 +209,16 @@ body.g4 #chatDr,body.g4 #btnChat,body.g4 #questHud,body.g4 #mini{display:none!im
   // ------------------------------------------------------------------
   // LAWAN
   // ------------------------------------------------------------------
-  function hearts(n, sh) { return A.l2Canvas(240, 64, (x, w, h) => { x.font = "40px system-ui"; x.textAlign = "center"; x.textBaseline = "middle"; x.shadowColor = "#22d3ee"; x.shadowBlur = 10; x.fillText("⚡".repeat(Math.max(0, n)) + (sh ? " " + "🛡".repeat(sh) : ""), w / 2, h / 2); }); }
+  function hearts(n, sh) { return A.l2Canvas(380, 64, (x, w, h) => { x.font = "40px system-ui"; x.textAlign = "center"; x.textBaseline = "middle"; x.shadowColor = "#22d3ee"; x.shadowBlur = 10; x.fillText("⚡".repeat(Math.max(0, n)) + (sh ? " " + "🛡".repeat(sh) : ""), w / 2, h / 2); }); }
   function oppGet(s, lx, lz) {
     let o = st.opp.get(s);
     if (o) return o;
     const col = colOf(s), av = A.makeAvatar(col, nameOf(s));
     A.applySkin(av, "trooper", col);
     const [wx, wz] = toW(lx, lz); av.position.set(wx, 0, wz); A.scene.add(av); A.own(av);
-    const hc = hearts(3, 0), hs = new T3.Sprite(new T3.SpriteMaterial({ map: A.xTex(hc), transparent: true, depthTest: false, toneMapped: false })); hs.scale.set(0.9, 0.24, 1); hs.position.y = 2.42; av.add(hs);
+    const hc = hearts(6, 0), hs = new T3.Sprite(new T3.SpriteMaterial({ map: A.xTex(hc), transparent: true, depthTest: false, toneMapped: false })); hs.scale.set(1.42, 0.24, 1); hs.position.y = 2.42; av.add(hs);
     const bub = new T3.Mesh(new T3.SphereGeometry(0.75, 20, 14), new T3.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.18, depthWrite: false, toneMapped: false })); bub.position.y = 1.0; bub.visible = false; av.add(bub);
-    o = { s, av, hs, hc, bub, cur: { x: wx, z: wz }, tgt: { x: wx, z: wz }, yaw: 0, tyaw: 0, lives: 3, sh: 0, inv: 0, mv: 0, w: "pistol" };
+    o = { s, av, hs, hc, bub, cur: { x: wx, z: wz }, tgt: { x: wx, z: wz }, yaw: 0, tyaw: 0, lives: 6, sh: 0, inv: 0, mv: 0, w: "pistol" };
     st.opp.set(s, o);
     return o;
   }
@@ -318,7 +318,7 @@ body.g4 #chatDr,body.g4 #btnChat,body.g4 #questHud,body.g4 #mini{display:none!im
     A.xTeleport(wx, wz, s[2]); P.camPitch = -0.28; st.cam0 = P.camDist; P.camDist = Math.max(3.8, Math.min(P.camDist, 5));
     TIM.musicOff = true; try { if (A.Music.xMute) A.Music.xMute(true); else { A.Music.xmuted = true; A.Music.setVol(); } } catch { /* */ }
     st.myBub = new T3.Mesh(new T3.SphereGeometry(0.75, 20, 14), new T3.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.16, depthWrite: false, toneMapped: false })); st.myBub.visible = false; A.scene.add(st.myBub); A.own(st.myBub);
-    A.ov("GAME 4 · SINYAL TERAKHIR", "Ambil senjata energi · berlindung di balik penutup · 3 nyawa · zona badai data menyempit. Hanya SATU sinyal yang tersisa.", 0);
+    A.ov("GAME 4 · SINYAL TERAKHIR", "Ambil senjata energi · berlindung di balik penutup · 6 nyawa · zona badai data menyempit. Hanya SATU sinyal yang tersisa.", 0);
     hudW(); hudTop();
     let n = 3; const cd = () => { if (st.ended || st.started) return; A.ov(String(n), "Bersiap…", 0); AU.beep(false); if (--n > 0) setTimeout(cd, 1000); };
     setTimeout(cd, 2000);

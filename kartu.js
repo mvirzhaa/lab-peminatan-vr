@@ -27,9 +27,10 @@ function createKartu({ dataDir, pem }) {
   // tahap 3: Gua Pustaka di balik rak buku Silvia → lencana Pengetahuan Umum (Teh Puspa)
   // tahap 6: Dunia Server Lab KERIS (6 babak coding) → lencana Pengetahuan Coding (Kang Sahid & Teh Gibtha)
   // tahap 7: Galeri Islam & Lembah Gurun → lencana Pengetahuan Agama Islam (Kang Fitrah & Teh Freza)
-  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam', 'pohon', 'raptor', 'gravitasi']);
+  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam', 'pohon', 'raptor', 'gravitasi', 'ketik']);
   // Portal Ring 1 (khusus pemegang Black Card = lencana tim): batu bercahaya, berurutan
-  const BATU = { kuning: { ch: 'pohon', pre: null }, hijau: { ch: 'raptor', pre: 'kuning' }, merah: { ch: 'gravitasi', pre: 'hijau' }, birutua: null, oranye: null, ungu: null, birulangit: null, putih: null, hitam: null };
+  const BATU = { kuning: { ch: 'pohon', pre: null }, hijau: { ch: 'raptor', pre: 'kuning' }, merah: { ch: 'gravitasi', pre: 'hijau' }, birutua: { ch: 'ketik', pre: 'merah' }, oranye: null, ungu: null, birulangit: null, putih: null, hitam: null };
+  const SKOR_NAIK = ['ketik']; // nilai = jumlah kata benar (makin besar makin baik)
   const SIX = ['dasar', 'umum', 'iot', 'jari', 'coding', 'islam'];
   // kode cepat tahap 8 (hanya hash yang disimpan)
   const KODE8 = '084326aacdb1a8b12e294f1cc07125c3a864a46a2314dea5b143acfa4c7f14ce';
@@ -87,7 +88,7 @@ function createKartu({ dataDir, pem }) {
       if (limited(req, 'k', 300)) return json(res, 429, { ok: false, err: 'Terlalu banyak permintaan.' });
       const id = String(new URL(req.url, 'http://x').searchParams.get('id') || '');
       if (!TANTANGAN.includes(id)) return json(res, 400, { ok: false, err: 'Tantangan tidak dikenal.' });
-      const list = K.filter((k) => !k.cabut && k.ch && k.ch[id] && k.ch[id].jalur === 'main' && k.ch[id].best > 0).map((k) => ({ nama: k.nama, best: k.ch[id].best, bintang: k.ch[id].bintang || 0 })).sort((a, b) => a.best - b.best).slice(0, 10);
+      const list = K.filter((k) => !k.cabut && k.ch && k.ch[id] && k.ch[id].jalur === 'main' && k.ch[id].best > 0).map((k) => ({ nama: k.nama, best: k.ch[id].best, bintang: k.ch[id].bintang || 0 })).sort((a, b) => SKOR_NAIK.includes(id) ? b.best - a.best : a.best - b.best).slice(0, 10);
       return json(res, 200, { ok: true, list });
     }
     // batu Portal Ring 1 & kode cepat tahap 8 (butuh token pemilik)
@@ -130,8 +131,8 @@ function createKartu({ dataDir, pem }) {
       if (p === '/api/kartu/tantangan') {
         if (!TANTANGAN.includes(id)) return json(res, 400, { ok: false, err: 'Tantangan tidak dikenal.' });
         k.ch = k.ch || {};
-        const dt = Number(o.dt), prev = k.ch[id];
-        k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= 3600 ? Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? ((prev && prev.jalur === 'main') ? 'main' : 'kode') : 'main', bintang: Math.max((prev && prev.bintang) || 0, Math.min(3, Math.max(0, Math.floor(Number(o.bintang) || 0)))) };
+        const dt = Number(o.dt), prev = k.ch[id], naik = SKOR_NAIK.includes(id);
+        k.ch[id] = { t: (prev && prev.t) || Date.now(), best: Number.isFinite(dt) && dt > 0 && dt <= (naik ? 400 : 3600) ? (naik ? Math.max(prev && prev.best ? prev.best : 0, Math.round(dt)) : Math.min(prev && prev.best ? prev.best : 1e9, Math.round(dt * 10) / 10)) : (prev && prev.best) || 0, jalur: o.jalur === 'kode' ? ((prev && prev.jalur === 'main') ? 'main' : 'kode') : 'main', bintang: Math.max((prev && prev.bintang) || 0, Math.min(3, Math.max(0, Math.floor(Number(o.bintang) || 0)))) };
       } else {
         if (!LENCANA[id]) return json(res, 400, { ok: false, err: 'Lencana tidak dikenal.' });
         // syarat lencana: tantangan tercatat (+ lencana sebelumnya)

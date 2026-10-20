@@ -5350,6 +5350,7 @@ function segIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
 }
 
 function collide(x, z, fromX, fromZ) {
+  if (typeof cht === "function" && cht("wall")) return [x, z];
   const hasFrom = fromX !== undefined && fromZ !== undefined;
   for (let it = 0; it < 4; it++) {
     for (const s of world.colliders) {
@@ -5402,25 +5403,20 @@ function collide(x, z, fromX, fromZ) {
       }
     }
     for (const c of world.circles) {
-      const ex = x - c.x, ez = z - c.z, d = Math.hypot(ex, ez), R = PLAYER_RADIUS + c.r;
-      if (d < R) {
-        if (d > 1e-5) {
-          x = c.x + (ex / d) * R;
-          z = c.z + (ez / d) * R;
-        } else if (hasFrom && Math.hypot(fromX - c.x, fromZ - c.z) > 1e-4) {
-          const fx = fromX - c.x, fz = fromZ - c.z, fd = Math.hypot(fx, fz);
-          x = c.x + (fx / fd) * R;
-          z = c.z + (fz / fd) * R;
-        } else {
-          x += R;
-        }
+      const ex = x - c.x, ez = z - c.z;
+      const d = Math.hypot(ex, ez);
+      const R = PLAYER_RADIUS + c.r;
+      if (d < R && d > 1e-5) {
+        x = c.x + (ex / d) * R;
+        z = c.z + (ez / d) * R;
       }
     }
   }
   return [x, z];
 }
-// Gerak dipecah menjadi langkah kecil (≤ 0,12 m) dipadukan dengan continuous collision detection (CCD).
-// Mencegah tembus dinding saat lari cepat / lag frame di mobile atau PC.
+// Gerak dipecah menjadi langkah kecil (≤ 0,12 m). Tanpa ini, saat berlari cepat (kecepatan 2× + Shift,
+// atau frame tersendat di ponsel) satu langkah bisa melewati garis tengah dinding tipis, lalu
+// collide() mendorong pemain ke SISI SEBALIKNYA — pemain "menembus" dinding (mis. Labirin Lorong 1).
 var MOVE_STEP = 0.12;
 function tryMove(nx, nz) {
   const dx = nx - P.x, dz = nz - P.z, d = Math.hypot(dx, dz);
@@ -5453,10 +5449,9 @@ function tryMoveStep(nx, nz) {
     }
     return false;
   }
-  const moved = Math.hypot(nx - P.x, nz - P.z);
   P.x = nx;
   P.z = nz;
-  return moved > 1e-4;
+  return true;
 }
 function insideAnyRoom(x, z) {
   for (const r of Object.values(ROOMS))
@@ -5964,7 +5959,7 @@ function quizClick(hit) {
     return;
   }
   q.st.ans[r.i] = r.j;
-  const ok = r.j === QUIZ.items[r.i].answer;
+  const ok = r.j === QUIZ.items[r.i].answer || cht("benar");
   if (ok) {
     q.st.score++;
     spawnSparkle();
@@ -6503,6 +6498,7 @@ $("btnShot").onclick = () => {
 };
 $("btnSit").onclick = toggleSit;
 function toggleSit() {
+  if (chtDown()) return;
   if (P.sit) {
     P.sit = false;
     $("btnSit").classList.remove("on");
@@ -7620,6 +7616,7 @@ function update(dt) {
   if (typeof IO !== "undefined" && IO.fly) { mx = mz = 0; P.walkTo = null; }
   if (typeof PR !== "undefined" && (PR.lock || (typeof TRG !== "undefined" && TRG.quizOpen))) { mx = mz = 0; P.walkTo = null; }
   if (typeof SA !== "undefined" && (SA.lock || SA.cd && SA.on)) { mx = mz = 0; P.walkTo = null; }
+  if (typeof TY !== "undefined" && TY.lock) { mx = mz = 0; P.walkTo = null; }
   if (mx || mz) {
     if (P.sit) {
       P.sit = false;
@@ -7849,7 +7846,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, __saVis: () => saPlatVis(), SA, SAG, SAP, SAE, SA_PL, SA_BANK, saEnter, saEnterAsk, saStart, saQuizAns, saExit, saOff, buildSeni, saBack, openCapaian, capMine, openProfile, mkRaptor, mkSauropod, mkTrike, mkPtero, KWF, KWR, kwfxTick, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, __saVis: () => saPlatVis(), KLS, SB, TY, tyStart, tyEnter, tyEnterAsk, tySubmit, tyEnd, tyExit, TY_KATA, cht, chtTry, CHT, CV, IO, SV, IS, stgRestart, kwLose, svLose, isLose, cvLoseLife, ioLose, svBegin, isBegin, svGoStage, isGoStage, cvB1Start, ioBegin, kwBegin, chtFly, SA, SAG, SAP, SAE, SA_PL, SA_BANK, saEnter, saEnterAsk, saStart, saQuizAns, saExit, saOff, buildSeni, saBack, openCapaian, capMine, openProfile, mkRaptor, mkSauropod, mkTrike, mkPtero, KWF, KWR, kwfxTick, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
 }
 boot().catch((err) => {
   console.error(err);
@@ -8417,7 +8414,7 @@ function sMsg(who, text, me, acts, quiz, npcId = curNpc) {
         b.textContent = o;
         b.onclick = () => {
           a.querySelectorAll("button").forEach((x) => x.disabled = true);
-          const ok = i === quiz.a;
+          const ok = i === quiz.a || cht("benar");
           b.style.background = ok ? "#1f9d61" : "#d23b3b";
           sMsg(NPCS[npcId].name, ok ? "✅ Benar! Ketik “kuis” untuk soal lain." : `❌ Belum tepat. Jawabannya: ${quiz.opts[quiz.a]}.`, false, null, null, npcId);
           if (ok) spawnSparkle();
@@ -9789,8 +9786,8 @@ function openRiddle(i) {
     const v = $("rdIn").value.trim();
     if (!v) return;
     if (/\s/.test(v.trim()) && riddleNorm(v).length > 14) { $("rdMsg").textContent = "Jawabannya cukup satu kata."; return; }
-    if (hs.includes(riddleHash(v)) && replay) { closeGen(); if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); toast(`✅ Benar! Teka-teki ${i + 1} terjawab lagi.`, 3500); return; }
-    if (hs.includes(riddleHash(v))) {
+    if ((hs.includes(riddleHash(v)) || cht("benar")) && replay) { closeGen(); if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); toast(`✅ Benar! Teka-teki ${i + 1} terjawab lagi.`, 3500); return; }
+    if ((hs.includes(riddleHash(v)) || cht("benar"))) {
       q.riddles.push(i); q.riddles = [...new Set(q.riddles)].sort((a, b) => a - b); saveQ();
       closeGen(); refreshGates(false); updHud();
       if (typeof SFX !== "undefined") SFX.chime();
@@ -10151,6 +10148,7 @@ function xHandleAct(act, hit, e) {
   if (typeof ioAct === "function" && ioAct(act, hit, e)) return;
   if (typeof prAct === "function" && prAct(act, hit, e)) return;
   if (typeof saAct === "function" && saAct(act, hit, e)) return;
+  if (typeof tyAct === "function" && tyAct(act, hit, e)) return;
   if (typeof kwAct === "function" && kwAct(act, hit, e)) return;
   if (typeof svAct === "function" && svAct(act, hit, e)) return;
   if (typeof isAct === "function" && isAct(act, hit, e)) return;
@@ -10285,6 +10283,7 @@ function buildExtras() {
     try { buildPurba(); } catch (err) { console.error("Lembah Purba gagal dibangun:", err); }
     try { kwUpgrade(); } catch (err) { console.error("Percantik Kawah Api gagal:", err); }
     try { buildSeni(); } catch (err) { console.error("Dunia Seni & Desain gagal dibangun:", err); }
+    try { buildKetik(); } catch (err) { console.error("Arena Mengetik gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -10444,7 +10443,7 @@ function applySkin(av, id, color) {
   av.add(s.group);
   ud.skinG = s.group; ud.body = s.body; ud.headG = s.headG; ud.mat = s.mat; ud.skinAnim = s.anim;
 }
-function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof SA !== "undefined" && SA.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === SA.forceSkin) ? S.skin : SA.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === PR.forceSkin) ? S.skin : PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
+function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof TY !== "undefined" && TY.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TY.forceSkin) ? S.skin : TY.forceSkin; if (typeof SA !== "undefined" && SA.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === SA.forceSkin) ? S.skin : SA.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === PR.forceSkin) ? S.skin : PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
 function refreshMySkin() { if (avatar && (avatar.userData.skinId || "default") !== mySkin()) applySkin(avatar, mySkin(), S.color); }
 function skinTick() {
   if (avatar && avatar.userData.skinAnim) avatar.userData.skinAnim(t);
@@ -10616,6 +10615,7 @@ function spScore(ans, exp) {
   return { score: hit / E.length, extra: A.length - hit, len: E.length };
 }
 function spCheck(id, ans) {
+  if (cht("benar")) return { ok: true, msg: "" };
   const Qd = SP_Q[id];
   if (Qd.labs) {
     const s = spNorm(ans).replace(/\bdan\b/g, "and");
@@ -11103,6 +11103,7 @@ async function snakeRoll() {
   }
 }
 async function snBlackHole() {
+  if (cht("tank")) { snMsg("🛡 Lubang Hitam tidak mampu menyedotmu!"); return; }
   const q = Q();
   snMsg("🕳 Lubang Hitam! Kamu tersedot kembali ke awal…");
   if (typeof SFX !== "undefined") SFX.whoosh();
@@ -11117,13 +11118,12 @@ async function snBlackHole() {
     toast("🕳 Lubang Hitam! (main ulang) Kembali ke awal papan — progres aslimu tetap aman.", 5500);
     snHud(); return;
   }
-  // ulangi dari Lorong 1 (pintu rahasia tetap terbuka)
-  q.maze = false; q.glass = false; q.riddles = []; q.sn = 0; q.snake = false; q.tries = {};
-  saveQ();
+  // ulangi papan Ular Tangga saja (Lorong 1–3 tetap tuntas)
+  q.sn = 0; saveQ();
   SN.anims.length = 0; SN.y = 0; SN.lastMsg = ""; SN.busy = false; SN.hole = false;
-  refreshGates(true); updHud();
-  xTeleport(0, 18.5, Math.PI);
-  setTimeout(() => toast("🕳 Kamu terlempar kembali ke Ruang Sambutan! Ulangi petualangan dari Lorong 1 · Labirin.", 7000), 400);
+  { const [hx, hz] = snTilePos(0); P.x = hx; P.z = hz; }
+  updHud();
+  setTimeout(() => toast("🕳 Lubang Hitam! Kamu kembali ke awal papan Ular Tangga — lorong sebelumnya tetap tuntas.", 6000), 300);
   snHud();
 }
 function snakeTick(dt, sr) {
@@ -12679,7 +12679,7 @@ function sbRender(B) {
     x.fillStyle = "#dc2626"; rr(x, SB_W / 2 - 110, 210, 220, 154, 40); x.fill();
     x.fillStyle = "#fff"; x.beginPath(); x.moveTo(SB_W / 2 - 30, 245); x.lineTo(SB_W / 2 + 50, 287); x.lineTo(SB_W / 2 - 30, 329); x.closePath(); x.fill();
     x.textAlign = "center"; x.fillStyle = "#f8fafc"; x.font = `700 44px ${FONT}`; x.fillText((B.cfg.judul || "Video YouTube").slice(0, 46), SB_W / 2, 450);
-    x.fillStyle = "#94a3b8"; x.font = `500 28px ${FONT}`; x.fillText(B.local ? "Klik layar untuk memutar video" : "Klik layar untuk memutar · diputar bersama semua pemain di ruangan", SB_W / 2, 505);
+    x.fillStyle = "#94a3b8"; x.font = `500 28px ${FONT}`; x.fillText(B.local ? "Klik layar untuk memutar video" : "Video tampil di smart board ruangan · klik untuk putar/jeda bersama", SB_W / 2, 505);
     x.fillStyle = B.acc; x.fillRect(0, 0, SB_W, 10);
   } else {
     x.fillStyle = "#0b1220"; x.fillRect(0, 0, SB_W, SB_H);
@@ -12755,6 +12755,7 @@ function sbYtApply(B, force) {
   const pos = sbPos(B);
   if (force || Math.abs(pos - B.cur) > 2.5) sbYtPost(B, "seekTo", [pos, true]);
   sbYtPost(B, B.yt.p ? "playVideo" : "pauseVideo");
+  B.playChk = B.yt.p ? performance.now() : 0;
   if (B.yt.p && !B.muted) sbYtPost(B, "unMute");
 }
 function sbYtCtl(B, act) {
@@ -12769,6 +12770,9 @@ function sbYtCtl(B, act) {
   sbYtApply(B, true);
   sbSend(B, { type: "sb_yt", p: B.yt.p, t: B.yt.t });
   sbTools(B);
+  // video diputar di smart board ruangan (di balik jendela ini) → tutup jendela agar terlihat
+  if ((act === "play" || act === "restart") && SB.cur === B.id && B.frame) { SB.cur = null; $("genCard").classList.remove("wide"); closeGen(); toast("▶ Video diputar di smart board ruangan. Klik papan lagi untuk jeda · ⛶ Perbesar untuk layar penuh.", 5000); }
+  else if ((act === "play" || act === "restart") && !B.frame) toast("Video tampil di smart board saat kamu berada di dalam ruangan ini. Gunakan ⛶ Perbesar untuk menonton di jendela.", 5000);
 }
 addEventListener("message", (ev) => {
   if (typeof ev.origin !== "string" || !/^https:\/\/www\.youtube(-nocookie)?\.com$/.test(ev.origin)) return;
@@ -12777,6 +12781,7 @@ addEventListener("message", (ev) => {
   const inf = d && d.info; if (!inf) return;
   if (typeof inf.currentTime === "number") B.cur = inf.currentTime;
   if (typeof inf.muted === "boolean") B.muted = inf.muted;
+  if (typeof inf.playerState === "number") B.pst = inf.playerState;
   if (inf.playerState === 0 && B.yt.p) { B.yt = { p: false, t: 0, base: performance.now() }; if (SB.cur === B.id) sbTools(B); } // video selesai
 });
 function sbTick() {
@@ -12784,6 +12789,11 @@ function sbTick() {
   for (const B of Object.values(SB.boards)) {
     const want = ok && B.cfg && sbMode(B) === "youtube" && curRoom === B.room && !B.screen;
     if (want && !B.css) sbCssOn1(B); else if (!want && B.css) sbCssOff(B);
+    // browser menahan pemutaran bersuara (kebijakan autoplay) → putar tanpa suara dulu
+    if (B.frame && B.ready && B.yt.p && B.playChk && performance.now() - B.playChk > 3000) {
+      B.playChk = 0;
+      if (B.pst !== 1 && B.pst !== 3) { B.muted = true; sbYtPost(B, "mute"); sbYtPost(B, "playVideo"); toast("🔇 Browser menahan suara video — video diputar tanpa suara. Buka smart board lalu tekan 🔈 Nyalakan suara.", 6000); }
+    }
   }
 }
 // ----- panel (jendela) smart board -----
@@ -13030,6 +13040,7 @@ async function sfuStart(r) {
     S.dev = new msc.Device(); await S.dev.load({ routerRtpCapabilities: caps });
     const rp = await sfuReq("sfu_tr", { dir: "recv" });
     S.recv = S.dev.createRecvTransport(rp);
+    sfuWatch(S, S.recv, "terima");
     S.recv.on("connect", ({ dtlsParameters }, cb, eb) => sfuReq("sfu_conn", { tid: S.recv.id, dtls: dtlsParameters }).then(cb, eb));
     if (S.dead) return;
     await sfuSendT(S);
@@ -13050,6 +13061,7 @@ async function sfuSendT(S) {
   if (S.send) return S.send;
   const sp = await sfuReq("sfu_tr", { dir: "send" });
   S.send = S.dev.createSendTransport(sp);
+  sfuWatch(S, S.send, "kirim");
   S.send.on("connect", ({ dtlsParameters }, cb, eb) => sfuReq("sfu_conn", { tid: S.send.id, dtls: dtlsParameters }).then(cb, eb));
   S.send.on("produce", ({ kind, rtpParameters, appData }, cb, eb) => sfuReq("sfu_prod", { tid: S.send.id, kind, rtp: rtpParameters, src: appData.src }).then((d) => cb({ id: d.id }), eb));
   return S.send;
@@ -13063,11 +13075,30 @@ function sfuConsume(S, p) {
       const c = await S.recv.consume({ id: d.id, producerId: d.pid, kind: d.kind, rtpParameters: d.rtp });
       const ent = { c, peer: p.peer, src: p.src };
       if (c.kind === "audio") { const a = new Audio(); a.srcObject = new MediaStream([c.track]); a.autoplay = true; a.play().catch(() => {}); ent.el = a; }
-      else klsScreenShow(new MediaStream([c.track]), p.peer);
+      else { klsScreenShow(new MediaStream([c.track]), p.peer); sfuScreenCheck(S, c); }
       S.cons.set(p.pid, ent);
       await sfuReq("sfu_resume", { cid: c.id });
     } catch (e) { console.warn("SFU consume:", e.message); }
   });
+}
+// pantau sambungan media ke server (UDP/TCP port SFU) — beri tahu bila terhalang
+function sfuWatch(S, tr, dir) {
+  S.net = S.net || {};
+  tr.on("connectionstatechange", (st) => {
+    S.net[dir] = st; console.log("SFU " + dir + ":", st);
+    if (st === "failed" && !S.warned) { S.warned = true; toast("⚠ Media kelas (suara & berbagi layar) tidak bisa tersambung ke server. Biasanya port 44444 UDP/TCP tertutup atau SFU_ANNOUNCED_IP salah — hubungi admin galeri.", 9000); }
+    if (typeof klsRender === "function") klsRender();
+  });
+  setTimeout(() => { if (!S.dead && (S.net[dir] === "new" || S.net[dir] === "connecting") && !S.warned) { S.warned = true; toast("⚠ Media kelas belum tersambung ke server setelah 12 detik (port 44444 / IP server). Suara & layar bersama mungkin tidak sampai.", 9000); } }, 12000);
+}
+function sfuScreenCheck(S, c) {
+  const t0 = performance.now();
+  const iv = setInterval(() => {
+    const B = SB.boards[KLS.joined], v = B && B.screen && B.screen.v;
+    if (S.dead || !v || c.closed) { clearInterval(iv); return; }
+    if (v.readyState >= 2 && v.videoWidth > 0) { clearInterval(iv); return; }
+    if (performance.now() - t0 > 9000) { clearInterval(iv); toast(`🖥 Layar pengajar belum sampai ke perangkatmu (status media: ${(S.net && S.net.terima) || "?"}). Biasanya port 44444 di server terhalang — hubungi admin galeri.`, 9000); }
+  }, 1000);
 }
 function sfuDrop(S, pid) {
   const e = S.cons.get(pid); if (!e) return;
@@ -13119,8 +13150,11 @@ function klsScreenShow(stream, peer) {
   const v = document.createElement("video"); v.muted = true; v.playsInline = true; v.autoplay = true; v.srcObject = stream;
   const tex = new THREE2.VideoTexture(v); tex.colorSpace = THREE2.SRGBColorSpace;
   tex.minFilter = THREE2.LinearFilter; tex.magFilter = THREE2.LinearFilter;
-  v.onloadedmetadata = () => { v.play().catch(() => {}); tex.needsUpdate = true; };
-  v.oncanplay = () => { v.play().catch(() => {}); tex.needsUpdate = true; };
+  const updateTex = () => { tex.needsUpdate = true; };
+  v.onloadedmetadata = () => { v.play().catch(() => {}); updateTex(); };
+  v.oncanplay = () => { v.play().catch(() => {}); updateTex(); };
+  v.onplay = updateTex;
+  v.ontimeupdate = updateTex;
   v.play().catch(() => {});
   sbCssOff(B); B.screen = { v, tex, peer };
   B.mesh.material = new THREE2.MeshBasicMaterial({ map: tex, toneMapped: false });
@@ -13184,6 +13218,7 @@ function klsRender() {
   }
   const canScreen = !!KLS.sfu && (!ses || T) && (!st.screen || (net && st.screen.id === net.selfId));
   if (canScreen) btn(KLS.sfu && KLS.sfu.screen ? "⏹ Hentikan berbagi layar" : "🖥 Bagikan layar", klsShareScreen, KLS.sfu && KLS.sfu.screen ? "btn" : "ghost", "Tampilkan layar laptopmu di smart board");
+  if (KLS.sfu && KLS.sfu.net) { const n = KLS.sfu.net, bad = Object.values(n).some((v) => v === "failed"), ok = Object.values(n).length && Object.values(n).every((v) => v === "connected"); const s = document.createElement("span"); s.className = "kmut"; s.textContent = bad ? "📡 Media: GAGAL tersambung (port 44444?)" : ok ? "📡 Media: tersambung" : "📡 Media: menyambung…"; if (bad) s.style.color = "#fca5a5"; c.appendChild(s); }
   else if (st.screen) { const s = document.createElement("span"); s.className = "kmut"; s.textContent = `🖥 ${st.screen.n} sedang berbagi layar`; c.appendChild(s); }
   if (T) {
     btn(st.ctl.muteAll ? "🔊 Buka mic semua" : "🔇 Bisukan semua", () => klsSend({ type: "kls_muteall", on: !st.ctl.muteAll }), st.ctl.muteAll ? "btn" : "ghost");
@@ -14294,7 +14329,7 @@ function buildSoon() {
 // ---------- 7 lencana (desain: segi enam bertingkat) ----------
 var BADGES = [
   { id: "dasar", kat: "PENGETAHUAN", nama: "Dasar", c: ["#3b82f6", "#2563eb", "#1e3a8a"], kc: "#93c5fd", icon: "book", syarat: "Tuntaskan 4 ruang tantangan Lantai 2 IT-Mart, lalu temui Teh Fety di Taman Apresiasi.", tahap: "tahap 2", desc: "atas keberhasilan menaklukkan 4 ruang tantangan Lantai 2 IT-Mart (Kognitif, Bahasa Inggris, Sahabat Rasulullah, Dasar Coding).", oleh: "Teh Fety" },
-  { id: "umum", kat: "PENGETAHUAN", nama: "Umum", c: ["#8b5cf6", "#7c3aed", "#3b0764"], kc: "#c4b5fd", icon: "bulb", syarat: "Taklukkan Gua Pustaka di balik rak buku Silvia (IT-Mart) — 3 babak, 3 nyawa — lalu temui Teh Puspa.", tahap: "tahap 3", desc: "atas keberhasilan menaklukkan Gua Pustaka: Lantai Benar/Salah, Lini Masa, dan Galeri Benda.", oleh: "Teh Puspa" },
+  { id: "umum", kat: "PENGETAHUAN", nama: "Umum", c: ["#8b5cf6", "#7c3aed", "#3b0764"], kc: "#c4b5fd", icon: "bulb", syarat: "Taklukkan Gua Pustaka di balik rak buku Silvia (IT-Mart) — 3 babak, 6 nyawa tiap babak — lalu temui Teh Puspa.", tahap: "tahap 3", desc: "atas keberhasilan menaklukkan Gua Pustaka: Lantai Benar/Salah, Lini Masa, dan Galeri Benda.", oleh: "Teh Puspa" },
   { id: "iot", kat: "TEKNOLOGI", nama: "IoT & Drone", c: ["#65a30d", "#4d7c0f", "#1a2e05"], kc: "#bef264", icon: "drone", syarat: "Minta Haryani (IT-Mart Lantai 2) mengaktifkan lift Lab CSN, lalu tuntaskan Misi Smart Farm di Hanggar Drone.", tahap: "tahap 4", desc: "atas keberhasilan menuntaskan Misi Smart Farm: merakit node sensor ESP32, memprogram otomasi kebun, dan menerbangkan drone dengan presisi.", oleh: "Kang Hendri & Kang Erwin" },
   { id: "jari", kat: "KETERAMPILAN", nama: "Jari", c: ["#f43f5e", "#e11d48", "#4c0519"], kc: "#fda4af", icon: "tap", syarat: "Pakai skin Ronin Neon, minta Sugiarti (Lab GIT) membuka lubang tangga, lalu taklukkan 4 babak Kawah Api.", tahap: "tahap 5", desc: "atas ketangkasan jari menaklukkan Kawah Api: Jalur Lava, Labirin Bola Api, Labirin Bayangan, dan Kejaran Bola Batu.", oleh: "Kang Safar & Teh Berlin" },
   { id: "coding", kat: "PENGETAHUAN", nama: "Coding", c: ["#06b6d4", "#0891b2", "#083344"], kc: "#67e8f9", icon: "code", syarat: "Temui Hartono yang berkeliling antara resepsionis dan lab-lab, bersedia membantunya, lalu taklukkan 6 babak Dunia Server di Lab KERIS.", tahap: "tahap 6", desc: "atas keberhasilan menyelamatkan Dunia Server Lab KERIS: Robot Kurir, Pemburu Bug, Duel Kilat, Brankas Hacker, Lorong Laser, dan Jinakkan Bom.", oleh: "Kang Sahid & Teh Gibtha" },
@@ -14571,7 +14606,7 @@ function cogShow() {
     b.appendChild(document.createTextNode(v));
     b.onclick = () => {
       if (!L2.cog || G.done) return;
-      if (k !== q.a) { b.classList.add("bad"); o.children[q.a]?.classList.add("good"); cogEnd(false, `Jawaban salah — ${q.ans}.`); return; }
+      if (k !== q.a && !cht("benar")) { b.classList.add("bad"); o.children[q.a]?.classList.add("good"); cogEnd(false, `Jawaban salah — ${q.ans}.`); return; }
       if (typeof SFX !== "undefined") SFX.bloop(1.5);
       G.i++;
       if (G.i >= G.qs.length) cogEnd(true); else cogShow();
@@ -14604,7 +14639,7 @@ function cogEnd(win, why) {
   const n = chCount(), all = chAllDone();
   if (card) card.innerHTML = win
     ? `<div class="cog-res win"><div style="font-size:54px">🔓</div><h2>Sel terbuka!</h2><p>20 soal ${pemEsc(C.nama)} benar dalam ${used.toFixed(1)} detik. Progres tahap 2: <b>${n}/4</b> tantangan.</p><p>${all ? "🎉 Keempat tantangan tuntas! Temui <b>Teh Fety</b> di paviliun Taman Apresiasi untuk Lencana Pengetahuan Dasar." : "Lanjutkan ke pintu tantangan berikutnya di Lantai 2."}</p></div>`
-    : `<div class="cog-res"><div style="font-size:54px">⛓</div><h2>Gagal</h2><p>${pemEsc(why || "")} Kamu dikembalikan ke Ananda. Coba lagi kapan saja!</p></div>`;
+    : `<div class="cog-res"><div style="font-size:54px">⛓</div><h2>Gagal</h2><p>${pemEsc(why || "")} ${why === "Kamu menyerah." ? "Kamu dikembalikan ke Ananda. Coba lagi kapan saja!" : "Tantangan ruangan ini diulang dari awal dengan soal baru…"}</p></div>`;
   if (win) {
     L2.cogWin = true;
     const bars = C.room === "dungeon" ? DG.bars : CHR[C.id];
@@ -14617,6 +14652,7 @@ function cogEnd(win, why) {
     }, 4200);
   } else {
     if (typeof SFX !== "undefined") SFX.whoosh();
+    if (why !== "Kamu menyerah.") { setTimeout(() => { $("cogOv")?.remove(); L2.cog = null; chStart(C.id); }, 3000); return; }
     setTimeout(() => { $("cogOv")?.remove(); L2.cog = null; xTeleport(L2_NAN.x - 1.6, L2_NAN.z - 1.4, 0); setTimeout(() => sayBubble("Jangan menyerah! Coba lagi kalau sudah siap 💪", "npc_nan"), 800); }, 3000);
   }
 }
@@ -15019,7 +15055,7 @@ function buildCapaian() {
 //    Dasar pemain tercatat di database server.
 //  • Gua gelap (kabut pekat, ±5 m terlihat), dimainkan SOLO: pemain lain
 //    tidak terlihat/terdengar selama di dalam gua.
-//  • 3 nyawa untuk 3 babak: 1) Lantai Benar/Salah, 2) Lini Masa,
+//  • 6 nyawa di tiap babak: 1) Lantai Benar/Salah, 2) Lini Masa,
 //    3) Galeri Benda (harus didekati ±2 m, 35 dtk per petunjuk).
 //  • Teh Puspa (tersembunyi) muncul di balik pintu ujung gua dan
 //    menyematkan Lencana Pengetahuan Umum.
@@ -15027,7 +15063,7 @@ function buildCapaian() {
 // =====================================================================
 var CV = { on: false, won: false, babak: 0, lives: 3, t0: 0, big: false, fogged: false, bc: 0, bcOpen: false, bcT: 0, gates: [], tiles: {}, objs: [], bs: null, lm: null, gl: null, busy: false };
 var CV_START = { x: 78, z: -3.5 };
-var CV_LIVES = 3, CV_BS_TIME = 9, CV_GL_TIME = 35;
+var CV_LIVES = 6, CV_BS_TIME = 9, CV_GL_TIME = 35;
 XROOMS.cave = { x0: 60, x1: 96, z0: -45, z1: -1, h: 5, name: "Gua Pustaka (tantangan solo)", short: "Gua Pustaka" };
 var inCave = (x, z) => x > 60 && x < 96 && z > -45 && z < -1;
 function caveSolo(r) { return inCave(P.x, P.z) || (r && r.cur && inCave(r.cur.x, r.cur.z)); }
@@ -15232,7 +15268,7 @@ function buildGua() {
   XT.anim.push(() => { crys.material.opacity = 0.55 + Math.sin(t * 1.3) * 0.25; });
   // ===== ceruk awal: papan judul + portal keluar =====
   const ttl = cvScreen(5, 1.2, 1200, 290); ttl.m.position.set(78, 3.6, -5.62); scene.add(ttl.m); xAct(ttl.m, { type: "x_cvintro" });
-  ttl.draw((x, w, h) => { x.fillStyle = "rgba(20,12,6,.88)"; rr(x, 0, 0, w, h, 30); x.fill(); x.strokeStyle = "#f59e0b"; x.lineWidth = 6; rr(x, 6, 6, w - 12, h - 12, 26); x.stroke(); x.textAlign = "center"; x.fillStyle = "#fde68a"; x.font = `800 92px ${FONT}`; x.fillText("⛏ GUA PUSTAKA", w / 2, 120); x.fillStyle = "#fed7aa"; x.font = `500 42px ${FONT}`; x.fillText("Tahap 3 · Pengetahuan Umum · 3 nyawa · 3 babak", w / 2, 210); });
+  ttl.draw((x, w, h) => { x.fillStyle = "rgba(20,12,6,.88)"; rr(x, 0, 0, w, h, 30); x.fill(); x.strokeStyle = "#f59e0b"; x.lineWidth = 6; rr(x, 6, 6, w - 12, h - 12, 26); x.stroke(); x.textAlign = "center"; x.fillStyle = "#fde68a"; x.font = `800 92px ${FONT}`; x.fillText("⛏ GUA PUSTAKA", w / 2, 120); x.fillStyle = "#fed7aa"; x.font = `500 42px ${FONT}`; x.fillText("Tahap 3 · Pengetahuan Umum · 3 babak · 6 nyawa/babak", w / 2, 210); });
   const pg = new THREE2.Group(); pg.position.set(78, 0, -1.35); pg.rotation.y = Math.PI; scene.add(pg);
   const pr = new THREE2.Mesh(new THREE2.TorusGeometry(0.9, 0.08, 10, 40), cvGlowMat(0xa78bfa)); pr.position.y = 1.35; pg.add(pr);
   const pd = new THREE2.Mesh(new THREE2.CircleGeometry(0.85, 32), cvGlowMat(0x5b21b6, 0.45)); pd.position.y = 1.35; pg.add(pd);
@@ -15395,7 +15431,7 @@ async function silviaGate() {
     return { text: why, acts: [["🔄 Coba lagi", () => askNpc("Buka Gua Pustaka", "ivy")]] };
   }
   cvOpenBookcase();
-  return { text: `🔷 Lencana Pengetahuan Dasar terverifikasi. Ssst… dorong pelan rak di sebelah kiriku. Di baliknya ada lorong menuju GUA PUSTAKA. Di sana kamu bermain sendirian: 3 babak, 3 nyawa. Bawa lentera, ya!` };
+  return { text: `🔷 Lencana Pengetahuan Dasar terverifikasi. Ssst… dorong pelan rak di sebelah kiriku. Di baliknya ada lorong menuju GUA PUSTAKA. Di sana kamu bermain sendirian: 3 babak, 6 nyawa tiap babak. Bawa lentera, ya!` };
 }
 function cvOpenBookcase() {
   CV.bcOpen = true; CV.bcT = performance.now();
@@ -15433,7 +15469,7 @@ function cvIntro(done) {
   if ($("cvSkip")) $("cvSkip").onclick = () => { closeGen(); CV.won = true; cvSetWon(); cvHudUpd("Temui Teh Puspa di balik pintu ujung gua.", null); xTeleport(78, -41.2, 0); setTimeout(() => openNpc("puspa", "chat"), 900); };
 }
 function cvLoseLife(why) {
-  CV.lives--;
+  if (!cht("god")) CV.lives--;
   cvFlash("rgba(220,38,38,.45)");
   if (typeof xShake === "function") xShake(0.6, 0.07);
   if (typeof SFX !== "undefined") SFX.whoosh();
@@ -15445,9 +15481,9 @@ function cvLoseLife(why) {
 function cvFail(why) {
   CV.busy = true;
   $("cvLm")?.remove();
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🕯</div><h2>Lenteramu padam…</h2><p id="cvWhy"></p><p>Nyawamu habis. Kamu dikembalikan ke Silvia di IT-Mart — coba lagi kapan saja!</p></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🕯</div><h2>Lenteramu padam…</h2><p id="cvWhy"></p><p>Nyawamu habis. <b>Babak ini diulang dari awal</b> dengan 6 nyawa — babak yang sudah tuntas tetap aman.</p></div>`);
   $("cvWhy").textContent = why || "";
-  setTimeout(() => { closeGen(); CV.busy = false; cvExit(true); setTimeout(() => sayBubble("Tidak apa-apa, gua itu memang sulit. Coba lagi kalau sudah siap 📚", "npc_ivy"), 900); }, 3600);
+  setTimeout(() => { closeGen(); CV.busy = false; stgRestart("cv"); }, 3600);
 }
 function cvExit(silent) {
   const wasWon = CV.won;
@@ -15459,7 +15495,7 @@ function cvExit(silent) {
 }
 // ----- Babak 1 -----
 function cvB1Start() {
-  CV.babak = 1; CV.t0 = performance.now();
+  CV.babak = 1; CV.lives = CV_LIVES; if (!CV.t0) CV.t0 = performance.now();
   const list = cogShuffle(CV_BS).slice(0, 7).concat(cogShuffle(CV_BS_KP).slice(0, 3));
   CV.bs = { list: cogShuffle(list), i: -1, until: 0, phase: "", side: "" };
   xTeleport(78, -13, 0);
@@ -15470,7 +15506,7 @@ function cvB1Next() {
   const B = CV.bs; if (!B || !CV.on) return;
   B.i++;
   if (B.i >= B.list.length) {
-    CV.bs = null; CV.babak = 2; CV.gates[0].setOpen(true);
+    CV.bs = null; CV.babak = 2; CV.lives = CV_LIVES; CV.gates[0].setOpen(true);
     cvDrawScreen("✅ Babak 1 tuntas!", "Gerbang batu terbuka — temukan prasasti LINI MASA di ruang berikutnya", "#22c55e");
     cvHudUpd("✅ Babak 1 tuntas! Masuki gerbang batu dan dekati prasasti Lini Masa.", null);
     if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle();
@@ -15488,7 +15524,7 @@ function cvSideAt() {
 function cvB1Judge() {
   const B = CV.bs; if (!B) return;
   B.phase = "fb";
-  const [s, truth, expl] = B.list[B.i], side = cvSideAt(), ok = side === (truth ? "B" : "S");
+  const [s, truth, expl] = B.list[B.i], side = cvSideAt(), ok = side === (truth ? "B" : "S") || cht("benar");
   if (ok) {
     cvFlash("rgba(34,197,94,.3)"); if (typeof SFX !== "undefined") SFX.chime();
     cvDrawScreen(`✅ ${truth ? "BENAR" : "SALAH"} — ${expl}`, `Pernyataan ${B.i + 1}/${B.list.length}`, "#22c55e");
@@ -15539,13 +15575,13 @@ function cvB2Open() {
   ov.querySelector("#lmTutup").onclick = () => { ov.remove(); CV.lmCool = performance.now() + 4000; };
   ov.querySelector("#lmCek").onclick = () => {
     const right = cur.filter((v, i) => v === sorted[i]).length;
-    if (right === cur.length) {
+    if (right === cur.length || cht("benar")) {
       if (typeof SFX !== "undefined") SFX.chime(); cvFlash("rgba(34,197,94,.3)");
       ov.querySelector(".lm-msg").textContent = "✅ Urutan benar! " + sorted.map((v) => `${v[0]} (${v[1]})`).join(" → ");
       ov.querySelector("#lmCek").disabled = true;
       setTimeout(() => {
         ov.remove(); L.i++;
-        if (L.i >= L.sets.length) { CV.babak = 3; CV.gates[1].setOpen(true); cvHudUpd("✅ Babak 2 tuntas! Masuki galeri di balik gerbang batu.", null); spawnSparkle(); }
+        if (L.i >= L.sets.length) { CV.babak = 3; CV.lives = CV_LIVES; CV.gates[1].setOpen(true); cvHudUpd("✅ Babak 2 tuntas! Masuki galeri di balik gerbang batu.", null); spawnSparkle(); }
         else { cvHudUpd(`Set 1 benar! Dekati prasasti lagi untuk set 2.`, null); setTimeout(cvB2Open, 400); }
       }, 2600);
     } else {
@@ -15583,7 +15619,7 @@ function cvPick(key) {
   if (Math.hypot(P.x - o.x, P.z - o.z) > 2.4) { toast("🔦 Dekati bendanya dulu (±2 langkah) baru bisa dipilih."); return; }
   const G = CV.gl, want = G.list[G.i];
   if (o.done) { toast("Benda ini sudah kamu temukan sebelumnya."); return; }
-  if (o === want) {
+  if (o === want || cht("benar")) {
     o.done = true; o.cr.material.color.set(0x22c55e);
     if (typeof SFX !== "undefined") SFX.chime(); cvFlash("rgba(34,197,94,.28)"); spawnSparkle({ x: o.x, y: 0.4, z: o.z });
     toast(`✅ Tepat! ${o.key[0] === "k" ? "Potret " + (CV_KP.find((c) => "k:" + c[0] === key) || [])[1] : ""}`.trim(), 2500);
@@ -15897,7 +15933,7 @@ function iotSimulate(rules, seed, budget) {
 // TAHAP 4 · HANGGAR DRONE (Lencana Teknologi IoT & Drone)
 //  • Haryani (IT-Mart Lantai 2) memeriksa Explorer Card + Lencana Dasar +
 //    Lencana Umum di server, lalu mengaktifkan LIFT di Lab CSN.
-//  • Hanggar di atap (malam hari, kota di kejauhan). 3 nyawa · 3 babak:
+//  • Hanggar di atap (malam hari, kota di kejauhan). 3 babak · 6 nyawa/babak:
 //    1) Rakit node sensor ESP32 (+2 soal wawasan), 2) Program otomasi +
 //    simulasi kebun 24 jam (anggaran listrik), 3) Pra-terbang + misi drone
 //    (5 cincin, pindai petak, jatuhkan node, mendarat presisi; ≥ 2 bintang).
@@ -15906,7 +15942,7 @@ function iotSimulate(rules, seed, budget) {
 //  • Kontrol drone: keyboard laptop atau 2 joystick sentuh di HP.
 // ---------------------------------------------------------------------
 var IO = { on: false, won: false, babak: 0, lives: 3, liftOk: false, liftK: 0, fly: false, dr: null, sim: null, seed: 0, grace: 0, t0: 0, rekor: [] };
-var IO_LIVES = 3, IO_WIRE_TIME = 240;
+var IO_LIVES = 6, IO_WIRE_TIME = 240;
 XROOMS.hangar = { x0: 100, x1: 170, z0: -76, z1: -4, h: 30, name: "Hanggar Drone (atap)", short: "Hanggar" };
 var inHangar = (x, z) => x > 100 && x < 170 && z > -76 && z < -4;
 var IO_LIFT_CSN = { x: 33.6, z: -7.6 };   // lift kaca berdiri bebas di sisi timur laut Lab CSN (pintu menghadap barat)
@@ -16089,7 +16125,7 @@ function ioWireTest() {
   const st = IO.wire, P2 = ioWirePart(); if (!P2) return;
   for (const [nm] of P2.pins) if (!st.cur[nm]) { $("ioMsg").textContent = `Pin ${nm} belum tersambung.`; return; }
   for (const [nm, , chk] of P2.pins) {
-    const w = st.cur[nm], why = chk(w.to, w.add);
+    const w = st.cur[nm], why = cht("benar") ? "" : chk(w.to, w.add);
     if (why) {
       const i = P2.pins.findIndex((p) => p[0] === nm), CY0 = 300 - (P2.pins.length - 1) * 55;
       st.spark = [495, (CY0 + i * 110 + 50 + IO_ESP.findIndex((e) => e[0] === w.to) * 38.5) / 2];
@@ -16119,14 +16155,14 @@ function ioQuiz(i) {
   const card = document.querySelector("#ioOv .io-card"); if (!card) return;
   if (i >= IO_QUIZ.length) {
     card.innerHTML = `<div class="cog-res win"><div style="font-size:54px">💡</div><h2>Node sensor menyala!</h2><p>LED berkedip, data suhu, cahaya, tanah, gerak & tandon terkirim lewat MQTT. Lanjut ke <b>konsol otomasi</b> di sisi kanan hanggar.</p></div>`;
-    IO.babak = 2; ioHudUpd("✅ Babak 1 tuntas! Dekati konsol otomasi (sisi kanan hanggar).");
+    IO.babak = 2; IO.lives = IO_LIVES; ioHudUpd("✅ Babak 1 tuntas! Dekati konsol otomasi (sisi kanan hanggar).");
     setTimeout(() => $("ioOv")?.remove(), 2600); return;
   }
   const [q, ok, wr] = IO_QUIZ[i], opts = cogShuffle([ok, ...wr]);
   card.innerHTML = `<div class="cog-top"><b>🔧 WAWASAN IoT ${i + 1}/2</b><span>${ioHearts()}</span></div><p class="io-q"></p><div class="cog-o txt"></div><p class="io-msg" id="ioMsg"></p>`;
   card.querySelector(".io-q").textContent = q;
   const o = card.querySelector(".cog-o");
-  opts.forEach((v) => { const b = document.createElement("button"); b.textContent = v; b.onclick = () => { if (v === ok) { if (typeof SFX !== "undefined") SFX.bloop(1.4); ioQuiz(i + 1); } else { b.classList.add("bad"); if (!ioLose("Jawaban wawasan IoT keliru.")) $("ioMsg").textContent = "❌ Kurang tepat — nyawa −1. Coba lagi."; } }; o.appendChild(b); });
+  opts.forEach((v) => { const b = document.createElement("button"); b.textContent = v; b.onclick = () => { if (v === ok || cht("benar")) { if (typeof SFX !== "undefined") SFX.bloop(1.4); ioQuiz(i + 1); } else { b.classList.add("bad"); if (!ioLose("Jawaban wawasan IoT keliru.")) $("ioMsg").textContent = "❌ Kurang tepat — nyawa −1. Coba lagi."; } }; o.appendChild(b); });
 }
 
 // ---------- Babak 2: program otomasi + simulasi ----------
@@ -16181,8 +16217,9 @@ function ioRuleRun() {
   let i = 0; const step = () => { if (!$("ioChart")) return; i++; ioChart(res, i); if (i < 24) setTimeout(step, 230); else done(); };
   const done = () => {
     $("ioRun").disabled = false;
+    if (!res.ok && cht("benar")) { res.ok = true; if (typeof res.offline !== "number") res.offline = IO.seed % IO_PLOTS.length; }
     if (res.ok) {
-      IO.sim = res; IO.babak = 3;
+      IO.sim = res; IO.babak = 3; IO.lives = IO_LIVES;
       if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle();
       const card = document.querySelector("#ioOv .io-card");
       card.insertAdjacentHTML("beforeend", `<div class="cog-res win"><h2>🌱 Kebun selamat!</h2><p>Semua petak sehat dan listrik ${res.energy}/${res.budget} unit. Tapi… <b>node sensor Petak ${res.offline + 1} tiba-tiba berhenti mengirim data</b> (ditandai merah di kebun). Terbangkan drone untuk memindainya dan menjatuhkan node pengganti!</p><div class="rowf"><button class="btn" id="ioNext">🛸 Menuju helipad</button></div></div>`);
@@ -16217,7 +16254,7 @@ function ioPreOpen() {
   $("ioClose").onclick = () => { ov.remove(); IO.preCool = performance.now() + 3000; };
   $("ioGo").onclick = () => {
     const chosen = new Set([...box.querySelectorAll("label")].filter((l) => l.querySelector("input").checked).map((l) => l.dataset.t));
-    const wrong = IO_PRE.find(([t2, ok]) => ok !== chosen.has(t2));
+    const wrong = cht("benar") ? null : IO_PRE.find(([t2, ok]) => ok !== chosen.has(t2));
     if (wrong) { const msg = wrong[1] ? `Ada langkah penting yang belum dicentang.` : `“${wrong[0]}” berbahaya — jangan dilakukan!`; if (!ioLose("Pra-terbang keliru: " + msg)) $("ioMsg").textContent = `❌ ${msg} Nyawa −1.`; return; }
     ov.remove(); IO.preOk = true; ioFlyStart();
   };
@@ -16252,6 +16289,7 @@ function ioFlyStart() {
 }
 function ioRingsReset() { (IO.rings || []).forEach((r, i) => { r.passed = false; r.prev = undefined; r.m.material.color.set(i === 0 ? 0x22c55e : 0x64748b); }); }
 function ioCrash(why) {
+  if (cht("tank")) { const D = IO.dr; if (D) { if (D.y < 0.3) D.y = 0.3; D.vy = Math.max(D.vy || 0, 0); if (D.bat !== undefined && D.bat <= 0) D.bat = 100; } return; }
   const D = IO.dr; if (!D || D.done) return;
   D.done = true; IO.fly = false; ioJoy(false);
   if (typeof xShake === "function") xShake(0.6, 0.08);
@@ -16393,7 +16431,7 @@ function droneCam(dt) {
 // ---------- umum ----------
 function ioHearts() { return "❤".repeat(Math.max(0, IO.lives)) + "🖤".repeat(Math.max(0, IO_LIVES - IO.lives)); }
 function ioLose(why) {
-  IO.lives--;
+  if (!cht("god")) IO.lives--;
   if (typeof xShake === "function") xShake(0.5, 0.06);
   cvFlash && cvFlash("rgba(220,38,38,.4)");
   if (typeof SFX !== "undefined") SFX.whoosh();
@@ -16403,10 +16441,10 @@ function ioLose(why) {
 }
 function ioFail(why) {
   $("ioOv")?.remove(); IO.fly = false; ioJoy(false); if (IO.drone) IO.drone.visible = false;
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🪫</div><h2>Misi gagal</h2><p id="ioWhy"></p><p>Nyawamu habis. Lift membawamu kembali ke Lab CSN — coba lagi kapan saja!</p></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🪫</div><h2>Babak gagal</h2><p id="ioWhy"></p><p>Nyawamu habis. <b>Babak ini diulang dari awal</b> dengan 6 nyawa — babak yang sudah tuntas tetap aman.</p></div>`);
   $("ioWhy").textContent = why || "";
   IO.busy = true;
-  setTimeout(() => { closeGen(); IO.busy = false; ioExit(true); }, 3600);
+  setTimeout(() => { closeGen(); IO.busy = false; stgRestart("io"); }, 3600);
 }
 function ioReset() {
   IO.babak = 0; IO.lives = IO_LIVES; IO.wire = null; IO.rules = null; IO.sim = null; IO.seed = 0; IO.preOk = false; IO.fly = false; IO.dr = null;
@@ -16502,7 +16540,7 @@ function haryaniAnswer(q) {
   const v = ["🛗 Aktifkan lift CSN", () => askNpc("Aktifkan lift CSN", "haryani")];
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama! Semoga dronemu mendarat mulus 🛸" };
   if (/syarat|siapa (saja|yang) boleh|boleh masuk/.test(ql)) return { text: "Syaratnya: Explorer Card (Kang Santo), Lencana Pengetahuan Dasar (Teh Fety), dan Lencana Pengetahuan Umum (Teh Puspa). Semua kuperiksa ke database server.", acts: [v] };
-  if (/tantangan apa|isi|misi|drone|iot|hanggar|babak/.test(ql) && !/aktif|buka|lift/.test(ql)) return { text: "Tahap 4 · Misi Smart Farm di Hanggar Drone (atap): 1) Kabel Jumper — rakit node sensor ESP32 dengan menarik kabel ke pin yang tepat, 2) program otomasi kebun dengan anggaran listrik ketat, 3) terbangkan drone melewati 5 cincin, pindai petak, jatuhkan node pengganti, lalu mendarat presisi (minimal 2⭐). 3 nyawa untuk semuanya. Bisa dimainkan dengan keyboard laptop atau layar sentuh HP.", acts: [v] };
+  if (/tantangan apa|isi|misi|drone|iot|hanggar|babak/.test(ql) && !/aktif|buka|lift/.test(ql)) return { text: "Tahap 4 · Misi Smart Farm di Hanggar Drone (atap): 1) Kabel Jumper — rakit node sensor ESP32 dengan menarik kabel ke pin yang tepat, 2) program otomasi kebun dengan anggaran listrik ketat, 3) terbangkan drone melewati 5 cincin, pindai petak, jatuhkan node pengganti, lalu mendarat presisi (minimal 2⭐). 6 nyawa di tiap babak. Bisa dimainkan dengan keyboard laptop atau layar sentuh HP.", acts: [v] };
   if (/lift|aktif|buka|verif|cek|naik|kartu|lencana|masuk/.test(ql)) return { text: "Kuperiksa Explorer Card dan lencanamu di database… 🔎", later: haryaniVerify() };
   return { text: `Halo ${nm}! Aku Haryani, operator lift Hanggar Drone. Lift di Lab CSN hanya kuaktifkan bagi pemegang Explorer Card dengan Lencana Pengetahuan Dasar dan Pengetahuan Umum.${IO.liftOk && IO.liftName === S.name ? " Lift-mu sudah aktif — langsung ke Lab CSN ya." : ""}`, acts: [v, ["Tantangan apa ini?", () => askNpc("Tantangan apa ini?", "haryani")]] };
 }
@@ -16517,7 +16555,7 @@ function heAnswer(q, who) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), qs = chMigrate(), other = who === "hendri" ? "Kang Erwin" : "Kang Hendri";
   const start = ["▶ Mulai misi", () => { ioStart(); }];
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: `Sama-sama! Kata ${other} juga: terbanglah setinggi mungkin 😄` };
-  if (/aturan|cara|kontrol|babak|misi apa|tantangan/.test(ql)) return { text: "Misi Smart Farm, 3 nyawa: 1) Meja kerja (kiri) — Kabel Jumper: tarik kabel dari 6 komponen ke pin ESP32 yang tepat (ketuk kabel sinyal untuk menyisipkan resistor), lalu 2 soal wawasan. 2) Konsol otomasi (kanan) — susun aturan pompa/kipas/lampu, lalu simulasi 24 jam tanpa tanaman rusak & dalam anggaran listrik. 3) Panggung pilot dekat helipad — daftar periksa pra-terbang, lalu terbangkan drone: 5 cincin, pindai petak bermasalah, jatuhkan node, mendarat presisi (≥ 2⭐).", acts: [start] };
+  if (/aturan|cara|kontrol|babak|misi apa|tantangan/.test(ql)) return { text: "Misi Smart Farm, 6 nyawa tiap babak: 1) Meja kerja (kiri) — Kabel Jumper: tarik kabel dari 6 komponen ke pin ESP32 yang tepat (ketuk kabel sinyal untuk menyisipkan resistor), lalu 2 soal wawasan. 2) Konsol otomasi (kanan) — susun aturan pompa/kipas/lampu, lalu simulasi 24 jam tanpa tanaman rusak & dalam anggaran listrik. 3) Panggung pilot dekat helipad — daftar periksa pra-terbang, lalu terbangkan drone: 5 cincin, pindai petak bermasalah, jatuhkan node, mendarat presisi (≥ 2⭐).", acts: [start] };
   if (/kembali|turun|csn|pulang|keluar/.test(ql)) return { text: "Lift ada di dinding selatan hanggar, atau pakai tombol ⟲ di bawah layar.", acts: [["⟲ Turun ke Lab CSN", () => ioExit()]] };
   if (/lencana|badge|hadiah|minta/.test(ql)) {
     if (qs.badges.iot) return { text: `Lencana IoT & Drone sudah tersemat di profilmu, ${S.name} 🛸`, acts: [["🛸 Lihat lencana", () => badgeReveal("iot", false)], ["📣 Pamerkan", () => capPamer("b:iot")]] };
@@ -16841,6 +16879,7 @@ var JUMP_V = 7.2, JUMP_G = 22;
 function doJump() {
   if (typeof saJump === "function" && saJump()) return;
   if (typeof prJump === "function" && prJump()) return;
+  if (chtFly()) return;
   if (P.sit || P.jfx || (typeof IO !== "undefined" && IO.fly) || renderer.xr.isPresenting) return;
   if ((P.jy || 0) > 0.001) { P.jbuf = 0.16; return; } // tekan sedikit sebelum mendarat tetap dihitung
   P.jv = JUMP_V; P.jy = 0.0001; P.jumps = (P.jumps || 0) + 1;
@@ -16851,8 +16890,8 @@ function jumpTick(dt) {
   P.jbuf = Math.max(0, (P.jbuf || 0) - dt);
   if (P.jfx) return;
   if (P.jy > 0 || P.jv > 0) {
-    P.jv -= JUMP_G * dt; P.jy += P.jv * dt;
-    if (P.jy <= 0) { P.jy = 0; P.jv = 0; if (typeof SFX !== "undefined") SFX.step(); if (P.jbuf > 0) { P.jbuf = 0; doJump(); } }
+    const g2 = cht("fly") && !CHT.dn ? JUMP_G * 0.22 : JUMP_G; P.jv -= g2 * dt; if (g2 !== JUMP_G) P.jv = Math.max(P.jv, -3.2); P.jy = Math.min(80, P.jy + P.jv * dt);
+    if (P.jy <= 0) { P.jy = 0; P.jv = 0; CHT.dn = false; if (typeof SFX !== "undefined") SFX.step(); if (P.jbuf > 0) { P.jbuf = 0; doJump(); } }
   }
 }
 addEventListener("keydown", (e) => {
@@ -16897,14 +16936,14 @@ document.addEventListener("click", (e) => {
 //  • Sugiarti (Lab GIT) membuka lubang tangga ke Kawah Api bagi pemegang
 //    Explorer Card + Lencana Dasar, Umum, IoT & Drone yang MEMAKAI skin
 //    Ronin Neon.
-//  • 3 nyawa · 4 babak: 1) Jalur Lava (loncat, pijakan retak & bergerak,
+//  • 4 babak · 6 nyawa/babak: 1) Jalur Lava (loncat, pijakan retak & bergerak,
 //    semburan lava), 2) Labirin Bola Api (3 rune), 3) Labirin Bayangan
 //    (terlihat saat petir; lantai jebakan), 4) Kejaran Bola Batu.
 //  • Kang Safar & Teh Berlin (berdampingan) menyematkan lencana.
 //  • Kode cepat "butnavudivoxyziz5" ke Haris.
 // =====================================================================
 var KW = { on: false, won: false, stage: 0, lives: 3, ok: false, okName: "", grace: 0, t0: 0, own: null, hidden: null, cp: null, busy: false, fall: 0 };
-var KW_LIVES = 3;
+var KW_LIVES = 6;
 var KW_Z = {
   k_lobby: { x0: -120, x1: -100, z0: -10, z1: 10, h: 6, name: "Kawah Api · Gerbang", short: "Kawah Api" },
   k_lava: { x0: -232, x1: -170, z0: 18, z1: 70, h: 12, name: "Kawah Api · Jalur Lava", short: "Jalur Lava" },
@@ -17041,7 +17080,7 @@ function kwLavaTick(dt, here) {
   for (const B of KWL.bursts) if (B.on && Math.hypot(P.x - B.x, P.z - B.z) < 1.25 && (P.jy || 0) < 1.0) { kwSink("Tersambar semburan lava!"); return; }
 }
 function kwSink(why) {
-  if (KW.busy) return;
+  if (KW.busy || cht("tank")) return;
   KW.busy = true; P.jfx = true;
   if (typeof SFX !== "undefined") SFX.whoosh(); AMB.rumble(0.5);
   cvFlash && cvFlash("rgba(255,90,20,.5)");
@@ -17141,7 +17180,7 @@ function kwFireTick(dt, here) {
   if (KWF.got === 3 && P.z < KWF.exitZ) kwStageDone(2);
 }
 function kwHit(why) {
-  if (KW.busy) return; KW.busy = true;
+  if (KW.busy || cht("tank")) return; KW.busy = true;
   cvFlash && cvFlash("rgba(255,60,0,.5)"); if (typeof xShake === "function") xShake(0.6, 0.07); if (typeof SFX !== "undefined") SFX.whoosh();
   KW.hitT = { t0: performance.now(), why };
 }
@@ -17288,7 +17327,7 @@ function sugiAnswer(q) {
   const v = ["🔥 Buka Kawah Api", () => askNpc("Buka Kawah Api", "sugiarti")];
   if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: "Sama-sama. Semoga jarimu lincah!" };
   if (/syarat/.test(ql)) return { text: "Syaratnya: Explorer Card, Lencana Pengetahuan Dasar, Pengetahuan Umum, IoT & Drone — dan kamu harus sedang memakai skin Ronin Neon.", acts: [v] };
-  if (/tantangan apa|isi|babak|kawah api itu/.test(ql) && !/buka/.test(ql)) return { text: "Kawah Api · Tahap 5 · Keterampilan Jari: 1) Jalur Lava (loncat, pijakan retak & bergerak, semburan lava), 2) Labirin Bola Api (kumpulkan 3 rune), 3) Labirin Bayangan (hanya terlihat saat petir, awas lantai jebakan), 4) Kejaran Bola Batu. 3 nyawa untuk semuanya.", acts: [v] };
+  if (/tantangan apa|isi|babak|kawah api itu/.test(ql) && !/buka/.test(ql)) return { text: "Kawah Api · Tahap 5 · Keterampilan Jari: 1) Jalur Lava (loncat, pijakan retak & bergerak, semburan lava), 2) Labirin Bola Api (kumpulkan 3 rune), 3) Labirin Bayangan (hanya terlihat saat petir, awas lantai jebakan), 4) Kejaran Bola Batu. 6 nyawa di tiap babak.", acts: [v] };
   if (/buka|masuk|turun|kawah|lubang|verif|cek/.test(ql)) return { text: "Kuperiksa kartu, lencana, dan zirahmu… 🔎", later: sugiVerify() };
   return { text: `Halo ${S.name}. Aku Sugiarti, penjaga pintu Kawah Api di bawah Lab GIT. Hanya pemegang 3 lencana yang berzirah Ronin Neon yang boleh turun.${KW.ok && KW.okName === S.name ? " Lubangnya sudah terbuka untukmu." : ""}`, acts: [v, ["Syaratnya apa?", () => askNpc("Syaratnya apa?", "sugiarti")]] };
 }
@@ -17330,15 +17369,15 @@ function kwHudUpd(txt, frac) {
   if (frac !== undefined && frac !== null) { $("kwBar").style.width = Math.max(0, Math.min(1, frac)) * 100 + "%"; $("kwBar").classList.toggle("warn", frac < 0.3); }
 }
 function kwLose(why) {
-  KW.lives--; toast(`💔 ${why}`, 3500); kwHudUpd();
+  if (!cht("god")) KW.lives--; toast(`💔 ${why}`, 3500); kwHudUpd();
   if (KW.lives <= 0) { kwFail(why); return true; }
   return false;
 }
 function kwFail(why) {
   KW.busy = true;
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🌋</div><h2>Kawah menelanmu…</h2><p id="kwWhy"></p><p>Nyawamu habis. Kamu dikembalikan ke Lab GIT — coba lagi kapan saja!</p></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🌋</div><h2>Kawah menelanmu…</h2><p id="kwWhy"></p><p>Nyawamu habis. <b>Babak ini diulang dari awal</b> dengan 6 nyawa — babak yang sudah tuntas tetap aman.</p></div>`);
   $("kwWhy").textContent = why || "";
-  setTimeout(() => { closeGen(); KW.busy = false; kwExit(true); }, 3600);
+  setTimeout(() => { closeGen(); KW.busy = false; stgRestart("kw"); }, 3600);
 }
 function kwReset() {
   KW.stage = 0; KW.lives = KW_LIVES; KW.cp = null; KW.sink = null; KW.hitT = null; P.jfx = false; KW.t0 = 0; KW.busy = false; KW.tension = 0;
@@ -17363,7 +17402,7 @@ function kwIntro() {
   const q = chMigrate(), done = !!q.chal.jari;
   if (renderer.xr.isPresenting) { showVRText("Kawah Api membutuhkan layar biasa (keyboard atau layar sentuh)."); return; }
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🔥 Kawah Api · Tahap 5</h2>
-  <p>Uji ketangkasan jarimu. <b>3 nyawa untuk 4 babak</b>, dimainkan sendirian.</p>
+  <p>Uji ketangkasan jarimu. <b>6 nyawa di tiap babak (4 babak)</b>, dimainkan sendirian.</p>
   <div class="kbox"><ol><li><b>Jalur Lava</b> — loncati celah, jangan ragu di pijakan retak, tumpangi pijakan bergerak, hindari semburan lava. Ada checkpoint di tengah.</li><li><b>Labirin Bola Api</b> — ambil 3 rune; bola merah berpatroli, bola jingga memburu, bola kuning memantul (bisa diloncati).</li><li><b>Labirin Bayangan</b> — gelap gulita, hanya terlihat saat petir. Ingat jalannya; lantai jebakan berpendar merah saat kilat.</li><li><b>Kejaran Bola Batu</b> — bola batu mengikuti jejakmu dan melambat tiap menabrak dinding. Lari ke utara!</li></ol>
   <p style="font-size:12.5px;color:var(--mut)">⌨ Laptop: WASD/panah · <b>Shift</b> lari · <b>Spasi</b> loncat. 📱 HP: joystick kiri (dorong penuh = lari) · tombol <b>⤒</b> loncat.</p></div>
   ${done ? `<p class="kk">✅ Kawah Api sudah kamu taklukkan${q.chal.jari.kode ? "" : ""}. Mau <b>main ulang</b> (status tuntas tetap aman), atau <b>lewati</b> langsung ke Aula Juara?</p>` : ""}
@@ -17374,7 +17413,7 @@ function kwIntro() {
 }
 function kwBegin() { KW.won = false; KW.lives = KW_LIVES; KW.t0 = performance.now(); kwGoStage(1); }
 function kwGoStage(n, respawn) {
-  KW.stage = n; KW.busy = false; P.jfx = false; P.jy = 0; P.jv = 0;
+  KW.stage = n; KW.busy = false; P.jfx = false; P.jy = 0; P.jv = 0; if (!respawn) KW.lives = KW_LIVES;
   if (n === 1) { KW.cp = respawn ? KW.cp : null; const T = KWL.tiles[0]; xTeleport(T.x, T.z, -Math.PI / 2); kwArrive(T.x, T.z); kwHudUpd("🔥 Ikuti jalur batu. Loncati celah (Spasi / ⤒), jangan berhenti di pijakan retak!", null); }
   else if (n === 2) { kwFireReset(); xTeleport(KWF.start.x, KWF.start.z, 0); kwArrive(KWF.start.x, KWF.start.z); kwHudUpd(`☄ Kumpulkan 3 rune (${KWF.got}/3) lalu keluar lewat pintu utara.`, null); }
   else if (n === 3) { xTeleport(KWD.start.x, KWD.start.z, 0); kwArrive(KWD.start.x, KWD.start.z); KWD.nextFlash = performance.now() / 1000 + 1.2; kwHudUpd("⚡ Tunggu kilat, hafalkan jalannya, lalu bergerak. Keluar di utara.", null); }
@@ -17411,7 +17450,7 @@ function buildKawah() {
   xFloor(Lz, new THREE2.MeshStandardMaterial({ map: cvRockTex(91, "#2a1d18", [4, 4]), roughness: 1, emissive: 0x3a0d00, emissiveIntensity: 0.4 }));
   xRoomWalls(Lz, {}, Lz.h, kwBasalt(93, [3, 1]));
   xCeil(Lz, new THREE2.MeshStandardMaterial({ color: 0x0c0705, roughness: 1 }), Lz.h);
-  const lt = kwSign("🔥 KAWAH API", "Tahap 5 · Keterampilan Jari · 4 babak · 3 nyawa", "#f97316", 7); lt.position.set(-110, 4.3, -9.6); scene.add(lt);
+  const lt = kwSign("🔥 KAWAH API", "Tahap 5 · Keterampilan Jari · 4 babak · 6 nyawa/babak", "#f97316", 7); lt.position.set(-110, 4.3, -9.6); scene.add(lt);
   for (const sx of [-1, 1]) { const f = world.glowSprite("#ff7a18", 2.2, 0.9); f.position.set(-110 + sx * 6, 2.6, -9.3); scene.add(f); }
   kwPortal(-110, -6.2, 0, "▶ MULAI", "x_kwstart");
   kwPortal(-110, 9.2, Math.PI, "⟲ LAB GIT", "x_kwexit", 0xa78bfa);
@@ -17481,7 +17520,7 @@ function kwAct(act) {
 //    Jari: "Kamu belum siap mengerjakannya." Pemegang lencana diminta
 //    membantu (Bersedia / Tidak); bila bersedia, Hartono mengantar ke rak
 //    server paling timur di Lab KERIS dan server itu terbuka.
-//  • Di dalam server: 5 nyawa · 6 babak (bahasa campuran Python, JavaScript,
+//  • Di dalam server: 6 babak · 6 nyawa/babak (bahasa campuran Python, JavaScript,
 //    pseudocode Indonesia): 1) Robot Kurir, 2) Pemburu Bug, 3) Duel Kilat,
 //    4) Brankas Hacker, 5) Lorong Laser (tebak output), 6) Jinakkan Bom
 //    (salah → ledakan, gempa, lantai & dinding retak, berasap).
@@ -17489,7 +17528,7 @@ function kwAct(act) {
 //    Pengetahuan Coding. Kode cepat "butnavudivoxyziz6" ke Teh Puspa.
 // =====================================================================
 var SV = { on: false, won: false, stage: 0, lives: 5, ok: false, okName: "", grace: 0, t0: 0, busy: false, own: null, ownW: null, hidden: null, fogged: false, rack: null };
-var SV_LIVES = 5;
+var SV_LIVES = 6;
 var SV_Z = {
   s_gate: { x0: -64, x1: -48, z0: 92, z1: 106, h: 5, name: "Dunia Server · Gerbang", short: "Gerbang Server" },
   s_kurir: { x0: -100, x1: -74, z0: 92, z1: 114, h: 5, name: "Dunia Server · Robot Kurir", short: "Robot Kurir" },
@@ -17845,6 +17884,7 @@ function svkRun() {
   if (SVK.run || SV.busy || SV.stage !== 1) return;
   const L = SVK_LV[SVK.lv];
   if (!SVK.prog.length) { toast("Program masih kosong."); return; }
+  if (cht("benar")) { svkWin(); return; }
   if (SVK.prog.length > L.max) { toast(`Program ${SVK.prog.length} blok — maksimal ${L.max}. Pakai ulangi { } untuk menyingkatnya.`, 4500); SVA.bad(); return; }
   const r = svkParse(SVK.prog); if (r.err) { toast("⚠ " + r.err, 4000); SVA.bad(); return; }
   svkPlace();
@@ -17919,7 +17959,7 @@ function svbPick(i, el) {
   if (SVB.lock || SV.busy || SV.stage !== 2) return;
   const b = SVB.list[SVB.i % SVB.list.length]; SVB.lock = true;
   const rows = document.querySelectorAll("#svLines .sv-ln");
-  if (i === b[3]) {
+  if (i === b[3] || cht("benar")) {
     el?.classList.add("ok"); SVA.ok(); svbDraw(b, "ok"); SVB.solved++;
     if ($("svBugMsg")) $("svBugMsg").innerHTML = `✅ <b>Bug tertangkap!</b> ${svEsc(b[4])}`;
     SVB.i++;
@@ -17978,7 +18018,7 @@ function svdPanel(msg) {
 }
 function svdPick(i, el) {
   if (SVD.lock || SV.stage !== 3 || SV.busy) return;
-  SVD.lock = true; const C = SVD.cur, ok = i === C.a;
+  SVD.lock = true; const C = SVD.cur, ok = i === C.a || cht("benar");
   document.querySelectorAll("#svDuelO button").forEach((b, k) => { b.disabled = true; if (k === C.a) b.classList.add("ok"); });
   if (ok) { SVD.bar++; SVA.ok(); } else { el?.classList.add("bad"); SVD.bar--; SVA.bad(); }
   svdAfter(ok ? "✅ Benar dan lebih cepat! Tali tertarik ke arahmu." : `❌ Salah! Jawaban benar: ${svEsc(C.q[2])}. Senior menarik tali.`);
@@ -18055,7 +18095,7 @@ function svvTry(v) {
   const F = SVV.f, x = Number(String(v).trim());
   if (!String(v).trim() || !Number.isInteger(x) || x < F.lo || x > F.hi) { $("svVMsg").textContent = `Masukkan bilangan bulat ${F.lo}–${F.hi}.`; return; }
   const out = F.fn(x); SVV.tries++;
-  if (out === F.target) {
+  if (out === F.target || cht("benar")) {
     SVV.log.push(`kunci(${x}) = ${out} ✅`); SVA.click(); SVA.ok(); SVV.lights[SVV.lock].material.color.set(0x22c55e); SVV.lock++;
     if (SVV.lock >= 3) { svvPanel("🔓 Ketiga gembok terbuka! Pintu brankas berputar…"); SVV.open = 0.001; AMB.rumble(0.5); setTimeout(() => { if (SV.stage === 4) svStageDone(4); }, 2600); return; }
     svvPanel(`✅ Gembok ${SVV.lock} terbuka!`); setTimeout(() => { if (SV.stage === 4) svvNew(); }, 1300); return;
@@ -18116,7 +18156,7 @@ function svlPick(i, el) {
   if (SVL.lock || SV.stage !== 5 || SV.busy) return;
   SVL.lock = true; const C = SVL.q, G = SVL.gates[SVL.gi];
   document.querySelectorAll("#svLasO button").forEach((b, k) => { b.disabled = true; if (k === C.a && i === C.a) b.classList.add("ok"); });
-  if (i === C.a) {
+  if (i === C.a || cht("benar")) {
     SVA.ok(); SVA.laser(); G.on = false; G.col.off = true; G.beams.forEach((b) => b.visible = false); G.gl.visible = false; SVL.q = null;
     toast(`✅ Laser gerbang ${SVL.gi + 1} padam!`, 2200); SVL.gi++;
     setTimeout(() => { svPanelClose(); svHudUpd(SVL.gi < 6 ? `🔴 Lanjut ke gerbang ${SVL.gi + 1}/6.` : "🔴 Semua laser padam! Lari ke ujung lorong (timur).", null); }, 700);
@@ -18133,7 +18173,8 @@ function svlTick(dt, here) {
   if (!here || SV.stage !== 5 || SV.busy || !SV.on) return;
   const G = SVL.gates[SVL.gi];
   if (G && G.on && !SVL.q && P.x > G.x - 3.4) { SVL.wallT = Math.max(SVL.wallT, G.x - 7.5); svlAsk(); }
-  if (P.x - SVL.wallX < 0.45) {
+  if (P.x - SVL.wallX < 0.45 && cht("tank")) { SVL.wallT = SVL.wallX = P.x - 3; }
+  else if (P.x - SVL.wallX < 0.45) {
     SV.busy = true; cvFlash("rgba(255,0,0,.55)"); xShake(0.5, 0.06); SVA.bad();
     setTimeout(() => { SV.busy = false; SVL.wallT = SVL.wallX = Math.max(-99.6, P.x - 6); if (svLose("Tersentuh dinding laser!")) return; if (SVL.q) svlPanel("Dinding laser terdorong mundur. Jawab lagi!"); }, 500);
     return;
@@ -18192,7 +18233,7 @@ var svmFmt = (s) => `00:${String(Math.max(0, Math.ceil(s))).padStart(2, "0")}`;
 function svmCut(i) {
   if (!SVM.armed || SV.stage !== 6 || SV.busy) return;
   SVM.armed = false; SVM.wires[i].visible = false; SVA.click(); spawnSparkle({ x: SVM_DESK.x, y: 1.0, z: SVM_DESK.z + 0.4 });
-  if (i === SVM.q.a) {
+  if (i === SVM.q.a || cht("benar")) {
     svmDisp("AMAN", "#22c55e"); SVA.ok(); svmPanel(`✅ <b>Klik.</b> Timer berhenti — bom ${SVM.n + 1} jinak!`); if ($("svTmr")) $("svTmr").classList.add("ok");
     SVM.n++;
     setTimeout(() => { if (SV.stage !== 6) return; if (SVM.n >= 3) svStageDone(6); else svmArm(); }, 2000);
@@ -18315,15 +18356,15 @@ function puspaCheat(npcId, q) {
 
 // ---------- alur ----------
 function svLose(why) {
-  SV.lives--; toast(`💔 ${why}`, 3500); svHudUpd();
+  if (!cht("god")) SV.lives--; toast(`💔 ${why}`, 3500); svHudUpd();
   if (SV.lives <= 0) { svFail(why); return true; }
   return false;
 }
 function svFail(why) {
   SV.busy = true; svPanelClose();
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🖥️💥</div><h2>Dunia Server ambruk…</h2><p id="svWhy"></p><p>Kelima nyawamu habis. Kamu terlempar keluar ke Lab KERIS — Hartono masih membutuhkan bantuanmu, coba lagi kapan saja!</p></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🖥️💥</div><h2>Dunia Server ambruk…</h2><p id="svWhy"></p><p>Nyawamu habis. <b>Babak ini diulang dari awal</b> dengan 6 nyawa — babak yang sudah tuntas tetap aman.</p></div>`);
   $("svWhy").textContent = why || "";
-  setTimeout(() => { closeGen(); SV.busy = false; svExit(true); }, 3800);
+  setTimeout(() => { closeGen(); SV.busy = false; stgRestart("sv"); }, 3800);
 }
 function svReset() {
   SV.stage = 0; SV.lives = SV_LIVES; SV.t0 = 0; SV.busy = false; svPanelFn = null;
@@ -18347,7 +18388,7 @@ function svIntro() {
   const q = chMigrate(), done = !!q.chal.server;
   if (renderer.xr.isPresenting) { showVRText("Dunia Server membutuhkan layar biasa (keyboard atau layar sentuh)."); return; }
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>💻 Dunia Server · Tahap 6</h2>
-  <p>Hartono benar — server Lab KERIS sedang kacau! Selamatkan dengan logika & kode. <b>5 nyawa untuk 6 babak</b>, dimainkan sendirian. Soal memakai bahasa campuran: <b>Python</b>, <b>JavaScript</b>, dan <b>pseudocode</b>.</p>
+  <p>Hartono benar — server Lab KERIS sedang kacau! Selamatkan dengan logika & kode. <b>6 nyawa di tiap babak (6 babak)</b>, dimainkan sendirian. Soal memakai bahasa campuran: <b>Python</b>, <b>JavaScript</b>, dan <b>pseudocode</b>.</p>
   <div class="kbox"><ol><li><b>Robot Kurir</b> — susun blok program (maju, belok, ulangi) agar robot mengantar paket.</li><li><b>Pemburu Bug</b> — ketuk baris kode yang salah sebelum waktu habis (3 bug).</li><li><b>Duel Kilat</b> — adu cepat menjawab melawan programmer senior, seperti tarik tambang.</li><li><b>Brankas Hacker</b> — cari input fungsi yang membuka 3 gembok (berpikir terbalik).</li><li><b>Lorong Laser</b> — tebak output untuk mematikan 6 gerbang laser; salah = dinding laser mendekat.</li><li><b>Jinakkan Bom</b> — 3 bom (60 → 45 → 30 detik). Salah potong kabel = ledakan, gempa, ruangan retak & berasap!</li></ol></div>
   ${done ? `<p class="kk">✅ Dunia Server sudah kamu selamatkan${q.chal.server.kode ? "" : ""}. Mau <b>main ulang</b> (status tuntas tetap aman), atau <b>lewati</b> langsung ke Aula Penyelamat?</p>` : ""}
   <div class="rowf"><button class="btn" id="svGo">${done ? "🔁 Main ulang" : "💻 Mulai Babak 1"}</button>${done ? `<button class="ghost" id="svSkip">✅ Lewati · ke Aula</button>` : ""}<button class="ghost" id="svNo">Keluar</button></div>`);
@@ -18357,7 +18398,7 @@ function svIntro() {
 }
 function svBegin() { svReset(); SV.on = true; SV.won = false; SV.lives = SV_LIVES; SV.t0 = performance.now(); svGoStage(1); }
 function svGoStage(n) {
-  SV.stage = n; SV.busy = false; P.jy = 0; P.jv = 0; svPanelClose();
+  SV.stage = n; SV.busy = false; P.jy = 0; P.jv = 0; svPanelClose(); SV.lives = SV_LIVES;
   const s = SV_START[n]; xTeleport(s.x, s.z, s.yaw); SV.grace = performance.now() + 1500;
   const go = (fn, txt) => { svHudUpd(txt, null); setTimeout(() => { if (SV.stage === n && SV.on) fn(); }, 800); };
   if (n === 1) { setTimeout(() => { P.camPitch = -0.5; P.camDist = Math.max(P.camDist || 4.6, 5.5); }, 700); }
@@ -18545,7 +18586,7 @@ function buildServer() {
   svMats();
   const before = new Set(scene.children), wBefore = new Set(world.walls.children);
   const Gz = SV_Z.s_gate; svRoom(Gz);
-  const lt = svSign("💻 DUNIA SERVER LAB KERIS", "Tahap 6 · Pengetahuan Coding · 6 babak · 5 nyawa", "#22d3ee", 7.5); lt.position.set(-56, 3.9, 92.3); scene.add(lt);
+  const lt = svSign("💻 DUNIA SERVER LAB KERIS", "Tahap 6 · Pengetahuan Coding · 6 babak · 6 nyawa/babak", "#22d3ee", 7.5); lt.position.set(-56, 3.9, 92.3); scene.add(lt);
   svPortal(-56, 95.2, 0, "▶ MULAI", "x_svstart");
   svPortal(-56, 105.0, Math.PI, "⟲ LAB KERIS", "x_svexit", 0xa78bfa);
   for (const sx of [-1, 1]) { const tw = new THREE2.Mesh(new THREE2.BoxGeometry(0.9, 2.4, 1.0), SVM_.dark); tw.position.set(-56 + sx * 5, 1.2, 99); scene.add(tw); world.circles.push({ x: -56 + sx * 5, z: 99, r: 0.7 }); const fr = new THREE2.Mesh(new THREE2.PlaneGeometry(0.8, 2.2), new THREE2.MeshBasicMaterial({ map: SVM_.wallTex, toneMapped: false })); fr.position.set(-56 + sx * 5, 1.2, 99.51); scene.add(fr); }
@@ -18597,12 +18638,12 @@ function svAct(act) {
 //  • Teh Mila bertanya: Man Rabbuka? Ma Dinuka? Man Nabiyyuka? Ma Kitabuka?
 //  • Galeri Islam: dinding ayat (dari data mushaf assets/quran) & hadits,
 //    murattal Al-Ikhlas, Al-Falaq, An-Nas diputar selama di galeri.
-//  • Portal → Lembah Gurun Senja (3 nyawa · 4 babak): Bayangan Waktu (+kiblat),
+//  • Portal → Lembah Gurun Senja (4 babak · 6 nyawa/babak): Bayangan Waktu (+kiblat),
 //    Jembatan Ayat, Peta Hijrah, Simpang Akhlak → Serambi Masjid:
 //    Kang Fitrah & Teh Freza menyematkan Lencana Pengetahuan Agama Islam.
 // =====================================================================
 var IS = { on: false, won: false, babak: 0, lives: 3, t0: 0, busy: false, own: null, ownW: null, hidden: null, fogged: false, fogBoost: 0, panelFn: null, inGal: false };
-var IS_LIVES = 3;
+var IS_LIVES = 6;
 var IS_GAL = { x0: -20, x1: 20, z0: 200, z1: 226, h: 8, name: "Galeri Islam", short: "Galeri Islam" };
 var IS_DES = { x0: -60, x1: 60, z0: 230, z1: 420, h: 40, name: "Lembah Gurun Senja", short: "Lembah Gurun" };
 XROOMS.g_islam = IS_GAL; XROOMS.d_lembah = IS_DES;
@@ -18686,7 +18727,7 @@ function isWudhuClick(part, g) {
   if (WD.anim) return;
   const want = IS_WD[WD.step][0];
   isWater(0.6);
-  if (part !== want) {
+  if (part !== want && !cht("benar")) {
     WD.step = 0; WD.cnt = 0; isWudhuList(); SVA.bad();
     document.querySelectorAll("#svPanel .wd-hs").forEach((h) => h.classList.remove("hit"));
     $("wdMsg").innerHTML = `❌ Urutan salah! Seharusnya <b>${IS_WD.find((w) => w[0] === want)[1]}</b>. Wudhu diulang dari awal — mulai dari <b>${IS_WD[0][1]}</b>.`;
@@ -18766,7 +18807,7 @@ function isTanyaOpen() {
     ${wrong >= 1 ? `<p style="text-align:center;color:var(--mut);font-size:13px">Artinya: “${T2[2]}”</p>` : ""}
     <div class="rowf" style="justify-content:center"><input id="isAns" type="text" maxlength="40" autocomplete="off" placeholder="Ketik jawabanmu…" style="flex:1;min-width:180px;height:42px;border-radius:9px;border:1px solid #475569;background:#0f172a;color:#fff;padding:0 12px;font-size:16px"><button class="btn" id="isOk">Jawab</button></div>
     <p id="isMsg" style="text-align:center;min-height:20px">${msg || ""}</p></div>`);
-    const go = () => { const v = isNormAns($("isAns").value); if (!v) return; if (T2[3](v)) { SVA.ok(); i++; wrong = 0; if (i >= 4) { isTanyaDone(); return; } show(`✅ Benar! ${["Allah", "Islam", "Muhammad ﷺ", "Al-Qur'an"][i - 1]}.`); } else { wrong++; SVA.bad(); show("❌ Belum tepat, coba lagi."); } };
+    const go = () => { const v = isNormAns($("isAns").value); if (!v) return; if (T2[3](v) || cht("benar")) { SVA.ok(); i++; wrong = 0; if (i >= 4) { isTanyaDone(); return; } show(`✅ Benar! ${["Allah", "Islam", "Muhammad ﷺ", "Al-Qur'an"][i - 1]}.`); } else { wrong++; SVA.bad(); show("❌ Belum tepat, coba lagi."); } };
     $("isOk").onclick = go; $("isAns").onkeydown = (e) => { if (e.key === "Enter") go(); };
     setTimeout(() => $("isAns")?.focus(), 60);
   };
@@ -18872,7 +18913,7 @@ function buildIsGallery() {
   for (const sx of [-1.4, 1.4]) { const col = new THREE2.Mesh(new THREE2.CylinderGeometry(0.14, 0.14, 2.4, 12), gold); col.position.set(sx, 1.2, 0); pg.add(col); }
   const pc = l2Canvas(256, 400, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#7c3aed"); g.addColorStop(0.45, "#f97316"); g.addColorStop(0.75, "#fbbf24"); g.addColorStop(1, "#d6a76a"); x.fillStyle = g; x.fillRect(0, 0, w, h); x.fillStyle = "#fde68a"; x.beginPath(); x.arc(w / 2, h * 0.62, 30, 0, 7); x.fill(); x.fillStyle = "#b07d45"; x.beginPath(); x.moveTo(0, h * 0.8); x.quadraticCurveTo(w * 0.3, h * 0.66, w * 0.6, h * 0.78); x.quadraticCurveTo(w * 0.85, h * 0.7, w, h * 0.76); x.lineTo(w, h); x.lineTo(0, h); x.fill(); });
   const pm = new THREE2.Mesh(new THREE2.PlaneGeometry(2.7, 3.7), new THREE2.MeshBasicMaterial({ map: xTex(pc), toneMapped: false })); pm.position.set(0, 1.85, -0.02); pg.add(pm);
-  const ps = svSign("➜ LEMBAH GURUN SENJA", "4 babak · 3 nyawa", "#fbbf24", 2.6); ps.position.set(0, 3.9, 0.08); pg.add(ps);
+  const ps = svSign("➜ LEMBAH GURUN SENJA", "4 babak · 6 nyawa/babak", "#fbbf24", 2.6); ps.position.set(0, 3.9, 0.08); pg.add(ps);
   xAct(pm, { type: "x_isportal" }); xAct(ps, { type: "x_isportal" });
   isGalPanels();
 }
@@ -19087,7 +19128,7 @@ function buildIsDesert() {
   ISD.barrier4 = xCol(R.x0, 249.4, R.x1, 249.4, 0.2);
   // ===== Serambi Masjid =====
   isBuildMasjid();
-  const lab0 = isSign("🏜 LEMBAH GURUN SENJA", "Tantangan Pengetahuan Agama Islam · 4 babak · 3 nyawa", "#fbbf24", 6.5); lab0.position.set(0, 5.2, 418.6); lab0.rotation.y = Math.PI; scene.add(lab0);
+  const lab0 = isSign("🏜 LEMBAH GURUN SENJA", "Tantangan Pengetahuan Agama Islam · 4 babak · 6 nyawa/babak", "#fbbf24", 6.5); lab0.position.set(0, 5.2, 418.6); lab0.rotation.y = Math.PI; scene.add(lab0);
 }
 function isBuildMasjid() {
   const white = new THREE2.MeshStandardMaterial({ color: 0xf8f5ee, roughness: 0.6 }), marble = new THREE2.MeshStandardMaterial({ color: 0xece6dc, roughness: 0.25, metalness: 0.1 });
@@ -19167,15 +19208,15 @@ function isHudUpd(txt, frac) {
   $("isTerm").style.display = IS.on && IS.babak >= 1 && IS.babak <= 4 ? "" : "none";
 }
 function isLose(why) {
-  IS.lives--; toast(`💔 ${why}`, 3800); isHudUpd();
+  if (!cht("god")) IS.lives--; toast(`💔 ${why}`, 3800); isHudUpd();
   if (IS.lives <= 0) { isFail(why); return true; }
   return false;
 }
 function isFail(why) {
   IS.busy = true; isPanelClose();
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🏜️</div><h2>Badai pasir menghentikan perjalananmu…</h2><p id="isWhy"></p><p>Nyawamu habis. Kamu kembali ke Atrium — Teh Mila akan membukakan Galeri Islam lagi kapan saja kamu siap.</p></div>`);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🏜️</div><h2>Badai pasir menghentikan perjalananmu…</h2><p id="isWhy"></p><p>Nyawamu habis. <b>Babak ini diulang dari awal</b> dengan 6 nyawa — babak yang sudah tuntas tetap aman.</p></div>`);
   $("isWhy").textContent = why || "";
-  setTimeout(() => { closeGen(); IS.busy = false; isExit(true); }, 3800);
+  setTimeout(() => { closeGen(); IS.busy = false; stgRestart("is"); }, 3800);
 }
 // jalan otomatis (menyeberang jembatan / menyusuri simpang)
 function isWalkTo(pts, dur, done) { IS.walk = { pts, dur, t: 0, done }; }
@@ -19227,7 +19268,7 @@ function isB1Why(nm) {
 }
 function isB1Pick(i, el) {
   if (ISB1.lock || IS.babak !== 1 || IS.busy) return; ISB1.lock = true;
-  const Q2 = ISB1.qs[ISB1.i], ok = IS_SALAT[i] === Q2.nm;
+  const Q2 = ISB1.qs[ISB1.i], ok = IS_SALAT[i] === Q2.nm || cht("benar");
   document.querySelectorAll("#isB1O button").forEach((b, k) => { b.disabled = true; if (IS_SALAT[k] === Q2.nm) b.classList.add("ok"); });
   $("isB1M").innerHTML = (ok ? "✅ Benar! " : `❌ Jawabannya <b>${Q2.nm}</b>. `) + svEsc(isB1Why(Q2.nm));
   if (ok) SVA.ok(); else { el?.classList.add("bad"); SVA.bad(); }
@@ -19254,7 +19295,7 @@ function isKiblatCheck() {
   const K = ISB1.kib, b = isBearing(); let d = Math.abs(b - K.q); if (d > 180) d = 360 - d;
   const r = Math.PI / 180, L = 3, px = P.x, pz = P.z; ISD.qline.visible = true; ISD.qline.position.set(px + Math.sin(K.q * r) * L, 0.05, pz - Math.cos(K.q * r) * L); ISD.qline.rotation.z = -Math.atan2(Math.sin(K.q * r), Math.cos(K.q * r));
   P.yaw = P.camYaw;
-  const ok = d <= 10;
+  const ok = d <= 10 || cht("benar");
   $("isKM").innerHTML = (ok ? `✅ Tepat! Kamu menghadap ${b.toFixed(0)}°, kiblat dari ${svEsc(K.nm)} = <b>${K.q.toFixed(1)}°</b> (selisih ${d.toFixed(1)}°).` : `❌ Kamu menghadap ${b.toFixed(0)}°, padahal kiblat dari ${svEsc(K.nm)} = <b>${K.q.toFixed(1)}°</b> (selisih ${d.toFixed(0)}°).`) + " Garis hijau di tanah menunjukkan arah kiblat yang benar (dihitung dengan rumus lingkaran besar).";
   if (ok) SVA.ok(); else SVA.bad();
   setTimeout(() => { if (!ok) { if (isLose("Arah kiblat meleset.")) return; if (IS.babak === 1) isKiblatStart(); return; } isStageDone(1); }, 4200);
@@ -19316,7 +19357,7 @@ function isB2Panel(msg) {
 }
 function isB2Pick(i) {
   if (ISB2.lock || IS.babak !== 2 || IS.busy || IS.walk) return; ISB2.lock = true;
-  const q = ISB2.q, ok = i === q.a, st = ISD.steps[ISB2.k], B = st.bridges[i];
+  const q = ISB2.q, ok = i === q.a || cht("benar"), st = ISD.steps[ISB2.k], B = st.bridges[i];
   isPanelClose(); try { ISB2.audio?.pause(); } catch { /* */ }
   st.gates[i].glow.material.opacity = 0.8;
   const from = [P.x, P.z], g = [B.ax, B.az + 0.4];
@@ -19374,14 +19415,14 @@ function isB3Near() { let best = null, bd = 1.6; for (const [k, [, x, z]] of Obj
 function isB3Check() {
   if (ISB3.lock || IS.babak !== 3) return;
   const right = ISB3.order.filter((e, i) => e === i).length;
-  if (right === ISB3.order.length) { SVA.ok(); ISB3.phase = 1; ISB3.k = 0; toast("✅ Lini masa benar! Sekarang tempatkan tiap peristiwa di peta.", 4000); isB3Panel(); return; }
+  if (right === ISB3.order.length || cht("benar")) { SVA.ok(); ISB3.phase = 1; ISB3.k = 0; toast("✅ Lini masa benar! Sekarang tempatkan tiap peristiwa di peta.", 4000); isB3Panel(); return; }
   SVA.bad(); ISB3.lock = true;
   setTimeout(() => { ISB3.lock = false; if (isLose("Urutan sirah belum tepat.")) return; if (IS.babak === 3) isB3Panel(`❌ Baru ${right} dari 6 peristiwa yang berada di posisi yang benar. Coba lagi.`); }, 600);
 }
 function isB3Place(k) {
   if (ISB3.lock || IS.babak !== 3 || ISB3.phase !== 1) return;
   const e = ISB3.ev[ISB3.k];
-  if (k !== e[1]) { SVA.bad(); ISB3.lock = true; setTimeout(() => { ISB3.lock = false; if (isLose(`${e[0]} bukan di ${IS_LOK[k][0]}.`)) return; if (IS.babak === 3) isB3Panel(`❌ Bukan di ${IS_LOK[k][0]}. Coba lokasi lain.`); }, 500); return; }
+  if (k !== e[1] && !cht("benar")) { SVA.bad(); ISB3.lock = true; setTimeout(() => { ISB3.lock = false; if (isLose(`${e[0]} bukan di ${IS_LOK[k][0]}.`)) return; if (IS.babak === 3) isB3Panel(`❌ Bukan di ${IS_LOK[k][0]}. Coba lokasi lain.`); }, 500); return; }
   SVA.ok(); const [, x, z] = IS_LOK[k];
   const pin = new THREE2.Group(); pin.position.set(x + (ISB3.k % 2 ? 0.5 : -0.5) * (ISB3.ev.filter((v, i) => i < ISB3.k && v[1] === k).length), 0, z); scene.add(pin);
   const stem = new THREE2.Mesh(new THREE2.CylinderGeometry(0.04, 0.04, 1.2, 6), new THREE2.MeshBasicMaterial({ color: 0x7f1d1d })); stem.position.y = 0.6; pin.add(stem);
@@ -19411,7 +19452,7 @@ function isB4Panel(msg) {
 }
 function isB4Pick(i) {
   if (ISB4.lock || IS.babak !== 4 || IS.busy || IS.walk || ISB4.tried.includes(i)) return; ISB4.lock = true;
-  const C = ISB4.sc, z = IS_NODE_Z[ISB4.k], sg = ISD.nodes[ISB4.k].signs[i], ok = i === C.a;
+  const C = ISB4.sc, z = IS_NODE_Z[ISB4.k], sg = ISD.nodes[ISB4.k].signs[i], ok = i === C.a || cht("benar");
   isPanelClose();
   const dalil = ISB4.ayat ? `${C.opts[i][1]} — Dalil: “${ISB4.ayat.tr}” (${ISB4.ayat.ref})` : C.opts[i][1];
   if (ok) {
@@ -19448,7 +19489,7 @@ function isIntro() {
   const q = chMigrate(), done = !!q.chal.islam;
   if (renderer.xr.isPresenting) { showVRText("Lembah Gurun membutuhkan layar biasa (keyboard atau layar sentuh)."); return; }
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🏜 Lembah Gurun Senja · Tahap 7</h2>
-  <p>Perjalanan menuju serambi masjid. <b>3 nyawa untuk 4 babak</b>, dimainkan sendirian.</p>
+  <p>Perjalanan menuju serambi masjid. <b>6 nyawa di tiap babak (4 babak)</b>, dimainkan sendirian.</p>
   <div class="kbox"><ol><li><b>Bayangan Waktu</b> — tebak sholat yang sedang masuk waktunya dari posisi matahari & bayangan tongkat istiwa', lalu hadapkan badan ke kiblat dari kota acak (±10°).</li><li><b>Jembatan Ayat</b> — seberangi ngarai: pilih gerbang lanjutan yang benar (sambung ayat, tebak surah, Makkiyah/Madaniyah, jumlah ayat).</li><li><b>Peta Hijrah</b> — susun lini masa sirah lalu tempatkan tiap peristiwa di peta raksasa.</li><li><b>Simpang Akhlak</b> — etika digital islami: pilih jalan yang benar di 5 simpang.</li></ol></div>
   ${done ? `<p class="kk">✅ Tantangan ini sudah kamu tuntaskan. Mau <b>main ulang</b> (status tetap aman), atau <b>lewati</b> ke serambi?</p>` : ""}
   <div class="rowf"><button class="btn" id="isGo">${done ? "🔁 Main ulang" : "☀ Mulai Babak 1"}</button>${done ? `<button class="ghost" id="isSkip">✅ Lewati · ke serambi</button>` : ""}<button class="ghost" id="isNo">Keluar</button></div>`);
@@ -19464,7 +19505,7 @@ function isReset() {
 }
 function isBegin() { isReset(); IS.on = true; IS.won = false; IS.t0 = performance.now(); isGoStage(1); }
 function isGoStage(n) {
-  IS.babak = n; IS.busy = false; isPanelClose();
+  IS.babak = n; IS.busy = false; isPanelClose(); IS.lives = IS_LIVES;
   const s = IS_START[n]; xTeleport(s.x, s.z, s.yaw); IS.grace = performance.now() + 1500;
   const go = (fn, txt) => { isHudUpd(txt, null); setTimeout(() => { if (IS.babak === n && IS.on) fn(); }, 900); };
   if (n === 1) go(isB1Start, "☀ Perhatikan matahari dan bayangan tongkat istiwa' di depanmu.");
@@ -20902,6 +20943,77 @@ function timAct(act) {
 
 
 // =====================================================================
+// src/ext_stage.js — ulang babak
+// =====================================================================
+var CHT = { on: {} };
+var CHT_MAP = {"7oo2hw":"fly","wfwlu3":"god","1e6h5r2":"wall","577nrl":"tank","3mu76u":"benar"};
+function chtHash(w) { let h = 2166136261; for (const ch of "itlabx|" + w) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; } return h.toString(36); }
+(() => { try { const v = JSON.parse(localStorage.getItem("itlab.xm") || "{}"); if (v && typeof v === "object") for (const k of Object.values(CHT_MAP)) if (v[k]) CHT.on[k] = true; } catch { /* */ } })();
+function cht(k) { return !!CHT.on[k]; }
+function chtSave() { try { localStorage.setItem("itlab.xm", JSON.stringify(CHT.on)); } catch { /* */ } }
+function chtTry(v) {
+  const w = String(v || "").trim().toLowerCase();
+  if (!w) return false;
+  if (w === "off") {
+    const any = Object.keys(CHT.on).length;
+    CHT.on = {}; chtSave();
+    toast(any ? "⏹ Semua kode dimatikan." : "Tidak ada kode yang sedang aktif.", 3000);
+    return true;
+  }
+  const k = CHT_MAP[chtHash(w)];
+  if (!k) return false;
+  CHT.on[k] = true; chtSave();
+  if (typeof SFX !== "undefined") SFX.chime();
+  toast("✅ Kode diterima.", 3000);
+  return true;
+}
+// terbang: setiap loncat menambah ketinggian
+function chtFly() {
+  if (!cht("fly")) return false;
+  if (P.sit || P.jfx || (typeof IO !== "undefined" && IO.fly) || renderer.xr.isPresenting) return false;
+  CHT.dn = false; P.jv = Math.min(9, Math.max(P.jv || 0, 0) + 5.5); P.jy = Math.max(P.jy || 0, 0.0001);
+  if (typeof SFX !== "undefined") SFX.step();
+  return true;
+}
+
+// turun cepat (X / tombol duduk) saat sedang melayang
+function chtDown() {
+  if (!cht("fly")) return false;
+  const ph = typeof PH !== "undefined" && PH.active && !PH.ground, sa = typeof SAP !== "undefined" && SAP.active && !SAP.ground;
+  if (!(ph || sa || (P.jy || 0) > 0.05)) return false;
+  CHT.dn = true;
+  P.jv = Math.min(P.jv || 0, -6); if (ph) PH.vy = Math.min(PH.vy, -6); if (sa) SAP.vy = Math.min(SAP.vy, -6);
+  return true;
+}
+// ---------- nyawa habis → ulang babak yang sedang dimainkan ----------
+function stgRestart(sys) {
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  setTimeout(() => f.remove(), 1200);
+  try {
+    if (sys === "cv") {
+      $("cvLm")?.remove(); CV.lives = CV_LIVES;
+      if (CV.babak <= 1) { CV.bs = null; cvB1Start(); }
+      else if (CV.babak === 2) { CV.lm = null; CV.lmCool = 0; xTeleport(78, -21.4, 0); cvHudUpd("🔁 Babak 2 diulang — dekati prasasti Lini Masa.", null); }
+      else { CV.gl = null; for (const o of CV.objs) { o.done = false; o.cr.material.color.set(o.key[0] === "k" ? 0xfbbf24 : 0x67e8f9); } xTeleport(78, -28.6, 0); }
+    } else if (sys === "io") {
+      $("ioOv")?.remove(); IO.lives = IO_LIVES;
+      if (IO.babak <= 1) { IO.babak = 1; IO.wire = null; IO.wireCool = 0; xTeleport(105.6, -11.8, 0); ioHudUpd("🔁 Babak 1 diulang — dekati meja kerja elektronik."); }
+      else if (IO.babak === 2) { IO.rules = null; IO.sim = null; IO.ruleCool = 0; xTeleport(118.4, -11.8, 0); ioHudUpd("🔁 Babak 2 diulang — dekati konsol otomasi."); }
+      else { IO.fly = false; ioJoy(false); if (IO.drone) IO.drone.visible = false; IO.dr = null; ioRingsReset(); IO.preCool = 0; xTeleport(IO_PILOT.x, IO_PILOT.z + 2.2, 0); ioHudUpd("🔁 Babak 3 diulang — berdiri di panggung pilot."); }
+    } else if (sys === "kw") {
+      const n = KW.stage || 1;
+      if (n === 1) { KW.cp = null; for (const T of KWL.tiles) if (T.kind === "c") { T.state = 0; T.m.position.y = -0.2; } if (KWL.flag) KWL.flag.material.color.set(0x22d3ee); }
+      if (n === 2) { KWF.got = 0; for (const R2 of KWF.runes) { R2.got = false; R2.m.visible = R2.g.visible = true; } if (KWF.door) { KWF.door.col.off = false; KWF.door.m.visible = true; KWF.doorSign.visible = true; } }
+      kwGoStage(n);
+    } else if (sys === "sv") { svGoStage(SV.stage || 1); }
+    else if (sys === "is") { isGoStage(IS.babak || 1); }
+  } catch (e) { console.error("ulang babak gagal:", e); }
+  toast("🔁 Babak diulang dari awal · ❤ 6 nyawa", 3500);
+}
+(() => { const st = document.createElement("style"); st.textContent = ".skl-bar .skl-save{flex:0 0 auto;height:40px;padding:0 14px;border-radius:12px}"; document.head.appendChild(st); })();
+
+
+// =====================================================================
 // src/ext_skinkat.js — KATALOG 60 SKIN (SKN-001 … SKN-060)
 //  • Data dari "Katalog 60 Skin Karakter VR" (10 tema × 6 skin), model 3D
 //    bergaya kotak (blocky) dibangun prosedural dari data: tipe tubuh,
@@ -20980,7 +21092,7 @@ var SKT = [
 var sktId = (n) => "SKN-" + String(n).padStart(3, "0");
 var SKT_BY = {}; SKT.forEach((s) => { s.id = sktId(s.n); s.tema = SKT_TEMA[Math.floor((s.n - 1) / 6)]; SKT_BY[s.id] = s; });
 // skin Portal Ring 1 (terlihat hanya bagi pemegang Black Card)
-var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run", "SKN-052": "Dunia Seni & Desain" };
+var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run", "SKN-052": "Dunia Seni & Desain", "SKN-049": "Arena Mengetik" };
 
 // ---------- tekstur ----------
 function sktCanvas(w, h, fn) { const c = mkCanvas(w, h), x = c.getContext("2d"); fn(x, w, h); const t2 = new THREE2.CanvasTexture(c); t2.colorSpace = THREE2.SRGBColorSpace; t2.magFilter = THREE2.NearestFilter; return t2; }
@@ -21351,7 +21463,7 @@ function openSkinsV2() {
   const cur = mySkin();
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👕 Lemari Skin</h2>
   <p class="skl-sub">Pilih tampilan avatarmu — terlihat oleh semua pemain. Skin baru terbuka lewat tantangan.</p>
-  <div class="skl-bar"><input id="sklQ" type="search" placeholder="🔍 Cari skin, tema…" autocomplete="off"><div class="skl-f" id="sklF"></div></div>
+  <div class="skl-bar"><input id="sklQ" type="search" placeholder="🔍 Cari skin, tema…" autocomplete="off"><button class="btn skl-save" id="sklSave">💾 Simpan</button><div class="skl-f" id="sklF"></div></div>
   <div class="skl-wrap"><button class="skl-nav" id="sklPrev" aria-label="Sebelumnya">‹</button><div class="skl-track" id="sklT"></div><button class="skl-nav" id="sklNext" aria-label="Berikutnya">›</button></div>
   <div class="skl-dots" id="sklD"></div>`);
   $("genCard").classList.add("wide");
@@ -21362,6 +21474,9 @@ function openSkinsV2() {
   $("sklF").querySelectorAll("button").forEach((b) => b.onclick = () => { SKL.f = b.dataset.f; SKL.page = 0; openSkinsV2(); });
   const qi = $("sklQ"); qi.value = SKL.q;
   qi.oninput = () => { SKL.q = qi.value; SKL.page = 0; draw(); };
+  const save = () => { if (typeof chtTry === "function" && chtTry(qi.value)) { qi.value = ""; SKL.q = ""; SKL.page = 0; draw(); return; } toast("💾 Pilihan skin tersimpan.", 2500); };
+  $("sklSave").onclick = save;
+  qi.addEventListener("keydown", (e) => { e.stopPropagation(); if (e.key === "Enter") { e.preventDefault(); save(); } });
   const draw = () => {
     const qq = norm(SKL.q).trim();
     let list = sktVisible().filter((v) => SKL.f === "all" || v.grp === SKL.f);
@@ -21418,7 +21533,7 @@ function openSkinsV2() {
 var ND_GROUPS = [
   ["sambut", "🏛 Penyambut & Pemandu Lab", ["tia", "kuri", "vir", "keris", "git", "se", "csn"]],
   ["mart", "☕ IT-Mart & Kafe", ["rahman", "sit", "ivy", "jejen", "bayu", "aftaf", "nan", "haryani"]],
-  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azka", "eq"]],
+  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azis", "eq", "azka"]],
   ["lencana", "🏅 Pemberi Lencana & Hadiah", ["tama", "fety", "puspa", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "dewi", "eko"]]
 ];
 var ND = { q: "", g: "all" };
@@ -21443,9 +21558,9 @@ function ndSeed() {
   for (const id of add) if (NPCS[id] && !m[id]) { m[id] = 1; ch = true; }
   if (ch) saveQ();
 }
-function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka", "eq"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
+function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka", "azis", "eq"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
 function ndGroupOf(id) { for (const [k, , ids] of ND_GROUPS) if (ids.includes(id)) return k; return "lain"; }
-var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)" };
+var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)" };
 function ndWhere(n) { const r = n.custom && n.custom.room || n.room; return ND_ZONE_NAME[r] || (ROOMS[r] && ROOMS[r].name) || (XROOMS[r] && (XROOMS[r].short || XROOMS[r].name)) || ""; }
 function openNpcDir() {
   hidePopups(); ndSeed();
@@ -21501,7 +21616,8 @@ function ndZonePrep(room, n) {
     if (room === "d_lembah") { isReset(); IS.on = true; IS.won = true; IS.babak = 5; if (typeof ISD !== "undefined") { if (ISD.barrier3) ISD.barrier3.off = true; if (ISD.barrier4) ISD.barrier4.off = true; } IS.grace = now + 3500; isHud(true); isHudUpd(msg, null); return true; }
     if (room === "t_aula") { TIM.aula = true; TIM.grace = now + 3500; return true; }
     if (room === "p_valley" && typeof prVisitPrep === "function") { if (typeof SA !== "undefined" && SA.on) saOff(); prVisitPrep(); return true; }
-    if (room === "s_art" && typeof saVisitPrep === "function") { saVisitPrep(); return true; }
+    if (room === "s_art" && typeof saVisitPrep === "function") { if (typeof TY !== "undefined" && TY.on) tyOff(); saVisitPrep(); return true; }
+    if (room === "m_ketik" && typeof tyVisitPrep === "function") { tyVisitPrep(); return true; }
   } catch (e) { console.error("persiapan kunjungan gagal:", e); }
   return false;
 }
@@ -21571,9 +21687,9 @@ function aftafCheat(npcId, q) {
 //    integral (pilihan ganda, dibangkitkan acak). Salah → nyawa −1.
 //    Andrian ikut berhenti saat pemain menjawab. Puncak → Batu Kuning.
 //  • Tantangan 2 · RAPTOR RUN: lari otomatis 3 jalur menunggang raptor
-//    melawan Azka (skin Raptor). Rintangan kecil = melambat, besar = nyawa
-//    −1. Booster ⚡ kecepatan & 🛡 perisai (Azka juga bisa mengambil).
-//    Menang → Batu Hijau, salam penghormatan Andrian & Azka.
+//    melawan Azis (skin Raptor). Rintangan kecil = melambat, besar = nyawa
+//    −1. Booster ⚡ kecepatan & 🛡 perisai (Azis juga bisa mengambil).
+//    Menang → Batu Hijau, salam penghormatan Andrian & Azis.
 //  • Batu Portal (9 slot) tampil di Capaian bagi pemegang Black Card.
 // =====================================================================
 var PR_Z = { p_valley: { x0: 380, x1: 560, z0: -112, z1: 92, h: 120, name: "Lembah Purba · Portal Ring 1", short: "Lembah Purba" } };
@@ -21583,13 +21699,13 @@ var prZone = (x, z) => x > PRV.x0 && x < PRV.x1 && z > PRV.z0 && z < PRV.z1;
 var PR_TC = { x: 470, z: -20 };
 var PR_SPAWN = { x: 470, z: 80, yaw: 0 };
 var PR_EXIT = { x: 481, z: 86 };
-var PR_LIVES = 3;
+var PR_LIVES = 6;
 var PR = { on: false, grace: 0, forceSkin: null, lock: false, own: null, ownW: null, hidden: null, fogged: false, prevSkin: null, arrive: null };
 var BATU = [
   { id: "kuning", nama: "Batu Kuning", c: "#facc15", c2: "#a16207", dari: "Pohon Purba" },
   { id: "hijau", nama: "Batu Hijau", c: "#22c55e", c2: "#14532d", dari: "Raptor Run" },
   { id: "merah", nama: "Batu Merah", c: "#ef4444", c2: "#7f1d1d", dari: "Anti-Gravitasi", tempat: "Dunia Seni & Desain" },
-  { id: "birutua", nama: "Batu Biru Tua", c: "#1d4ed8", c2: "#172554" },
+  { id: "birutua", nama: "Batu Biru Tua", c: "#1d4ed8", c2: "#172554", dari: "Typing Master", tempat: "Arena Mengetik" },
   { id: "oranye", nama: "Batu Oranye", c: "#f97316", c2: "#7c2d12" },
   { id: "ungu", nama: "Batu Ungu", c: "#a855f7", c2: "#3b0764" },
   { id: "birulangit", nama: "Batu Biru Langit", c: "#38bdf8", c2: "#0c4a6e" },
@@ -21664,7 +21780,7 @@ function batuReveal(id) {
 }
 async function prSync() {
   const q = chMigrate(); if (!q.card || !q.card.no || !q.card.tok) return;
-  for (const id of ["pohon", "raptor", "gravitasi"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
+  for (const id of ["pohon", "raptor", "gravitasi", "ketik"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
   const B2 = batuQ();
   for (const id of Object.keys(B2)) { const b = B2[id]; if (b.srv) continue; try { const j = await xcPost("api/kartu/batu", { no: q.card.no, tok: q.card.tok, id }); if (j.ok) b.srv = true; } catch { /* nanti */ } }
   saveQ();
@@ -21770,7 +21886,7 @@ function trCheckpointPos(p) { const a = (p.a0 + p.a1) / 2, q = trXZ(a, TR.R); re
 function phJumpTry() {
   if (!PH.active) return false;
   if (TRG.quizOpen) return true;
-  if (PH.ground || PH.coyote > 0) { PH.vy = 7.6; PH.ground = false; PH.coyote = 0; if (typeof SFX !== "undefined") SFX.step(); }
+  if (PH.ground || PH.coyote > 0 || cht("fly")) { if (cht("fly")) CHT.dn = false; PH.vy = cht("fly") ? Math.min(9, Math.max(PH.vy, 0) + 5.5) : 7.6; PH.ground = false; PH.coyote = 0; if (typeof SFX !== "undefined") SFX.step(); }
   else PH.buf = 0.16;
   return true;
 }
@@ -21785,18 +21901,19 @@ function phTick(dt) {
   let sup = trSupport(P.x, P.z, PH.y);
   if (sup.block) { P.x = PH.px; P.z = PH.pz; sup = trSupport(P.x, P.z, PH.y); }
   const prevGround = PH.ground;
-  PH.vy -= 22 * dt; PH.y += PH.vy * dt;
+  if (cht("fly") && !CHT.dn) { PH.vy -= 22 * 0.22 * dt; PH.vy = Math.max(PH.vy, -3.2); } else PH.vy -= 22 * dt;
+  PH.y += PH.vy * dt;
   if (PH.y <= sup.y) {
     const landV = PH.vy;
     PH.y = sup.y;
-    PH.vy = 0; PH.ground = true; PH.coyote = 0.1;
+    PH.vy = 0; PH.ground = true; PH.coyote = 0.1; CHT.dn = false;
     if (PH.standY - PH.y > 4.0 && !TRG.busy) { trFall(); return; }
     PH.standY = PH.y; PH.standPiece = sup.p;
     if (PH.buf > 0) { PH.buf = 0; PH.vy = 7.6; PH.ground = false; }
     const p = sup.p;
     if (p && p !== "top") {
       if (!prevGround) { if (typeof SFX !== "undefined") SFX.step(); if (p.leaf) p.hit = Math.min(1, -landV / 8 + 0.3); }
-      if (p.leaf && p.kind === "weak" && !p.st) {
+      if (p.leaf && p.kind === "weak" && !p.st && !cht("tank")) {
         p.rt = (p.rt || 0) + dt; p.onT = performance.now();
         if (p.rt > 0.3 && !p.warn) { p.warn = true; if (typeof SFX !== "undefined") SFX.bloop(0.45); }
         if (p.rt > 0.95) { p.st = 2; p.tm = 5.5; p.warn = false; if (typeof xShake === "function") xShake(0.25, 0.04); toast("🍂 Daun lemah robek!", 1400); }
@@ -21819,12 +21936,13 @@ function phTick(dt) {
   P.jy = PH.y;
 }
 function trFall() {
+  if (cht("tank") || cht("fly")) { PH.standY = PH.y; return; }
   if (!TRG.on) { // bukan saat balapan: cukup kembali ke titik terakhir tanpa hukuman
     const p = TRG.cp || TR.pieces[1], c = trCheckpointPos(p); trPlace(c.x, c.z, c.y, c.yaw); PH.standY = c.y; return;
   }
   TRG.busy = true;
   if (typeof cvFlash === "function") cvFlash("rgba(120,60,20,.45)"); if (typeof xShake === "function") xShake(0.4, 0.05);
-  TRG.lives--; trHudUpd(); toast(`💔 Terjatuh dari pohon! Nyawa tersisa ${Math.max(0, TRG.lives)}.`, 3000);
+  if (!cht("god")) TRG.lives--; trHudUpd(); toast(`💔 Terjatuh dari pohon! Nyawa tersisa ${Math.max(0, TRG.lives)}.`, 3000);
   if (TRG.lives <= 0) { setTimeout(() => trLose("Nyawamu habis — kamu terjatuh terlalu sering."), 600); return; }
   const p = TRG.cp || TR.pieces[1], c = trCheckpointPos(p);
   PH.standY = 999;
@@ -21874,7 +21992,7 @@ function trQuizOpen(i) {
 function trQuizAns(i, k) {
   const Qz = TRG.qGen[i], ov = $("prQz"); if (!ov || TRG.busy) return;
   const btns = ov.querySelectorAll(".prq-o button");
-  if (k === Qz.ans) {
+  if (k === Qz.ans || cht("benar")) {
     btns[k].classList.add("ok"); if (typeof SFX !== "undefined") SFX.chime();
     TRG.solved[i] = true;
     $("prqMsg").textContent = "✅ Benar! Akar-akar penghalang menyingkir.";
@@ -21882,7 +22000,7 @@ function trQuizAns(i, k) {
     setTimeout(() => { ov.remove(); TRG.quizOpen = false; trHudUpd(); }, 900);
   } else {
     btns[k].classList.add("bad"); btns[Qz.ans].classList.add("ok");
-    TRG.lives--; trHudUpd(); if (typeof SFX !== "undefined") SFX.bloop(0.6); if (typeof xShake === "function") xShake(0.3, 0.04);
+    if (!cht("god")) TRG.lives--; trHudUpd(); if (typeof SFX !== "undefined") SFX.bloop(0.6); if (typeof xShake === "function") xShake(0.3, 0.04);
     $("prqMsg").textContent = TRG.lives > 0 ? `❌ Kurang tepat. Nyawa tersisa ${TRG.lives}. Soal baru…` : "❌ Kurang tepat — nyawamu habis.";
     btns.forEach((b) => b.disabled = true);
     setTimeout(() => { ov.remove(); TRG.quizOpen = false; if (TRG.lives <= 0) { trLose("Nyawamu habis di batu prasasti."); return; } TRG.qGen[i] = PR_QGEN[i](); trQuizOpen(i); }, 1900);
@@ -21938,8 +22056,8 @@ function trAiTick(dt) {
   if (A.pause > 0) A.pause -= dt;
   else {
     if (now > A.slipT) { A.pause = 1.6; A.slipT = now + 20000 + Math.random() * 15000; sayBubble("Waduh, daunnya licin!", "npc_andrian"); }
-    let v = 2.7; const gapH = A.y - PH.y;
-    if (gapH > 8) v = 2.15; else if (gapH < -8) v = 3.3;
+    let v = 1.0; const gapH = A.y - PH.y;
+    if (gapH > 8) v = 0.8; else if (gapH < -8) v = 1.3;
     A.s = Math.min(TR.len, A.s + v * dt);
   }
   const R2 = TR.route; let i = A.idx || 0;
@@ -21960,7 +22078,7 @@ function trWin() {
   TRG.won = true; TRG.on = false;
   const secs = (performance.now() - TRG.t0) / 1000;
   const q = chMigrate(), prev = q.chal.pohon;
-  q.chal.pohon = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, secs).toFixed(1), bintang: TRG.lives };
+  q.chal.pohon = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, secs).toFixed(1), bintang: Math.min(3, Math.ceil(TRG.lives / 2)) };
   saveQ();
   if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
   if (TR.stone) TR.stone.userData.gem.scale.setScalar(1.6);
@@ -22184,7 +22302,7 @@ function rrStart() {
   RR.me = rrRacer(true); RR.az = rrRacer(false); RR.me.lane = 0; RR.az.lane = 1; RR.az.lx = 1; RR.me.lx = 0; RR.az.s = 0;
   RR.on = true; RR.lock = true; PR.lock = true; RR.cd = true; RR.t0 = 0; RR.res = null;
   document.body.classList.add("rr-on"); rrPad(true);
-  RR.meRap.visible = true; RR.azRap.visible = true; RR.azRider.visible = true; if (NPCS.azka) NPCS.azka.g.visible = false;
+  RR.meRap.visible = true; RR.azRap.visible = true; RR.azRider.visible = true; if (NPCS.azis) NPCS.azis.g.visible = false;
   RR.prevDist = P.camDist; RR.prevPitch = P.camPitch; P.camPitch = 0.34; P.camDist = 7.2;
   rrPlace(RR.me, RR.meRap, 0); rrPlace(RR.az, RR.azRap, 0);
   prHudSet("🦖 RAPTOR RUN", RR.me.lives, "Bersiap… ←/→ (A/D) pindah jalur · Spasi/↑ loncat · HP: geser layar atau tombol.", 0, 0);
@@ -22199,10 +22317,11 @@ function rrPlace(r, rap, dt) {
 }
 function rrHit(r, o) {
   if (r.invT > 0) return;
+  if (r.me && cht("tank")) { r.invT = 0.5; PRS.thump(0.15); if (typeof xShake === "function") xShake(0.15, 0.03); return; }
   if (r.shield) { r.shield = false; r.invT = 1.0; if (r.me) { toast("🛡 Perisai cangkang telur menahan tabrakan!", 2000); PRS.thump(0.2); } return; }
   if (o.big) {
     r.v *= 0.25; r.slowT = 1.4; r.invT = 1.6;
-    if (r.me) { r.lives--; if (typeof xShake === "function") xShake(0.45, 0.08); if (typeof cvFlash === "function") cvFlash("rgba(255,60,20,.35)"); toast(`💥 Menabrak ${o.kind === "rock" ? "batu" : o.kind === "foot" ? "kaki dinosaurus" : o.kind === "tri" ? "triceratops" : "pterosaurus"}! Nyawa −1`, 2200); if (r.lives <= 0) rrEnd(false, "Nyawamu habis di lintasan."); }
+    if (r.me) { if (!cht("god")) r.lives--; if (typeof xShake === "function") xShake(0.45, 0.08); if (typeof cvFlash === "function") cvFlash("rgba(255,60,20,.35)"); toast(`💥 Menabrak ${o.kind === "rock" ? "batu" : o.kind === "foot" ? "kaki dinosaurus" : o.kind === "tri" ? "triceratops" : "pterosaurus"}! Nyawa −1`, 2200); if (r.lives <= 0) rrEnd(false, "Nyawamu habis di lintasan."); }
   } else { r.slowT = 1.2; r.invT = 0.8; if (r.me) { toast(o.kind === "mud" ? "🟤 Terjebak lumpur — melambat!" : "😵 Tersandung — melambat!", 1600); PRS.thump(0.18); } }
 }
 function rrStep(r, rap, dt, aiFn) {
@@ -22234,7 +22353,7 @@ function rrStep(r, rap, dt, aiFn) {
     const ds = r.s - it.s; if (ds < -1 || ds > 1) continue;
     if (Math.abs(r.lx - it.lane) > 0.6) continue;
     it.taken = true; it.m.visible = false;
-    if (it.kind === "speed") { r.boostT = 3; if (r.me) { toast("⚡ Booster! Raptor melesat!", 1600); PRS.boost(); } else sayBubble("Hehe, booster-ku!", "npc_azka"); }
+    if (it.kind === "speed") { r.boostT = 3; if (r.me) { toast("⚡ Booster! Raptor melesat!", 1600); PRS.boost(); } else sayBubble("Hehe, booster-ku!", "npc_azis"); }
     else { r.shield = true; if (r.me) { toast("🛡 Perisai cangkang telur aktif (menahan 1 tabrakan).", 2000); PRS.boost(); } }
   }
   if (r.s >= RR.D) { r.done = true; r.s = RR.D; }
@@ -22252,7 +22371,7 @@ function rrAi(r, dt) {
   // loncat
   const nx = RR.obs.find((o) => !o.big && o.kind !== "mud" && o.s > r.s && o.s - r.s < r.v * 0.36 + 0.6 && (o.w > 50 || Math.abs(o.lane - r.lane) < 0.7));
   if (nx && r.y <= 0.001 && !nx.aiDone) { nx.aiDone = true; if (Math.random() < 0.85) r.vy = 7.2; }
-  // karet gelang: Azka tak terlalu jauh dari pemain
+  // karet gelang: Azis tak terlalu jauh dari pemain
   const gap = r.s - RR.me.s;
   if (gap > 35 && r.slowT <= 0) r.v *= 1 - dt * 0.12; else if (gap < -35) r.v *= 1 + dt * 0.1;
 }
@@ -22272,11 +22391,11 @@ function rrTick(dt) {
   rrStep(RR.az, RR.azRap, dt, rrAi);
   rrPutRider();
   if (RR.me.done && !RR.res) rrEnd(true);
-  else if (RR.az.done && !RR.res) rrEnd(false, "Azka melintasi garis finis lebih dulu.");
+  else if (RR.az.done && !RR.res) rrEnd(false, "Azis melintasi garis finis lebih dulu.");
   if (Math.floor(performance.now() / 250) !== RR.hudT && !RR.res) {
     RR.hudT = Math.floor(performance.now() / 250);
     const lap = Math.min(2, Math.floor(RR.me.s / RT.L) + 1), gap = RR.me.s - RR.az.s, tm = (performance.now() - RR.t0) / 1000;
-    prHudSet(`🦖 RAPTOR RUN · Putaran ${lap}/2 · ⏱ ${Math.floor(tm / 60)}:${String(Math.floor(tm % 60)).padStart(2, "0")}`, RR.me.lives, `${gap >= 0 ? `Unggul ${gap.toFixed(0)} m` : `Tertinggal ${(-gap).toFixed(0)} m`} dari Azka · ${Math.round(RR.me.v * 3.6)} km/j${RR.me.boostT > 0 ? " · ⚡" : ""}${RR.me.shield ? " · 🛡" : ""}`, RR.me.s / RR.D, RR.az.s / RR.D);
+    prHudSet(`🦖 RAPTOR RUN · Putaran ${lap}/2 · ⏱ ${Math.floor(tm / 60)}:${String(Math.floor(tm % 60)).padStart(2, "0")}`, RR.me.lives, `${gap >= 0 ? `Unggul ${gap.toFixed(0)} m` : `Tertinggal ${(-gap).toFixed(0)} m`} dari Azis · ${Math.round(RR.me.v * 3.6)} km/j${RR.me.boostT > 0 ? " · ⚡" : ""}${RR.me.shield ? " · 🛡" : ""}`, RR.me.s / RR.D, RR.az.s / RR.D);
   }
 }
 function rrPutRider() {
@@ -22291,10 +22410,10 @@ function rrEnd(win, why) {
   const secs = (performance.now() - RR.t0) / 1000;
   if (win) {
     const q = chMigrate(), prev = q.chal.raptor;
-    q.chal.raptor = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, secs).toFixed(1), bintang: RR.me.lives };
+    q.chal.raptor = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, secs).toFixed(1), bintang: Math.min(3, Math.ceil(RR.me.lives / 2)) };
     saveQ();
     if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
-    prHudSet("🏆 JUARA RAPTOR RUN!", RR.me.lives, `Kamu mengalahkan Azka dalam ${Math.floor(secs / 60)} mnt ${Math.round(secs % 60)} dtk!`, 1, RR.az.s / RR.D);
+    prHudSet("🏆 JUARA RAPTOR RUN!", RR.me.lives, `Kamu mengalahkan Azis dalam ${Math.floor(secs / 60)} mnt ${Math.round(secs % 60)} dtk!`, 1, RR.az.s / RR.D);
     setTimeout(() => { rrStop(); rrSalute(); }, 1800);
   } else {
     setTimeout(() => {
@@ -22310,20 +22429,20 @@ function rrStop() {
   RR.on = false; RR.lock = false; PR.lock = false; RR.cd = false;
   document.body.classList.remove("rr-on"); rrPad(false);
   P.jfx = false; P.jy = 0; P.jcamK = 0; if (RR.prevDist !== undefined) { P.camDist = RR.prevDist; P.camPitch = RR.prevPitch; }
-  RR.meRap.visible = false; RR.azRap.visible = false; RR.azRider.visible = false; if (NPCS.azka) NPCS.azka.g.visible = true;
+  RR.meRap.visible = false; RR.azRap.visible = false; RR.azRider.visible = false; if (NPCS.azis) NPCS.azis.g.visible = true;
   PR.forceSkin = PR.chosen || null; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
   const p = rtAt(0); xTeleport(p.x + p.rx * 6, p.z + p.rz * 6 - 2, 0);
-  prHudSet("🌳 LEMBAH PURBA · Portal Ring 1", null, "Bicara dengan Andrian (Pohon Purba) atau Azka (Raptor Run).", null);
+  prHudSet("🌳 LEMBAH PURBA · Portal Ring 1", null, "Bicara dengan Andrian (Pohon Purba) atau Azis (Raptor Run).", null);
 }
-// salam penghormatan Andrian & Azka + gerbang berikutnya
+// salam penghormatan Andrian & Azis + gerbang berikutnya
 function rrSalute() {
   const p = rtAt(0), fx = p.x + p.rx * 6, fz = p.z + p.rz * 6 - 2;
   const place = (id, dx) => { const n = NPCS[id]; if (!n) return; n.g.visible = true; n.g.position.set(fx + dx, 0, fz - 3.2); n.x = fx + dx; n.z = fz - 3.2; n.g.rotation.y = 0; };
   setTimeout(() => {
-    place("andrian", -1.2); place("azka", 1.2);
+    place("andrian", -1.2); place("azis", 1.2);
     PR.salute = performance.now();
     sayBubble(`Salam hormat, ${S.name}! Pendaki tercepat Pohon Purba 🙇`, "npc_andrian");
-    setTimeout(() => sayBubble(`Salam hormat, Juara Raptor Run! 🦖🙇`, "npc_azka"), 1800);
+    setTimeout(() => sayBubble(`Salam hormat, Juara Raptor Run! 🦖🙇`, "npc_azis"), 1800);
     prAwardBatu("hijau");
     if (PR.next) { PR.next.visible = true; spawnSparkle(); }
     setTimeout(() => toast("✨ Gerbang ke Dunia Seni & Desain terbuka di dekat garis start Raptor Run — Kang Eq menunggumu!", 6500), 5200);
@@ -22349,24 +22468,24 @@ addEventListener("keydown", (e) => {
 async function rrRekorLoad() { try { const j = await (await fetch("api/kartu/rekor?id=raptor", { credentials: "same-origin" })).json(); if (j.ok) prBoardDraw(RR.board, "🦖 REKOR RAPTOR RUN", j.list); } catch { /* */ } }
 
 // =====================================================================
-// NPC: Andrian & Azka
+// NPC: Andrian & Azis
 // =====================================================================
 function andrianAns(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), bt = batuQ();
   const go = ["🌳 Tantang memanjat!", () => { closeGen(); hidePopups(); trStart(); }];
   if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama! Jaga pijakanmu ya 🌿" };
-  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Kita balapan memanjat Pohon Purba setinggi 80 meter. Kita melompat dari daun raksasa ke daun raksasa. Daun hijau tua itu kuat; daun pucat yang robek-robek itu lemah — sebentar saja diinjak langsung robek dan kamu jatuh! Ada juga daun yang bergoyang. Makin tinggi, kabut makin tebal — jarak pandang makin pendek. Jatuh lebih dari 4 meter = nyawa berkurang 1 (ada 3 nyawa). Di tiga batu prasasti kamu harus menjawab soal kalkulus — aku akan menunggu selama kamu menjawab. Yang pertama tiba di puncak mendapat Batu Kuning!", acts: [go] };
+  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Kita balapan memanjat Pohon Purba setinggi 80 meter. Kita melompat dari daun raksasa ke daun raksasa. Daun hijau tua itu kuat; daun pucat yang robek-robek itu lemah — sebentar saja diinjak langsung robek dan kamu jatuh! Ada juga daun yang bergoyang. Makin tinggi, kabut makin tebal — jarak pandang makin pendek. Jatuh lebih dari 4 meter = nyawa berkurang 1 (ada 6 nyawa). Di tiga batu prasasti kamu harus menjawab soal kalkulus — aku akan menunggu selama kamu menjawab. Yang pertama tiba di puncak mendapat Batu Kuning!", acts: [go] };
   if (/tantang|mulai|main|balap|panjat|ulang|siap/.test(ql)) { if (TRG.on || RR.on) return { text: "Tantangan sedang berjalan!" }; setTimeout(trStart, 400); return { text: bt.kuning ? `Main ulang? Ayo, ${S.name}! Kali ini aku tidak akan kalah!` : `Siap, ${S.name}? Hitungan mundur… yang pertama sampai puncak mengambil Batu Kuning!` }; }
-  return { text: bt.kuning ? `Hai, ${S.name}! Batu Kuning sudah milikmu. Mau balapan memanjat lagi? Lalu tantang Azka di Raptor Run!` : `Aku Andrian, pelukis gua penjaga Pohon Purba. Pohon ini 80 meter tingginya. Berani balapan memanjat denganku? Di puncaknya ada Batu Kuning yang bercahaya.`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "andrian")]] };
+  return { text: bt.kuning ? `Hai, ${S.name}! Batu Kuning sudah milikmu. Mau balapan memanjat lagi? Lalu tantang Azis di Raptor Run!` : `Aku Andrian, pelukis gua penjaga Pohon Purba. Pohon ini 80 meter tingginya. Berani balapan memanjat denganku? Di puncaknya ada Batu Kuning yang bercahaya.`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "andrian")]] };
 }
 function azkaAns(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), bt = batuQ();
   const go = ["🦖 Tantang balapan!", () => { closeGen(); hidePopups(); rrStart(); }];
   if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama! Raptor-mu sudah lapar lari 🦖" };
-  if (!bt.kuning) return { text: `Aku Azka, penjinak raptor. Raptor Run hanya untuk penjelajah yang sudah merebut Batu Kuning dari puncak Pohon Purba. Kalahkan Andrian dulu ya, ${S.name}!` };
+  if (!bt.kuning) return { text: `Aku Azis, penjinak raptor. Raptor Run hanya untuk penjelajah yang sudah merebut Batu Kuning dari puncak Pohon Purba. Kalahkan Andrian dulu ya, ${S.name}!` };
   if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Raptor berlari sendiri dua putaran mengelilingi lembah. Pindah jalur dengan ←/→ (A/D) atau geser layar, loncat dengan Spasi/↑ atau ⤒. Rintangan kecil (batang kayu, retakan lava, lumpur) cuma memperlambat; rintangan besar (batu, kaki dinosaurus, triceratops, pterosaurus) mengurangi nyawa. Ambil ⚡ untuk melesat dan 🛡 untuk perisai — aku juga akan mengincarnya!", acts: [go] };
   if (/tantang|mulai|main|balap|ulang|siap|raptor/.test(ql)) { if (TRG.on || RR.on) return { text: "Tantangan sedang berjalan!" }; setTimeout(rrStart, 400); return { text: bt.hijau ? "Main ulang? Ayo, raptor-ku sudah siap!" : `Naik ke raptormu, ${S.name}! Pemenang membawa pulang Batu Hijau!` }; }
-  return { text: bt.hijau ? `Juara! Batu Hijau sudah milikmu. Mau balapan lagi?` : `Aku Azka, penjinak raptor. Berani adu cepat menunggang raptor denganku? Pemenangnya mendapat Batu Hijau!`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "azka")]] };
+  return { text: bt.hijau ? `Juara! Batu Hijau sudah milikmu. Mau balapan lagi?` : `Aku Azis, penjinak raptor. Berani adu cepat menunggang raptor denganku? Pemenangnya mendapat Batu Hijau!`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "azis")]] };
 }
 
 // =====================================================================
@@ -22378,7 +22497,7 @@ function prEnterAsk() {
   genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>◆ Portal Ring 1 · Lembah Purba</h2>
   <p>Black Card-mu diterima. Sebelum melangkah ke zaman purba, kenakan pakaian penghuni lembah. Keduanya masuk koleksi Lemari Skin-mu.</p>
   <div class="pr-pick">${["SKN-025", "SKN-029"].map((id) => `<button class="pr-sk${id === cur ? " on" : ""}" data-id="${id}"><img alt="" src="assets/skins/${id}.jpg"><b>${SKT_BY[id].nm}</b><small>${SKT_BY[id].ds}</small></button>`).join("")}</div>
-  <p style="font-size:12.5px;color:var(--mut)">Tantangan 1: <b>Pohon Purba</b> melawan Andrian · Tantangan 2: <b>Raptor Run</b> melawan Azka.</p>`);
+  <p style="font-size:12.5px;color:var(--mut)">Tantangan 1: <b>Pohon Purba</b> melawan Andrian · Tantangan 2: <b>Raptor Run</b> melawan Azis.</p>`);
   document.querySelectorAll(".pr-sk").forEach((b) => b.onclick = () => { closeGen(); prEnter(b.dataset.id); });
 }
 function prEnter(skinId) {
@@ -22434,7 +22553,7 @@ function prTick(dt) {
   if (PR.on && !RR.on && !TRG.on && !grace && Math.hypot(P.x - PR_EXIT.x, P.z - PR_EXIT.z) < 1.3) prExit();
   if (PR.on && !RR.on && !TRG.on && !grace && PR.next && PR.next.visible && batuQ().hijau && typeof saEnterAsk === "function" && Math.hypot(P.x - PR.next.position.x, P.z - PR.next.position.z) < 1.6 && now > (PR.askNextT || 0)) { PR.askNextT = now + 8000; saEnterAsk(); }
   // NPC membungkuk saat salam penghormatan
-  if (PR.salute) { const k = Math.max(0, 1 - Math.abs((now - PR.salute) / 1000 - 1.6) / 1.4); for (const id of ["andrian", "azka"]) { const n = NPCS[id]; if (n && n.skinG) n.skinG.rotation.x = k * 0.45; } if (now - PR.salute > 6000) PR.salute = 0; }
+  if (PR.salute) { const k = Math.max(0, 1 - Math.abs((now - PR.salute) / 1000 - 1.6) / 1.4); for (const id of ["andrian", "azis"]) { const n = NPCS[id]; if (n && n.skinG) n.skinG.rotation.x = k * 0.45; } if (now - PR.salute > 6000) PR.salute = 0; }
   for (const e of PR.anims) e(dt);
 }
 
@@ -22710,10 +22829,10 @@ function buildPurba() {
   makeCustomHuman("andrian", { code: "PURBA", name: "Andrian", role: "Pelukis Gua · Penjaga Pohon Purba", col: "#b45309", icon: "🌳", hint: "🌳", x: st2.x, z: st2.z, room: "p_valley", secret: true, hidden: true, tag: "ANDRIAN · POHON PURBA",
     look: { shirt: "#D6B184", apron: "#D6B184", glasses: false, noApron: true }, chips: ["Tantang memanjat!", "Aturannya?", "Main ulang"], roleNote: "Tantangan Pohon Purba (Portal Ring 1)",
     knowText: "Andrian, pelukis gua, menantang pemain balapan memanjat Pohon Purba setinggi 80 meter. Pemenangnya mendapat Batu Kuning.", greetActs: () => andrianAns("halo").acts, answer: andrianAns });
-  makeCustomHuman("azka", { code: "RAPTOR", name: "Azka", role: "Penjinak Raptor · Raptor Run", col: "#15803d", icon: "🦖", hint: "🦖", x: az0.x + az0.rx * 7.5, z: az0.z + az0.rz * 7.5, room: "p_valley", secret: true, hidden: true, tag: "AZKA · RAPTOR RUN",
+  makeCustomHuman("azis", { code: "RAPTOR", name: "Azis", role: "Penjinak Raptor · Raptor Run", col: "#15803d", icon: "🦖", hint: "🦖", x: az0.x + az0.rx * 7.5, z: az0.z + az0.rz * 7.5, room: "p_valley", secret: true, hidden: true, tag: "AZIS · RAPTOR RUN",
     look: { shirt: "#4F9F5B", apron: "#4F9F5B", glasses: false, noApron: true }, chips: ["Tantang balapan!", "Aturannya?", "Main ulang"], roleNote: "Tantangan Raptor Run (Portal Ring 1)",
-    knowText: "Azka, penjinak dinosaurus, menantang pemain balapan menunggang raptor di Raptor Run. Pemenangnya mendapat Batu Hijau.", greetActs: () => azkaAns("halo").acts, answer: azkaAns });
-  for (const [id, sk] of [["andrian", "SKN-027"], ["azka", "SKN-028"]]) { const n = NPCS[id]; const s = sktOnNpc(n, sk); n.skinG = s.group; n.pitch = id === "andrian" ? 0.95 : 1.1; n.tag.position.y = 2.2; }
+    knowText: "Azis, penjinak dinosaurus, menantang pemain balapan menunggang raptor di Raptor Run. Pemenangnya mendapat Batu Hijau.", greetActs: () => azkaAns("halo").acts, answer: azkaAns });
+  for (const [id, sk] of [["andrian", "SKN-027"], ["azis", "SKN-028"]]) { const n = NPCS[id]; const s = sktOnNpc(n, sk); n.skinG = s.group; n.pitch = id === "andrian" ? 0.95 : 1.1; n.tag.position.y = 2.2; }
   const parked = mkRaptor("#c2410c", "#fed7aa"); parked.position.set(az0.x + az0.rx * 10.5, 0, az0.z + az0.rz * 10.5); parked.rotation.y = Math.atan2(-az0.fx, -az0.fz) + 0.6; scene.add(parked); PR.anims.push(() => { parked.userData.run(t * 1.1, 0.06); });
   PR.own = new Set(scene.children.filter((o) => !before.has(o))); PR.own.add(world.walls);
   PR.ownW = new Set(world.walls.children.filter((o) => !wBefore.has(o)));
@@ -23024,7 +23143,7 @@ function saJump() {
   if (!SAP.active) return false;
   if (SA.quiz || SA.cd) return true;
   if (SA.race && SAG.phase === "float" && !SA.forceFall) { SAP.vy = Math.max(SAP.vy, 3.2); SAP.ground = false; SA.upT = 0.35; return true; }
-  if (SAP.ground) { SAP.vy = 7.2; SAP.ground = false; if (typeof SFX !== "undefined") SFX.step(); }
+  if (SAP.ground || cht("fly")) { if (cht("fly")) CHT.dn = false; SAP.vy = cht("fly") ? Math.min(9, Math.max(SAP.vy, 0) + 5.5) : 7.2; SAP.ground = false; if (typeof SFX !== "undefined") SFX.step(); }
   return true;
 }
 function saPhys(dt) {
@@ -23041,15 +23160,15 @@ function saPhys(dt) {
     if (!up && tgt === 0 && !SAP.ground) { const b = saBelow(P.x, P.z, SAP.y); if (b && b.solid && SAP.y - b.y < 1.0 && (b.i === SA.next || (b.i === 6 && SA.next >= 6))) tgt = -2.2; }
     SAP.vy += (tgt - SAP.vy) * Math.min(1, dt * 3.2);
     if (SAP.ground && tgt <= 0) SAP.vy = 0;
-  } else SAP.vy -= 22 * dt;
+  } else if (cht("fly") && !CHT.dn) { SAP.vy -= 22 * 0.22 * dt; SAP.vy = Math.max(SAP.vy, -3.2); } else SAP.vy -= 22 * dt;
   if (!SA.quiz) SAP.y += SAP.vy * dt;
   const sup = saSupport(P.x, P.z, SAP.y);
   const wasGround = SAP.ground;
   if (sup && SAP.y <= sup.y) {
     const land = SAP.vy;
-    SAP.y = sup.y; SAP.vy = Math.max(0, SAP.vy); SAP.ground = true;
+    SAP.y = sup.y; SAP.vy = Math.max(0, SAP.vy); SAP.ground = true; CHT.dn = false;
     if (!wasGround || SAP.stand !== sup.i) { if (land < -2 && typeof SFX !== "undefined") SFX.step(); const p = sup.p; p.hit = Math.min(1, 0.3 - land / 10); }
-    SAP.stand = sup.i;
+    SAP.stand = sup.i; SA.lastStand = sup.i;
     saLanded(sup.i);
   } else { SAP.ground = false; SAP.stand = null; }
   if (SAP.y > SA_CEIL) { SAP.y = SA_CEIL; SAP.vy = Math.min(0, SAP.vy); }
@@ -23065,6 +23184,7 @@ function saLanded(i) {
 function saPlace(x, z, y, yaw) { P.x = x; P.z = z; SAP.y = y; SAP.vy = 0; SAP.px = x; SAP.pz = z; P.jy = y; P.yaw = yaw; P.camYaw = yaw; P.walkTo = null; }
 function saFell(why) {
   if (SA.respawn) return;
+  if (cht("tank") && SA.race && !SA.dying) { const p = SA_PL[SA.lastStand || 0]; SAP.vy = 0; SA.forceFall = false; saPlace(p.x, p.z, p.cy + 0.1, SA_SPAWN.yaw); toast("🛡 Kamu kembali ke pijakan terakhir.", 1800); return; }
   if (!SA.race) { // bukan saat lomba: kembali ke Frame 1 tanpa hukuman
     SA.respawn = true;
     const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
@@ -23101,13 +23221,14 @@ function saQuizAns(i, k) {
   ov.dataset.done = "1";
   const btns = ov.querySelectorAll(".saq-o button"); btns.forEach((b) => b.disabled = true);
   const p = SA_PL[i];
-  if (k === Qz.ans) {
+  if (k === Qz.ans || cht("benar")) {
     btns[k].classList.add("ok"); SAS.ok();
     p.solved = true; SA.next = i + 1; p.pulse = 1;
     $("saqMsg").textContent = i < 5 ? "✅ Tepat! Komponen ter-render. Tunggu gravitasi hilang lalu terbang ke pijakan berikutnya." : "✅ Tepat! Tombol PUBLISH di ujung kanvas kini aktif — terbang & mendarat di sana!";
     setTimeout(() => { ov.remove(); SA.quiz = false; SA.lock = false; saHudUpd(); saPlatVis(); }, 1100);
   } else {
     btns[k].classList.add("bad"); btns[Qz.ans].classList.add("ok"); SAS.bad();
+    if (cht("tank")) { $("saqMsg").textContent = "❌ Kurang tepat… pijakan bergetar tapi bertahan. Soal baru!"; setTimeout(() => { ov.remove(); SA.quiz = false; SA.qs[i - 1] = saQuestions()[0]; saQuizOpen(i); }, 1500); return; }
     $("saqMsg").textContent = "❌ Kurang tepat… pijakan mulai retak!";
     setTimeout(() => { ov.remove(); SA.quiz = false; SA.lock = false; p.fall = true; p.fv = 0; SA.forceFall = true; SAP.ground = false; SAP.vy = -1; if (typeof xShake === "function") xShake(0.35, 0.05); saPlatVis(); }, 1500);
   }
@@ -23166,7 +23287,7 @@ function saEqSay(txt) { const now = performance.now(); if (now - SAE.said < 2500
 // ALUR LOMBA
 // =====================================================================
 function saReset() {
-  SA.next = 1; SA.won = false; SA.lost = false; SA.quiz = false; SA.dying = false; SA.forceFall = false; SA.lock = false; SA.qs = saQuestions();
+  SA.next = 1; SA.lastStand = 0; SA.won = false; SA.lost = false; SA.quiz = false; SA.dying = false; SA.forceFall = false; SA.lock = false; SA.qs = saQuestions();
   for (const p of SA_PL) { p.solved = false; p.fall = false; p.fv = 0; p.cy = p.y; p.pulse = 0; if (p.g) { p.g.position.y = p.y; p.g.rotation.set(0, -Math.PI / 2, 0); p.g.visible = true; } }
   SAE.at = 0; SAE.st = "idle"; SAE.u = 0; SAE.think = 0;
   SAG.phase = "normal"; SAG.t = SA_CYCLE.first; SAG.warn = 0;
@@ -23237,7 +23358,7 @@ function saSalute() {
   SA.salute = performance.now();
   sayBubble(`Salam hormat, ${S.name}! Desainer tercepat di kanvas ini 🎨🙇`, "npc_eq");
   if (SA.next2) { SA.next2.visible = true; spawnSparkle(); }
-  setTimeout(() => toast("✨ Sebuah gerbang baru muncul di ujung kanvas… segera dibuka!", 6000), 4800);
+  setTimeout(() => toast("✨ Gerbang ke Arena Mengetik terbuka di ujung kanvas — Azka menunggumu!", 6500), 4800);
 }
 function saLose(why) {
   if (SA.lost) return;
@@ -23406,6 +23527,7 @@ function saTick(dt) {
   // portal pulang ke Lembah Purba
   if (SA.on && !SA.race && !SA.cd && !grace && Math.hypot(P.x - SA_EXIT.x, P.z - SA_EXIT.z) < 1.2 && SAP.y < 0.5) saToValley();
   if (SA.on && !SA.race && !SA.cd && SAP.stand === 6 && Math.hypot(P.x - SA_BACK.x, P.z - SA_BACK.z) < 0.9) saBack();
+  if (SA.on && !SA.race && !SA.cd && SA.next2 && SA.next2.visible && batuQ().merah && typeof tyEnterAsk === "function" && Math.hypot(P.x - SA.next2.position.x, P.z - SA.next2.position.z) < 1.6 && now > (SA.askNextT || 0)) { SA.askNextT = now + 8000; tyEnterAsk(); }
   if (SA.salute) { const k = Math.max(0, 1 - Math.abs((now - SA.salute) / 1000 - 1.6) / 1.4); const n = NPCS.eq; if (n && n.skinG) n.skinG.rotation.x = k * 0.45; if (now - SA.salute > 6000) SA.salute = 0; }
   for (const e of SA.anims) e(dt);
 }
@@ -23665,7 +23787,7 @@ function buildSeni() {
   // gerbang berikutnya (tersegel) di ujung kanvas
   const nx = new THREE2.Group(); nx.position.set(fin.x + 3.4, fin.y, fin.z - 3.6); nx.rotation.y = -Math.PI / 2; root.add(nx);
   const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.6, 0.22, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x7f1d1d, emissive: 0xef4444, emissiveIntensity: 0.8, metalness: 0.5 })); nr.position.y = 2.1; nx.add(nr);
-  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#ef4444", 2.8); ns.position.y = 4.4; nx.add(ns);
+  const ns = prSign("⌨ ARENA MENGETIK", "tantangan 4 · Azka", "#ef4444", 2.8); ns.position.y = 4.4; nx.add(ns);
   { const bk = new THREE2.Group(); bk.position.set(SA_BACK.x, fin.y + 0.07, SA_BACK.z); root.add(bk);
     const br = new THREE2.Mesh(new THREE2.TorusGeometry(0.9, 0.08, 8, 32), new THREE2.MeshBasicMaterial({ color: 0x22c55e, toneMapped: false })); br.rotation.x = Math.PI / 2; bk.add(br);
     const bd = new THREE2.Mesh(new THREE2.CircleGeometry(0.85, 28), new THREE2.MeshBasicMaterial({ color: 0x14532d, transparent: true, opacity: 0.7 })); bd.rotation.x = -Math.PI / 2; bk.add(bd);
@@ -23699,11 +23821,451 @@ function saAct(act) {
   const ty = act.type;
   if (ty === "x_saexit") { saToValley(); return true; }
   if (ty === "x_saback") { saBack(); return true; }
-  if (ty === "x_sanext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
+  if (ty === "x_sanext") { if (batuQ().merah && typeof tyEnterAsk === "function") { if (SA.race) { toast("Selesaikan dulu lomba yang sedang berjalan."); return true; } tyEnterAsk(); } else toast("◆ Gerbang ini terbuka bagi pemegang Batu Merah (juara Anti-Gravity UI Race).", 4000); return true; }
   return false;
 }
 // tombol tahan ▲ / ▼ di keyboard (selain Spasi yang ditangani doJump)
 addEventListener("keyup", (e) => { if (e.code === "Space") SA.upT = 0; });
+
+
+// =====================================================================
+// src/ext_ketik.js — PORTAL RING 1 · ARENA MENGETIK (Azka)
+//  • Gerbang di ujung kanvas Dunia Seni & Desain (terbuka setelah Batu
+//    Merah) membawa pemain ke arena modern: dua meja, dua keyboard RGB,
+//    dinding LED raksasa. Penjaga: Azka (skin hacker "Pentester Hoodie Hitam",
+//    SKN-049) — pemain ikut memakai skin yang sama selama di arena.
+//  • Tantangan 4 · TYPING MASTER: 60 detik mengetik kata-kata bahasa
+//    Indonesia. Nilai = jumlah kata yang diketik BENAR. Spasi/Enter =
+//    kirim kata, Backspace menghapus huruf — keyboard laptop maupun HP.
+//    Azka mengetik ±80 WPM (standar 5 karakter = 1 kata) dan sesekali
+//    salah ketik. Kata benar lebih banyak dari Azka → Batu Biru Tua.
+// =====================================================================
+var TY_Z = { m_ketik: { x0: 546, x1: 590, z0: 354, z1: 398, h: 12, name: "Arena Mengetik · Portal Ring 1", short: "Arena Mengetik" } };
+Object.assign(XROOMS, TY_Z);
+var TYV = TY_Z.m_ketik;
+var tyZone = (x, z) => x > TYV.x0 && x < TYV.x1 && z > TYV.z0 && z < TYV.z1;
+var TY_SPAWN = { x: 568, z: 389, yaw: 0 };
+var TY_EXIT = { x: 550.5, z: 390 };
+var TY_SKIN = "SKN-049";
+var TY_DUR = 60, TY_AZ_WPM = 80, TY_AZ_ERR = 0.035;
+var TY_DESK = { me: { x: 563.5, z: 372 }, az: { x: 572.5, z: 372 } };
+var TY = { on: false, grace: 0, arrive: null, forceSkin: null, lock: false, root: null, hidden: null, fogged: false, built: false,
+  race: false, cd: false, t0: 0, words: [], i: 0, res: [], me: 0, meChars: 0, az: null, done: false, won: false, anims: [], hudT: 0, next: null };
+var TY_KATA = ("rumah sekolah buku pensil meja kursi jendela pintu langit awan hujan matahari bulan bintang laut pantai gunung sungai danau hutan pohon daun bunga buah " +
+  "makan minum tidur bangun belajar membaca menulis berjalan berlari bermain bekerja bertanya menjawab mendengar melihat berbicara tersenyum tertawa " +
+  "teman keluarga ayah ibu kakak adik nenek kakek guru murid dosen mahasiswa kampus kelas tugas ujian nilai jadwal pagi siang sore malam hari minggu bulan tahun " +
+  "komputer laptop jaringan internet program kode data aplikasi desain layar keyboard mouse server sistem informasi teknologi digital kreatif inovasi " +
+  "indah besar kecil panjang pendek tinggi rendah cepat lambat baru lama baik benar salah mudah sulit senang sedih ramah rajin pintar jujur sabar berani " +
+  "kota desa jalan pasar toko kantor masjid taman lapangan stasiun bandara kapal kereta mobil motor sepeda perjalanan petualangan cerita mimpi harapan " +
+  "air api tanah udara cahaya warna merah biru hijau kuning putih hitam ungu jingga suara musik lagu gambar foto video film berita pesan surat " +
+  "selalu sering kadang jarang segera nanti sekarang kemarin besok bersama sendiri semua setiap banyak sedikit lebih kurang sangat cukup hampir " +
+  "karena tetapi sehingga ketika setelah sebelum selama agar supaya walaupun meskipun bahwa dengan untuk dari kepada tentang antara").split(/\s+/);
+function tyGenWords(n) { const out = []; let prev = ""; for (let i = 0; i < n; i++) { let w; do { w = TY_KATA[Math.floor(Math.random() * TY_KATA.length)]; } while (w === prev); out.push(w); prev = w; } return out; }
+
+// ---------- suara arena ----------
+var TYS = (() => {
+  let ac = null, out = null;
+  const ctx = () => { if (!ac) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ac = new AC(); out = ac.createGain(); out.gain.value = 0.5; out.connect(ac.destination); } if (ac.state === "suspended") ac.resume().catch(() => {}); return ac; };
+  const tone = (f, dur, type, vol) => { if (!ctx()) return; const now = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = type || "square"; o.frequency.value = f; g.gain.setValueAtTime(vol || 0.04, now); g.gain.exponentialRampToValueAtTime(0.0001, now + dur); o.connect(g); g.connect(out); o.start(now); o.stop(now + dur + 0.01); };
+  return { key() { tone(1800 + Math.random() * 600, 0.025, "square", 0.025); }, ok() { tone(880, 0.06, "triangle", 0.05); }, bad() { tone(180, 0.12, "sawtooth", 0.05); }, beep(k) { tone(k ? 1046 : 784, 0.12, "square", 0.05); } };
+})();
+
+// ---------- gaya ----------
+(() => {
+  const st = document.createElement("style");
+  st.textContent = `
+#tyOv{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:8000;width:min(760px,calc(100vw - 16px))}
+body.touch #tyOv{bottom:auto;top:calc(8px + env(safe-area-inset-top,0px))}
+.ty-card{background:rgba(9,12,24,.94);border:1px solid #22d3ee;border-radius:18px;padding:12px 14px;color:#e2e8f0;box-shadow:0 0 0 1px rgba(34,211,238,.2),0 20px 60px rgba(0,0,0,.6)}
+.ty-top{display:flex;justify-content:space-between;align-items:center;font:800 13px/1.2 Poppins,sans-serif;letter-spacing:.05em;color:#67e8f9}
+.ty-top #tyTm{font:900 26px/1 Poppins,sans-serif;color:#fff;min-width:64px;text-align:right}
+.ty-top #tyTm.warn{color:#f87171}
+.ty-score{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 6px}
+.ty-score>div{background:rgba(255,255,255,.05);border-radius:12px;padding:6px 10px;font-size:13px}
+.ty-score b{font:900 24px/1 Poppins,sans-serif;color:#fff;margin-right:4px}
+.ty-score .me b{color:#22d3ee}.ty-score .az b{color:#f472b6}
+.ty-bar{position:relative;height:6px;background:#1e293b;border-radius:4px;margin-bottom:8px;overflow:hidden}
+.ty-bar i{position:absolute;left:0;height:3px;border-radius:3px;transition:width .2s}
+.ty-bar #tyBm{top:0;background:#22d3ee}.ty-bar #tyBa{bottom:0;background:#f472b6}
+.ty-words{font:600 20px/1.7 "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;background:#0b1020;border-radius:12px;padding:8px 12px;height:5.3em;overflow:hidden;word-spacing:.25em;user-select:none}
+.ty-words span{border-radius:5px;padding:0 2px;color:#64748b}
+.ty-words span.ok{color:#4ade80}.ty-words span.bad{color:#f87171;text-decoration:line-through}
+.ty-words span.cur{background:rgba(34,211,238,.16);color:#e2e8f0;outline:1px solid rgba(34,211,238,.5)}
+.ty-words span.cur.err{background:rgba(248,113,113,.2);outline-color:#f87171}
+#tyIn{width:100%;margin-top:8px;height:48px;border-radius:12px;border:2px solid #22d3ee;background:#020617;color:#fff;font:600 20px "JetBrains Mono",ui-monospace,Menlo,monospace;padding:0 14px;outline:none}
+#tyIn.err{border-color:#f87171}
+.ty-hint{font-size:12px;color:#94a3b8;margin:6px 2px 0}
+#tyHud{position:fixed;bottom:calc(76px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:30;width:min(620px,calc(100vw - 24px));background:rgba(8,15,30,.92);border:1px solid #0891b2;border-radius:14px;padding:10px 12px;color:#fff;font-size:13.5px}
+#tyHud .cvh-top{color:#67e8f9;font-weight:800}
+#tyHud .cvh-btn{display:flex;justify-content:flex-end;margin-top:6px}
+body.touch #tyHud{top:calc(92px + env(safe-area-inset-top,0px));bottom:auto;font-size:12px;padding:6px 10px}
+body:has(#tyHud) #questHud{display:none!important}
+body:has(#tyHud) #mini{display:none}
+body:has(#tyOv) #tyHud{display:none}
+`;
+  document.head.appendChild(st);
+})();
+
+// =====================================================================
+// LOMBA MENGETIK
+// =====================================================================
+function tyStart() {
+  if (TY.race || TY.cd) return;
+  hidePopups(); if (typeof closeGen === "function") closeGen();
+  TY.words = tyGenWords(260); TY.i = 0; TY.res = []; TY.me = 0; TY.meChars = 0; TY.done = false; TY.won = false;
+  TY.az = { i: 0, ok: 0, chars: 0, nextT: 0, typing: 0, cur: 0, typo: false };
+  const d = TY_DESK.me; xTeleport(d.x, d.z + 1.3, 0); TY.grace = performance.now() + 2000;
+  P.camDist = 5.5; P.camPitch = 0.12;
+  if (NPCS.azka && TY.racer) { const n = NPCS.azka, a = TY_DESK.az; n.g.visible = false; TY.racer.visible = true; TY.racer.position.set(a.x, 0, a.z + 0.95); TY.racer.rotation.y = 0; n.x = a.x; n.z = a.z + 0.95; }
+  tyOverlay(); tyRender();
+  TY.cd = true; TY.lock = true;
+  const el = document.createElement("div"); el.id = "prCd"; el.style.color = "#67e8f9"; document.body.appendChild(el);
+  let n = 3; const step = () => { if (n > 0) { el.textContent = n; el.className = "go"; void el.offsetWidth; el.className = ""; TYS.beep(0); n--; setTimeout(step, 800); } else { el.textContent = "KETIK!"; TYS.beep(1); setTimeout(() => el.remove(), 600); tyGo(); } };
+  step();
+}
+function tyGo() {
+  TY.cd = false; TY.race = true; TY.t0 = performance.now();
+  const now = performance.now();
+  TY.az.nextT = now + tyAzDur(TY.words[0]);
+  const inp = $("tyIn"); if (inp) { inp.disabled = false; inp.value = ""; inp.focus(); }
+}
+function tyAzDur(w) {
+  const cps = TY_AZ_WPM * 5 / 60; // karakter per detik
+  let s = (w.length + 1) / cps * (0.74 + Math.random() * 0.34);
+  if (Math.random() < 0.06) s += 0.4 + Math.random() * 0.6; // jeda berpikir
+  return s * 1000;
+}
+function tyOverlay() {
+  $("tyOv")?.remove();
+  const ov = document.createElement("div"); ov.id = "tyOv";
+  ov.innerHTML = `<div class="ty-card"><div class="ty-top"><span>⌨ TYPING MASTER · 60 detik · bahasa Indonesia</span><span id="tyTm">60</span></div>
+  <div class="ty-score"><div class="me"><b id="tyMe">0</b>kata benar · Kamu <small id="tyMw"></small></div><div class="az"><b id="tyAz">0</b>kata benar · Azka <small id="tyAw"></small></div></div>
+  <div class="ty-bar"><i id="tyBm"></i><i id="tyBa"></i></div>
+  <div class="ty-words" id="tyW"></div>
+  <input id="tyIn" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="next" aria-label="Ketik di sini" placeholder="Tunggu aba-aba, lalu ketik di sini…" disabled>
+  <p class="ty-hint">Ketik kata yang disorot, lalu tekan <b>Spasi</b> (atau Enter). Salah huruf? Hapus dengan <b>Backspace</b>. Yang dinilai: jumlah kata yang benar.</p></div>`;
+  document.body.appendChild(ov);
+  const inp = $("tyIn");
+  inp.addEventListener("keydown", (e) => { e.stopPropagation(); if (e.key === "Enter") { e.preventDefault(); tySubmit(inp.value.trim()); inp.value = ""; tyRender(); } else if (e.key.length === 1 || e.key === "Backspace") TYS.key(); });
+  inp.addEventListener("keyup", (e) => e.stopPropagation());
+  inp.addEventListener("input", () => {
+    if (!TY.race) { inp.value = ""; return; }
+    let v = inp.value;
+    // spasi (termasuk dari keyboard HP) mengirim kata
+    while (/\s/.test(v)) { const k = v.search(/\s/), w = v.slice(0, k); v = v.slice(k + 1).replace(/^\s+/, ""); if (w) tySubmit(w); }
+    inp.value = v; tyRender();
+  });
+  ov.addEventListener("pointerdown", (e) => { if (e.target !== inp && TY.race) { e.preventDefault(); inp.focus(); } });
+}
+function tySubmit(w) {
+  if (!TY.race || !w) return;
+  const want = TY.words[TY.i], ok = w.toLowerCase() === want || cht("benar");
+  TY.res[TY.i] = ok; TY.i++;
+  if (ok) { TY.me++; TY.meChars += want.length + 1; TYS.ok(); } else TYS.bad();
+}
+function tyRender() {
+  const W = $("tyW"); if (!W) return;
+  const inp = $("tyIn"), v = inp ? inp.value : "", cur = TY.words[TY.i] || "";
+  const start = Math.max(0, TY.i - 6), end = Math.min(TY.words.length, start + 26);
+  W.innerHTML = "";
+  for (let k = start; k < end; k++) {
+    const sp = document.createElement("span"); sp.textContent = TY.words[k];
+    if (k < TY.i) sp.className = TY.res[k] ? "ok" : "bad";
+    else if (k === TY.i) { sp.className = "cur" + (v && !cur.startsWith(v.toLowerCase()) ? " err" : ""); }
+    W.appendChild(sp); W.appendChild(document.createTextNode(" "));
+  }
+  if (inp) inp.classList.toggle("err", !!v && !cur.startsWith(v.toLowerCase()));
+  if ($("tyMe")) $("tyMe").textContent = TY.me;
+  if ($("tyAz") && TY.az) $("tyAz").textContent = TY.az.ok;
+}
+function tyTick(dt) {
+  if (!TY.race) return;
+  const now = performance.now(), el = (now - TY.t0) / 1000, left = Math.max(0, TY_DUR - el);
+  const A = TY.az;
+  // Azka mengetik ±80 WPM, sesekali salah ketik
+  while (now >= A.nextT && A.i < TY.words.length) {
+    const w = TY.words[A.i], typo = Math.random() < TY_AZ_ERR;
+    if (typo) { if (Math.random() < 0.6) sayBubble(prPick(["Ups, typo!", "Aduh, salah huruf…", "Hmm, jariku terpeleset"]), "npc_azka"); }
+    else { A.ok++; A.chars += w.length + 1; }
+    A.i++; A.nextT += tyAzDur(TY.words[A.i] || "kata");
+  }
+  if (Math.floor(now / 200) !== TY.hudT) {
+    TY.hudT = Math.floor(now / 200);
+    if ($("tyTm")) { $("tyTm").textContent = Math.ceil(left); $("tyTm").classList.toggle("warn", left <= 10); }
+    const mins = Math.max(1 / 60, el / 60);
+    if ($("tyMw")) $("tyMw").textContent = `· ${Math.round(TY.meChars / 5 / mins)} WPM`;
+    if ($("tyAw")) $("tyAw").textContent = `· ${Math.round(A.chars / 5 / mins)} WPM`;
+    const mx = Math.max(10, TY.me, A.ok) * 1.15;
+    if ($("tyBm")) $("tyBm").style.width = TY.me / mx * 100 + "%";
+    if ($("tyBa")) $("tyBa").style.width = A.ok / mx * 100 + "%";
+    if ($("tyAz")) $("tyAz").textContent = A.ok;
+    tyWallDraw(left);
+    const inp = $("tyIn"); if (inp && document.activeElement !== inp && !document.querySelector("#genOv.show")) inp.focus();
+  }
+  if (left <= 0) tyEnd();
+}
+function tyEnd() {
+  if (!TY.race) return;
+  TY.race = false; TY.done = true; TY.lock = false;
+  const inp = $("tyIn"); if (inp) { inp.blur(); inp.disabled = true; }
+  const me = TY.me, az = TY.az.ok, win = me > az;
+  tyWallDraw(0, true);
+  setTimeout(() => $("tyOv")?.remove(), 400);
+  if (win) {
+    const q = chMigrate(), prev = q.chal.ketik;
+    q.chal.ketik = { t: (prev && prev.t) || Date.now(), best: Math.max(prev && prev.best ? prev.best : 0, me), bintang: me >= az + 15 ? 3 : me >= az + 5 ? 2 : 1 };
+    if (prev && prev.srv && me > (prev.best || 0)) q.chal.ketik.srv = false;
+    saveQ();
+    TY.won = true;
+    if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+    tyHudSet(`🏆 TYPING MASTER! ${me} vs ${az} kata`, `Kamu mengetik ${me} kata benar dalam 60 detik dan mengalahkan Azka (${az}).`);
+    sayBubble(`Luar biasa, ${S.name}! Jarimu lebih cepat dariku ⌨🙇`, "npc_azka");
+    setTimeout(() => { if (TY.stone) TY.stone.visible = false; prAwardBatu("birutua"); tyRekorLoad(); if (TY.next) { TY.next.visible = true; spawnSparkle(); } }, 1400);
+    setTimeout(() => toast("✨ Sebuah gerbang baru muncul di arena… segera dibuka!", 6000), 5200);
+  } else {
+    sayBubble(me === az ? "Seri! Tapi juara harus lebih banyak 😉" : "Keyboard-ku masih lebih cepat! Coba lagi ya ⌨", "npc_azka");
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">⌨</div><h2>Belum menang…</h2><p id="tyWhy"></p><div class="rowf"><button class="btn" id="tyAgain">🔁 Tanding lagi</button><button class="ghost" id="tyNo">Nanti saja</button></div></div>`);
+    $("tyWhy").textContent = `Kamu ${me} kata benar, Azka ${az} kata benar.${me === az ? " Hasil seri — kamu harus lebih banyak dari Azka." : ""}`;
+    $("tyAgain").onclick = () => { closeGen(); tyStart(); };
+    $("tyNo").onclick = () => closeGen();
+    tyHudUpd();
+  }
+  setTimeout(tyNpcHome, 4500);
+}
+function tyStop() { TY.race = false; TY.cd = false; TY.lock = false; $("tyOv")?.remove(); tyNpcHome(); }
+function tyNpcHome() { const n = NPCS.azka; if (!n) return; if (TY.racer) TY.racer.visible = false; n.g.visible = true; n.x = n.hx; n.z = n.hz; n.g.position.set(n.hx, 0, n.hz); }
+
+// ---------- dinding LED & papan rekor ----------
+function tyWallDraw(left, fin) {
+  const B = TY.wall; if (!B) return;
+  B.draw((x, w, h) => {
+    const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, "#020617"); g.addColorStop(1, "#0c1a33"); x.fillStyle = g; x.fillRect(0, 0, w, h);
+    x.strokeStyle = "rgba(34,211,238,.25)"; x.lineWidth = 2; for (let i = 0; i < w; i += 40) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, h); x.stroke(); }
+    x.textAlign = "center"; x.fillStyle = "#67e8f9"; x.font = `900 64px ${FONT}`; x.fillText("⌨ TYPING MASTER", w / 2, 86);
+    const raceOn = TY.race || fin || TY.cd;
+    if (!raceOn) {
+      x.fillStyle = "#e2e8f0"; x.font = `600 40px ${FONT}`; x.fillText("60 detik · kata bahasa Indonesia · yang dinilai: kata benar", w / 2, 170);
+      x.fillStyle = "#f472b6"; x.font = `800 46px ${FONT}`; x.fillText("Juara bertahan: AZKA · ±80 WPM", w / 2, 250);
+      x.fillStyle = "#94a3b8"; x.font = `500 34px ${FONT}`; x.fillText("Bicara dengan Azka untuk menantangnya", w / 2, 320);
+      return;
+    }
+    const me = TY.me, az = TY.az ? TY.az.ok : 0;
+    x.font = `900 ${fin ? 64 : 84}px ${FONT}`; x.fillStyle = left <= 10 && !fin ? "#f87171" : "#fff"; x.fillText(fin ? (me > az ? "🏆 " + String(S.name).toUpperCase() + " MENANG!" : "AZKA MENANG") : String(Math.ceil(left)), w / 2, 190);
+    const row = (y, nm, v, col) => { x.textAlign = "left"; x.fillStyle = col; x.font = `800 44px ${FONT}`; x.fillText(nm, 60, y); x.textAlign = "right"; x.fillText(`${v} kata`, w - 60, y); const mx = Math.max(10, me, az) * 1.1; x.fillStyle = "rgba(255,255,255,.1)"; x.fillRect(60, y + 16, w - 120, 18); x.fillStyle = col; x.fillRect(60, y + 16, (w - 120) * v / mx, 18); };
+    row(260, String(S.name).slice(0, 14).toUpperCase(), me, "#22d3ee"); row(340, "AZKA", az, "#f472b6");
+  });
+}
+async function tyRekorLoad() { try { const j = await (await fetch("api/kartu/rekor?id=ketik", { credentials: "same-origin" })).json(); if (j.ok) tyBoardDraw(j.list); } catch { /* */ } }
+function tyBoardDraw(list) {
+  const B = TY.board; if (!B) return;
+  B.draw((x, w, h) => {
+    x.fillStyle = "#020617"; rr(x, 0, 0, w, h, 26); x.fill(); x.strokeStyle = "#22d3ee"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 22); x.stroke();
+    x.textAlign = "center"; x.fillStyle = "#67e8f9"; x.font = `800 50px ${FONT}`; x.fillText("⌨ REKOR TYPING MASTER", w / 2, 76);
+    x.font = `600 34px ${FONT}`; const L = (list || []).slice(0, 8);
+    if (!L.length) { x.fillStyle = "#94a3b8"; x.fillText("Belum ada juara — jadilah yang pertama!", w / 2, 300); return; }
+    L.forEach((r, i) => { const y = 146 + i * 62; x.textAlign = "left"; x.fillStyle = i === 0 ? "#67e8f9" : "#e2e8f0"; x.fillText(`${i + 1}. ${String(r.nama).slice(0, 18)}`, 50, y); x.textAlign = "right"; x.fillText(`${r.best} kata`, w - 50, y); });
+  });
+}
+
+// ---------- HUD ----------
+function tyHud(show) {
+  let el = $("tyHud");
+  if (!show) { el?.remove(); return; }
+  if (!el) {
+    el = document.createElement("div"); el.id = "tyHud";
+    el.innerHTML = `<div class="cvh-top" id="tyHB"></div><div id="tyHT" class="cvh-txt"></div><div class="cvh-btn"><button class="ghost" id="tyOut">⟲ Keluar Arena</button></div>`;
+    document.body.appendChild(el);
+    $("tyOut").onclick = () => { if (TY.race && !confirm("Keluar dari Arena Mengetik? Pertandingan akan berhenti.")) return; tyExit(); };
+  }
+}
+function tyHudSet(t, txt) { if (!$("tyHud")) tyHud(true); $("tyHB").textContent = t; $("tyHT").textContent = txt; }
+function tyHudUpd() { tyHudSet("⌨ ARENA MENGETIK · Portal Ring 1", batuQ().birutua ? "Batu Biru Tua sudah milikmu. Bicara dengan Azka untuk bertanding lagi." : "Bicara dengan Azka di mejanya untuk memulai Typing Master — kalahkan ±80 WPM-nya!"); }
+
+// =====================================================================
+// MASUK / KELUAR
+// =====================================================================
+function tyEnterAsk() {
+  hidePopups();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>⌨ Gerbang Arena Mengetik</h2>
+  <p>Di balik gerbang ini ada arena modern tempat <b>Azka</b>, juara mengetik, menunggu penantangnya. Kamu akan mengenakan skin <b>${SKT_BY[TY_SKIN].nm}</b> (masuk koleksi Lemari Skin-mu).</p>
+  <div class="pr-pick"><button class="pr-sk on" id="tyGo"><img alt="" src="assets/skins/${TY_SKIN}.jpg"><b>${SKT_BY[TY_SKIN].nm}</b><small>${SKT_BY[TY_SKIN].ds}</small></button></div>
+  <p style="font-size:12.5px;color:var(--mut)">Tantangan 4: <b>Typing Master</b> melawan Azka · hadiah <b>Batu Biru Tua</b>.</p>
+  <div class="rowf"><button class="btn" id="tyGo2">⌨ Masuk</button><button class="ghost" id="tyNo2">Nanti saja</button></div>`);
+  $("tyGo").onclick = $("tyGo2").onclick = () => { closeGen(); tyEnter(); };
+  $("tyNo2").onclick = () => closeGen();
+}
+function tyEnter() {
+  sktGrant([TY_SKIN]);
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  setTimeout(() => {
+    if (typeof saOff === "function" && SA.on) saOff();
+    if (typeof saLeaveValley === "function") saLeaveValley();
+    TY.on = true; TY.forceSkin = TY_SKIN; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+    TY.grace = performance.now() + 3500; TY.arrive = { x: TY_SPAWN.x, z: TY_SPAWN.z, t0: performance.now() };
+    xTeleport(TY_SPAWN.x, TY_SPAWN.z, TY_SPAWN.yaw);
+    tyHud(true); tyHudUpd(); tyRekorLoad(); tyWallDraw(TY_DUR);
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => toast("⌨ Selamat datang di Arena Mengetik! Azka menunggumu di mejanya.", 5000), 1400);
+  }, 650);
+}
+function tyVisitPrep() { if (!TY.on) { sktGrant([TY_SKIN], true); if (typeof saOff === "function" && SA.on) saOff(); if (typeof saLeaveValley === "function") saLeaveValley(); TY.on = true; TY.forceSkin = TY_SKIN; refreshMySkin(); TY.grace = performance.now() + 3500; tyHud(true); tyHudUpd(); } }
+function tyOff() {
+  tyStop();
+  TY.on = false; TY.forceSkin = null; TY.grace = performance.now() + 3500;
+  refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+  tyHud(false);
+}
+function tyExit() { tyOff(); xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Kamu kembali ke Taman Apresiasi.", 3000); }
+function tyToArt() { if (TY.race && !confirm("Kembali ke Dunia Seni & Desain? Pertandingan akan berhenti.")) return; tyOff(); if (typeof saEnter === "function") saEnter(); }
+function tyIsolate(on) {
+  if (on === !!TY.hidden) return;
+  if (on) {
+    TY.root.visible = true;
+    const keep = new Set([avatar, camera, TY.root].filter(Boolean)); for (const r of remotes.values()) keep.add(r.av);
+    TY.hidden = [];
+    for (const o of scene.children) if (o.visible && !keep.has(o) && !o.isLight && !o.isCamera) { o.visible = false; TY.hidden.push(o); }
+    for (const o of world.walls.children) if (o.visible && !TY.ownW.has(o)) { o.visible = false; TY.hidden.push(o); }
+  } else { for (const o of TY.hidden) o.visible = true; TY.hidden = null; TY.root.visible = false; }
+}
+function tyTickAll(dt) {
+  const now = performance.now(), here = tyZone(P.x, P.z), grace = now < TY.grace;
+  if (TY.arrive) { if (Math.hypot(P.x - TY.arrive.x, P.z - TY.arrive.z) < 2 || now - TY.arrive.t0 > 6000) TY.arrive = null; }
+  tyIsolate(here);
+  if (here) { scene.fog.color.setRGB(0.01, 0.015, 0.035); scene.fog.density = 0.012; TY.fogged = true; }
+  else if (TY.fogged && typeof xFogBase !== "undefined" && xFogBase) { scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; TY.fogged = false; }
+  if (here && !TY.on && !grace && !TY.arrive) { xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Arena Mengetik hanya bisa dimasuki lewat gerbang di Dunia Seni & Desain."); return; }
+  if (!here && TY.on && !grace && !TY.arrive && roomAt(P.x, P.z)) tyOff();
+  if (!here) return;
+  tyTick(dt);
+  if (TY.on && !TY.race && !TY.cd && !grace && Math.hypot(P.x - TY_EXIT.x, P.z - TY_EXIT.z) < 1.2) tyToArt();
+  for (const e of TY.anims) e(dt);
+}
+
+// =====================================================================
+// PEMBANGUNAN ARENA
+// =====================================================================
+function tyKeyTex(rgb) {
+  return xTex(l2Canvas(512, 180, (x, w, h) => {
+    x.fillStyle = "#0b0f19"; rr(x, 0, 0, w, h, 16); x.fill();
+    const rows = [14, 14, 13, 12, 9];
+    rows.forEach((n, r) => { const kw = (w - 24) / 14.6; let cx = 12 + (r === 4 ? kw * 2.6 : r * kw * 0.3); for (let i = 0; i < n; i++) { const big = r === 4 && i === 4, ww = big ? kw * 5.2 : kw * 0.88; const hue = (rgb + (cx / w) * 300 + r * 20) % 360; x.fillStyle = "#1f2937"; rr(x, cx, 10 + r * 33, ww, 28, 5); x.fill(); x.strokeStyle = `hsla(${hue},95%,60%,.95)`; x.lineWidth = 2; rr(x, cx, 10 + r * 33, ww, 28, 5); x.stroke(); cx += big ? kw * 5.4 : kw; } });
+  }));
+}
+function tyMonitorTex(kind) {
+  return xTex(l2Canvas(640, 380, (x, w, h) => {
+    x.fillStyle = "#0b1020"; x.fillRect(0, 0, w, h);
+    x.fillStyle = kind === "me" ? "#22d3ee" : "#f472b6"; x.fillRect(0, 0, w, 36);
+    x.fillStyle = "#020617"; x.font = `800 22px ${FONT}`; x.textAlign = "left"; x.fillText(kind === "me" ? "  typing-master — PENANTANG" : "  typing-master — AZKA", 0, 25);
+    x.font = `600 22px ui-monospace,monospace`; x.fillStyle = "#64748b";
+    const ws = tyGenWords(40); let y = 76, line = "";
+    for (const wd of ws) { if (x.measureText(line + wd + " ").width > w - 40) { x.fillText(line, 20, y); y += 34; line = ""; if (y > h - 20) break; } line += wd + " "; }
+    x.fillStyle = kind === "me" ? "#4ade80" : "#f9a8d4"; x.fillRect(20, 52, 160, 4);
+  }));
+}
+function buildKetik() {
+  if (TY.built) return; TY.built = true;
+  const root = new THREE2.Group(); root.visible = false; scene.add(root); TY.root = root;
+  const wBefore = new Set(world.walls.children);
+  const CX = (TYV.x0 + TYV.x1) / 2, CZ = (TYV.z0 + TYV.z1) / 2, W = TYV.x1 - TYV.x0 - 4, D = TYV.z1 - TYV.z0 - 4, H = 9;
+  // lantai mengilap berpola
+  const fl = l2Canvas(512, 512, (x, w, h) => { x.fillStyle = "#0b1120"; x.fillRect(0, 0, w, h); x.strokeStyle = "#1e293b"; x.lineWidth = 3; for (let i = 0; i <= w; i += 64) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, h); x.stroke(); x.beginPath(); x.moveTo(0, i); x.lineTo(w, i); x.stroke(); } x.fillStyle = "rgba(34,211,238,.06)"; x.fillRect(0, 0, w, h); });
+  const ft = xTex(fl); ft.wrapS = ft.wrapT = THREE2.RepeatWrapping; ft.repeat.set(W / 4, D / 4);
+  const floor = new THREE2.Mesh(new THREE2.PlaneGeometry(W, D), new THREE2.MeshStandardMaterial({ map: ft, roughness: 0.35, metalness: 0.15, color: 0xb6c2d6 })); floor.rotation.x = -Math.PI / 2; floor.position.set(CX, 0.01, CZ); floor.receiveShadow = true; root.add(floor);
+  // garis lampu neon di lantai
+  for (const [z, col] of [[CZ + 6, 0x22d3ee], [CZ - 2, 0xf472b6]]) { const m = new THREE2.Mesh(new THREE2.PlaneGeometry(W - 6, 0.12), new THREE2.MeshBasicMaterial({ color: col, toneMapped: false })); m.rotation.x = -Math.PI / 2; m.position.set(CX, 0.02, z); root.add(m); }
+  // langit-langit & panel lampu
+  const ceil = new THREE2.Mesh(new THREE2.PlaneGeometry(W, D), new THREE2.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.9 })); ceil.rotation.x = Math.PI / 2; ceil.position.set(CX, H, CZ); root.add(ceil);
+  for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) { const p = new THREE2.Mesh(new THREE2.PlaneGeometry(7, 1.2), new THREE2.MeshBasicMaterial({ color: 0xe0f2fe, toneMapped: false })); p.rotation.x = Math.PI / 2; p.position.set(TYV.x0 + 10 + i * 12, H - 0.02, TYV.z0 + 8 + j * 13); root.add(p); }
+  // cahaya arena (hanya aktif saat arena terlihat)
+  { const hl = new THREE2.HemisphereLight(0xdbeafe, 0x1e293b, 1.1); hl.position.set(CX, H, CZ); root.add(hl);
+    for (const [x, z, col, k] of [[CX - 5, TYV.z0 + 9, 0x22d3ee, 18], [CX + 5, TYV.z0 + 9, 0xf472b6, 18], [CX, CZ, 0xffffff, 26]]) { const pl = new THREE2.PointLight(col, k, 26, 1.6); pl.position.set(x, 6, z); root.add(pl); } }
+  // dinding kaca + kota malam
+  const city = l2Canvas(2048, 512, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#020617"); g.addColorStop(1, "#1e1b4b"); x.fillStyle = g; x.fillRect(0, 0, w, h); const R = rndGen(17); for (let i = 0; i < 70; i++) { const bw = 30 + R() * 70, bh = 120 + R() * 330, bx = R() * w; x.fillStyle = `hsl(230,30%,${8 + R() * 10}%)`; x.fillRect(bx, h - bh, bw, bh); for (let yy = h - bh + 10; yy < h - 6; yy += 14) for (let xx = bx + 5; xx < bx + bw - 5; xx += 11) if (R() < 0.45) { x.fillStyle = R() < 0.8 ? "rgba(253,224,71,.75)" : "rgba(103,232,249,.8)"; x.fillRect(xx, yy, 5, 7); } } });
+  const cityT = xTex(city);
+  const wallM = new THREE2.MeshBasicMaterial({ map: cityT, toneMapped: false, fog: false });
+  for (const [x, z, ry, len] of [[CX, TYV.z0 + 2, 0, W], [TYV.x0 + 2, CZ, Math.PI / 2, D], [TYV.x1 - 2, CZ, -Math.PI / 2, D]]) { const m = new THREE2.Mesh(new THREE2.PlaneGeometry(len, H), wallM); m.position.set(x, H / 2, z); m.rotation.y = ry; root.add(m); const fr = new THREE2.Mesh(new THREE2.BoxGeometry(len, 0.2, 0.2), new THREE2.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.7, roughness: 0.3 })); fr.position.set(x, H - 0.1, z); fr.rotation.y = ry; root.add(fr); for (let k = -len / 2 + 4; k < len / 2; k += 6) { const mu = new THREE2.Mesh(new THREE2.BoxGeometry(0.16, H, 0.16), fr.material); mu.position.set(x + Math.cos(ry) * k, H / 2, z - Math.sin(ry) * k); root.add(mu); } }
+  { const back = new THREE2.Mesh(new THREE2.PlaneGeometry(W, H), new THREE2.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6 })); back.position.set(CX, H / 2, TYV.z1 - 2); back.rotation.y = Math.PI; root.add(back); }
+  // dinding LED raksasa
+  TY.wall = cvScreen(16, 6, 1600, 600); TY.wall.m.position.set(CX, 5.0, TYV.z0 + 7); root.add(TY.wall.m);
+  { const fr = new THREE2.Mesh(new THREE2.BoxGeometry(16.6, 6.6, 0.3), new THREE2.MeshStandardMaterial({ color: 0x020617, metalness: 0.6, roughness: 0.3, emissive: 0x0e7490, emissiveIntensity: 0.25 })); fr.position.set(CX, 5.0, TYV.z0 + 6.8); root.add(fr); }
+  tyWallDraw(TY_DUR);
+  // dua meja modern + keyboard RGB + monitor + kursi
+  const deskM = new THREE2.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.3, metalness: 0.1 }), legM = new THREE2.MeshStandardMaterial({ color: 0x111827, metalness: 0.8, roughness: 0.3 });
+  TY.kb = [];
+  for (const [k, d] of Object.entries(TY_DESK)) {
+    const g = new THREE2.Group(); g.position.set(d.x, 0, d.z); root.add(g);
+    const top = new THREE2.Mesh(new THREE2.BoxGeometry(3.4, 0.08, 1.3), deskM); top.position.y = 0.92; g.add(top);
+    for (const sx of [-1.55, 1.55]) { const l = new THREE2.Mesh(new THREE2.BoxGeometry(0.08, 0.9, 1.1), legM); l.position.set(sx, 0.45, 0); g.add(l); }
+    const strip = new THREE2.Mesh(new THREE2.BoxGeometry(3.4, 0.03, 0.03), new THREE2.MeshBasicMaterial({ color: k === "me" ? 0x22d3ee : 0xf472b6, toneMapped: false })); strip.position.set(0, 0.88, 0.66); g.add(strip);
+    const kb = new THREE2.Mesh(new THREE2.BoxGeometry(1.15, 0.05, 0.4), [legM, legM, new THREE2.MeshBasicMaterial({ map: tyKeyTex(k === "me" ? 180 : 300), toneMapped: false }), legM, legM, legM]); kb.position.set(0, 0.985, 0.25); g.add(kb); TY.kb.push(kb);
+    const glow = world.glowSprite(k === "me" ? "#22d3ee" : "#f472b6", 1.6, 0.35); glow.position.set(0, 0.96, 0.25); g.add(glow);
+    const mouse = new THREE2.Mesh(new THREE2.SphereGeometry(0.06, 12, 8), legM); mouse.scale.set(1, 0.5, 1.5); mouse.position.set(0.85, 0.98, 0.25); g.add(mouse);
+    const mon = new THREE2.Mesh(new THREE2.BoxGeometry(1.5, 0.88, 0.05), [legM, legM, legM, legM, new THREE2.MeshBasicMaterial({ map: tyMonitorTex(k), toneMapped: false }), legM]); mon.position.set(0, 1.55, -0.3); g.add(mon);
+    const st = new THREE2.Mesh(new THREE2.CylinderGeometry(0.03, 0.03, 0.4, 8), legM); st.position.set(0, 1.12, -0.32); g.add(st);
+    const nm = saLabel(k === "me" ? "PENANTANG" : "AZKA", null, k === "me" ? "#0891b2" : "#db2777", 0.45); nm.position.set(0, 2.3, -0.3); g.add(nm);
+    // kursi gaming
+    const ch = new THREE2.Group(); ch.position.set(0, 0, 1.25); g.add(ch);
+    const seatM = new THREE2.MeshStandardMaterial({ color: 0x111827, roughness: 0.5 }), accM = new THREE2.MeshStandardMaterial({ color: k === "me" ? 0x0891b2 : 0xdb2777, roughness: 0.5 });
+    const seat = new THREE2.Mesh(new THREE2.BoxGeometry(0.6, 0.12, 0.55), seatM); seat.position.y = 0.55; ch.add(seat);
+    const back = new THREE2.Mesh(new THREE2.BoxGeometry(0.58, 0.85, 0.1), seatM); back.position.set(0, 1.0, 0.27); back.rotation.x = 0.12; ch.add(back);
+    const bs = new THREE2.Mesh(new THREE2.BoxGeometry(0.14, 0.8, 0.11), accM); bs.position.set(0, 1.0, 0.265); bs.rotation.x = 0.12; ch.add(bs);
+    const post = new THREE2.Mesh(new THREE2.CylinderGeometry(0.04, 0.04, 0.45, 8), legM); post.position.y = 0.27; ch.add(post);
+    for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2, leg = new THREE2.Mesh(new THREE2.BoxGeometry(0.05, 0.04, 0.32), legM); leg.position.set(Math.sin(a) * 0.16, 0.05, Math.cos(a) * 0.16); leg.rotation.y = a; ch.add(leg); }
+  }
+  // tanaman & lampu sorot
+  for (const [x, z] of [[TYV.x0 + 4, TYV.z0 + 4], [TYV.x1 - 4, TYV.z0 + 4], [TYV.x0 + 4, TYV.z1 - 6], [TYV.x1 - 4, TYV.z1 - 6]]) { const pot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.35, 0.28, 0.6, 16), new THREE2.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.4 })); pot.position.set(x, 0.3, z); root.add(pot); for (let i = 0; i < 7; i++) { const lf = new THREE2.Mesh(new THREE2.SphereGeometry(0.3, 10, 8), new THREE2.MeshStandardMaterial({ color: 0x15803d, roughness: 0.7 })); lf.scale.set(0.5, 1.4, 0.25); lf.position.set(x + Math.sin(i * 0.9) * 0.18, 1.0 + (i % 3) * 0.12, z + Math.cos(i * 0.9) * 0.18); lf.rotation.set(Math.sin(i) * 0.5, i, Math.cos(i) * 0.5); root.add(lf); } }
+  for (const [x, col] of [[CX - 6, "#22d3ee"], [CX + 6, "#f472b6"]]) { const s = world.glowSprite(col, 9, 0.18); s.position.set(x, 4, TYV.z0 + 8); root.add(s); }
+  // papan tanda & rekor
+  const sg = prSign("⌨ TYPING MASTER · Tantangan 4", "60 detik · kata benar terbanyak menang · lawan: Azka", "#22d3ee", 6); sg.position.set(CX, 2.6, TYV.z1 - 2.3); sg.rotation.y = Math.PI; root.add(sg);
+  TY.board = cvScreen(3.2, 2.6, 900, 750); TY.board.m.position.set(TYV.x1 - 2.6, 1.9, CZ + 8); TY.board.m.rotation.y = -Math.PI / 2; root.add(TY.board.m); tyBoardDraw([]);
+  // Batu Biru Tua di alas kaca
+  const ped = new THREE2.Mesh(new THREE2.CylinderGeometry(0.6, 0.75, 1.0, 24), new THREE2.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.7, roughness: 0.2, emissive: 0x1d4ed8, emissiveIntensity: 0.35 })); ped.position.set(CX, 0.5, TYV.z0 + 13); root.add(ped);
+  const gem = prGem("#1d4ed8", "#172554", 0.5); gem.position.set(CX, 0, TYV.z0 + 13); root.add(gem); TY.stone = gem; gem.visible = !batuQ().birutua;
+  TY.anims.push((dt) => { gem.rotation.y += dt; gem.userData.gem.position.y = 1.15 + Math.sin(t * 2) * 0.12; });
+  // portal pulang ke Dunia Seni & Desain
+  const ex = new THREE2.Group(); ex.position.set(TY_EXIT.x, 0, TY_EXIT.z); ex.rotation.y = Math.PI / 2; root.add(ex);
+  const er = new THREE2.Mesh(new THREE2.TorusGeometry(1.2, 0.12, 10, 36), new THREE2.MeshBasicMaterial({ color: 0xa855f7, toneMapped: false })); er.position.y = 1.6; ex.add(er);
+  const ed = new THREE2.Mesh(new THREE2.CircleGeometry(1.1, 30), new THREE2.MeshBasicMaterial({ color: 0x2e1065, transparent: true, opacity: 0.85, side: THREE2.DoubleSide })); ed.position.y = 1.6; ex.add(ed);
+  const es = prSign("⟲ DUNIA SENI & DESAIN", "kembali ke tantangan 3", "#a855f7", 2.6); es.position.y = 3.3; ex.add(es);
+  xAct(ed, { type: "x_tyexit" }); xAct(es, { type: "x_tyexit" });
+  TY.anims.push((dt) => { er.rotation.z += dt; });
+  // gerbang berikutnya (tersegel)
+  const nx = new THREE2.Group(); nx.position.set(TYV.x1 - 5, 0, TYV.z1 - 7); nx.rotation.y = -Math.PI / 2 - 0.5; root.add(nx);
+  const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.6, 0.22, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x172554, emissive: 0x1d4ed8, emissiveIntensity: 0.9, metalness: 0.5 })); nr.position.y = 2.1; nx.add(nr);
+  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#3b82f6", 2.8); ns.position.y = 4.4; nx.add(ns);
+  TY.next = nx; nx.visible = !!batuQ().birutua; TY.anims.push((dt) => { nr.rotation.z += dt * 0.7; });
+  xAct(nr, { type: "x_tynext" }); xAct(ns, { type: "x_tynext" });
+  // keyboard berkedip saat lomba
+  TY.anims.push(() => { const on = TY.race; TY.kb.forEach((k, i) => { k.position.y = 0.985 + (on ? Math.abs(Math.sin(t * (i ? 22 : 16))) * 0.004 : 0); }); });
+  // batas
+  for (const [ax, az, bx, bz] of [[TYV.x0 + 2.4, TYV.z0 + 2.4, TYV.x1 - 2.4, TYV.z0 + 2.4], [TYV.x1 - 2.4, TYV.z0 + 2.4, TYV.x1 - 2.4, TYV.z1 - 2.4], [TYV.x1 - 2.4, TYV.z1 - 2.4, TYV.x0 + 2.4, TYV.z1 - 2.4], [TYV.x0 + 2.4, TYV.z1 - 2.4, TYV.x0 + 2.4, TYV.z0 + 2.4]]) xCol(ax, az, bx, bz, 0.3);
+  for (const d of Object.values(TY_DESK)) xCol(d.x - 1.7, d.z - 0.1, d.x + 1.7, d.z - 0.1, 0.65);
+  // Azka
+  const a = TY_DESK.az;
+  makeCustomHuman("azka", { code: "KETIK", name: "Azka", role: "Juara Mengetik · Arena Typing Master", col: "#db2777", icon: "⌨", hint: "⌨", x: a.x + 1.9, z: a.z + 2.2, room: "m_ketik", secret: true, hidden: true, tag: "AZKA · TYPING MASTER",
+    look: { shirt: "#15151C", apron: "#15151C", glasses: true, noApron: true }, chips: ["Tantang mengetik!", "Aturannya?", "Main ulang"], roleNote: "Tantangan Typing Master (Portal Ring 1)",
+    knowText: "Azka, juara mengetik berkecepatan sekitar 80 kata per menit, menantang pemain lomba mengetik kata-kata bahasa Indonesia selama 60 detik. Yang kata benarnya lebih banyak menang dan mendapat Batu Biru Tua.", greetActs: () => azkaKetikAns("halo").acts, answer: azkaKetikAns });
+  { const n = NPCS.azka; const s = sktOnNpc(n, TY_SKIN); n.skinG = s.group; n.pitch = 1.08; n.tag.position.y = 2.25; n.hx = n.x; n.hz = n.z; root.add(n.g); }
+  { const rb = SKIN_BUILD[TY_SKIN]("#ffffff"); rb.headG.position.y = 1.5; TY.racer = rb.group; TY.racer.visible = false; root.add(TY.racer); TY.anims.push(() => { if (TY.racer.visible) { rb.headG.rotation.x = 0.25 + Math.sin(t * 3) * 0.03; TY.racer.position.y = TY.race ? Math.abs(Math.sin(t * 18)) * 0.01 : 0; } }); }
+  TY.own = new Set([root]); TY.ownW = new Set(world.walls.children.filter((o) => !wBefore.has(o)));
+  XT.anim.push((dt) => tyTickAll(dt));
+}
+function azkaKetikAns(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), bt = batuQ();
+  const go = ["⌨ Tantang mengetik!", () => { closeGen(); hidePopups(); tyStart(); }];
+  if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama! Latih terus jarimu ⌨" };
+  if (!bt.merah) return { text: `Aku Azka, juara mengetik. Arena ini hanya untuk penjelajah yang sudah membawa Batu Merah dari Dunia Seni & Desain, ${S.name}.` };
+  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Kita mengetik kata-kata bahasa Indonesia selama 60 detik. Ketik kata yang disorot lalu tekan Spasi (atau Enter). Kalau salah huruf, hapus dengan Backspace sebelum menekan Spasi. Yang dinilai hanya jumlah kata yang BENAR — kata salah tidak dihitung. Kecepatanku sekitar 80 WPM, dan kadang aku juga salah ketik. Kalau kata benarmu lebih banyak dariku, Batu Biru Tua milikmu! Bisa dimainkan di laptop maupun HP.", acts: [go] };
+  if (/tantang|mulai|main|lomba|ulang|siap|ketik|tanding/.test(ql)) { if (TY.race || TY.cd) return { text: "Pertandingan sedang berjalan!" }; setTimeout(tyStart, 400); return { text: bt.birutua ? `Tanding ulang? Siap, ${S.name}! Jariku sudah pemanasan ⌨` : `Siap, ${S.name}? Letakkan jarimu di keyboard… hitungan mundur dimulai!` }; }
+  return { text: bt.birutua ? `Halo lagi, Typing Master ${S.name}! Batu Biru Tua sudah milikmu. Mau adu cepat lagi?` : `Selamat datang di Arena Mengetik! Aku Azka. Kecepatanku sekitar 80 kata per menit — berani adu cepat mengetik bahasa Indonesia selama 60 detik?`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "azka")]] };
+}
+function tyAct(act) {
+  const ty = act.type;
+  if (ty === "x_tyexit") { tyToArt(); return true; }
+  if (ty === "x_tynext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
+  return false;
+}
 
 // panel Lembah Purba bisa diciutkan (HP)
 document.addEventListener("click", (e) => { const top = e.target.closest && e.target.closest("#prHud .cvh-top"); if (top && document.body.classList.contains("touch")) top.parentElement.classList.toggle("mini"); });

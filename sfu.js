@@ -82,6 +82,8 @@ function createSfu({ onSpeak, onProducer }) {
         if (P.transports.size >= 2) for (const t of P.transports.values()) if (t.appData.dir === m.dir) { try { t.close(); } catch { } P.transports.delete(t.id); }
         const t = await R.router.createWebRtcTransport({ webRtcServer: server, enableUdp: true, enableTcp: true, preferUdp: true, initialAvailableOutgoingBitrate: 800000, appData: { dir: m.dir === 'send' ? 'send' : 'recv' } });
         P.transports.set(t.id, t);
+        t.on('dtlsstatechange', (st) => { if (st === 'failed') console.warn(`SFU: DTLS gagal (${t.appData.dir}) — cek port ${PORT} UDP/TCP & SFU_ANNOUNCED_IP=${ANNOUNCED}`); });
+        setTimeout(() => { if (!t.closed && (t.appData.dir === 'send' ? P.producers.size : P.consumers.size) && t.iceState !== 'connected' && t.iceState !== 'completed') console.warn(`SFU: transport ${t.appData.dir} belum tersambung setelah 20 dtk (ICE ${t.iceState}). Pastikan port ${PORT} UDP & TCP terbuka dan ${ANNOUNCED} adalah IP publik server.`); }, 20000);
         return { id: t.id, iceParameters: t.iceParameters, iceCandidates: t.iceCandidates, dtlsParameters: t.dtlsParameters };
       }
       case 'sfu_conn': { const t = P.transports.get(m.tid); if (!t) throw new Error('transport'); await t.connect({ dtlsParameters: m.dtls }); return {}; }

@@ -360,3 +360,30 @@ Setelah memperbarui berkas: `pm2 restart all` (atau jalankan ulang `node server.
 - **Kang Eq** masuk Daftar NPC (kunjungi cepat) setelah ditemui.
 
 Setelah memperbarui berkas: `pm2 restart all` (atau jalankan ulang `node server.js`).
+
+## Pembaruan v17.3 — Smart board YouTube
+- Video YouTube diputar di **smart board di dinding ruangan**, bukan di jendela panel. Setelah ▶ Putar ditekan, jendela panel otomatis tertutup supaya videonya terlihat. Untuk menonton di jendela besar, gunakan ⛶ Perbesar.
+- Kalau browser menahan pemutaran bersuara (kebijakan autoplay), video tetap diputar tanpa suara dan pemain diberi tahu cara menyalakan suaranya.
+
+## Pembaruan v17.4 — Diagnosa media kelas (SFU)
+- Panel kelas kini menampilkan status sambungan media: **📡 Media: tersambung / menyambung… / GAGAL tersambung (port 44444?)**. Kalau sambungan gagal atau belum tersambung setelah 12 detik, pemain mendapat peringatan.
+- Peserta mendapat pemberitahuan bila layar pengajar tidak sampai ke perangkatnya dalam 9 detik.
+- Server mencatat di `pm2 logs` bila sambungan media (DTLS/ICE) gagal, lengkap dengan port dan `SFU_ANNOUNCED_IP` yang dipakai.
+- Diuji dengan dua peserta (pengajar berbagi layar → layar 1920×1080 diterima peserta) saat port SFU terjangkau.
+
+## Pembaruan v18 — Nyawa per babak, Azis & Arena Mengetik (Tantangan 4 Portal Ring 1)
+- **6 nyawa di setiap babak** untuk semua tantangan bernyawa: Gua Pustaka, Hanggar Drone, Kawah Api, Dunia Server, Lembah Gurun, Pohon Purba, Raptor Run, dan Game 4 Kerjasama Tim. Nyawa terisi penuh lagi di awal setiap babak.
+- **Gagal = ulang babak itu saja.** Bila nyawa habis, babak yang sedang dimainkan diulang dari awal; babak yang sudah tuntas tetap aman.
+  - **Ular Tangga:** masuk Lubang Hitam hanya mengulang papan Ular Tangga, bukan lagi mulai dari Lorong 1.
+  - **Ruang tantangan Lantai 2:** salah jawab atau waktu habis langsung mengulang tantangan ruangan itu dengan soal baru. Tombol menyerah tetap mengembalikan pemain ke Ananda.
+- **Pohon Purba:** Andrian kini memanjat sangat lambat.
+- **Raptor Run:** NPC penunggang raptor berganti nama menjadi **Azis**.
+- **Arena Mengetik · Typing Master** (tantangan 4):
+  - Gerbang di ujung kanvas Dunia Seni & Desain terbuka bagi pemegang Batu Merah. Arenanya ruangan modern: dua meja dengan keyboard RGB, dinding LED, dan pemandangan kota malam.
+  - Lawannya **Azka**, berbaju hacker (skin Pentester Hoodie Hitam, SKN-049). Pemain ikut memakai skin yang sama dan skin itu masuk koleksi.
+  - Lomba berlangsung 60 detik, mengetik kata-kata bahasa Indonesia. Spasi atau Enter mengirim kata, Backspace menghapus huruf. Bisa dimainkan di laptop maupun HP (keyboard layar).
+  - Yang dinilai adalah **jumlah kata yang benar**. Azka mengetik sekitar 80 WPM (standar 5 karakter = 1 kata) dan sesekali salah ketik.
+  - Kata benar lebih banyak dari Azka berarti menang dan mendapat **Batu Biru Tua**.
+  - Papan rekor diurutkan dari kata terbanyak. Server mencatat tantangan `ketik`, dan Batu Biru Tua hanya diterima setelah tantangan `ketik` tercatat dan pemain memiliki Batu Merah.
+
+Setelah memperbarui berkas: `pm2 restart all`.
