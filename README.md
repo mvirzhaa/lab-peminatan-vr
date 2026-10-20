@@ -387,3 +387,12 @@ Setelah memperbarui berkas: `pm2 restart all` (atau jalankan ulang `node server.
   - Papan rekor diurutkan dari kata terbanyak. Server mencatat tantangan `ketik`, dan Batu Biru Tua hanya diterima setelah tantangan `ketik` tercatat dan pemain memiliki Batu Merah.
 
 Setelah memperbarui berkas: `pm2 restart all`.
+
+## Pembaruan v18.1 — Jeda adzan di dalam game
+- Saat waktu adzan tiba, pemain yang sedang bermain **tidak lagi dikeluarkan**. Layar berubah hijau dan permainan dikunci 15 menit di posisi terakhir.
+  - Semua hitung mundur tantangan, gerak lawan, dan siklus waktu ikut berhenti, begitu juga keyboard dan sentuhan.
+  - Musik diredam dan mikrofon dibisukan sementara.
+- Di layar adzan tampil panduan **menjawab adzan** dan **doa setelah adzan** (teks Arab, latin, dan arti).
+- Setelah 15 menit, tombol **▶ Lanjutkan bermain** aktif. Permainan baru berjalan lagi setelah tombol itu ditekan.
+- Halaman login tetap terkunci selama jeda adzan seperti sebelumnya.
+- Game Kerjasama Tim berjalan di server, jadi waktunya tidak ikut berhenti.
