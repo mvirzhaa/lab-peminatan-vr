@@ -112,7 +112,17 @@ function createSfu({ onSpeak, onProducer }) {
         c.on('producerclose', () => { P.consumers.delete(c.id); });
         return { id: c.id, pid: m.pid, kind: c.kind, rtp: c.rtpParameters };
       }
-      case 'sfu_resume': { const c = P.consumers.get(m.cid); if (c) await c.resume(); return {}; }
+      case 'sfu_resume': {
+        const c = P.consumers.get(m.cid);
+        if (c) {
+          await c.resume();
+          if (c.kind === 'video') {
+            c.requestKeyFrame().catch(() => {});
+            setTimeout(() => { if (!c.closed) c.requestKeyFrame().catch(() => {}); }, 600);
+          }
+        }
+        return {};
+      }
       case 'sfu_pause': { const pr = P.producers.get(m.pid); if (pr) { if (m.on) await pr.pause(); else { const why = allow(ws, pr.appData.src, true); if (why) throw new Error(why); await pr.resume(); } } return {}; }
       case 'sfu_stop': { closeProducer(key, R, ws, m.pid); return {}; }
     }

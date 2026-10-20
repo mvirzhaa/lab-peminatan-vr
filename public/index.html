@@ -13116,8 +13116,12 @@ function klsStopScreen() {
 function klsScreenShow(stream, peer) {
   const B = SB.boards[KLS.joined]; if (!B) return;
   klsScreenHide();
-  const v = document.createElement("video"); v.muted = true; v.playsInline = true; v.autoplay = true; v.srcObject = stream; v.play().catch(() => {});
+  const v = document.createElement("video"); v.muted = true; v.playsInline = true; v.autoplay = true; v.srcObject = stream;
   const tex = new THREE2.VideoTexture(v); tex.colorSpace = THREE2.SRGBColorSpace;
+  tex.minFilter = THREE2.LinearFilter; tex.magFilter = THREE2.LinearFilter;
+  v.onloadedmetadata = () => { v.play().catch(() => {}); tex.needsUpdate = true; };
+  v.oncanplay = () => { v.play().catch(() => {}); tex.needsUpdate = true; };
+  v.play().catch(() => {});
   sbCssOff(B); B.screen = { v, tex, peer };
   B.mesh.material = new THREE2.MeshBasicMaterial({ map: tex, toneMapped: false });
 }
