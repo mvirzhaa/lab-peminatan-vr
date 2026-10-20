@@ -25,11 +25,11 @@ function createKartu({ dataDir, pem }) {
   // tahap 2: empat ruang tantangan di Lantai 2 IT-Mart → lencana Pengetahuan Dasar (Teh Fety)
   const TAHAP2 = ['kognitif', 'inggris', 'sahabat', 'coding'];
   // tahap 3: Gua Pustaka di balik rak buku Silvia → lencana Pengetahuan Umum (Teh Puspa)
-  // tahap 6: Dunia Server Lab KERIS (6 babak coding) → lencana Pengetahuan Coding (Kang Sahid & Teh Gibhta)
+  // tahap 6: Dunia Server Lab KERIS (6 babak coding) → lencana Pengetahuan Coding (Kang Sahid & Teh Gibtha)
   // tahap 7: Galeri Islam & Lembah Gurun → lencana Pengetahuan Agama Islam (Kang Fitrah & Teh Freza)
-  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam', 'pohon', 'raptor']);
+  const TANTANGAN = TAHAP2.concat(['pustaka', 'iot', 'jari', 'server', 'islam', 'pohon', 'raptor', 'gravitasi']);
   // Portal Ring 1 (khusus pemegang Black Card = lencana tim): batu bercahaya, berurutan
-  const BATU = { kuning: { ch: 'pohon', pre: null }, hijau: { ch: 'raptor', pre: 'kuning' }, merah: null, birutua: null, oranye: null, ungu: null, birulangit: null, putih: null, hitam: null };
+  const BATU = { kuning: { ch: 'pohon', pre: null }, hijau: { ch: 'raptor', pre: 'kuning' }, merah: { ch: 'gravitasi', pre: 'hijau' }, birutua: null, oranye: null, ungu: null, birulangit: null, putih: null, hitam: null };
   const SIX = ['dasar', 'umum', 'iot', 'jari', 'coding', 'islam'];
   // kode cepat tahap 8 (hanya hash yang disimpan)
   const KODE8 = '084326aacdb1a8b12e294f1cc07125c3a864a46a2314dea5b143acfa4c7f14ce';

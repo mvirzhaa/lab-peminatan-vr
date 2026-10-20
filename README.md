@@ -229,7 +229,7 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
   4. *Brankas Hacker* — cari input fungsi yang menghasilkan target (3 gembok acak, 4 percobaan/gembok).
   5. *Lorong Laser* — 6 gerbang laser, tebak output; salah → dinding laser di belakang mendekat; tersentuh = nyawa −1.
   6. *Jinakkan Bom* — 3 bom (60/45/30 dtk) di meja resepsionis inti; potong kabel berisi potongan kode yang benar. Salah/waktu habis → ledakan: kilat putih, **gempa**, lantai & dinding **retak menjalar**, **asap**, puing, ruangan gosong lalu pulih.
-- **Kang Sahid** (gamis putih, kopiah) & **Teh Gibhta** (kerudung hijau) di Aula Penyelamat menyematkan **Lencana Pengetahuan Coding**; papan rekor `GET /api/kartu/rekor?id=server`.
+- **Kang Sahid** (gamis putih, kopiah) & **Teh Gibtha** (kerudung hijau) di Aula Penyelamat menyematkan **Lencana Pengetahuan Coding**; papan rekor `GET /api/kartu/rekor?id=server`.
 - **Kode cepat:** `butnavudivoxyziz6` diketik ke **Teh Puspa** (bagi pemegang Lencana Dasar, Umum, IoT & Drone, Jari).
 - Server: tantangan `server`, lencana `coding` (prasyarat `jari`). Admin menampilkan "Server ✓" dan "💻 Coding".
 
@@ -330,3 +330,33 @@ judul dengan bidang keahlian dosen lalu menyarankan pembimbing utama + pendampin
   - Menang → **Batu Hijau**, Andrian & Azka memberi salam penghormatan, dan gerbang berikutnya tampak (masih tersegel). Papan rekor `?id=raptor`.
 - **Batu Portal Ring 1:** 9 slot di Capaian (kuning, hijau, merah, biru tua, oranye, ungu, biru langit, putih, hitam), hanya tampil bagi pemegang Black Card. Server: `POST /api/kartu/batu` (wajib lencana tim + tantangan terkait, berurutan), `GET /api/kartu/cek` kini memuat `batu`. Admin menampilkan "Pohon Purba ✓", "Raptor ✓", dan "Batu: 🟡🟢".
 - Server: tantangan baru `pohon`, `raptor`; endpoint `/api/kartu/batu` dan `/api/kartu/kode`. Setelah deploy: `pm2 restart`.
+
+## Pembaruan v17.1 — Peningkatan visual
+
+- **Skin:** jenggot & kumis di bawah mulut (tidak menutupi wajah), hijab/tudung bulat yang membingkai wajah, barang dipegang di tangan dengan pose lengan, dan 4 varian warna kulit (Terang, Kuning langsat, Sawo matang, Gelap) untuk setiap skin manusia — dipilih lewat titik warna di Lemari Skin.
+- **Dinosaurus:** raptor, brontosaurus, triceratops & pterosaurus dibentuk ulang dengan badan meruncing yang mulus, tekstur bercak, perut terang, gigi, mata, jambul bulu dan cakar sabit.
+- **Pohon Purba:** pijakan kini berupa 108 daun besar — daun **kuat** (hijau), daun **rapuh** (kuning berlubang, jatuh bila diinjak ±1 detik lalu tumbuh lagi) dan daun **bergoyang** (ikut membawa pemain). Batang lathe bertekstur dengan akar, sulur, pakis dan kanopi.
+- **Lembah Purba:** 8 siluet brontosaurus raksasa yang berjalan di balik bukit, gunung berapi dengan aliran lava & asap, sungai mengalir, bukit organik, batu berlumut, pakis 3D dan pohon sikas.
+- **Raptor Run:** rintangan baru — batu berlumut, kayu tumbang, lumpur bergelembung, retakan lava, kaki sauropoda raksasa, triceratops dan pterosaurus menukik.
+- **Kawah Api:** dinding Labirin Bola Api & Kejaran Bola Batu kini batu basal bergerigi dengan retakan lava berdenyut, stalaktit, uap panas, bara melayang dan debu di belakang bola batu.
+- Soal pertidaksamaan/nilai mutlak kini ditulis rapi (mis. `|x + 3|`, bukan `|x − -3|`).
+
+Setelah memperbarui berkas: `pm2 restart all` (atau jalankan ulang `node server.js`).
+
+## Pembaruan v17.2 — Dunia Seni & Desain (Tantangan 3 Portal Ring 1) & slot Black Card
+
+- **Gerbang ke Dunia Seni & Desain:** gerbang di dekat garis start Raptor Run terbuka bagi pemegang Batu Hijau. Pemain otomatis memakai skin **UI/UX Designer** (SKN-052, masuk koleksi), sama dengan penjaganya, **Kang Eq**.
+- **Anti-Gravity UI Race** (lawan Kang Eq):
+  - Gravitasi berganti dengan pola tetap: 6 detik normal, lalu 8 detik melayang. Ada hitungan mundur, bunyi peringatan 3 detik sebelum berganti, dan panel status di atas layar.
+  - Saat melayang, gerak dengan WASD/joystick. Naik dengan Spasi (▲) dan turun dengan C/F (▼); di HP lewat tombol ▲/▼.
+  - Ada 5 pijakan berbentuk komponen UI: Button, Card, Toggle, Slider, Input Field. Pijakan berikutnya menyala dengan kotak seleksi biru. Pijakan yang belum terbuka tampil sebagai garis putus-putus dan bisa ditembus.
+  - Setiap pijakan berisi satu soal Multimedia/UI-UX pilihan ganda. Bank soal berisi 45 soal dan 5 di antaranya diacak setiap percobaan.
+  - Selama pemain menjawab, siklus gravitasi dan Kang Eq ikut berhenti.
+  - Jawaban salah membuat pijakan runtuh dan pemain jatuh. Pemain yang belum berpijak saat gravitasi kembali jatuh ke jurang. Setiap kali jatuh, permainan diulang dari awal (Kang Eq juga kembali ke garis mulai).
+  - Bayangan dan garis bantu merah muda menunjukkan pijakan di bawah pemain (merah berarti tidak ada pijakan). Garis ukur (redline) menunjukkan jarak antarpijakan.
+  - Yang pertama mendarat di tombol **PUBLISH** menang dan mendapat **Batu Merah**. Kang Eq memberi salam hormat, lalu muncul gerbang berikutnya (masih tersegel).
+- **Server:** tantangan `gravitasi` tercatat dan masuk papan rekor. Batu Merah hanya diterima setelah tantangan `gravitasi` tercatat dan pemain memiliki Batu Hijau. Halaman admin menampilkan "Anti-Gravitasi ✓".
+- **Capaian:** slot **Black Card** di samping Sertifikat dan Explorer Card, dengan tombol Lihat dan Pamerkan (ikon 🖤 di atas kepala). Profil pemain lain juga menampilkan Black Card.
+- **Kang Eq** masuk Daftar NPC (kunjungi cepat) setelah ditemui.
+
+Setelah memperbarui berkas: `pm2 restart all` (atau jalankan ulang `node server.js`).
