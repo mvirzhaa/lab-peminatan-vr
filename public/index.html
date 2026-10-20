@@ -5335,38 +5335,92 @@ function setAvatarName(n) {
   t2.material.map.colorSpace = THREE2.SRGBColorSpace;
   t2.scale.set(0.2 * c.width / c.height, 0.2, 1);
 }
-var PR = 0.32;
-function collide(x, z) {
-  for (let it = 0; it < 3; it++) {
+var PLAYER_RADIUS = 0.32;
+var PR_RADIUS = PLAYER_RADIUS;
+
+function segIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
+  const d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+  if (Math.abs(d) < 1e-9) return null;
+  const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / d;
+  const u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / d;
+  if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+    return { x: x1 + t * (x2 - x1), y: y1 + t * (y2 - y1), t, u };
+  }
+  return null;
+}
+
+function collide(x, z, fromX, fromZ) {
+  const hasFrom = fromX !== undefined && fromZ !== undefined;
+  for (let it = 0; it < 4; it++) {
     for (const s of world.colliders) {
       if (s.off) continue;
-      if (s.bb && (x < s.bb[0] - 1 || x > s.bb[1] + 1 || z < s.bb[2] - 1 || z > s.bb[3] + 1)) continue;
-      const ax = s.a[0], az = s.a[1], bx = s.b[0], bz = s.b[1], dx = bx - ax, dz = bz - az, L = dx * dx + dz * dz;
-      let t2 = L ? ((x - ax) * dx + (z - az) * dz) / L : 0;
-      t2 = clamp(t2, 0, 1);
-      const qx = ax + dx * t2, qz = az + dz * t2, ex = x - qx, ez = z - qz, d = Math.hypot(ex, ez), R = PR + (s.r ?? 0.15);
-      if (d < R) {
-        if (d < 1e-5) {
-          x += R;
+      if (s.bb) {
+        const minX = hasFrom ? Math.min(x, fromX) : x;
+        const maxX = hasFrom ? Math.max(x, fromX) : x;
+        const minZ = hasFrom ? Math.min(z, fromZ) : z;
+        const maxZ = hasFrom ? Math.max(z, fromZ) : z;
+        if (maxX < s.bb[0] - 1 || minX > s.bb[1] + 1 || maxZ < s.bb[2] - 1 || minZ > s.bb[3] + 1) continue;
+      }
+      const ax = s.a[0], az = s.a[1], bx = s.b[0], bz = s.b[1];
+      const dx = bx - ax, dz = bz - az, L = dx * dx + dz * dz;
+      if (L < 1e-8) continue;
+      const invL = 1 / L;
+      const len = Math.sqrt(L);
+      const unx = -dz / len, unz = dx / len;
+      const R = PLAYER_RADIUS + (s.r ?? 0.15);
+      if (hasFrom && it === 0) {
+        const hit = segIntersect(fromX, fromZ, x, z, ax, az, bx, bz);
+        if (hit) {
+          const fromSide = (fromX - ax) * unx + (fromZ - az) * unz >= 0 ? 1 : -1;
+          x = hit.x + unx * fromSide * R;
+          z = hit.y + unz * fromSide * R;
           continue;
         }
-        x = qx + ex / d * R;
-        z = qz + ez / d * R;
+      }
+      let t2 = ((x - ax) * dx + (z - az) * dz) * invL;
+      t2 = clamp(t2, 0, 1);
+      const qx = ax + dx * t2, qz = az + dz * t2;
+      const ex = x - qx, ez = z - qz;
+      const d = Math.hypot(ex, ez);
+      if (d < R) {
+        if (hasFrom && t2 > 0 && t2 < 1) {
+          const fromSide = (fromX - ax) * unx + (fromZ - az) * unz >= 0 ? 1 : -1;
+          const dot = ex * unx + ez * unz;
+          if (dot * fromSide <= 1e-4) {
+            x = qx + unx * fromSide * R;
+            z = qz + unz * fromSide * R;
+            continue;
+          }
+        }
+        if (d < 1e-5) {
+          x = qx + unx * R;
+          z = qz + unz * R;
+        } else {
+          x = qx + (ex / d) * R;
+          z = qz + (ez / d) * R;
+        }
       }
     }
     for (const c of world.circles) {
-      const ex = x - c.x, ez = z - c.z, d = Math.hypot(ex, ez), R = PR + c.r;
-      if (d < R && d > 1e-5) {
-        x = c.x + ex / d * R;
-        z = c.z + ez / d * R;
+      const ex = x - c.x, ez = z - c.z, d = Math.hypot(ex, ez), R = PLAYER_RADIUS + c.r;
+      if (d < R) {
+        if (d > 1e-5) {
+          x = c.x + (ex / d) * R;
+          z = c.z + (ez / d) * R;
+        } else if (hasFrom && Math.hypot(fromX - c.x, fromZ - c.z) > 1e-4) {
+          const fx = fromX - c.x, fz = fromZ - c.z, fd = Math.hypot(fx, fz);
+          x = c.x + (fx / fd) * R;
+          z = c.z + (fz / fd) * R;
+        } else {
+          x += R;
+        }
       }
     }
   }
   return [x, z];
 }
-// Gerak dipecah menjadi langkah kecil (≤ 0,12 m). Tanpa ini, saat berlari cepat (kecepatan 2× + Shift,
-// atau frame tersendat di ponsel) satu langkah bisa melewati garis tengah dinding tipis, lalu
-// collide() mendorong pemain ke SISI SEBALIKNYA — pemain "menembus" dinding (mis. Labirin Lorong 1).
+// Gerak dipecah menjadi langkah kecil (≤ 0,12 m) dipadukan dengan continuous collision detection (CCD).
+// Mencegah tembus dinding saat lari cepat / lag frame di mobile atau PC.
 var MOVE_STEP = 0.12;
 function tryMove(nx, nz) {
   const dx = nx - P.x, dz = nz - P.z, d = Math.hypot(dx, dz);
@@ -5380,25 +5434,29 @@ function tryMove(nx, nz) {
   return any;
 }
 function tryMoveStep(nx, nz) {
-  [nx, nz] = collide(nx, nz);
+  [nx, nz] = collide(nx, nz, P.x, P.z);
   const h = groundH(nx, nz);
   if (blocked(nx, nz) || h - P.y > 0.5) {
     const hx = groundH(nx, P.z);
     if (!blocked(nx, P.z) && hx - P.y <= 0.5) {
-      [nx] = collide(nx, P.z);
+      [nx] = collide(nx, P.z, P.x, P.z);
+      const movedX = Math.abs(nx - P.x);
       P.x = nx;
-      return true;
+      return movedX > 1e-4;
     }
     const hz = groundH(P.x, nz);
     if (!blocked(P.x, nz) && hz - P.y <= 0.5) {
-      P.z = collide(P.x, nz)[1];
-      return true;
+      const cz = collide(P.x, nz, P.x, P.z)[1];
+      const movedZ = Math.abs(cz - P.z);
+      P.z = cz;
+      return movedZ > 1e-4;
     }
     return false;
   }
+  const moved = Math.hypot(nx - P.x, nz - P.z);
   P.x = nx;
   P.z = nz;
-  return true;
+  return moved > 1e-4;
 }
 function insideAnyRoom(x, z) {
   for (const r of Object.values(ROOMS))
