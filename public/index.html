@@ -22378,7 +22378,7 @@ function rrStart() {
   RR.on = true; RR.lock = true; PR.lock = true; RR.cd = true; RR.t0 = 0; RR.res = null;
   document.body.classList.add("rr-on"); rrPad(true);
   RR.meRap.visible = true; RR.azRap.visible = true; RR.azRider.visible = true; if (NPCS.azis) NPCS.azis.g.visible = false;
-  RR.prevDist = P.camDist; RR.prevPitch = P.camPitch; P.camPitch = 0.34; P.camDist = 7.2;
+  RR.prevDist = P.camDist; RR.prevPitch = P.camPitch; P.camPitch = 0.34; P.camDist = 7.2; RR.camOff = 0; RR.camLast = undefined; setTimeout(() => toast(document.body.classList.contains("touch") ? "🎥 Geser layar perlahan untuk memutar kamera · usap cepat untuk pindah jalur" : "🎥 Seret mouse untuk memutar kamera · gulir untuk zoom · C = kamera belakang", 5000), 4200);
   rrPlace(RR.me, RR.meRap, 0); rrPlace(RR.az, RR.azRap, 0);
   prHudSet("🦖 RAPTOR RUN", RR.me.lives, "Bersiap… ←/→ (A/D) pindah jalur · Spasi/↑ loncat · HP: geser layar atau tombol.", 0, 0);
   prCountdown(() => { RR.cd = false; RR.t0 = performance.now(); PRS.roar(); });
@@ -22476,7 +22476,10 @@ function rrTick(dt) {
 function rrPutRider() {
   const m = RR.me, rap = RR.meRap;
   P.x = rap.position.x; P.z = rap.position.z; P.jfx = true; P.jy = m.y + 1.84; P.jcamK = 0.7;
-  P.yaw = rap.rotation.y; P.camYaw = lerpAngle(P.camYaw, rap.rotation.y, 0.2); P.walkTo = null; P.camDist = 7.2; P.camPitch = 0.34;
+  // kamera bebas: seret mouse/layar memutar (offset tersimpan), gulir = jarak; ←/→ tetap untuk pindah jalur
+  if (RR.camLast !== undefined && !(keys.ArrowLeft || keys.ArrowRight || keys.KeyQ || keys.KeyE)) { const d = P.camYaw - RR.camLast; RR.camOff = Math.atan2(Math.sin(RR.camOff + Math.atan2(Math.sin(d), Math.cos(d))), Math.cos(RR.camOff + Math.atan2(Math.sin(d), Math.cos(d)))); }
+  P.yaw = rap.rotation.y; P.camYaw = lerpAngle(P.camYaw, rap.rotation.y + (RR.camOff || 0), 0.2); RR.camLast = P.camYaw; P.walkTo = null;
+  P.camDist = Math.max(3, Math.min(14, P.camDist)); P.camPitch = Math.max(-0.25, Math.min(0.7, P.camPitch));
   RR.azRider.position.set(RR.azRap.position.x, RR.az.y + 1.84, RR.azRap.position.z); RR.azRider.rotation.y = RR.azRap.rotation.y;
 }
 function rrEnd(win, why) {
@@ -22537,9 +22540,10 @@ addEventListener("keydown", (e) => {
   if (e.target && e.target.closest && e.target.closest("input,textarea,select")) return;
   if (e.code === "ArrowLeft" || e.code === "KeyA") { rrLane(-1); e.preventDefault(); }
   else if (e.code === "ArrowRight" || e.code === "KeyD") { rrLane(1); e.preventDefault(); }
+  else if (e.code === "KeyC") { RR.camOff = 0; RR.camLast = undefined; P.camDist = 7.2; P.camPitch = 0.34; }
   else if (e.code === "ArrowUp" || e.code === "KeyW") { rrJumpTry(); e.preventDefault(); }
 });
-(() => { let sx = null, sy = null; addEventListener("touchstart", (e) => { if (!RR.on || e.target.closest("button,#genOv,.pop")) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true }); addEventListener("touchend", (e) => { if (!RR.on || sx === null) return; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null; if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) rrLane(dx > 0 ? 1 : -1); else if (dy < -40) rrJumpTry(); }, { passive: true }); })();
+(() => { let sx = null, sy = null; let st0 = 0, off0 = 0; addEventListener("touchstart", (e) => { if (!RR.on || e.target.closest("button,#genOv,.pop")) return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; st0 = performance.now(); off0 = RR.camOff || 0; }, { passive: true }); addEventListener("touchend", (e) => { if (!RR.on || sx === null) return; const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = null; const flick = performance.now() - st0 < 280; if (flick && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { rrLane(dx > 0 ? 1 : -1); RR.camOff = off0; RR.camLast = undefined; } else if (flick && dy < -40) rrJumpTry(); }, { passive: true }); })();
 async function rrRekorLoad() { try { const j = await (await fetch("api/kartu/rekor?id=raptor", { credentials: "same-origin" })).json(); if (j.ok) prBoardDraw(RR.board, "🦖 REKOR RAPTOR RUN", j.list); } catch { /* */ } }
 
 // =====================================================================
@@ -23285,9 +23289,8 @@ function saSolid(i) {
   const p = SA_PL[i];
   if (p.fall) return false;
   if (i === 0) return true;
-  if (!(SA.race || SA.won || SA.lost)) return false;
-  if (i === 6) return SA.next >= 6 || SA.won;
-  return !!p.solved || i === SA.next;
+  if (!(SA.race || SA.won || SA.lost || SA.cd)) return false;
+  return true; // v19.1: semua pijakan (termasuk PUBLISH) bisa dipijak sejak awal — boleh melompati pijakan
 }
 function saSupport(x, z, y) {
   let best = null;
@@ -23330,7 +23333,7 @@ function saPhys(dt) {
     const up = SA.up || keys.Space || SA.upT > 0, dn = SA.dn || keys.KeyC || keys.KeyF;
     let tgt = up && !dn ? 4.4 : dn && !up ? -4.4 : 0;
     // magnet pendaratan: melayang dekat di atas pijakan tujuan → tertarik turun perlahan
-    if (!up && tgt === 0 && !SAP.ground) { const b = saBelow(P.x, P.z, SAP.y); if (b && b.solid && SAP.y - b.y < 1.0 && (b.i === SA.next || (b.i === 6 && SA.next >= 6))) tgt = -2.2; }
+    if (!up && tgt === 0 && !SAP.ground) { const b = saBelow(P.x, P.z, SAP.y); if (b && b.solid && SAP.y - b.y < 1.0 && ((b.i >= SA.next && b.i <= 5 && !SA_PL[b.i].solved) || b.i === 6)) tgt = -2.2; }
     SAP.vy += (tgt - SAP.vy) * Math.min(1, dt * 3.2);
     if (SAP.ground && tgt <= 0) SAP.vy = 0;
   } else if (cht("fly") && !CHT.dn) { SAP.vy -= 22 * 0.22 * dt; SAP.vy = Math.max(SAP.vy, -3.2); } else SAP.vy -= 22 * dt;
@@ -23351,8 +23354,8 @@ function saPhys(dt) {
 }
 function saLanded(i) {
   if (!SA.race || SA.dying || SA.won || SA.lost) return;
-  if (i === SA.next && i >= 1 && i <= 5 && !SA_PL[i].solved && !SA.quiz) saQuizOpen(i);
-  else if (i === 6 && SA.next >= 6) saWin();
+  if (i >= SA.next && i >= 1 && i <= 5 && !SA_PL[i].solved && !SA.quiz) saQuizOpen(i);
+  else if (i === 6) saWin();
 }
 function saPlace(x, z, y, yaw) { P.x = x; P.z = z; SAP.y = y; SAP.vy = 0; SAP.px = x; SAP.pz = z; P.jy = y; P.yaw = yaw; P.camYaw = yaw; P.walkTo = null; }
 function saFell(why) {
@@ -23396,8 +23399,8 @@ function saQuizAns(i, k) {
   const p = SA_PL[i];
   if (k === Qz.ans || cht("benar")) {
     btns[k].classList.add("ok"); SAS.ok();
-    p.solved = true; SA.next = i + 1; p.pulse = 1;
-    $("saqMsg").textContent = i < 5 ? "✅ Tepat! Komponen ter-render. Tunggu gravitasi hilang lalu terbang ke pijakan berikutnya." : "✅ Tepat! Tombol PUBLISH di ujung kanvas kini aktif — terbang & mendarat di sana!";
+    p.solved = true; SA.next = Math.max(SA.next, i + 1); p.pulse = 1;
+    $("saqMsg").textContent = i < 5 ? "✅ Tepat! Komponen ter-render. Tunggu gravitasi hilang lalu terbang ke pijakan berikutnya — boleh langsung melompati beberapa pijakan." : "✅ Tepat! Tombol PUBLISH di ujung kanvas kini aktif — terbang & mendarat di sana!";
     setTimeout(() => { ov.remove(); SA.quiz = false; SA.lock = false; saHudUpd(); saPlatVis(); }, 1100);
   } else {
     btns[k].classList.add("bad"); btns[Qz.ans].classList.add("ok"); SAS.bad();
@@ -23713,9 +23716,9 @@ function saPlatVis() {
     p.side.opacity = ghost ? 0.08 : 1;
     p.wire.visible = ghost;
     const active = SA.race && i === SA.next && !p.fall && i <= 6;
-    p.sel.visible = active || (i === 6 && SA.next >= 6);
+    p.sel.visible = active || (i === 6 && SA.race);
     if (p.ok) p.ok.visible = !!p.solved;
-    if (p.ask) p.ask.visible = SA.race && i === SA.next && i >= 1 && i <= 5;
+    if (p.ask) p.ask.visible = SA.race && i >= SA.next && i >= 1 && i <= 5 && !p.solved && !p.fall;
     if (p.selM) p.selM.color.set(p.solved ? 0x22c55e : 0x0d99ff);
   }
 }
@@ -23986,7 +23989,7 @@ function eqAns(q) {
   const go = ["🪐 Tantang lomba!", () => { closeGen(); hidePopups(); saStart(); }];
   if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama! Ingat: desain yang baik itu yang memudahkan orang 🎨" };
   if (!bt.hijau) return { text: `Aku Kang Eq, desainer UI/UX. Lomba di kanvas ini khusus penjelajah yang sudah membawa Batu Hijau dari Raptor Run, ${S.name}.` };
-  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Gravitasi di kanvasku berganti dengan pola tetap: 6 detik normal, lalu 8 detik melayang. Saat melayang, terbanglah ke pijakan yang menyala biru — ▲ naik (Spasi), ▼ turun (C), gerak dengan WASD/joystick. Setiap pijakan berisi satu soal Multimedia atau UI/UX. Salah menjawab, pijakannya runtuh dan kamu jatuh. Kalau gravitasi kembali saat kamu belum berpijak, kamu jatuh ke jurang. Jatuh = kita berdua mulai lagi dari awal. Selama kamu menjawab, waktu dan aku ikut berhenti. Siapa yang lebih dulu mendarat di tombol PUBLISH, dialah juaranya — hadiahnya Batu Merah!", acts: [go] };
+  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Gravitasi di kanvasku berganti dengan pola tetap: 6 detik normal, lalu 8 detik melayang. Saat melayang, terbanglah ke pijakan yang menyala biru — ▲ naik (Spasi), ▼ turun (C), gerak dengan WASD/joystick. Setiap pijakan berisi satu soal Multimedia atau UI/UX. Semua pijakan bisa dipijak sejak awal — kalau sanggup, boleh langsung melompati dua pijakan atau lebih, bahkan langsung ke PUBLISH! Salah menjawab, pijakannya runtuh dan kamu jatuh. Kalau gravitasi kembali saat kamu belum berpijak, kamu jatuh ke jurang. Jatuh = kita berdua mulai lagi dari awal. Selama kamu menjawab, waktu dan aku ikut berhenti. Siapa yang lebih dulu mendarat di tombol PUBLISH, dialah juaranya — hadiahnya Batu Merah!", acts: [go] };
   if (/tantang|mulai|main|lomba|ulang|siap|terbang/.test(ql)) { if (SA.race || SA.cd) return { text: "Lomba sedang berjalan!" }; setTimeout(saStart, 400); return { text: bt.merah ? `Main ulang? Ayo, ${S.name}! Kali ini desainku yang live duluan 😎` : `Siap, ${S.name}? Hitungan mundur… yang pertama menekan PUBLISH membawa pulang Batu Merah!` }; }
   return { text: bt.merah ? `Halo lagi, ${S.name}! Batu Merah sudah milikmu. Mau adu terbang lagi di kanvas anti-gravitasi?` : `Selamat datang di Dunia Seni & Desain! Aku Kang Eq, desainer UI/UX. Berani adu cepat menyeberangi kanvas anti-gravitasiku? Setiap pijakan adalah komponen UI — dan setiap komponen menyimpan satu soal.`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "eq")]] };
 }
@@ -25001,6 +25004,60 @@ function kpAct(act) {
   if (ty === "x_kpnext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
   return false;
 }
+
+
+
+// =====================================================================
+// src/ext_hud.js — HUD tantangan ringkas di pojok kanan atas
+//  • Semua panel tantangan (nyawa, progres, keterangan) dipindah ke pojok
+//    kanan atas, tembus pandang, dan ringkas agar tidak menghalangi
+//    pandangan. Ketuk judul panel (▾/▴) untuk membuka detail & tombol.
+// =====================================================================
+var HUD_IDS = ["cvHud", "ioHud", "kwHud", "svHud", "isHud", "tmHud", "prHud", "saHud", "tyHud", "kpHud"];
+var HUDX = (() => { try { return JSON.parse(localStorage.getItem("itlab.hudx") || "{}") || {}; } catch { return {}; } })();
+function hudSaveX() { try { localStorage.setItem("itlab.hudx", JSON.stringify(HUDX)); } catch { /* */ } }
+(() => {
+  const H = ":is(" + HUD_IDS.map((i) => "#" + i).join(",") + ")";
+  const st = document.createElement("style");
+  st.textContent = `
+${H}{top:var(--hudTop,calc(58px + env(safe-area-inset-top,0px)))!important;bottom:auto!important;left:auto!important;right:max(10px,env(safe-area-inset-right,0px))!important;transform:none!important;width:min(300px,calc(100vw - 20px))!important;padding:7px 10px 8px!important;font-size:12px!important;line-height:1.35!important;border-radius:12px!important;background:rgba(10,12,22,.6)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(0,0,0,.35)!important;max-height:calc(100vh - 150px);overflow:auto}
+${H} .cvh-top{display:flex!important;align-items:flex-start!important;gap:6px!important;font-size:11px!important;letter-spacing:.02em!important;line-height:1.3;cursor:pointer;user-select:none;-webkit-user-select:none}
+${H} .cvh-top>b{flex:1;min-width:0}
+${H} .cvh-top>span{font-size:12px!important;letter-spacing:0!important;white-space:nowrap;flex:0 0 auto}
+${H} .cvh-top::after{content:"▾"!important;margin-left:2px!important;opacity:.75;flex:0 0 auto}
+${H}.hx .cvh-top::after{content:"▴"!important}
+${H} .cvh-txt{font-size:12.5px!important;font-weight:600!important;line-height:1.35!important;margin:4px 0!important;max-height:none!important}
+${H}:not(.hx) .cvh-txt{display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden!important}
+${H}:not(.hx) :is(.cvh-btn,.tm-row2,.tm-mem,#tmHudChat){display:none!important}
+${H} .cvh-bar,${H} .pr-bar,${H} .sa-bar{margin:5px 0 2px!important}
+${H} .cvh-btn{margin-top:6px!important;flex-wrap:wrap}
+${H} .cvh-btn button{height:26px!important;font-size:11.5px!important;padding:0 9px!important}
+body.touch ${H}{width:min(250px,calc(100vw - 20px))!important}
+#snakeHud{top:var(--hudTop,calc(58px + env(safe-area-inset-top,0px)))!important;bottom:auto!important;right:max(10px,env(safe-area-inset-right,0px))!important;left:auto!important;width:min(260px,calc(100vw - 20px))!important;padding:8px 10px!important;gap:6px!important;border-radius:12px!important;background:rgba(17,12,38,.62)!important;font-size:12px}
+#snakeHud #snMsg{font-size:12.5px;line-height:1.35}
+#snakeHud #snRoll{height:34px;font-size:13px}
+body:has(${H}) #mini,body:has(#snakeHud:not([hidden])) #mini,body:has(${H}) #questHud,body:has(#snakeHud:not([hidden])) #questHud{display:none!important}
+body.touch:has(#saHud) #saGrav{top:auto!important;bottom:calc(150px + env(safe-area-inset-bottom,0px))!important}
+`;
+  document.head.appendChild(st);
+})();
+// ketuk judul → buka/tutup detail (menggantikan perilaku "mini" lama)
+document.addEventListener("click", (e) => {
+  const top = e.target && e.target.closest ? e.target.closest(".cvh-top") : null; if (!top) return;
+  const h = top.parentElement; if (!h || !HUD_IDS.includes(h.id)) return;
+  e.stopImmediatePropagation(); e.preventDefault();
+  h.classList.remove("mini");
+  HUDX[h.id] = h.classList.toggle("hx"); hudSaveX();
+}, true);
+new MutationObserver((ms) => {
+  for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1 && HUD_IDS.includes(n.id)) { n.classList.remove("mini"); n.classList.toggle("hx", !!HUDX[n.id]); }
+}).observe(document.body, { childList: true });
+// posisi atas panel menyesuaikan tinggi bilah atas (di HP bilah atas bisa 2 baris)
+function hudTopFit() {
+  let b = 0; for (const id of ["top", "menuBtn"]) { const el = document.getElementById(id); if (el && getComputedStyle(el).display !== "none") { const r = el.getBoundingClientRect(); if (r.width > 0 && r.right > innerWidth - 330) b = Math.max(b, r.bottom); } }
+  document.documentElement.style.setProperty("--hudTop", Math.round(Math.max(50, b) + 8) + "px");
+}
+addEventListener("resize", hudTopFit); setInterval(hudTopFit, 1500); hudTopFit();
 
 // panel Lembah Purba bisa diciutkan (HP)
 document.addEventListener("click", (e) => { const top = e.target.closest && e.target.closest("#prHud .cvh-top"); if (top && document.body.classList.contains("touch")) top.parentElement.classList.toggle("mini"); });

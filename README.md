@@ -410,3 +410,16 @@ Setelah memperbarui berkas: `pm2 restart all`.
   - Yang lebih dulu menenggelamkan semua kapal lawan menang. Kalah berarti diulang dari awal (pasang kapal lagi).
   - Menang memberi **Batu Oranye**. Rekor dihitung dari jumlah tembakan paling sedikit.
 - Server: tantangan `kapal` dan syarat Batu Oranye (setelah Batu Biru Tua) ditambahkan di `kartu.js`. Admin menampilkan "Tembak Kapal N tembakan ✓".
+
+## Pembaruan v19.1 — HUD ringkas & kamera Raptor Run
+- Panel semua tantangan (nyawa, progres, keterangan) kini berada di **pojok kanan atas**, tembus pandang, dan ringkas agar tidak menghalangi pandangan.
+  - Berlaku untuk Gua Pustaka, Hanggar, Kawah, Dunia Server, Lembah Gurun, Kerjasama Tim, Ular Tangga, Pohon Purba, Raptor Run, Dunia Seni, Arena Mengetik, dan Ruang Komando.
+  - Tampilan ringkas menunjukkan judul, nyawa, progres, dan 2 baris keterangan. Ketuk judul panel (▾) untuk membuka keterangan lengkap dan tombol seperti "Keluar"; ketuk lagi (▴) untuk meringkas. Pilihan ini diingat per tantangan.
+  - Peta mini dan papan misi disembunyikan selama panel tantangan tampil.
+- **Raptor Run:** kamera kini bisa diatur.
+  - Seret mouse untuk memutar dan memiringkan kamera, gulir untuk mengatur jarak, dan tekan C untuk kembali ke kamera belakang.
+  - Di HP, geser layar perlahan untuk memutar kamera; usapan cepat tetap untuk pindah jalur/melompat.
+  - ←/→ dan A/D tetap untuk pindah jalur dan tidak memutar kamera.
+- **Anti-Gravity UI Race:** semua pijakan (termasuk PUBLISH) bisa dipijak sejak awal.
+  - Pemain boleh melompati dua pijakan atau lebih. Soal hanya muncul di pijakan yang benar-benar dipijak, dan mendarat di PUBLISH kapan saja langsung menang.
+  - Kembali ke pijakan yang sudah dilewati tidak memunculkan soal lagi.
