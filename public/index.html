@@ -2746,7 +2746,8 @@ var ROOMS = {
   eportal: { x0: -20, x1: 9, z0: 30, z1: 56, h: 6, name: "Ruang E-Portal UIKA", short: "E-Portal", col: "#34d399" },
   kelas1: { x0: -26, x1: -8, z0: 56, z1: 80, h: 6, name: "Kelas 1 · Auditorium", short: "Kelas 1", col: "#60a5fa" },
   rapat: { x0: -8, x1: 10, z0: 56, z1: 80, h: 4.6, name: "Ruang Rapat", short: "R. Rapat", col: "#b45309" },
-  kelas2: { x0: 9, x1: 27, z0: 30, z1: 56, h: 6, name: "Kelas 2 · Auditorium", short: "Kelas 2", col: "#2dd4bf" }
+  kelas2: { x0: 9, x1: 27, z0: 30, z1: 56, h: 6, name: "Kelas 2 · Auditorium", short: "Kelas 2", col: "#2dd4bf" },
+  bencana: { x0: -40, x1: -20, z0: 30, z1: 56, h: 6, name: "Ruang Simulasi Bencana", short: "Sim. Bencana", col: "#f97316" }
 };
 var SPOTS = [
   { id: "welcome", name: "Ruang Sambutan (video)", x: 0, z: 18.5, yaw: Math.PI },
@@ -2760,7 +2761,8 @@ var SPOTS = [
   { id: "eportal", name: "🌐 Ruang E-Portal UIKA", x: -5.5, z: 36.5, yaw: Math.PI },
   { id: "kelas1", name: "🎓 Kelas 1 · Auditorium", x: -12.4, z: 59.5, yaw: 0 },
   { id: "kelas2", name: "🎓 Kelas 2 · Auditorium", x: 12.6, z: 33.6, yaw: 0 },
-  { id: "rapat", name: "🤝 Ruang Rapat", x: 3, z: 58.4, yaw: Math.PI }
+  { id: "rapat", name: "🤝 Ruang Rapat", x: 3, z: 58.4, yaw: Math.PI },
+  { id: "bencana", name: "🧯 Ruang Simulasi Bencana", x: -23.5, z: 33.5, yaw: -Math.PI / 2 }
 ];
 var NPC_POS = {
   tia: { x: 0, z: -0.35, yaw: 0, room: "atrium" },
@@ -2783,12 +2785,16 @@ var WALLS = [
   { z: 30, x: [-9, 9], d: [[-7.7, -5.3, 3.3]], f: "eportal", b: "welcome", h: 6 }, // pintu ke Ruang E-Portal
   // Ruang E-Portal UIKA (selatan Ruang Sambutan)
   { z: 30, x: [-20, -9], f: "eportal", b: "eportal", h: 6 },
-  { x: -20, z: [30, 56], f: "eportal", b: "eportal", h: 6 },
+  { x: -20, z: [30, 56], d: [[31.4, 33.6, 3.1]], f: "bencana", b: "eportal", h: 6, dc: "#f97316" }, // pintu ke Ruang Simulasi Bencana
+  // Ruang Simulasi Bencana (barat E-Portal)
+  { z: 30, x: [-40, -20], f: "bencana", b: "bencana", h: 6 },
+  { x: -40, z: [30, 56], f: "bencana", b: "bencana", h: 6 },
+  { z: 56, x: [-40, -26], f: "bencana", b: "bencana", h: 6 },
   { x: 9, z: [30, 56], d: [[31.6, 33.6, 3.1]], f: "eportal", b: "kelas2", h: 6, dc: "#2dd4bf" }, // pintu ke Kelas 2
   { z: 56, x: [-20, -8], d: [[-11.8, -9.8, 3.1]], f: "kelas1", b: "eportal", h: 6, dc: "#60a5fa" }, // pintu ke Kelas 1
   { z: 56, x: [-8, 9], d: [[2, 4, 3.1]], f: "rapat", b: "eportal", h: 6, dc: "#f59e0b" }, // pintu ke Ruang Rapat
   // Kelas 1 · Auditorium (selatan-barat E-Portal)
-  { z: 56, x: [-26, -20], f: "kelas1", b: "kelas1", h: 6 },
+  { z: 56, x: [-26, -20], f: "kelas1", b: "bencana", h: 6 },
   { x: -26, z: [56, 80], f: "kelas1", b: "kelas1", h: 6 },
   { z: 80, x: [-26, -8], f: "kelas1", b: "kelas1", h: 6 },
   { x: -8, z: [56, 80], f: "kelas1", b: "rapat", h: 6 },
@@ -2826,6 +2832,7 @@ var WALLS = [
   { x: 24, z: [-38, -12], f: "se", b: "se", h: 5.5 }
 ];
 function groundH(x, z) {
+  if (x > 600 && typeof bcGround === "function") { const b = bcGround(x, z); if (b !== null) return b; }
   return typeof audGround === "function" ? audGround(x, z) : 0;
 }
 function blocked(x, z) {
@@ -2981,6 +2988,11 @@ function wallCanvas(kind) {
     }
     x.fillStyle = "#a0522d";
     for (let r = 0; r < 4; r++) for (let c = 0; c < 5; c++) { x.fillStyle = `hsl(${14 + R() * 10},${45 + R() * 15}%,${34 + R() * 10}%)`; x.fillRect(c * 104 + (r % 2) * 52 - 52 + 3, 360 + r * 38 + 3, 98, 32); }
+  } else if (kind === "bencana") {
+    x.fillStyle = "#e7e5e4"; x.fillRect(0, 0, 512, 512);
+    x.fillStyle = "#d6d3d1"; for (let i = 0; i < 512; i += 128) x.fillRect(i, 0, 3, 512);
+    x.fillStyle = "#f97316"; x.fillRect(0, 430, 512, 26);
+    for (let i = -40; i < 560; i += 48) { x.fillStyle = "#1f2937"; x.beginPath(); x.moveTo(i, 456); x.lineTo(i + 24, 456); x.lineTo(i + 44, 512); x.lineTo(i + 20, 512); x.closePath(); x.fill(); x.fillStyle = "#facc15"; x.beginPath(); x.moveTo(i + 24, 456); x.lineTo(i + 48, 456); x.lineTo(i + 68, 512); x.lineTo(i + 44, 512); x.closePath(); x.fill(); }
   } else if (kind === "csn") {
     x.fillStyle = "#06223a";
     x.fillRect(0, 0, 512, 512);
@@ -3097,6 +3109,11 @@ function floorCanvas(k, r) {
     x.strokeStyle = "rgba(5,150,105,.6)";
     x.lineWidth = 0.08 * sx;
     for (const rad of [3, 4.6]) { x.beginPath(); x.arc(X(-5.5), Z(51), rad * sx, 0, 7); x.stroke(); }
+  } else if (k === "bencana") {
+    x.fillStyle = "#cbd5e1"; x.fillRect(0, 0, c.width, c.height);
+    const tl = 1.0 * sx;
+    for (let i = 0; i < c.width; i += tl) for (let j = 0; j < c.height; j += tl) { x.fillStyle = (Math.floor(i / tl) + Math.floor(j / tl)) % 2 ? "#d4d4d8" : "#e4e4e7"; x.fillRect(i + 1, j + 1, tl - 2, tl - 2); }
+    x.fillStyle = "rgba(249,115,22,.55)"; x.fillRect(X(-37.8), Z(31.5), 1.0 * sx, (54.5 - 31.5) * sz); x.fillRect(X(-37.8), Z(31.5), (37.8 - 20) * sx, 1.0 * sz);
   } else if (k === "kelas1" || k === "kelas2") {
     // karpet kelas (abu kebiruan / hijau toska) + jalur depan
     x.fillStyle = k === "kelas1" ? "#3b4a63" : "#2f5650";
@@ -3447,7 +3464,7 @@ function buildWorld(scene2, quality) {
   };
   api.texFrom = texFrom;
   const wallC = {};
-  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat"]) wallC[k] = wallCanvas(k);
+  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat", "bencana"]) wallC[k] = wallCanvas(k);
   const wallMatCache = {};
   const wallMat = (k, len, h) => {
     const key = k + "|" + len.toFixed(1) + "|" + h;
@@ -3548,7 +3565,7 @@ function buildWorld(scene2, quality) {
     }
   }
   // lantai, plafon, lampu strip
-  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528", eportal: "#ffffff", kelas1: "#e8edf5", kelas2: "#e6f2f0", rapat: "#2a1d14" };
+  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528", eportal: "#ffffff", kelas1: "#e8edf5", kelas2: "#e6f2f0", rapat: "#2a1d14", bencana: "#e2e8f0" };
   for (const [k, r] of Object.entries(ROOMS)) {
     const w = r.x1 - r.x0, d = r.z1 - r.z0;
     const fc = floorCanvas(k, r);
@@ -3580,7 +3597,7 @@ function buildWorld(scene2, quality) {
     ce.rotation.x = Math.PI / 2;
     ce.position.y = r.h;
     scene2.add(ce);
-    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : k === "eportal" ? "#10b981" : k === "kelas1" ? "#93c5fd" : k === "kelas2" ? "#5eead4" : k === "rapat" ? "#fcd34d" : "#ffffff";
+    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : k === "eportal" ? "#10b981" : k === "kelas1" ? "#93c5fd" : k === "kelas2" ? "#5eead4" : k === "rapat" ? "#fcd34d" : k === "bencana" ? "#f97316" : "#ffffff";
     const sm = basicCol(stripCol);
     for (const [ax, az, bx, bz] of [[r.x0 + 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z0 + 0.5], [r.x0 + 0.5, r.z1 - 0.5, r.x1 - 0.5, r.z1 - 0.5], [r.x0 + 0.5, r.z0 + 0.5, r.x0 + 0.5, r.z1 - 0.5], [r.x1 - 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z1 - 0.5]]) {
       const len = Math.hypot(bx - ax, bz - az), led = new THREE.Mesh(new THREE.BoxGeometry(ax === bx ? 0.08 : len, 0.03, ax === bx ? len : 0.08), sm);
@@ -6693,7 +6710,7 @@ function closeAll() {
   if (drawMode)
     setDrawMode(false);
 }
-var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat"];
+var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat", "bencana"];
 function drawMap(c, opt = {}) {
   const x = c.getContext("2d"), W = c.width, H = c.height;
   const bx0 = -42, bx1 = 42, bz0 = -40, bz1 = 82;
@@ -7865,7 +7882,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, KP, KP_FLEET, KP_AI, kpStart, kpBattle, kpShoot, kpAiPick, kpFire, kpRandom, kpBoard, kpAlive, kpEnd, kpEnter, kpEnterAsk, kpExit, kpPlaceAt, ISN, isnaGive, prAwardBatu, __saVis: () => saPlatVis(), ADZ, adzanLock, adzanUnlock, VT, KLS, SB, TY, tyStart, tyEnter, tyEnterAsk, tySubmit, tyEnd, tyExit, TY_KATA, cht, chtTry, CHT, CV, IO, SV, IS, stgRestart, kwLose, svLose, isLose, cvLoseLife, ioLose, svBegin, isBegin, svGoStage, isGoStage, cvB1Start, ioBegin, kwBegin, chtFly, SA, SAG, SAP, SAE, SA_PL, SA_BANK, saEnter, saEnterAsk, saStart, saQuizAns, saExit, saOff, buildSeni, saBack, openCapaian, capMine, openProfile, mkRaptor, mkSauropod, mkTrike, mkPtero, KWF, KWR, kwfxTick, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, BC, BCS, BC_META, BC_ORDER, BC_VIDS, bcStart, bcEnter, bcGateAsk, bcAct, bcStep, bcToHub, bcDone, bcGrid, bcSbPick, SB, KP, KP_FLEET, KP_AI, kpStart, kpBattle, kpShoot, kpAiPick, kpFire, kpRandom, kpBoard, kpAlive, kpEnd, kpEnter, kpEnterAsk, kpExit, kpPlaceAt, ISN, isnaGive, prAwardBatu, __saVis: () => saPlatVis(), ADZ, adzanLock, adzanUnlock, VT, KLS, SB, TY, tyStart, tyEnter, tyEnterAsk, tySubmit, tyEnd, tyExit, TY_KATA, cht, chtTry, CHT, CV, IO, SV, IS, stgRestart, kwLose, svLose, isLose, cvLoseLife, ioLose, svBegin, isBegin, svGoStage, isGoStage, cvB1Start, ioBegin, kwBegin, chtFly, SA, SAG, SAP, SAE, SA_PL, SA_BANK, saEnter, saEnterAsk, saStart, saQuizAns, saExit, saOff, buildSeni, saBack, openCapaian, capMine, openProfile, mkRaptor, mkSauropod, mkTrike, mkPtero, KWF, KWR, kwfxTick, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
 }
 boot().catch((err) => {
   console.error(err);
@@ -9035,6 +9052,8 @@ function zoneTick(dt) {
       setTimeout(() => sayBubble(L.greet.replace("IT'ers", S.name), "npc_" + lab), 600);
       if (visitedLabs.size === 4) setTimeout(() => toast("🎉 Kamu sudah mengunjungi keempat lab! Saatnya mendaftar di meja resepsionis Atrium.", 6e3), 4e3);
     }
+  } else if (r === "bencana") {
+    toast("🧯 Ruang Simulasi Bencana — pilih gerbang simulasi di dinding barat; pemandu menunggumu di dalam.", 4500);
   } else if (r === "eportal") {
     toast("🌐 Ruang E-Portal UIKA — temui Virzha di gerbang portal untuk akses eportal.uika-bogor.ac.id (masih dalam pengembangan).", 4500);
   } else if (r === "kelas1" || r === "kelas2") {
@@ -10170,6 +10189,7 @@ function xHandleAct(act, hit, e) {
   if (typeof saAct === "function" && saAct(act, hit, e)) return;
   if (typeof tyAct === "function" && tyAct(act, hit, e)) return;
   if (typeof kpAct === "function" && kpAct(act, hit, e)) return;
+  if (typeof bcAct === "function" && bcAct(act, hit, e)) return;
   if (typeof kwAct === "function" && kwAct(act, hit, e)) return;
   if (typeof svAct === "function" && svAct(act, hit, e)) return;
   if (typeof isAct === "function" && isAct(act, hit, e)) return;
@@ -10306,6 +10326,8 @@ function buildExtras() {
     try { buildSeni(); } catch (err) { console.error("Dunia Seni & Desain gagal dibangun:", err); }
     try { buildKetik(); } catch (err) { console.error("Arena Mengetik gagal dibangun:", err); }
     try { buildKapal(); } catch (err) { console.error("Ruang Komando gagal dibangun:", err); }
+    try { buildBencanaHub(); } catch (err) { console.error("Ruang Simulasi Bencana gagal dibangun:", err); }
+    try { buildBencana(); } catch (err) { console.error("Simulasi bencana gagal dibangun:", err); }
     const hud = document.createElement("button");
     hud.id = "questHud"; hud.className = "pill"; hud.hidden = true; hud.onclick = showQuestCard;
     document.body.appendChild(hud);
@@ -12925,6 +12947,7 @@ function sbTools(B) {
     btn("⏮ Dari awal", () => sbYtCtl(B, "restart"));
     btn(B.muted ? "🔈 Nyalakan suara" : "🔇 Bisukan (perangkatku)", () => sbYtCtl(B, "mute"));
     btn("⛶ Perbesar", () => sbYtCtl(B, "big"));
+    if (B.playlist) { sep(); const lb2 = document.createElement("span"); lb2.className = "sb-pg"; lb2.textContent = "🎬 Pilih video:"; T2.appendChild(lb2); B.playlist.forEach((v, i) => { const b = btn(v.t, () => bcSbPick(B, i)); if (i === B.pl) b.classList.add("on"); }); }
     return;
   }
   const n = sbList(B).length;
@@ -13507,6 +13530,7 @@ function buildKelas() {
 
 // ---------- Patimah: waitress IT-Mart, pemandu ruangan di denah ----------
 var ROOM_INFO = {
+  bencana: ["Ruang Simulasi Bencana", "lewat pintu oranye di dinding barat Ruang E-Portal", "Ruang edukasi kebencanaan: 5 gerbang simulasi (kebakaran hutan, banjir bandang, tanah longsor, gempa bumi, gunung meletus) dengan pemandu Renda, Farhan, Adrin, Ridwan, dan Salsa, serta smart board video edukasi."],
   welcome: ["Ruang Sambutan", "titik awal kamu tiba", "Ada layar besar video sambutan, slideshow “Kenali Lab Peminatan”, galeri Kepala Program Studi, logo TI 3D, denah, headset VR, dan robot Haris yang hafal kurikulum OBE serta visi-misi.", /sambutan|awal|video|kaprodi|kepala program|\bdul\b|haris|kurikulum|obe/],
   atrium: ["Atrium Pendaftaran", "di utara Ruang Sambutan, pusat semua ruangan", "Sudut Al-Qur'an berkubah di sisi timur laut (baca 114 surah + terjemahan + murattal), meja resepsionis Kak Tias untuk mendaftar peminatan, layar persentase peminatan, papan pengumuman hasil final, kuis “Kasus ini cocok di lab mana?”, papan tulis, papan pesan, dan pita Hall of Fame.", /atrium|resepsionis|\btias\b|daftar|pendaftaran|pengumuman|kuis|papan tulis/],
   keris: ["Lab KERIS", "lewat pintu barat Atrium", "Lab AI, data mining, machine learning & computer vision — ada rak server berkedip, hologram jaringan saraf, video lab, dan robot Keri.", /keris|\bkeri\b|\bai\b|machine learning|kecerdasan/],
@@ -14984,6 +15008,7 @@ async function openCapaian() {
   <h3 class="cap-h">Lencana <span class="pill">${owned.length}/7</span></h3>
   ${capBadgeGrid(owned, true)}
   ${typeof batuGrid === "function" ? batuGrid() : ""}
+  ${typeof bcGrid === "function" ? bcGrid() : ""}
   <div class="kbox"><b>TAHAP 2 · LANTAI 2 IT-MART (${a.ch}/4)</b><ul class="qlist">${CH_LIST.map((C) => `<li>${chDone(C.id) ? "✅" : "⬜"} Tantangan ${C.no} · ${C.nama}${q.chal[C.id] && q.chal[C.id].best ? ` <span style="color:var(--mut)">(rekor ${q.chal[C.id].best} dtk)</span>` : ""}</li>`).join("")}<li>${q.badges.dasar ? "✅" : "⬜"} Lencana Pengetahuan Dasar dari Teh Fety</li></ul><b style="display:block;margin-top:8px">TAHAP 3 · GUA PUSTAKA</b><ul class="qlist"><li>${q.chal.pustaka ? "✅" : "⬜"} Lolos 3 babak Gua Pustaka${q.chal.pustaka && q.chal.pustaka.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.pustaka.best / 60)}:${String(q.chal.pustaka.best % 60).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.umum ? "✅" : "⬜"} Lencana Pengetahuan Umum dari Teh Puspa</li></ul><b style="display:block;margin-top:8px">TAHAP 4 · HANGGAR DRONE</b><ul class="qlist"><li>${q.chal.iot ? "✅" : "⬜"} Misi Smart Farm${q.chal.iot && q.chal.iot.best ? ` <span style="color:var(--mut)">(rekor ${q.chal.iot.best} dtk ${"⭐".repeat(q.chal.iot.bintang || 0)})</span>` : ""}</li><li>${q.badges.iot ? "✅" : "⬜"} Lencana IoT & Drone dari Kang Hendri & Kang Erwin</li></ul><b style="display:block;margin-top:8px">TAHAP 5 · KAWAH API</b><ul class="qlist"><li>${q.chal.jari ? "✅" : "⬜"} Taklukkan 4 babak Kawah Api${q.chal.jari && q.chal.jari.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.jari.best / 60)}:${String(Math.round(q.chal.jari.best % 60)).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.jari ? "✅" : "⬜"} Lencana Keterampilan Jari dari Kang Safar & Teh Berlin</li></ul><b style="display:block;margin-top:8px">TAHAP 6 · DUNIA SERVER LAB KERIS</b><ul class="qlist"><li>${q.chal.server ? "✅" : "⬜"} Selamatkan 6 babak Dunia Server${q.chal.server && q.chal.server.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.server.best / 60)}:${String(Math.round(q.chal.server.best % 60)).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.coding ? "✅" : "⬜"} Lencana Pengetahuan Coding dari Kang Sahid & Teh Gibtha</li></ul><b style="display:block;margin-top:8px">TAHAP 7 · GALERI ISLAM & LEMBAH GURUN</b><ul class="qlist"><li>${q.islam && q.islam.wudhu ? "✅" : "⬜"} Berwudhu di Hanggar Drone</li><li>${q.islam && q.islam.tanya ? "✅" : "⬜"} Menjawab 4 pertanyaan Teh Mila</li><li>${q.chal.islam ? "✅" : "⬜"} Tuntaskan 4 babak Lembah Gurun${q.chal.islam && q.chal.islam.best ? ` <span style="color:var(--mut)">(rekor ${Math.floor(q.chal.islam.best / 60)}:${String(Math.round(q.chal.islam.best % 60)).padStart(2, "0")})</span>` : ""}</li><li>${q.badges.islam ? "✅" : "⬜"} Lencana Pengetahuan Agama Islam dari Kang Fitrah & Teh Freza</li></ul><b style="display:block;margin-top:8px">TAHAP 8 · KERJASAMA TIM</b><ul class="qlist"><li>${["dasar", "umum", "iot", "jari", "coding", "islam"].every((id) => q.badges[id]) ? "✅" : "⬜"} Memiliki 6 lencana (tercantum di papan Taman Apresiasi)</li><li>${q.skinTim ? "✅" : "⬜"} Mencapai babak terakhir · skin Tentara Futuristik</li><li>${q.badges.tim ? "✅" : "⬜"} Lencana Kerjasama Tim dari Teh Dewi & Kang Eko${q.chal.tim && q.chal.tim.best ? ` <span style="color:var(--mut)">(${Math.floor(q.chal.tim.best / 60)}:${String(Math.round(q.chal.tim.best % 60)).padStart(2, "0")})</span>` : ""}</li><li>${q.blackCard ? "✅" : "⬜"} Black Card dari Kang Santo${q.blackCard ? ` <button class="ghost" id="capBlack" style="height:26px;margin-left:6px">Lihat</button>` : ""}</li></ul></div>
   <label class="cap-sw"><input type="checkbox" id="capPub"${a.p ? " checked" : ""}> Tampilkan ikon capaian di atas kepalaku untuk semua pemain</label>`);
   $("genCard").classList.add("wide");
@@ -21607,6 +21632,7 @@ var ND_GROUPS = [
   ["sambut", "🏛 Penyambut & Pemandu Lab", ["tia", "kuri", "vir", "keris", "git", "se", "csn"]],
   ["mart", "☕ IT-Mart & Kafe", ["rahman", "sit", "ivy", "jejen", "bayu", "aftaf", "nan", "haryani"]],
   ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azis", "eq", "azka", "guido"]],
+  ["bencana", "🧯 Pemandu Simulasi Bencana", ["renda", "farhan", "adrin", "ridwan", "salsa"]],
   ["lencana", "🏅 Pemberi Lencana & Hadiah", ["tama", "fety", "puspa", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "dewi", "eko"]]
 ];
 var ND = { q: "", g: "all" };
@@ -21633,7 +21659,7 @@ function ndSeed() {
 }
 function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka", "azis", "eq", "guido", "isna"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
 function ndGroupOf(id) { for (const [k, , ids] of ND_GROUPS) if (ids.includes(id)) return k; return "lain"; }
-var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)", m_kapal: "Ruang Komando (Portal Ring 1)" };
+var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)", m_kapal: "Ruang Komando (Portal Ring 1)", bencana: "Ruang Simulasi Bencana", b_api: "Simulasi Kebakaran Hutan", b_banjir: "Simulasi Banjir Bandang", b_longsor: "Simulasi Tanah Longsor", b_gempa: "Simulasi Gempa Bumi", b_gunung: "Simulasi Gunung Meletus" };
 function ndWhere(n) { const r = n.custom && n.custom.room || n.room; return ND_ZONE_NAME[r] || (ROOMS[r] && ROOMS[r].name) || (XROOMS[r] && (XROOMS[r].short || XROOMS[r].name)) || ""; }
 function openNpcDir() {
   hidePopups(); ndSeed();
@@ -21692,6 +21718,7 @@ function ndZonePrep(room, n) {
     if (room === "s_art" && typeof saVisitPrep === "function") { if (typeof TY !== "undefined" && TY.on) tyOff(); saVisitPrep(); return true; }
     if (room === "m_ketik" && typeof tyVisitPrep === "function") { if (typeof KP !== "undefined" && KP.on) kpOff(); tyVisitPrep(); return true; }
     if (room === "m_kapal" && typeof kpVisitPrep === "function") { kpVisitPrep(); return true; }
+    if (/^b_/.test(room) && typeof bcVisitPrep === "function") { if (typeof KP !== "undefined" && KP.on) kpOff(); bcVisitPrep(room.slice(2)); return true; }
   } catch (e) { console.error("persiapan kunjungan gagal:", e); }
   return false;
 }
@@ -22336,6 +22363,7 @@ function rrMakeCourse() {
     else if (kind === "log") { big = false; const len = RR_LANE * 3.1; const m = new THREE2.Mesh(new THREE2.CylinderGeometry(0.34, 0.38, len, 14), K.barkLog); m.rotation.z = Math.PI / 2; m.position.y = 0.36; g.add(m); for (const sx of [-1, 1]) { const e = new THREE2.Mesh(new THREE2.CircleGeometry(0.34, 14), K.endM); e.position.set(sx * len / 2, 0.36, 0); e.rotation.y = sx * Math.PI / 2; g.add(e); } for (let i = 0; i < 3; i++) { const st3 = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.1, 0.6, 6), K.barkLog); st3.position.set(-len / 2 + 1 + i * 2.6, 0.7, (R() - 0.5) * 0.3); st3.rotation.z = (R() - 0.5) * 0.8; g.add(st3); const ms = new THREE2.Mesh(new THREE2.SphereGeometry(0.28, 8, 6), K.moss); ms.scale.set(1.6, 0.35, 1); ms.position.set(-len / 2 + 2 + i * 2.4, 0.68, 0); g.add(ms); } g.position.set(p.x, 0, p.z); w = 99; }
     else if (kind === "lava") { big = false; const sh = new THREE2.Shape(), L2 = RR_LANE * 3.1; sh.moveTo(-L2 / 2, -0.25); for (let i = 0; i <= 12; i++) sh.lineTo(-L2 / 2 + (i / 12) * L2, (i % 2 ? 0.55 : 0.2) * (0.8 + R() * 0.4)); for (let i = 12; i >= 0; i--) sh.lineTo(-L2 / 2 + (i / 12) * L2, -(i % 2 ? 0.45 : 0.25) * (0.8 + R() * 0.4)); const m = new THREE2.Mesh(new THREE2.ShapeGeometry(sh), K.lava); m.rotation.x = -Math.PI / 2; m.position.y = 0.05; g.add(m); const cr = new THREE2.Mesh(new THREE2.PlaneGeometry(L2 + 1, 1.8), K.lavaCrust); cr.rotation.x = -Math.PI / 2; cr.position.y = 0.035; g.add(cr); const glow = world.glowSprite("#ff6a00", 3, 0.5); glow.position.y = 0.4; g.add(glow); g.position.set(p.x, 0, p.z); w = 99; anim = () => { glow.material.opacity = 0.35 + Math.sin(t * 5) * 0.15; }; }
     else if (kind === "mud") { big = false; const m = new THREE2.Mesh(new THREE2.CircleGeometry(1.25, 18), K.mud); m.rotation.x = -Math.PI / 2; m.position.y = 0.04; m.scale.y = 1.4; g.add(m); const bubs = []; for (let i = 0; i < 6; i++) { const b = new THREE2.Mesh(new THREE2.SphereGeometry(0.12, 8, 6), K.mudB); b.position.set((R() - 0.5) * 1.6, 0.04, (R() - 0.5) * 2.2); g.add(b); bubs.push({ b, ph: R() * 6 }); } anim = () => { for (const B of bubs) { const k = (Math.sin(t * 2.2 + B.ph) + 1) / 2; B.b.scale.setScalar(0.2 + k); B.b.position.y = 0.02 + k * 0.08; } }; }
+    if (kind === "log" || kind === "lava") w = 99; // melintang di ketiga jalur
     scene.add(g); PR.own.add(g);
     const o = { s, lane, kind, big, w, m: g, hitBy: new Set(), anim };
     if (kind === "tri") { o.l0 = lane; o.l1 = lane === 1 ? -1 : lane === -1 ? 1 : prPick([-1, 1]); o.lane = o.l0; }
@@ -22346,7 +22374,8 @@ function rrMakeCourse() {
     if (kind === "speed") { const m = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.35), new THREE2.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xf59e0b, emissiveIntensity: 1, roughness: 0.2 })); m.scale.y = 1.5; g.add(m); g.add(world.glowSprite("#fbbf24", 2.4, 0.8)); }
     else { const m = new THREE2.Mesh(new THREE2.SphereGeometry(0.33, 14, 10), new THREE2.MeshStandardMaterial({ color: 0xbfdbfe, emissive: 0x60a5fa, emissiveIntensity: 0.6, roughness: 0.3 })); m.scale.y = 1.3; g.add(m); g.add(world.glowSprite("#60a5fa", 2.4, 0.8)); }
     scene.add(g); PR.own.add(g);
-    RR.items.push({ s, lane, kind, m: g, taken: false });
+    const mats = []; g.traverse((o) => { if (o.material) { o.material.transparent = true; mats.push(o.material); } });
+    RR.items.push({ s, lane, kind, m: g, by: new Set(), mats, dim: false });
   };
   let s = 70;
   while (s < D - 45) {
@@ -22397,7 +22426,7 @@ function rrHit(r, o) {
   if (o.big) {
     r.v *= 0.25; r.slowT = 1.4; r.invT = 1.6;
     if (r.me) { if (!cht("god")) r.lives--; if (typeof xShake === "function") xShake(0.45, 0.08); if (typeof cvFlash === "function") cvFlash("rgba(255,60,20,.35)"); toast(`💥 Menabrak ${o.kind === "rock" ? "batu" : o.kind === "foot" ? "kaki dinosaurus" : o.kind === "tri" ? "triceratops" : "pterosaurus"}! Nyawa −1`, 2200); if (r.lives <= 0) rrEnd(false, "Nyawamu habis di lintasan."); }
-  } else { r.slowT = 1.2; r.invT = 0.8; if (r.me) { toast(o.kind === "mud" ? "🟤 Terjebak lumpur — melambat!" : "😵 Tersandung — melambat!", 1600); PRS.thump(0.18); } }
+  } else { r.slowT = 1.2; r.invT = 0.8; if (r.me) { toast(o.kind === "mud" ? "🟤 Terjebak lumpur — melambat!" : o.kind === "lava" ? "🔥 Menginjak lava — melambat! Loncati lain kali." : o.kind === "log" ? "🪵 Tersandung batang kayu — melambat! Loncati lain kali." : "😵 Tersandung — melambat!", 1600); PRS.thump(0.18); } }
 }
 function rrStep(r, rap, dt, aiFn) {
   if (r.done) return rrPlace(r, rap, dt);
@@ -22409,13 +22438,14 @@ function rrStep(r, rap, dt, aiFn) {
   if (r.slowT > 0) { r.slowT -= dt; target *= 0.5; }
   r.invT = Math.max(0, r.invT - dt);
   r.v += (target - r.v) * Math.min(1, dt * (r.v < target ? 1.6 : 3));
+  const s0 = r.s;
   r.s += r.v * dt;
   if (r.y > 0 || r.vy > 0) { r.vy -= 20 * dt; r.y += r.vy * dt; if (r.y <= 0) { r.y = 0; r.vy = 0; if (r.me) PRS.thump(0.1); } }
   // tabrakan
   for (const o of RR.obs) {
     if (o.hitBy.has(r)) continue;
-    const ds = r.s - o.s; if (ds < -0.9 || ds > 0.9) continue;
-    const ol = o.kind === "tri" ? o.lane : o.lane;
+    if (o.s > r.s + 0.9 || o.s < s0 - 0.9) continue; // tersapu: tak ada yang terlewat walau frame melambat
+    const ol = o.lane;
     const laneHit = o.w > 50 || Math.abs(r.lx - ol) < 0.62;
     if (!laneHit) continue;
     if (o.kind === "ptero" && !(o.dive > 0.6)) continue;
@@ -22423,12 +22453,21 @@ function rrStep(r, rap, dt, aiFn) {
     if (o.kind === "mud" && r.y > 0.7) { o.hitBy.add(r); continue; }
     o.hitBy.add(r); rrHit(r, o);
   }
+  // item: setiap pembalap punya salinannya sendiri (Azis tidak "mencuri" booster pemain)
   for (const it of RR.items) {
-    if (it.taken) continue;
-    const ds = r.s - it.s; if (ds < -1 || ds > 1) continue;
-    if (Math.abs(r.lx - it.lane) > 0.6) continue;
-    it.taken = true; it.m.visible = false;
-    if (it.kind === "speed") { r.boostT = 3; if (r.me) { toast("⚡ Booster! Raptor melesat!", 1600); PRS.boost(); } else sayBubble("Hehe, booster-ku!", "npc_azis"); }
+    if (it.by.has(r)) continue;
+    if (it.s > r.s + 1.2 || it.s < s0 - 1.2) continue;
+    if (Math.abs(r.lx - it.lane) > 0.8 && r.lane !== it.lane) continue;
+    if (Math.abs(r.lx - it.lane) > 0.95) continue;
+    const busy = it.kind === "speed" ? r.boostT > 0 : r.shield;
+    if (busy) { // efek sejenis masih aktif → tidak bisa diambil
+      it.by.add(r);
+      if (r.me) toast(it.kind === "speed" ? "⚡ Booster masih aktif — booster berikutnya baru bisa diambil setelah efeknya habis." : "🛡 Perisai masih terpasang — perisai baru bisa diambil setelah yang lama terpakai.", 2200);
+      continue;
+    }
+    it.by.add(r);
+    if (r.me) it.m.visible = false;
+    if (it.kind === "speed") { r.boostT = 3; if (r.me) { toast("⚡ Booster! Raptor melesat 3 detik!", 1600); PRS.boost(); } else sayBubble("Hehe, booster-ku!", "npc_azis"); }
     else { r.shield = true; if (r.me) { toast("🛡 Perisai cangkang telur aktif (menahan 1 tabrakan).", 2000); PRS.boost(); } }
   }
   if (r.s >= RR.D) { r.done = true; r.s = RR.D; }
@@ -22441,7 +22480,7 @@ function rrAi(r, dt) {
   if (!r.think || r.think <= 0) {
     r.think = 0.18;
     if (!laneFree(r.lane, r.s, r.s + look)) { const c = [-1, 0, 1].filter((l) => l !== r.lane && Math.abs(l - r.lane) === 1 && laneFree(l, r.s - 2, r.s + look)); if (c.length && Math.random() < 0.93) r.lane = prPick(c); }
-    else { const it = RR.items.find((i) => !i.taken && i.s > r.s + 4 && i.s < r.s + 30 && Math.abs(i.lane - r.lane) === 1 && laneFree(i.lane, r.s - 2, i.s + 6)); if (it && Math.random() < 0.7) r.lane = it.lane; }
+    else { const it = RR.items.find((i) => !i.by.has(r) && !(i.kind === "speed" ? r.boostT > 0 : r.shield) && i.s > r.s + 4 && i.s < r.s + 30 && Math.abs(i.lane - r.lane) === 1 && laneFree(i.lane, r.s - 2, i.s + 6)); if (it && Math.random() < 0.7) r.lane = it.lane; }
   } else r.think -= dt;
   // loncat
   const nx = RR.obs.find((o) => !o.big && o.kind !== "mud" && o.s > r.s && o.s - r.s < r.v * 0.36 + 0.6 && (o.w > 50 || Math.abs(o.lane - r.lane) < 0.7));
@@ -22459,7 +22498,7 @@ function rrTick(dt) {
     if (o.kind === "ptero") { const d = o.s - Math.min(RR.me.s, RR.az.s); const near = Math.min(...[RR.me, RR.az].map((r) => o.s - r.s).filter((v) => v > -3)); o.dive = near < 30 ? Math.min(1, (30 - near) / 18) : 0; const pt = o.m.userData.pt; pt.position.y = 9 - o.dive * 7.6; pt.rotation.z = Math.sin(t * 6) * 0.2; o.m.userData.sh.material.opacity = 0.2 + o.dive * 0.45; void d; }
     if (o.kind === "tri") { const near = o.s - front; const u = near < 34 && near > 4 ? Math.min(1, (34 - near) / 22) : near <= 4 ? 1 : 0; o.lane = o.l0 + (o.l1 - o.l0) * u; const p = rtAt(o.s); o.m.position.set(p.x + p.rx * o.lane * RR_LANE, 0, p.z + p.rz * o.lane * RR_LANE); o.m.children.forEach((c) => { c.position.y += Math.sin(t * 8) * 0.002; }); }
   }
-  for (const it of RR.items) if (!it.taken) { it.m.rotation.y += dt * 2; it.m.position.y = 1.2 + Math.sin(t * 3 + it.s) * 0.2; }
+  for (const it of RR.items) if (it.m.visible) { it.m.rotation.y += dt * 2; it.m.position.y = 1.2 + Math.sin(t * 3 + it.s) * 0.2; }
   if (RR.cd) { rrPlace(RR.me, RR.meRap, dt); rrPlace(RR.az, RR.azRap, dt); rrPutRider(); return; }
   if (RR.res) { rrPutRider(); return; }
   rrStep(RR.me, RR.meRap, dt, null);
@@ -22470,11 +22509,20 @@ function rrTick(dt) {
   if (Math.floor(performance.now() / 250) !== RR.hudT && !RR.res) {
     RR.hudT = Math.floor(performance.now() / 250);
     const lap = Math.min(2, Math.floor(RR.me.s / RT.L) + 1), gap = RR.me.s - RR.az.s, tm = (performance.now() - RR.t0) / 1000;
-    prHudSet(`🦖 RAPTOR RUN · Putaran ${lap}/2 · ⏱ ${Math.floor(tm / 60)}:${String(Math.floor(tm % 60)).padStart(2, "0")}`, RR.me.lives, `${gap >= 0 ? `Unggul ${gap.toFixed(0)} m` : `Tertinggal ${(-gap).toFixed(0)} m`} dari Azis · ${Math.round(RR.me.v * 3.6)} km/j${RR.me.boostT > 0 ? " · ⚡" : ""}${RR.me.shield ? " · 🛡" : ""}`, RR.me.s / RR.D, RR.az.s / RR.D);
+    prHudSet(`🦖 RAPTOR RUN · Putaran ${lap}/2 · ⏱ ${Math.floor(tm / 60)}:${String(Math.floor(tm % 60)).padStart(2, "0")}`, RR.me.lives, `${gap >= 0 ? `Unggul ${gap.toFixed(0)} m` : `Tertinggal ${(-gap).toFixed(0)} m`} dari Azis · ${Math.round(RR.me.v * 3.6)} km/j${RR.me.boostT > 0 ? ` · ⚡ ${RR.me.boostT.toFixed(1)} dtk` : ""}${RR.me.shield ? " · 🛡" : ""}`, RR.me.s / RR.D, RR.az.s / RR.D);
+  }
+}
+function rrItemDim() {
+  const m = RR.me; if (!m) return;
+  for (const it of RR.items) {
+    if (it.by.has(m) || it.s < m.s - 2 || it.s > m.s + 60) continue;
+    const dim = it.kind === "speed" ? m.boostT > 0 : m.shield;
+    if (dim !== it.dim) { it.dim = dim; for (const mt of it.mats) mt.opacity = dim ? 0.25 : 1; }
   }
 }
 function rrPutRider() {
   const m = RR.me, rap = RR.meRap;
+  rrItemDim();
   P.x = rap.position.x; P.z = rap.position.z; P.jfx = true; P.jy = m.y + 1.84; P.jcamK = 0.7;
   // kamera bebas: seret mouse/layar memutar (offset tersimpan), gulir = jarak; ←/→ tetap untuk pindah jalur
   if (RR.camLast !== undefined && !(keys.ArrowLeft || keys.ArrowRight || keys.KeyQ || keys.KeyE)) { const d = P.camYaw - RR.camLast; RR.camOff = Math.atan2(Math.sin(RR.camOff + Math.atan2(Math.sin(d), Math.cos(d))), Math.cos(RR.camOff + Math.atan2(Math.sin(d), Math.cos(d)))); }
@@ -25008,12 +25056,1031 @@ function kpAct(act) {
 
 
 // =====================================================================
+// src/ext_bencana.js — RUANG SIMULASI BENCANA (barat Ruang E-Portal)
+//  • Ruang utama kecil berisi 5 gerbang holodeck. Tiap gerbang membawa
+//    pemain ke lingkungan simulasi sendiri dengan pemandu:
+//      🔥 Kebakaran Hutan (Renda) · 🌊 Banjir Bandang (Farhan)
+//      ⛰ Tanah Longsor (Adrin) · 🏚 Gempa Bumi (Ridwan)
+//      🌋 Gunung Meletus (Salsa)
+//  • Simulasi berisi langkah-langkah mitigasi. Tindakan yang tidak sesuai
+//    instruksi penyelamatan = simulasi GAGAL dan harus diulang dari awal.
+//  • Lulus → sertifikat; lulus kelimanya → status "Siaga Bencana" di Capaian.
+// =====================================================================
+var BC_HUB = { x0: -40, x1: -20, z0: 30, z1: 56 };
+var BCS = {}; // definisi simulasi per kunci (diisi ext_bencana_sims.js)
+var BC_ORDER = ["api", "banjir", "longsor", "gempa", "gunung"];
+var BC_META = {
+  api: { nm: "Kebakaran Hutan", icon: "🔥", col: "#f97316", npc: "renda", npcNm: "Renda", cx: 750, cz: -70 },
+  banjir: { nm: "Banjir Bandang", icon: "🌊", col: "#0ea5e9", npc: "farhan", npcNm: "Farhan", cx: 750, cz: 50 },
+  longsor: { nm: "Tanah Longsor", icon: "⛰", col: "#a16207", npc: "adrin", npcNm: "Adrin", cx: 750, cz: 170 },
+  gempa: { nm: "Gempa Bumi", icon: "🏚", col: "#eab308", npc: "ridwan", npcNm: "Ridwan", cx: 870, cz: -70 },
+  gunung: { nm: "Gunung Meletus", icon: "🌋", col: "#ef4444", npc: "salsa", npcNm: "Salsa", cx: 870, cz: 50 }
+};
+for (const k of BC_ORDER) { const M = BC_META[k]; XROOMS["b_" + k] = { x0: M.cx - 50, x1: M.cx + 50, z0: M.cz - 50, z1: M.cz + 50, h: 30, name: `Simulasi ${M.nm} · Ruang Simulasi Bencana`, short: `Sim. ${M.nm}` }; }
+var BC = { at: null, grace: 0, arrive: null, hidden: null, fogged: false, built: false, run: null, roots: {}, ownW: new Set(), anims: [], objs: {}, hubAskT: 0 };
+var bcLocal = (k, x, z) => { const M = BC_META[k]; return [x - M.cx, z - M.cz]; };
+function bcZoneAt(x, z) { for (const k of BC_ORDER) { const M = BC_META[k]; if (Math.abs(x - M.cx) < 50 && Math.abs(z - M.cz) < 50) return k; } return null; }
+// tinggi permukaan tanah di dunia simulasi (dipakai groundH)
+function bcGround(x, z) { const k = bcZoneAt(x, z); if (!k || !BCS[k] || !BCS[k].ground) return null; const [lx, lz] = bcLocal(k, x, z); return BCS[k].ground(lx, lz); }
+var bcDone = () => { const q = Q(); q.bencana = q.bencana || {}; return q.bencana; };
+
+// ---------- suara ----------
+var BCSND = (() => {
+  let ac = null, out = null;
+  const ctx = () => { if (!ac) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ac = new AC(); out = ac.createGain(); out.gain.value = 0.5; out.connect(ac.destination); } if (ac.state === "suspended") ac.resume().catch(() => {}); return ac; };
+  const tone = (f, dur, type, vol, f2) => { if (!ctx()) return; const now = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = type || "sine"; o.frequency.setValueAtTime(f, now); if (f2) o.frequency.linearRampToValueAtTime(f2, now + dur); g.gain.setValueAtTime(vol || 0.05, now); g.gain.exponentialRampToValueAtTime(0.0001, now + dur); o.connect(g); g.connect(out); o.start(now); o.stop(now + dur + 0.02); };
+  const noise = (dur, f0, vol) => { if (!ctx()) return; const now = ac.currentTime, n = Math.floor(ac.sampleRate * dur), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n); const s = ac.createBufferSource(); s.buffer = b; const fl = ac.createBiquadFilter(); fl.type = "lowpass"; fl.frequency.value = f0; const g = ac.createGain(); g.gain.value = vol; s.connect(fl); fl.connect(g); g.connect(out); s.start(now); };
+  return {
+    ok() { tone(660, 0.12, "triangle", 0.06); setTimeout(() => tone(990, 0.16, "triangle", 0.06), 110); },
+    bad() { tone(200, 0.4, "sawtooth", 0.06, 90); },
+    siren() { for (let i = 0; i < 4; i++) setTimeout(() => tone(620, 0.55, "sawtooth", 0.035, 940), i * 600); },
+    kentong() { for (let i = 0; i < 6; i++) setTimeout(() => tone(330, 0.12, "square", 0.06), i * 180); },
+    rumble(d) { noise(d || 2.5, 160, 0.6); },
+    boom() { noise(1.8, 300, 0.9); tone(55, 1.2, "sine", 0.2, 30); },
+    fire() { noise(1.2, 1800, 0.12); }
+  };
+})();
+
+// ---------- gaya ----------
+(() => {
+  const st = document.createElement("style");
+  st.textContent = `
+#bcHud{position:fixed;z-index:30;color:#fff}
+#bcHud .cvh-top{color:#fdba74}
+#bcHud .bc-bar{height:7px;background:#3b2a1d;border-radius:5px;overflow:hidden}
+#bcHud .bc-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f97316,#22c55e);transition:width .3s}
+#bcHud .bc-warn{color:#fca5a5}
+.bc-card h2{margin:4px 0 6px}
+.bc-steps{margin:8px 0 4px;padding-left:20px;text-align:left;line-height:1.45}
+.bc-steps li{margin:3px 0}
+.bc-steps li.done{color:#86efac}
+.bc-lesson{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.45);border-radius:12px;padding:8px 12px;text-align:left;margin:8px 0}
+.bc-why{background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.5);border-radius:12px;padding:8px 12px;text-align:left;margin:8px 0}
+.bc-opts{display:grid;gap:8px;margin-top:10px}
+.bc-opts button{text-align:left;white-space:normal;line-height:1.35;padding:10px 12px;height:auto}
+.bc-cert{border:3px double #facc15;border-radius:16px;padding:14px;background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(255,255,255,.03))}
+.bc-cert small{letter-spacing:.14em;color:#fde68a;font-weight:700}
+.bc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0 10px}
+.bc-grid div{border-radius:12px;padding:8px 4px;text-align:center;background:rgba(255,255,255,.05);font-size:11px;line-height:1.25;opacity:.55}
+.bc-grid div.on{opacity:1;background:rgba(34,197,94,.16);outline:1px solid rgba(34,197,94,.5)}
+.bc-grid b{display:block;font-size:22px}
+#bcShake{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:40;padding:12px 22px;border-radius:16px;background:rgba(127,29,29,.9);border:2px solid #fca5a5;color:#fff;font:800 18px/1.3 Poppins,sans-serif;text-align:center;pointer-events:none;animation:bcPulse .5s ease-in-out infinite alternate}
+@keyframes bcPulse{to{transform:translate(-50%,-50%) scale(1.06)}}
+`;
+  document.head.appendChild(st);
+})();
+
+// =====================================================================
+// HUD & ALUR SIMULASI
+// =====================================================================
+function bcHud(show) {
+  let el = $("bcHud");
+  if (!show) { el?.remove(); return; }
+  if (!el) {
+    el = document.createElement("div"); el.id = "bcHud";
+    el.innerHTML = `<div class="cvh-top"><b id="bcHB"></b><span id="bcHS"></span></div><div id="bcHT" class="cvh-txt"></div><div class="bc-bar"><i id="bcHBar"></i></div><div class="cvh-btn"><button class="ghost" id="bcHMit">📋 Langkah mitigasi</button><button class="ghost" id="bcHOut">⟲ Keluar</button></div>`;
+    document.body.appendChild(el);
+    $("bcHMit").onclick = () => { if (BC.at) bcMitigasiCard(BC.at); };
+    $("bcHOut").onclick = () => { if (BC.run && !BC.run.end && !confirm("Keluar dari ruang simulasi? Simulasi yang sedang berjalan akan dihentikan.")) return; bcToHub(); };
+  }
+}
+function bcHudUpd(extra) {
+  if (!BC.at) return; bcHud(true);
+  const k = BC.at, M = BC_META[k], S2 = BCS[k], R = BC.run;
+  $("bcHB").textContent = `${M.icon} SIMULASI ${M.nm.toUpperCase()}${R ? ` · Langkah ${Math.min(R.step + 1, S2.steps.length)}/${S2.steps.length}` : ""}`;
+  $("bcHS").textContent = R && R.timer ? R.timer : "";
+  $("bcHT").innerHTML = "";
+  const txt = R ? (R.end === "win" ? "✅ Simulasi selesai — kamu selamat!" : R.end === "fail" ? "❌ Simulasi gagal." : S2.steps[R.step]) : `Bicara dengan ${M.npcNm} untuk memulai simulasi. Ikuti setiap instruksi penyelamatan — tindakan yang salah membuat simulasi gagal.`;
+  $("bcHT").textContent = txt + (extra ? " " + extra : "");
+  $("bcHBar").style.width = (R ? Math.min(1, R.step / S2.steps.length) * 100 : 0) + "%";
+}
+function bcMitigasiCard(k) {
+  const M = BC_META[k], S2 = BCS[k], R = BC.run && BC.run.key === k ? BC.run : null;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bc-card"><h2>${M.icon} Mitigasi ${M.nm}</h2>
+  <p style="font-size:13px;color:var(--mut)">Langkah penyelamatan dalam simulasi (lakukan berurutan):</p>
+  <ol class="bc-steps">${S2.steps.map((s, i) => `<li class="${R && i < R.step ? "done" : ""}">${s}</li>`).join("")}</ol>
+  <h3 style="margin:10px 0 4px;font-size:15px">📚 Pencegahan & kesiapsiagaan</h3><ul class="bc-steps">${S2.edu.map((s) => `<li>${s}</li>`).join("")}</ul>
+  <p style="font-size:12px;color:var(--mut)">Rujukan umum: panduan kesiapsiagaan BNPB/BPBD. Nomor darurat 112.</p></div>`);
+}
+function bcStart(k) {
+  if (!BCS[k]) return;
+  hidePopups(); if (typeof closeGen === "function") closeGen();
+  $("bcShake")?.remove(); P.sit = false; $("btnSit")?.classList.remove("on");
+  const S2 = BCS[k], sp = S2.spawn, M = BC_META[k];
+  BC.run = { key: k, step: 0, t0: performance.now(), f: {}, end: null, timer: "" };
+  xTeleport(M.cx + sp.x, M.cz + sp.z, sp.yaw); BC.grace = performance.now() + 2000;
+  try { S2.reset && S2.reset(BC.run); } catch (e) { console.error(e); }
+  try { S2.start && S2.start(BC.run); } catch (e) { console.error(e); }
+  bcHudUpd(); bcMarkUpd();
+  toast(`${M.icon} Simulasi ${M.nm} dimulai! Ikuti instruksi di panel kanan atas.`, 4000);
+}
+function bcStep(R, n, msg) {
+  if (!R || R !== BC.run || R.end) return;
+  if (n !== R.step) return;
+  R.step = n + 1; BCSND.ok();
+  if (msg) toast("✅ " + msg, 3500);
+  bcHudUpd(); bcMarkUpd();
+  if (R.step >= BCS[R.key].steps.length) bcWin(R);
+}
+// pemain mencoba tindakan langkah lain → ingatkan urutan (bukan gagal)
+function bcOrder(R) { toast(`☝ Ikuti urutan instruksi: ${BCS[R.key].steps[R.step]}`, 3800); }
+function bcFail(R, why, lesson) {
+  if (!R || R !== BC.run || R.end) return;
+  R.end = "fail"; BCSND.bad(); $("bcShake")?.remove();
+  if (typeof xShake === "function") xShake(0.4, 0.06); if (typeof cvFlash === "function") cvFlash("rgba(185,28,28,.45)");
+  bcHudUpd(); bcMarkUpd();
+  const M = BC_META[R.key];
+  setTimeout(() => {
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bc-card" style="text-align:center"><div style="font-size:50px">❌</div><h2>Simulasi gagal</h2>
+    <div class="bc-why" id="bcWhy"></div><div class="bc-lesson" id="bcLes"></div>
+    <div class="rowf"><button class="btn" id="bcAgain">🔁 Ulangi dari awal</button><button class="ghost" id="bcMit2">📋 Langkah mitigasi</button></div></div>`);
+    $("bcWhy").textContent = "⚠ " + why; $("bcLes").textContent = "✅ Yang benar: " + lesson;
+    $("bcAgain").onclick = () => { closeGen(); bcStart(R.key); };
+    $("bcMit2").onclick = () => bcMitigasiCard(R.key);
+    if (NPCS[M.npc]) sayBubble("Tidak apa-apa, ini latihan. Ayo ulangi dengan langkah yang benar!", "npc_" + M.npc);
+  }, 900);
+}
+function bcWin(R) {
+  if (R.end) return; R.end = "win";
+  const k = R.key, M = BC_META[k], D = bcDone(), first = !D[k];
+  D[k] = { t: (D[k] && D[k].t) || Date.now(), n: ((D[k] && D[k].n) || 0) + 1, dt: Math.round((performance.now() - R.t0) / 1000) }; saveQ();
+  if (typeof capPresDirty === "function") capPresDirty();
+  if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+  bcHudUpd(); bcMarkUpd(); bcHubBoard();
+  const all = BC_ORDER.every((x) => D[x]);
+  setTimeout(() => {
+    genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bc-card bc-cert" style="text-align:center"><small>SERTIFIKAT SIMULASI</small><div style="font-size:52px">${M.icon}</div>
+    <h2>Lulus Simulasi ${M.nm}</h2><p id="bcCertNm"></p>
+    <ol class="bc-steps">${BCS[k].steps.map((s) => `<li class="done">${s}</li>`).join("")}</ol>
+    ${all ? `<p><b>🏅 Kelima simulasi lulus — status <span style="color:#86efac">SIAGA BENCANA</span> tercatat di Capaian!</b></p>` : `<p style="font-size:13px">Lulus ${BC_ORDER.filter((x) => D[x]).length} dari 5 simulasi. Selesaikan semuanya untuk status <b>Siaga Bencana</b>.</p>`}
+    <div class="rowf"><button class="btn" id="bcHubB">🏠 Kembali ke ruang utama</button><button class="ghost" id="bcAgain2">🔁 Ulangi simulasi</button></div></div>`);
+    $("bcCertNm").textContent = `Diberikan kepada ${S.name} karena berhasil menjalankan langkah-langkah penyelamatan diri dengan benar.`;
+    $("bcHubB").onclick = () => { closeGen(); bcToHub(); };
+    $("bcAgain2").onclick = () => { closeGen(); bcStart(k); };
+    if (first && all) toast("🏅 Status SIAGA BENCANA diraih!", 6000);
+  }, 1200);
+  if (NPCS[M.npc]) sayBubble(`Hebat, ${S.name}! Kamu selamat karena mengikuti langkah yang benar.`, "npc_" + M.npc);
+}
+// pilihan keputusan: opts = [[teks, benar?, alasan salah, pelajaran]]
+function bcAsk(R, title, q, opts, onOk) {
+  if (!R || R.end) return;
+  const sh = opts.map((o, i) => [o, i]).sort(() => Math.random() - 0.5);
+  genCard(`<div class="bc-card"><h2>${title}</h2><p id="bcQ"></p><div class="bc-opts" id="bcO"></div></div>`);
+  $("bcQ").textContent = q;
+  for (const [o] of sh) {
+    const b = document.createElement("button"); b.className = "ghost"; b.textContent = o[0];
+    b.onclick = () => { closeGen(); if (o[1]) onOk(); else bcFail(R, o[2], o[3]); };
+    $("bcO").appendChild(b);
+  }
+}
+
+// =====================================================================
+// MASUK / KELUAR DUNIA SIMULASI
+// =====================================================================
+function bcGateAsk(k) {
+  const M = BC_META[k], D = bcDone();
+  hidePopups();
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bc-card"><h2>${M.icon} Ruang Simulasi ${M.nm}</h2>
+  <p>Pemandu: <b>${M.npcNm}</b>. Di dalam, kamu akan berlatih langkah penyelamatan diri saat terjadi ${M.nm.toLowerCase()}. Tindakan yang tidak sesuai instruksi membuat simulasi gagal dan harus diulang dari awal.</p>
+  ${D[k] ? `<p style="color:#86efac">✅ Kamu sudah lulus simulasi ini.</p>` : ""}
+  <div class="rowf"><button class="btn" id="bcIn">${M.icon} Masuk</button><button class="ghost" id="bcMit3">📋 Langkah mitigasi</button><button class="ghost" id="bcNo">Nanti saja</button></div></div>`);
+  $("bcIn").onclick = () => { closeGen(); bcEnter(k); };
+  $("bcMit3").onclick = () => bcMitigasiCard(k);
+  $("bcNo").onclick = () => closeGen();
+}
+function bcEnter(k) {
+  try { buildBencana(); } catch (e) { console.error("Ruang simulasi gagal dibangun:", e); }
+  const M = BC_META[k], sp = BCS[k].spawn;
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  setTimeout(() => {
+    BC.run = null; BC.at = k; BC.grace = performance.now() + 3500; BC.arrive = { x: M.cx + sp.x, z: M.cz + sp.z, t0: performance.now() };
+    try { BCS[k].reset && BCS[k].reset(null); } catch (e) { console.error(e); }
+    xTeleport(M.cx + sp.x, M.cz + sp.z, sp.yaw);
+    bcHud(true); bcHudUpd(); bcMarkUpd();
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => toast(`${M.icon} Selamat datang di Ruang Simulasi ${M.nm}. ${M.npcNm} menunggumu.`, 4500), 1300);
+  }, 650);
+}
+function bcVisitPrep(k) { if (BC.at !== k) { try { buildBencana(); } catch (e) { console.error(e); } BC.run = null; BC.at = k; BC.grace = performance.now() + 3500; try { BCS[k].reset && BCS[k].reset(null); } catch { /* */ } bcHud(true); bcHudUpd(); } }
+function bcOff() { BC.at = null; BC.run = null; BC.grace = performance.now() + 3500; $("bcShake")?.remove(); bcHud(false); bcMarkUpd(); }
+function bcToHub() { bcOff(); xTeleport(-23.5, 33.5, -Math.PI / 2); toast("🏠 Kembali ke Ruang Simulasi Bencana.", 2500); }
+function bcIsolate(on) {
+  if (on === !!BC.hidden) return;
+  if (on) {
+    const keep = new Set([avatar, camera, typeof ISN !== "undefined" ? ISN.g : null].filter(Boolean)); for (const r of Object.values(BC.roots)) keep.add(r); for (const r of remotes.values()) keep.add(r.av);
+    BC.hidden = [];
+    for (const o of scene.children) if (o.visible && !keep.has(o) && !o.isLight && !o.isCamera) { o.visible = false; BC.hidden.push(o); }
+    for (const o of world.walls.children) if (o.visible && !BC.ownW.has(o)) { o.visible = false; BC.hidden.push(o); }
+  } else { for (const o of BC.hidden) o.visible = true; BC.hidden = null; }
+}
+function bcTickAll(dt) {
+  const now = performance.now(), zk = bcZoneAt(P.x, P.z), grace = now < BC.grace;
+  for (const k of BC_ORDER) if (BC.roots[k]) BC.roots[k].visible = zk === k;
+  if (BC.arrive && (Math.hypot(P.x - BC.arrive.x, P.z - BC.arrive.z) < 2 || now - BC.arrive.t0 > 6000)) BC.arrive = null;
+  bcIsolate(!!zk);
+  const S2 = zk ? BCS[zk] : null;
+  if (zk) { const fg = S2.fog || [0.6, 0.7, 0.75, 0.01]; scene.fog.color.setRGB(fg[0], fg[1], fg[2]); scene.fog.density = fg[3]; BC.fogged = true; }
+  else if (BC.fogged && typeof xFogBase !== "undefined" && xFogBase) { scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; BC.fogged = false; }
+  if (zk && BC.at !== zk && !grace && !BC.arrive) { xTeleport(-23.5, 33.5, -Math.PI / 2); toast("◆ Ruang simulasi hanya bisa dimasuki lewat gerbang di Ruang Simulasi Bencana."); return; }
+  if (!zk && BC.at && !grace && !BC.arrive && roomAt(P.x, P.z)) bcOff();
+  // ruang utama: gerbang bisa didatangi langsung
+  if (!zk && roomAt(P.x, P.z) === "bencana") bcHubTick(now);
+  if (!zk) return;
+  const [lx, lz] = bcLocal(zk, P.x, P.z);
+  try { S2.tick && S2.tick(BC.run && BC.run.key === zk ? BC.run : null, dt, lx, lz, now); } catch (e) { console.error(e); }
+  if (BC.run && BC.run.key === zk && !BC.run.end && Math.floor(now / 500) !== BC.hudT) { BC.hudT = Math.floor(now / 500); bcHudUpd(); }
+  if (!BC.run && !grace && S2.exit && Math.hypot(lx - S2.exit.x, lz - S2.exit.z) < 1.3) bcToHub();
+  for (const e of BC.anims) e(dt, zk);
+}
+// penanda sasaran langkah saat ini (cincin berdenyut)
+function bcMarkUpd() {
+  for (const k of BC_ORDER) { const S2 = BCS[k]; if (!S2 || !S2.marks) continue; for (const [id, m] of Object.entries(S2.marks)) m.visible = false; }
+  const R = BC.run; if (!R || R.end || !BC.at) return;
+  const S2 = BCS[R.key], tg = S2.target ? S2.target(R) : null;
+  for (const id of [].concat(tg || [])) if (S2.marks && S2.marks[id]) S2.marks[id].visible = true;
+}
+function bcAct(act) {
+  if (act.type !== "x_bc") return false;
+  const id = act.id || "";
+  if (id.startsWith("gate:")) { bcGateAsk(id.slice(5)); return true; }
+  if (id === "exit") { if (BC.run && !BC.run.end && !confirm("Keluar dari ruang simulasi? Simulasi yang sedang berjalan akan dihentikan.")) return true; bcToHub(); return true; }
+  const [k, what] = id.split(":"); const S2 = BCS[k]; if (!S2) return true;
+  if (act.p && Math.hypot(P.x - act.p.x, P.z - act.p.z) > (act.r || 4.5)) { toast("Dekati dulu objeknya.", 1800); return true; }
+  const R = BC.run && BC.run.key === k ? BC.run : null;
+  if (!R || R.end) { toast(`Mulai simulasi dulu lewat ${BC_META[k].npcNm}.`, 2500); return true; }
+  try { S2.act && S2.act(R, what); } catch (e) { console.error(e); }
+  return true;
+}
+
+// =====================================================================
+// PEMBANTU PEMBANGUNAN
+// =====================================================================
+function bcAt(k, x, z) { const M = BC_META[k]; return [M.cx + x, M.cz + z]; }
+function bcObj(k, mesh, what, x, z, r) { const [wx, wz] = bcAt(k, x, z); xAct(mesh, { type: "x_bc", id: k + ":" + what, p: { x: wx, z: wz }, r: r || 4.5 }); }
+function bcMark(k, root, id, x, z, y) {
+  const S2 = BCS[k]; S2.marks = S2.marks || {};
+  const g = new THREE2.Group(); const [wx, wz] = bcAt(k, x, z); g.position.set(wx, (y !== undefined ? y : (S2.ground ? S2.ground(x, z) : 0)) + 0.06, wz); root.add(g);
+  const ring = new THREE2.Mesh(new THREE2.RingGeometry(0.9, 1.15, 40), new THREE2.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.9, toneMapped: false, side: THREE2.DoubleSide, depthWrite: false })); ring.rotation.x = -Math.PI / 2; g.add(ring);
+  const arrow = new THREE2.Mesh(new THREE2.ConeGeometry(0.28, 0.6, 4), new THREE2.MeshBasicMaterial({ color: 0xfacc15, toneMapped: false })); arrow.rotation.x = Math.PI; arrow.position.y = 3.2; g.add(arrow);
+  if (/^meja/.test(id)) arrow.visible = false;
+  BC.anims.push(() => { if (g.visible) { const s = 1 + Math.sin(t * 4) * 0.12; ring.scale.set(s, s, s); arrow.position.y = 3.0 + Math.sin(t * 3) * 0.25; } });
+  g.visible = false; S2.marks[id] = g; return g;
+}
+function bcSignTex(lines, bg, fg, w, h) {
+  return l2Canvas(w || 640, h || 280, (x, W, H) => { x.fillStyle = bg; rr(x, 0, 0, W, H, 26); x.fill(); x.strokeStyle = "rgba(255,255,255,.85)"; x.lineWidth = 8; rr(x, 8, 8, W - 16, H - 16, 20); x.stroke(); x.fillStyle = fg || "#fff"; x.textAlign = "center"; x.textBaseline = "middle"; const n = lines.length; lines.forEach((l, i) => { let fs = i === 0 ? 66 : 42; x.font = `${i === 0 ? 900 : 700} ${fs}px ${FONT}`; const mw = x.measureText(l).width; if (mw > W - 70) { fs = Math.floor(fs * (W - 70) / mw); x.font = `${i === 0 ? 900 : 700} ${fs}px ${FONT}`; } x.fillText(l, W / 2, H / 2 + (i - (n - 1) / 2) * (i === 0 ? 76 : 62)); }); });
+}
+function bcPostSign(k, root, lines, bg, x, z, ry, w) {
+  const S2 = BCS[k], [wx, wz] = bcAt(k, x, z), y0 = S2.ground ? S2.ground(x, z) : 0;
+  const g = new THREE2.Group(); g.position.set(wx, y0, wz); g.rotation.y = ry || 0; root.add(g);
+  const ww = w || 1.8, c = bcSignTex(lines, bg), hh = ww * c.height / c.width;
+  const pole = new THREE2.Mesh(new THREE2.CylinderGeometry(0.05, 0.05, 2.2, 8), new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.6, roughness: 0.4 })); pole.position.y = 1.1; g.add(pole);
+  const p = xPlane(c, ww, hh); p.position.y = 2.2 + hh / 2; g.add(p);
+  const p2 = new THREE2.Mesh(p.geometry, p.material); p2.rotation.y = Math.PI; p2.position.copy(p.position); p2.position.z -= 0.01; g.add(p2);
+  return g;
+}
+var bcEvac = (k, root, x, z, ry, txt) => bcPostSign(k, root, [txt || "JALUR EVAKUASI ➜"], "#15803d", x, z, ry, 1.9);
+var bcTK = (k, root, x, z, ry) => bcPostSign(k, root, ["TITIK KUMPUL", "👨‍👩‍👧 assembly point"], "#15803d", x, z, ry, 2.2);
+var bcDanger = (k, root, x, z, ry, txt) => bcPostSign(k, root, [txt || "⚠ BAHAYA"], "#b91c1c", x, z, ry, 1.8);
+// medan: plane bersegmen dengan tinggi dari ground()
+function bcTerrain(k, root, colFn, seg) {
+  const S2 = BCS[k], M = BC_META[k], n = seg || 60;
+  const geo = new THREE2.PlaneGeometry(100, 100, n, n); geo.rotateX(-Math.PI / 2);
+  const pos = geo.attributes.position, cols = new Float32Array(pos.count * 3), c = new THREE2.Color();
+  for (let i = 0; i < pos.count; i++) { const lx = pos.getX(i), lz = pos.getZ(i), h = S2.ground ? S2.ground(lx, lz) : 0; pos.setY(i, h); colFn(lx, lz, h, c); c.multiplyScalar(0.42); cols[i * 3] = c.r; cols[i * 3 + 1] = c.g; cols[i * 3 + 2] = c.b; }
+  geo.setAttribute("color", new THREE2.BufferAttribute(cols, 3)); geo.computeVertexNormals();
+  const m = new THREE2.Mesh(geo, new THREE2.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, flatShading: true }));
+  m.position.set(M.cx, 0, M.cz); m.receiveShadow = true; root.add(m); return m;
+}
+function bcTrees(k, root, pts, kind, burnt) {
+  const S2 = BCS[k], M = BC_META[k], n = pts.length; if (!n) return null;
+  const trunkG = new THREE2.CylinderGeometry(0.16, 0.24, 1, 6); trunkG.translate(0, 0.5, 0);
+  const topG = kind === "pine" ? new THREE2.ConeGeometry(1.3, 3.4, 7) : new THREE2.IcosahedronGeometry(1.5, 0); topG.translate(0, kind === "pine" ? 3.6 : 3.4, 0);
+  const tm = new THREE2.InstancedMesh(trunkG, new THREE2.MeshStandardMaterial({ color: burnt ? 0x1c1917 : 0x6b4423, roughness: 0.9 }), n);
+  const lm = new THREE2.InstancedMesh(topG, new THREE2.MeshStandardMaterial({ color: burnt ? 0x292524 : kind === "pine" ? 0x2f6b3a : 0x3f8f46, roughness: 0.85, flatShading: true }), n);
+  const o = new THREE2.Object3D();
+  pts.forEach(([x, z, s], i) => { const h = S2.ground ? S2.ground(x, z) : 0; o.position.set(M.cx + x, h, M.cz + z); o.rotation.set(0, (x * 13 + z * 7) % 6, 0); o.scale.set(s, s * 2.2, s); o.updateMatrix(); tm.setMatrixAt(i, o.matrix); o.scale.set(s, s, s); o.updateMatrix(); lm.setMatrixAt(i, o.matrix); });
+  tm.castShadow = lm.castShadow = true; root.add(tm); root.add(lm); return { tm, lm };
+}
+function bcHouse(k, root, x, z, ry, o) {
+  o = o || {}; const S2 = BCS[k], [wx, wz] = bcAt(k, x, z), y0 = S2.ground ? S2.ground(x, z) : 0;
+  const g = new THREE2.Group(); g.position.set(wx, y0, wz); g.rotation.y = ry || 0; root.add(g);
+  const W = o.w || 5, D = o.d || 4, H = o.h || 2.8;
+  const wallM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(o.wall || "#e7dcc5"), roughness: 0.9 }), roofM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(o.roof || "#9a3412"), roughness: 0.8, flatShading: true });
+  const body = new THREE2.Mesh(new THREE2.BoxGeometry(W, H, D), wallM); body.position.y = H / 2; body.castShadow = true; g.add(body);
+  const roof = new THREE2.Mesh(new THREE2.ConeGeometry(Math.hypot(W, D) / 2 * 1.05, 1.6, 4), roofM); roof.rotation.y = Math.PI / 4; roof.scale.set(1, 1, D / W); roof.position.y = H + 0.8; g.add(roof);
+  const door = new THREE2.Mesh(new THREE2.PlaneGeometry(0.9, 1.9), new THREE2.MeshStandardMaterial({ color: 0x5b3a1e })); door.position.set(0, 0.95, D / 2 + 0.01); g.add(door);
+  for (const sx of [-1, 1]) { const w2 = new THREE2.Mesh(new THREE2.PlaneGeometry(0.8, 0.7), new THREE2.MeshStandardMaterial({ color: 0x93c5fd, emissive: 0x1e3a8a, emissiveIntensity: 0.3 })); w2.position.set(sx * W * 0.3, 1.6, D / 2 + 0.01); g.add(w2); }
+  if (o.solid !== false) { const c = Math.cos(ry || 0), s = Math.sin(ry || 0), P2 = (a, b) => [wx + a * c + b * s, wz - a * s + b * c]; const pts = [P2(-W / 2, -D / 2), P2(W / 2, -D / 2), P2(W / 2, D / 2), P2(-W / 2, D / 2)]; for (let i = 0; i < 4; i++) { const a = pts[i], b = pts[(i + 1) % 4]; xCol(a[0], a[1], b[0], b[1], 0.3); } }
+  return g;
+}
+function bcRain(k, root, n, col, speed, area) {
+  const M = BC_META[k], A = area || 90, pos = new Float32Array(n * 6);
+  for (let i = 0; i < n; i++) { const x = (Math.random() - 0.5) * A, y = Math.random() * 22, z = (Math.random() - 0.5) * A; pos.set([x, y, z, x - 0.05, y - 0.7, z], i * 6); }
+  const g = new THREE2.BufferGeometry(); g.setAttribute("position", new THREE2.BufferAttribute(pos, 3));
+  const m = new THREE2.LineSegments(g, new THREE2.LineBasicMaterial({ color: col || 0xbfdbfe, transparent: true, opacity: 0.45 })); m.position.set(M.cx, 0, M.cz); m.frustumCulled = false; root.add(m);
+  BC.anims.push((dt, zk) => { if (zk !== k || !m.visible) return; const p = g.attributes.position.array, v = (speed || 26) * dt; for (let i = 0; i < n; i++) { let y = p[i * 6 + 1] - v; if (y < 0) y += 22; p[i * 6 + 1] = y; p[i * 6 + 4] = y - 0.7; } g.attributes.position.needsUpdate = true; m.position.x = P.x; m.position.z = P.z; });
+  return m;
+}
+function bcNpc(k, root, id, x, z, spec, o) {
+  const M = BC_META[k], [wx, wz] = bcAt(k, x, z);
+  makeCustomHuman(id, Object.assign({ code: "BENCANA", name: M.npcNm, role: `Pemandu Simulasi ${M.nm}`, col: M.col, icon: M.icon, hint: M.icon, x: wx, z: wz, room: "b_" + k, secret: true, hidden: true, tag: `${M.npcNm.toUpperCase()} · PEMANDU ${M.nm.toUpperCase()}`,
+    look: { shirt: spec.top, apron: spec.top, noApron: true }, chips: ["Mulai simulasi", "Langkah mitigasi", `Apa itu ${M.nm.toLowerCase()}?`], roleNote: `Simulasi ${M.nm} (Ruang Simulasi Bencana)`,
+    knowText: `${M.npcNm} memandu simulasi ${M.nm.toLowerCase()} di Ruang Simulasi Bencana: pemain berlatih langkah mitigasi dan penyelamatan diri; tindakan yang salah membuat simulasi gagal dan harus diulang.`,
+    greetActs: () => bcNpcAns(k, "halo").acts, answer: (q) => bcNpcAns(k, q) }, o || {}));
+  const n = NPCS[id];
+  SKIN_BUILD["BC-" + id] = SKIN_BUILD["BC-" + id] || sktBuild(Object.assign({ n: 0, nm: M.npcNm, ds: "" }, spec));
+  const s = sktOnNpc(n, "BC-" + id); n.skinG = s.group; n.tag.position.y = 2.25; n.hx = n.x; n.hz = n.z;
+  const y0 = BCS[k].ground ? BCS[k].ground(x, z) : 0; n.g.position.y = y0;
+  root.add(n.g);
+  return n;
+}
+function bcNpcAns(k, q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), M = BC_META[k], S2 = BCS[k];
+  const go = ["▶ Mulai simulasi", () => { closeGen(); hidePopups(); bcStart(k); }], mit = ["📋 Langkah mitigasi", () => bcMitigasiCard(k)];
+  if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama! Semoga kita selalu siap dan selamat." };
+  if (/apa itu|pengertian|penyebab|apa sih/.test(ql)) return { text: S2.about, acts: [go, mit] };
+  if (/mitigasi|langkah|cara|aturan|bagaimana|gimana|tips/.test(ql)) { setTimeout(() => bcMitigasiCard(k), 300); return { text: `Ini langkah penyelamatan yang akan kita latih: ${S2.steps.map((s, i) => `${i + 1}) ${s}`).join(" ")}`, acts: [go] }; }
+  if (/mulai|simulasi|latih|siap|coba|ulang|main/.test(ql)) { setTimeout(() => bcStart(k), 400); return { text: `Baik, ${S.name}! Simulasi dimulai. Perhatikan instruksi di panel kanan atas dan ikuti langkahnya dengan benar.` }; }
+  return { text: `Halo ${S.name}, aku ${M.npcNm}, pemandu simulasi ${M.nm.toLowerCase()}. ${S2.intro}`, acts: [go, mit, [`❓ Apa itu ${M.nm.toLowerCase()}?`, () => askNpc(`Apa itu ${M.nm.toLowerCase()}?`, M.npc)]] };
+}
+
+// =====================================================================
+// RUANG UTAMA (hub) — di dalam gedung, barat Ruang E-Portal
+// =====================================================================
+var BCH = { gates: [], board: null };
+function bcHubTick(now) {
+  if (now < (BC.hubAskT || 0) || document.querySelector("#genOv.show")) return;
+  for (const g of BCH.gates) if (Math.abs(P.x - g.x) < 0.9 && Math.abs(P.z - g.z) < 1.3) { BC.hubAskT = now + 6000; bcGateAsk(g.k); return; }
+}
+function bcHubBoard() {
+  const B = BCH.board; if (!B) return; const D = bcDone();
+  B.draw((x, w, h) => {
+    x.fillStyle = "#0f172a"; rr(x, 0, 0, w, h, 24); x.fill(); x.strokeStyle = "#f97316"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 20); x.stroke();
+    x.textAlign = "center"; x.fillStyle = "#fdba74"; x.font = `900 52px ${FONT}`; x.fillText("🧯 RUANG SIMULASI BENCANA", w / 2, 74);
+    x.fillStyle = "#cbd5e1"; x.font = `500 28px ${FONT}`; x.fillText(`${S.name ? String(S.name).slice(0, 20) + " · " : ""}lulus ${BC_ORDER.filter((k) => D[k]).length}/5 simulasi`, w / 2, 116);
+    BC_ORDER.forEach((k, i) => { const M = BC_META[k], y = 170 + i * 64; x.textAlign = "left"; x.fillStyle = D[k] ? "#86efac" : "#e2e8f0"; x.font = `700 34px ${FONT}`; x.fillText(`${M.icon}  ${M.nm}`, 60, y); x.fillStyle = "#94a3b8"; x.font = `500 26px ${FONT}`; x.fillText(`pemandu: ${M.npcNm}`, 440, y); x.textAlign = "right"; x.fillStyle = D[k] ? "#86efac" : "#64748b"; x.font = `800 30px ${FONT}`; x.fillText(D[k] ? "✓ LULUS" : "belum", w - 60, y); });
+  });
+}
+function buildBencanaHub() {
+  const R = ROOMS.bencana; if (!R || BCH.built) return; BCH.built = true;
+  const H = R.h;
+  // 5 gerbang holodeck di dinding barat
+  BC_ORDER.forEach((k, i) => {
+    const M = BC_META[k], z = 33.6 + i * 4.6, x = R.x0 + 0.9;
+    const g = new THREE2.Group(); g.position.set(x, 0, z); g.rotation.y = Math.PI / 2; scene.add(g);
+    const frM = new THREE2.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.6, roughness: 0.35 });
+    for (const sx of [-1, 1]) { const p = new THREE2.Mesh(new THREE2.BoxGeometry(0.28, 3.3, 0.4), frM); p.position.set(sx * 1.45, 1.65, 0); g.add(p); }
+    const top = new THREE2.Mesh(new THREE2.BoxGeometry(3.2, 0.3, 0.4), frM); top.position.y = 3.4; g.add(top);
+    const strip = new THREE2.Mesh(new THREE2.BoxGeometry(3.25, 0.06, 0.42), new THREE2.MeshBasicMaterial({ color: new THREE2.Color(M.col), toneMapped: false })); strip.position.y = 3.25; g.add(strip);
+    const scr = l2Canvas(400, 440, (c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, M.col); gr.addColorStop(1, "#0b1020"); c.fillStyle = gr; c.fillRect(0, 0, w, h); c.strokeStyle = "rgba(255,255,255,.18)"; c.lineWidth = 2; for (let j = 0; j < h; j += 22) { c.beginPath(); c.moveTo(0, j); c.lineTo(w, j); c.stroke(); } c.textAlign = "center"; c.font = `120px ${FONT}`; c.fillText(M.icon, w / 2, 190); c.fillStyle = "#fff"; c.font = `900 40px ${FONT}`; c.fillText(M.nm.toUpperCase(), w / 2, 290); c.font = `600 30px ${FONT}`; c.fillStyle = "#e2e8f0"; c.fillText(`Pemandu: ${M.npcNm}`, w / 2, 344); c.font = `700 26px ${FONT}`; c.fillStyle = "#fde68a"; c.fillText("▶ KETUK UNTUK MASUK", w / 2, 404); });
+    const sp = xPlane(scr, 2.6, 2.86); sp.position.set(0, 1.62, 0.05); g.add(sp);
+    const glow = world.glowSprite(M.col, 4.2, 0.35); glow.position.set(0, 1.7, 0.4); g.add(glow);
+    xAct(sp, { type: "x_bc", id: "gate:" + k });
+    const pad = new THREE2.Mesh(new THREE2.CircleGeometry(1.0, 32), new THREE2.MeshBasicMaterial({ color: new THREE2.Color(M.col), transparent: true, opacity: 0.35, toneMapped: false })); pad.rotation.x = -Math.PI / 2; pad.position.set(x + 1.3, 0.02, z); scene.add(pad);
+    BCH.gates.push({ k, x: x + 1.3, z });
+  });
+  // smart board video edukasi (dinding utara) · papan status (dinding timur) · meja peta risiko
+  try { bcSmartBoard(); } catch (e) { console.error("smart board bencana:", e); }
+  BCH.board = cvScreen(5.0, 2.86, 1120, 640); BCH.board.m.position.set(R.x1 - 0.2, 2.9, 48.6); BCH.board.m.rotation.y = -Math.PI / 2; scene.add(BCH.board.m); bcHubBoard();
+  const map = l2Canvas(1024, 520, (x, w, h) => {
+    x.fillStyle = "#0c4a6e"; x.fillRect(0, 0, w, h);
+    const R2 = rndGen(77);
+    for (let i = 0; i < 9; i++) { const cx = 90 + i * 100 + R2() * 40, cy = 200 + Math.sin(i * 1.3) * 90; x.fillStyle = ["#65a30d", "#4d7c0f", "#84cc16"][i % 3]; x.beginPath(); x.ellipse(cx, cy, 70 + R2() * 50, 28 + R2() * 30, R2(), 0, 7); x.fill(); }
+    const hz = [["🔥", 300, 170], ["🌊", 520, 260], ["⛰", 640, 200], ["🏚", 420, 330], ["🌋", 760, 250]];
+    x.font = `46px ${FONT}`; x.textAlign = "center"; for (const [e, a, b] of hz) { x.fillStyle = "rgba(239,68,68,.35)"; x.beginPath(); x.arc(a, b, 38, 0, 7); x.fill(); x.fillText(e, a, b + 16); }
+    x.fillStyle = "#fff"; x.font = `800 40px ${FONT}`; x.fillText("PETA RISIKO BENCANA", w / 2, 60); x.font = `500 26px ${FONT}`; x.fillStyle = "#bae6fd"; x.fillText("Kenali risiko di sekitarmu · siapkan tas siaga · hafalkan jalur evakuasi", w / 2, 480);
+  });
+  const tb = new THREE2.Mesh(new THREE2.BoxGeometry(4.6, 0.85, 2.6), new THREE2.MeshStandardMaterial({ color: 0x334155, metalness: 0.4, roughness: 0.5 })); tb.position.set(-29, 0.425, 43); scene.add(tb);
+  const mp = xPlane(map, 4.4, 2.3); mp.rotation.x = -Math.PI / 2; mp.position.set(-29, 0.86, 43); scene.add(mp);
+  xCol(-31.4, 41.6, -26.6, 41.6, 0.3); xCol(-31.4, 44.4, -26.6, 44.4, 0.3); xCol(-31.4, 41.6, -31.4, 44.4, 0.3); xCol(-26.6, 41.6, -26.6, 44.4, 0.3);
+  // poster tas siaga (dinding selatan)
+  const tas = l2Canvas(900, 640, (x, w, h) => { x.fillStyle = "#fff7ed"; x.fillRect(0, 0, w, h); x.fillStyle = "#c2410c"; x.fillRect(0, 0, w, 100); x.fillStyle = "#fff"; x.textAlign = "center"; x.font = `900 52px ${FONT}`; x.fillText("🎒 TAS SIAGA BENCANA", w / 2, 68); x.fillStyle = "#1f2937"; x.textAlign = "left"; x.font = `600 32px ${FONT}`; ["📄 Dokumen penting (plastik kedap air)", "💧 Air minum & makanan tahan lama", "💊 Obat-obatan & P3K", "🔦 Senter, peluit, baterai/powerbank", "😷 Masker & pakaian ganti", "📻 Radio kecil & uang tunai secukupnya"].forEach((s, i) => x.fillText(s, 60, 170 + i * 72)); });
+  const tp = xPlane(tas, 3.6, 2.56); tp.position.set(-33, 2.8, R.z1 - 0.2); tp.rotation.y = Math.PI; scene.add(tp);
+  const no = l2Canvas(900, 300, (x, w, h) => { x.fillStyle = "#b91c1c"; rr(x, 0, 0, w, h, 30); x.fill(); x.fillStyle = "#fff"; x.textAlign = "center"; x.font = `900 120px ${FONT}`; x.fillText("☎ 112", w / 2, 150); x.font = `600 36px ${FONT}`; x.fillText("Panggilan darurat · gratis · 24 jam", w / 2, 240); });
+  const np = xPlane(no, 2.4, 0.8); np.position.set(-25, 2.8, R.z1 - 0.2); np.rotation.y = Math.PI; scene.add(np);
+  const sg = xPlane(bcSignTex(["🧯 RUANG SIMULASI BENCANA", "pilih gerbang simulasi di dinding barat"], "#9a3412"), 4.2, 1.84); sg.position.set(R.x1 - 0.2, 3.8, 39); sg.rotation.y = -Math.PI / 2; scene.add(sg);
+  XT.anim.push(() => { if (Math.floor(t * 2) % 20 === 0 && curRoom === "bencana") bcHubBoard(); });
+}
+
+// =====================================================================
+// PEMBANGUNAN SEMUA RUANG SIMULASI (sekali, saat pertama dibutuhkan)
+// =====================================================================
+function buildBencana() {
+  if (BC.built) return; BC.built = true;
+  const wBefore = new Set(world.walls.children);
+  for (const k of BC_ORDER) {
+    const M = BC_META[k], S2 = BCS[k]; if (!S2) continue;
+    const root = new THREE2.Group(); root.visible = false; scene.add(root); BC.roots[k] = root;
+    const hl = new THREE2.HemisphereLight(S2.sky || 0xdbeafe, 0x3f3f2f, (S2.hemi || 1.1) * 0.55); hl.position.set(M.cx, 30, M.cz); root.add(hl);
+    const dl = new THREE2.DirectionalLight(S2.sun || 0xfff1d6, (S2.sunK || 1.2) * 0.7); dl.position.set(M.cx + 30, 50, M.cz + 20); dl.target.position.set(M.cx, 0, M.cz); root.add(dl); root.add(dl.target);
+    // langit (kubah)
+    const skyC = l2Canvas(16, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); (S2.skyCols || ["#7dd3fc", "#e0f2fe"]).forEach((c, i, a) => g.addColorStop(i / (a.length - 1), c)); x.fillStyle = g; x.fillRect(0, 0, w, h); });
+    const dome = new THREE2.Mesh(new THREE2.SphereGeometry(140, 24, 12), new THREE2.MeshBasicMaterial({ map: xTex(skyC), side: THREE2.BackSide, fog: false, toneMapped: false })); dome.position.set(M.cx, 0, M.cz); root.add(dome);
+    // batas dunia
+    for (const [ax, az, bx, bz] of [[-48, -48, 48, -48], [48, -48, 48, 48], [48, 48, -48, 48], [-48, 48, -48, -48]]) xCol(M.cx + ax, M.cz + az, M.cx + bx, M.cz + bz, 0.3);
+    try { S2.build(root); } catch (e) { console.error("Simulasi " + k + " gagal dibangun:", e); }
+    // portal kembali ke ruang utama
+    if (S2.exit) {
+      const [ex, ez] = bcAt(k, S2.exit.x, S2.exit.z), ey = S2.ground ? S2.ground(S2.exit.x, S2.exit.z) : 0;
+      const g = new THREE2.Group(); g.position.set(ex, ey, ez); g.rotation.y = S2.exit.ry || 0; root.add(g);
+      const r = new THREE2.Mesh(new THREE2.TorusGeometry(1.2, 0.12, 10, 36), new THREE2.MeshBasicMaterial({ color: 0x22c55e, toneMapped: false })); r.position.y = 1.6; g.add(r);
+      const d = new THREE2.Mesh(new THREE2.CircleGeometry(1.1, 30), new THREE2.MeshBasicMaterial({ color: 0x052e16, transparent: true, opacity: 0.85, side: THREE2.DoubleSide })); d.position.y = 1.6; g.add(d);
+      const s = prSign("⟲ RUANG UTAMA", "keluar dari simulasi", "#22c55e", 2.6); s.position.y = 3.3; g.add(s);
+      xAct(d, { type: "x_bc", id: "exit" }); xAct(s, { type: "x_bc", id: "exit" });
+      BC.anims.push((dt) => { r.rotation.z += dt; });
+    }
+  }
+  BC.ownW = new Set(world.walls.children.filter((o) => !wBefore.has(o)));
+  XT.anim.push((dt) => bcTickAll(dt));
+}
+function bcGrid() {
+  const D = bcDone(), n = BC_ORDER.filter((k) => D[k]).length;
+  return `<h3 class="cap-h">Simulasi Bencana <span class="pill">${n}/5${n === 5 ? " · 🏅 SIAGA BENCANA" : ""}</span></h3><div class="bc-grid">${BC_ORDER.map((k) => { const M = BC_META[k]; return `<div class="${D[k] ? "on" : ""}"><b>${M.icon}</b>${M.nm}<br>${D[k] ? "✓ lulus" : "belum"}</div>`; }).join("")}</div>`;
+}
+
+// ---------- smart board: video edukasi kelima bencana (diputar masing-masing pemain) ----------
+var BC_VIDS = [
+  { id: "8n9ZYPHNRQ4", t: "🔥 Bahaya & dampak kebakaran hutan dan lahan (animasi)" },
+  { id: "yyfRQ7ZJAC4", t: "🔥 Kebakaran hutan dan lahan (animasi 2D)" },
+  { id: "EV1DkiCgkn0", t: "🌊 Pesan kesiapsiagaan bencana banjir (animasi)" },
+  { id: "1B0agZyoPc0", t: "🌊 Sahabat Siaga · Banjir" },
+  { id: "3R2teddxm3M", t: "⛰ Pesan kesiapsiagaan bencana tanah longsor (animasi)" },
+  { id: "iIW_o95gwjs", t: "⛰ Sahabat Siaga · Longsor" },
+  { id: "DeafytS3Rjw", t: "🏚 Animasi mitigasi gempa bumi (BMKG)" },
+  { id: "4c4Gc5ZJGtA", t: "🏚 Panduan mitigasi saat gempa bumi & tsunami" },
+  { id: "GlzpBn0CSOY", t: "🌋 Kesiapsiagaan bencana gunung berapi (animasi)" },
+  { id: "z3IIitKGa9A", t: "🌋 Sahabat Siaga · Gunung Meletus" }
+];
+function bcSmartBoard() {
+  const p = world.onWall("bencana", "N", -30, 3.1), g = world.group(p), w = 6.0, h = 3.38;
+  const bez = new THREE2.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4, metalness: 0.4 });
+  xBox(w + 0.22, h + 0.22, 0.08, bez, 0, 0, 0, 0, g);
+  for (const sx of [-1, 1]) xBox(0.18, h * 0.8, 0.12, bez, sx * (w / 2 + 0.28), 0, 0, 0, g);
+  const lc = mkCanvas(1100, 120), lx = lc.getContext("2d"); lx.fillStyle = "#f97316"; lx.font = `700 60px ${FONT}`; lx.textAlign = "center"; lx.fillText("VIDEO EDUKASI BENCANA · SMART BOARD", 550, 84);
+  const lb = xPlane(lc, 3.9, 0.43); lb.position.set(0, h / 2 + 0.45, 0.05); g.add(lb);
+  const B = sbMake("bencana", "SIMULASI BENCANA", "#f97316", g, w, h, "bencana", true);
+  B.playlist = BC_VIDS; B.pl = 0; B.cfg = { mode: "youtube", yt: BC_VIDS[0].id, judul: BC_VIDS[0].t, v: 1 }; B.v = 1;
+  sbRender(B);
+  world.panels.sb_bencana = { id: "sb_bencana", kind: "sb", title: "Smart Board Simulasi Bencana", data: { title: "Smart Board Simulasi Bencana", d: "Video edukasi YouTube tentang kebakaran hutan, banjir bandang, tanah longsor, gempa bumi, dan gunung meletus." }, mesh: B.mesh, x: p.x + Math.sin(p.ry) * 4, z: p.z + Math.cos(p.ry) * 4, room: "bencana" };
+  return B;
+}
+function bcSbPick(B, i) {
+  const v = B.playlist[i]; if (!v) return;
+  B.pl = i; sbCssOff(B);
+  B.cfg = { mode: "youtube", yt: v.id, judul: v.t, v: (B.cfg && B.cfg.v || 0) + 1 }; B.v = B.cfg.v;
+  B.yt = { p: false, t: 0, base: performance.now() }; B.cur = 0;
+  sbRender(B); sbPanel(B);
+  toast("🎬 " + v.t + " — klik layar atau ▶ Putar untuk memutar.", 3500);
+}
+
+
+
+// =====================================================================
+// src/ext_bencana_sims.js — LIMA SIMULASI BENCANA
+//  Koordinat di setiap simulasi memakai sistem lokal (lx, lz) relatif
+//  terhadap pusat dunia simulasi (BC_META[k].cx/cz), rentang ±48 m.
+// =====================================================================
+var BCF = { smokeMat: null, flameGeo: null, flameM: null, flameM2: null };
+function bcSmokeMat(col) {
+  const c = l2Canvas(128, 128, (x, w, h) => { const g = x.createRadialGradient(64, 64, 4, 64, 64, 62); g.addColorStop(0, col || "rgba(90,90,90,.85)"); g.addColorStop(1, "rgba(90,90,90,0)"); x.fillStyle = g; x.fillRect(0, 0, w, h); });
+  return new THREE2.SpriteMaterial({ map: xTex(c), transparent: true, depthWrite: false, opacity: 0.7 });
+}
+function bcFlame(root, x, y, z, s) {
+  if (!BCF.flameGeo) { BCF.flameGeo = new THREE2.ConeGeometry(0.55, 1.7, 7); BCF.flameGeo.translate(0, 0.85, 0); BCF.flameM = new THREE2.MeshBasicMaterial({ color: 0xff6a00, transparent: true, opacity: 0.9, toneMapped: false }); BCF.flameM2 = new THREE2.MeshBasicMaterial({ color: 0xffd23f, transparent: true, opacity: 0.95, toneMapped: false }); }
+  const g = new THREE2.Group(); g.position.set(x, y, z); g.scale.setScalar(s || 1); root.add(g);
+  const a = new THREE2.Mesh(BCF.flameGeo, BCF.flameM); g.add(a);
+  const b = new THREE2.Mesh(BCF.flameGeo, BCF.flameM2); b.scale.set(0.55, 0.65, 0.55); g.add(b);
+  const c2 = new THREE2.Mesh(BCF.flameGeo, BCF.flameM); c2.scale.set(0.6, 0.8, 0.6); c2.position.set(0.5, 0, 0.3); g.add(c2);
+  const gl = world.glowSprite("#ff7a1a", 4.5, 0.55); gl.position.y = 1.0; g.add(gl);
+  g.visible = false; g.userData.ph = Math.random() * 6;
+  return g;
+}
+function bcPosko(k, root, x, z, label) {
+  const S2 = BCS[k], [wx, wz] = bcAt(k, x, z), y0 = S2.ground ? S2.ground(x, z) : 0;
+  const g = new THREE2.Group(); g.position.set(wx, y0, wz); root.add(g);
+  const tent = new THREE2.Mesh(new THREE2.ConeGeometry(2.4, 2.6, 4), new THREE2.MeshStandardMaterial({ color: 0xea580c, roughness: 0.8, flatShading: true })); tent.rotation.y = Math.PI / 4; tent.position.y = 1.3; g.add(tent);
+  const tb = new THREE2.Mesh(new THREE2.BoxGeometry(1.6, 0.8, 0.7), new THREE2.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.6 })); tb.position.set(0, 0.4, 2.0); g.add(tb);
+  const sg = xPlane(bcSignTex([label || "POSKO", "lapor di sini"], "#c2410c"), 2.0, 0.875); sg.position.set(0, 2.6, 1.75); g.add(sg);
+  bcObj(k, tb, "posko", x, z + 2, 5); bcObj(k, sg, "posko", x, z + 2, 5); bcObj(k, tent, "posko", x, z, 5);
+  xCol(wx - 1.6, wz - 1.6, wx + 1.6, wz - 1.6, 0.3); xCol(wx - 1.6, wz - 1.6, wx - 1.6, wz + 1.2, 0.3); xCol(wx + 1.6, wz - 1.6, wx + 1.6, wz + 1.2, 0.3);
+  return g;
+}
+function bcTable(k, root, x, z, col) {
+  const [wx, wz] = bcAt(k, x, z), y0 = BCS[k].ground ? BCS[k].ground(x, z) : 0;
+  const g = new THREE2.Group(); g.position.set(wx, y0, wz); root.add(g);
+  const top = new THREE2.Mesh(new THREE2.BoxGeometry(1.4, 0.08, 0.8), new THREE2.MeshStandardMaterial({ color: col || 0x8b5a2b, roughness: 0.7 })); top.position.y = 0.85; g.add(top);
+  for (const [a, b] of [[-0.6, -0.32], [0.6, -0.32], [-0.6, 0.32], [0.6, 0.32]]) { const l = new THREE2.Mesh(new THREE2.BoxGeometry(0.07, 0.85, 0.07), top.material); l.position.set(a, 0.425, b); g.add(l); }
+  return g;
+}
+function bcTreePts(n, seed, ok) { const R = rndGen(seed), out = []; let guard = 0; while (out.length < n && guard++ < n * 30) { const x = (R() - 0.5) * 94, z = (R() - 0.5) * 94; if (!ok(x, z)) continue; if (out.some(([a, b]) => Math.hypot(a - x, b - z) < 3.2)) continue; out.push([x, z, 0.8 + R() * 0.6]); } return out; }
+var bcIn = (lx, lz, x, z, r) => Math.hypot(lx - x, lz - z) < r;
+function bcQuizEnd(R, q, good, bad1, bad2) { bcAsk(R, "📋 Laporan di posko", q, [[good, true], bad1, bad2], () => bcStep(R, R.step, "Laporan diterima petugas.")); }
+
+// =====================================================================
+// 1) KEBAKARAN HUTAN — Renda
+// =====================================================================
+BCS.api = {
+  about: "Kebakaran hutan dan lahan (karhutla) adalah terbakarnya hutan atau lahan—sering di lahan gambut—karena ulah manusia (pembukaan lahan dengan membakar, puntung rokok, api unggun) atau faktor alam saat kemarau panjang. Asapnya berbahaya bagi pernapasan dan api merambat cepat searah angin serta ke arah atas lereng.",
+  intro: "Kita berada di pos jaga hutan. Saat api terlihat, laporkan, lindungi pernapasan, baca arah angin, lalu evakuasi menyamping dari arah angin ke area terbuka di dekat sungai.",
+  steps: [
+    "Laporkan kebakaran: gunakan radio HT di meja pos jaga.",
+    "Lindungi pernapasan: ambil masker dari kotak P3K di pos jaga.",
+    "Baca arah angin pada kantong angin (windsock), lalu tentukan arah evakuasi.",
+    "Evakuasi lewat jalur selatan (ikuti papan JALUR EVAKUASI) ke titik kumpul di lapangan dekat sungai.",
+    "Lapor ke petugas di posko titik kumpul."
+  ],
+  edu: [
+    "Jangan membuka lahan dengan cara membakar; gunakan pembukaan lahan tanpa bakar (PLTB).",
+    "Jangan membuang puntung rokok sembarangan dan pastikan api unggun benar-benar padam.",
+    "Laporkan titik api sekecil apa pun ke Manggala Agni/BPBD/112.",
+    "Api merambat cepat searah angin dan ke atas lereng — evakuasi menyamping dari arah angin menuju area terbuka/sungai.",
+    "Gunakan masker (sebaiknya N95) saat ada asap dan kurangi aktivitas di luar ruangan."
+  ],
+  spawn: { x: 0, z: 11, yaw: 0 }, exit: { x: 12, z: 12, ry: -Math.PI / 2 },
+  fog: [0.72, 0.58, 0.44, 0.012], skyCols: ["#f59e0b", "#fcd34d", "#fef3c7"], sky: 0xffe8c2, sun: 0xffb366, sunK: 1.1,
+  ground(lx, lz) { let h = lz < -14 ? Math.min(10, (-14 - lz) * 0.42) : 0; if (lz > 43.5) h = -0.6; return h; },
+  F: { flames: [], smoke: [] },
+  build(root) {
+    const k = "api", M = BC_META[k], F = this.F, self = this;
+    bcTerrain(k, root, (x, z, h, c) => { if (z > 43.5) c.set(0x2a6f97); else if (bcIn(x, z, 0, 37, 9) || (Math.abs(x) < 2.6 && z > 4 && z < 37)) c.set(0xc9a66b); else c.setHSL(0.22 + h * 0.004, 0.45, 0.28 + (h > 0 ? 0.03 : 0)); }, 70);
+    // sungai & tepian
+    const riv = new THREE2.Mesh(new THREE2.PlaneGeometry(100, 6), new THREE2.MeshStandardMaterial({ color: 0x2a7fb8, roughness: 0.15, metalness: 0.2, transparent: true, opacity: 0.85 })); riv.rotation.x = -Math.PI / 2; riv.position.set(M.cx, -0.25, M.cz + 46.5); root.add(riv);
+    xCol(M.cx - 48, M.cz + 43.2, M.cx + 48, M.cz + 43.2, 0.3);
+    // hutan
+    const clear = (x, z) => !(bcIn(x, z, 0, 2, 10) || (Math.abs(x) < 4 && z > 2 && z < 40) || bcIn(x, z, 0, 37, 10) || (Math.abs(z) < 3.5 && x > 6) || (Math.abs(x) < 3.5 && z < -6) || z > 41 || bcIn(x, z, 12, 12, 3));
+    const pts = bcTreePts(240, 901, clear);
+    bcTrees(k, root, pts.filter((_, i) => i % 3 !== 0), "pine"); bcTrees(k, root, pts.filter((_, i) => i % 3 === 0), "leaf");
+    // pos jaga, radio, kotak P3K, windsock
+    bcHouse(k, root, 0, -1, 0, { w: 6, d: 4, wall: "#a16207", roof: "#14532d" });
+    const sg = xPlane(bcSignTex(["POS JAGA HUTAN", "Manggala Agni"], "#14532d"), 2.6, 1.14); const [px, pz] = bcAt(k, 0, 1.03); sg.position.set(px, 3.4, pz); root.add(sg);
+    bcTable(k, root, -3, 3.4);
+    const radio = new THREE2.Group(); const [rx, rz] = bcAt(k, -3, 3.4); radio.position.set(rx, 0.89, rz); root.add(radio);
+    const rb = new THREE2.Mesh(new THREE2.BoxGeometry(0.22, 0.42, 0.12), new THREE2.MeshStandardMaterial({ color: 0x111827, roughness: 0.4 })); rb.position.y = 0.21; radio.add(rb);
+    const ant = new THREE2.Mesh(new THREE2.CylinderGeometry(0.015, 0.015, 0.45, 6), rb.material); ant.position.set(0.06, 0.62, 0); radio.add(ant);
+    const led = new THREE2.Mesh(new THREE2.SphereGeometry(0.03, 8, 6), new THREE2.MeshBasicMaterial({ color: 0x22c55e })); led.position.set(-0.05, 0.38, 0.065); radio.add(led);
+    bcObj(k, rb, "radio", -3, 3.4); bcObj(k, ant, "radio", -3, 3.4);
+    bcTable(k, root, 3, 3.4);
+    const kit = new THREE2.Mesh(new THREE2.BoxGeometry(0.6, 0.38, 0.4), new THREE2.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.5 })); const [kx, kz] = bcAt(k, 3, 3.4); kit.position.set(kx, 1.08, kz); root.add(kit);
+    const crs = xPlane(l2Canvas(128, 128, (x) => { x.fillStyle = "#fff"; x.fillRect(48, 16, 32, 96); x.fillRect(16, 48, 96, 32); }), 0.26, 0.26); crs.position.set(kx, 1.08, kz + 0.205); root.add(crs);
+    bcObj(k, kit, "masker", 3, 3.4); bcObj(k, crs, "masker", 3, 3.4);
+    const [wx, wz] = bcAt(k, 8, 2.5); const pole = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.06, 5, 8), new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.6 })); pole.position.set(wx, 2.5, wz); root.add(pole);
+    const sockC = l2Canvas(256, 64, (x) => { for (let i = 0; i < 5; i++) { x.fillStyle = i % 2 ? "#fff" : "#ea580c"; x.fillRect(i * 51, 0, 52, 64); } });
+    const sock = new THREE2.Mesh(new THREE2.CylinderGeometry(0.3, 0.12, 1.8, 12, 1, true), new THREE2.MeshStandardMaterial({ map: xTex(sockC), side: THREE2.DoubleSide })); sock.rotation.z = -Math.PI / 2; sock.position.set(wx + 0.9, 4.8, wz); root.add(sock);
+    bcObj(k, pole, "angin", 8, 2.5); bcObj(k, sock, "angin", 8, 2.5);
+    BC.anims.push(() => { sock.rotation.x = Math.sin(t * 3) * 0.12; sock.position.y = 4.8 + Math.sin(t * 2.2) * 0.05; });
+    const ws = xPlane(bcSignTex(["ARAH ANGIN ➜ TIMUR"], "#334155"), 1.8, 0.79); ws.position.set(wx, 2.0, wz + 0.1); root.add(ws);
+    // papan jalur
+    bcEvac(k, root, 0, 9, 0, "JALUR EVAKUASI ⬇ SELATAN"); bcEvac(k, root, 1.6, 22, 0, "JALUR EVAKUASI ⬇"); bcTK(k, root, -4, 34, 0);
+    bcDanger(k, root, 9, -2, -Math.PI / 2, "⚠ HUTAN LEBAT · TIMUR"); bcDanger(k, root, -2.4, -8, 0, "⚠ BUKIT · UTARA");
+    bcPosko(k, root, 5, 36, "POSKO KARHUTLA");
+    // api
+    const R2 = rndGen(55); F.flames = [];
+    const fpts = pts.filter((p) => p[2] > 0.9).concat(bcTreePts(60, 77, (x, z) => clear(x, z) && x < 20));
+    for (const [x, z] of fpts) { const h = self.ground(x, z), [fx, fz] = bcAt(k, x, z); const g = bcFlame(root, fx, h + 0.1, fz, 0.9 + R2() * 0.9); const dx = x + 40, dz = z + 6; const d = Math.hypot(dx > 0 ? dx / 1.7 : dx / 0.6, dz < 0 ? dz / 1.5 : dz / 0.85); F.flames.push({ g, x, z, d }); }
+    F.smokeM = bcSmokeMat("rgba(70,60,55,.9)");
+    F.smoke = []; for (let i = 0; i < 40; i++) { const s = new THREE2.Sprite(F.smokeM); s.visible = false; root.add(s); F.smoke.push({ s, life: 0 }); }
+    // asap besar di barat sejak awal
+    F.plume = []; for (let i = 0; i < 8; i++) { const s = new THREE2.Sprite(F.smokeM); const [sx, sz] = bcAt(k, -44 + R2() * 8, -10 + R2() * 10); s.position.set(sx, 6 + i * 3, sz); s.scale.setScalar(10 + i * 2); root.add(s); F.plume.push(s); }
+    BC.anims.push((dt, zk) => { if (zk !== "api") return; for (const f of F.flames) if (f.g.visible) { const p = f.g.userData.ph += dt * 9; f.g.children[0].scale.y = 1 + Math.sin(p) * 0.18; f.g.children[1].scale.y = 0.65 + Math.cos(p * 1.3) * 0.12; } F.plume.forEach((s, i) => { s.position.y += dt * 0.6; if (s.position.y > 34) s.position.y = 6; s.material.rotation = t * 0.05 + i; }); });
+    // NPC
+    bcNpc(k, root, "renda", 3.2, 9.5, { b: "N", tn: "T", top: "#a16207", bot: "#3f3f46", hat: ["ranger", "#6b4f2a"], it: "binoculars", x: ["pocket", "belt:#3b2a1a"] });
+    self.marks = {}; bcMark(k, root, "radio", -3, 4.6); bcMark(k, root, "masker", 3, 4.6); bcMark(k, root, "angin", 7, 3.6); bcMark(k, root, "tk", 0, 37); bcMark(k, root, "posko", 5, 38.6);
+  },
+  reset(R) { const F = this.F; for (const f of F.flames) f.g.visible = false; for (const s of F.smoke) { s.s.visible = false; s.life = 0; } },
+  start(R) { R.f.fire0 = performance.now(); R.f.mask = false; BCSND.fire(); },
+  target(R) { return ["radio", "masker", "angin", "tk", "posko"][R.step]; },
+  act(R, w) {
+    const st = R.step;
+    if (w === "radio") { if (st !== 0) return bcOrder(R); bcAsk(R, "📻 Radio HT pos jaga", "Asap tebal dan titik api terlihat di hutan sebelah barat. Apa yang kamu lakukan dengan radio ini?", [
+      ["Segera melapor ke Manggala Agni/BPBD (atau 112): sebutkan lokasi titik api, arah asap, dan jumlah orang di pos.", true],
+      ["Merekam video api dulu untuk diunggah ke media sosial, baru melapor.", false, "Kamu membuang waktu untuk merekam video sementara api terus membesar.", "Laporkan titik api secepatnya ke petugas (Manggala Agni/BPBD/112) — keterlambatan beberapa menit membuat api sulit dikendalikan."],
+      ["Tidak perlu melapor; coba padamkan sendiri api besar itu dengan ranting.", false, "Kamu mencoba memadamkan api besar sendirian tanpa alat dan pelatihan.", "Api besar dipadamkan oleh petugas terlatih. Tugasmu: lapor segera, lindungi diri, dan evakuasi."]
+    ], () => bcStep(R, 0, "Laporan diterima: petugas pemadam menuju lokasi.")); return; }
+    if (w === "masker") { if (st !== 1) return bcOrder(R); R.f.mask = true; bcStep(R, 1, "Masker terpasang — pernapasan terlindungi dari asap."); return; }
+    if (w === "angin") { if (st !== 2) return bcOrder(R); bcAsk(R, "🎏 Kantong angin", "Kantong angin menunjukkan angin bertiup ke TIMUR. Api berada di BARAT dan bukit di UTARA. Ke mana kamu harus menyelamatkan diri?", [
+      ["Ke selatan: menyamping dari arah angin, menuju lapangan terbuka di tepi sungai.", true],
+      ["Ke timur, searah angin, menembus hutan lebat.", false, "Kamu berlari searah angin — ke arah api dan asap akan merambat paling cepat.", "Jangan evakuasi searah angin. Bergeraklah menyamping/tegak lurus dari arah angin menuju area terbuka atau sungai."],
+      ["Ke utara, naik ke bukit agar bisa melihat api dari atas.", false, "Kamu naik ke bukit — api merambat jauh lebih cepat ke arah atas lereng.", "Hindari naik lereng/bukit saat kebakaran hutan; pilih jalur menyamping dari angin menuju area terbuka yang lebih rendah."]
+    ], () => bcStep(R, 2, "Arah evakuasi benar: jalur selatan menuju sungai.")); return; }
+    if (w === "posko") { if (st !== 4) return bcOrder(R); bcQuizEnd(R, "Petugas bertanya: agar kebakaran hutan tidak terulang, bagaimana sebaiknya warga membuka lahan pertanian?", "Tanpa membakar (PLTB): menebas, mencacah, dan mengomposkan sisa tanaman.", ["Dibakar saat musim kemarau agar cepat bersih.", false, "Membuka lahan dengan membakar adalah penyebab utama karhutla.", "Buka lahan tanpa bakar (PLTB) dan jaga lahan gambut tetap basah."], ["Membakar sedikit demi sedikit asal dijaga.", false, "Api kecil di lahan kering/gambut mudah lepas kendali dan menjalar di bawah tanah.", "Jangan membakar lahan dalam bentuk apa pun; laporkan pembakaran lahan ke petugas."]); }
+  },
+  tick(R, dt, lx, lz, now) {
+    const F = this.F; if (!R) return;
+    if (R.end) return;
+    const e = (now - R.f.fire0) / 1000, front = Math.max(0, e - 6) * 0.32;
+    let near = 1e9;
+    for (const f of F.flames) { const on = f.d < front + 2; if (on !== f.g.visible) f.g.visible = on; if (on) { const d = Math.hypot(f.x - lx, f.z - lz); if (d < near) near = d; } }
+    // asap dari api yang menyala
+    if (Math.random() < dt * 14) { const s = F.smoke.find((o) => o.life <= 0), on = F.flames.filter((f) => f.g.visible); if (s && on.length) { const f = on[Math.floor(Math.random() * on.length)], [x, z] = bcAt("api", f.x, f.z); s.s.position.set(x, this.ground(f.x, f.z) + 2.5, z); s.life = 5; s.s.visible = true; } }
+    for (const s of F.smoke) if (s.life > 0) { s.life -= dt; s.s.position.y += dt * 1.6; s.s.position.x += dt * 1.8; const k2 = 1 - s.life / 5; s.s.scale.setScalar(2 + k2 * 9); s.s.material.opacity = 0.7; if (s.life <= 0) s.s.visible = false; }
+    R.timer = near < 1e8 ? `🔥 api ${Math.round(near)} m` : "";
+    if (near < 2.2) return bcFail(R, "Kamu terlalu dekat dengan api dan terkepung kobaran.", "Jauhi api secepatnya lewat jalur evakuasi menyamping dari arah angin; jangan menunda evakuasi.");
+    if (near < 9 && !R.f.mask) { R.f.smokeT = (R.f.smokeT || 0) + dt; if (R.f.smokeT > 4) return bcFail(R, "Kamu menghirup asap pekat tanpa pelindung pernapasan hingga sesak napas.", "Kenakan masker (sebaiknya N95) atau kain basah sebelum berada di dekat asap, lalu segera menjauh."); } else R.f.smokeT = 0;
+    if (R.step <= 3) {
+      if (lx > 15 && Math.abs(lz) < 14) return bcFail(R, "Kamu lari ke timur searah angin, ke arah api merambat paling cepat.", "Evakuasi menyamping dari arah angin (di simulasi ini ke selatan) menuju area terbuka/sungai.");
+      if (lz < -12) return bcFail(R, "Kamu naik ke arah bukit; api merambat sangat cepat ke atas lereng.", "Hindari lereng/bukit saat kebakaran hutan. Ikuti jalur evakuasi ke area terbuka yang lebih rendah.");
+    }
+    if (R.step < 3 && Math.hypot(lx, lz - 2) > 15) return bcFail(R, "Kamu meninggalkan pos sebelum melapor, memakai masker, dan memastikan arah angin.", "Urutannya: lapor ke petugas → lindungi pernapasan → baca arah angin → baru evakuasi lewat jalur yang aman.");
+    if (R.step === 3 && bcIn(lx, lz, 0, 37, 4.5)) bcStep(R, 3, "Kamu tiba di titik kumpul yang aman.");
+  }
+};
+
+// =====================================================================
+// 2) BANJIR BANDANG — Farhan
+// =====================================================================
+BCS.banjir = {
+  about: "Banjir bandang adalah banjir besar yang datang tiba-tiba dengan arus sangat deras, membawa lumpur, batu, dan kayu dari hulu. Biasanya dipicu hujan lebat berjam-jam di hulu, tanggul/bendungan alami jebol, atau hutan di hulu yang gundul.",
+  intro: "Kita di desa tepi sungai saat hujan deras berhari-hari. Kenali tanda bahaya, matikan listrik, bawa tas siaga, lalu evakuasi ke bukit lewat jalur evakuasi.",
+  steps: [
+    "Amati tanda bahaya di papan pantau tinggi muka air di tepi sungai.",
+    "Sirene berbunyi! Matikan listrik di panel meteran/MCB di dinding depan rumah.",
+    "Ambil tas siaga bencana di bangku teras.",
+    "Evakuasi ke bukit di timur lewat jalur evakuasi — jangan menyeberang jembatan atau menyusuri sungai.",
+    "Lapor ke posko pengungsian & tetap di sana sampai dinyatakan aman."
+  ],
+  edu: [
+    "Kenali tanda banjir bandang: hujan deras lama di hulu, air sungai tiba-tiba keruh membawa lumpur/kayu, dan suara gemuruh.",
+    "Siapkan tas siaga bencana dan ketahui jalur evakuasi serta titik kumpul di desamu.",
+    "Matikan listrik dan gas sebelum meninggalkan rumah.",
+    "Jangan berjalan atau berkendara menembus arus — arus setinggi 15 cm bisa menjatuhkan orang dewasa.",
+    "Jaga hutan di hulu, jangan membuang sampah ke sungai, dan jangan membangun di bantaran sungai."
+  ],
+  spawn: { x: -4.5, z: 1, yaw: Math.PI / 2 }, exit: { x: 3, z: 14, ry: 0 },
+  fog: [0.55, 0.6, 0.65, 0.014], skyCols: ["#64748b", "#94a3b8", "#cbd5e1"], sky: 0xcbd5e1, sun: 0xdbe4ee, sunK: 0.7, hemi: 1.0,
+  ground(lx, lz) { if (lx > -27 && lx < -15) return -1.1; return lx > 14 ? Math.min(7.2, (lx - 14) * 0.33) : 0; },
+  W: { water: null, lvl: -0.3 },
+  build(root) {
+    const k = "banjir", M = BC_META[k], self = this;
+    bcTerrain(k, root, (x, z, h, c) => { if (x > -27.5 && x < -14.5) c.set(0x6b4f2a); else if (h > 0) c.setHSL(0.27, 0.42, 0.26 + h * 0.01); else c.setHSL(0.25, 0.35, 0.32); }, 80);
+    // air sungai/banjir (bidang yang naik)
+    const wc = l2Canvas(256, 256, (x, w, h) => { x.fillStyle = "#7c5a32"; x.fillRect(0, 0, w, h); for (let i = 0; i < 70; i++) { x.strokeStyle = `rgba(210,180,140,${0.15 + Math.random() * 0.25})`; x.lineWidth = 2; x.beginPath(); const y = Math.random() * h; x.moveTo(0, y); x.bezierCurveTo(w * 0.3, y - 8, w * 0.6, y + 8, w, y); x.stroke(); } });
+    const wt = xTex(wc); wt.wrapS = wt.wrapT = THREE2.RepeatWrapping; wt.repeat.set(8, 8);
+    const water = new THREE2.Mesh(new THREE2.PlaneGeometry(100, 100), new THREE2.MeshStandardMaterial({ map: wt, color: 0xb08a5a, roughness: 0.3, transparent: true, opacity: 0.9 })); water.rotation.x = -Math.PI / 2; water.position.set(M.cx, -0.3, M.cz); root.add(water); self.W.water = water; self.W.tex = wt;
+    BC.anims.push((dt, zk) => { if (zk === "banjir") wt.offset.y += dt * (self.W.flood ? 0.35 : 0.12); });
+    // jembatan
+    const [bx, bz] = bcAt(k, -21, -12); const deck = new THREE2.Mesh(new THREE2.BoxGeometry(14, 0.25, 2.4), new THREE2.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.8 })); deck.position.set(bx, 0.2, bz); root.add(deck); self.W.bridge = deck;
+    for (const s of [-1, 1]) { const rail = new THREE2.Mesh(new THREE2.BoxGeometry(14, 0.08, 0.08), deck.material); rail.position.set(bx, 1.1, bz + s * 1.15); root.add(rail); }
+    bcDanger(k, root, -13, -9.5, Math.PI / 2, "⚠ JEMBATAN · DILARANG LEWAT");
+    bcDanger(k, root, -11, -20, Math.PI / 2, "⚠ TEPI SUNGAI");
+    // rumah-rumah
+    bcHouse(k, root, 0, 0, -Math.PI / 2, { w: 6, d: 4, wall: "#fde68a", roof: "#b91c1c" });
+    for (const [x, z, r] of [[0, 13, -Math.PI / 2], [0, -14, -Math.PI / 2], [-8, 24, 0], [7, -26, Math.PI], [8, 26, 0], [-6, -30, Math.PI]]) bcHouse(k, root, x, z, r, { wall: ["#e7dcc5", "#bfdbfe", "#fecaca"][Math.abs(x + z) % 3], roof: "#7c2d12" });
+    // MCB di dinding depan & tas siaga di bangku teras
+    const [mx, mz] = bcAt(k, -2.03, 1.6); const mcb = new THREE2.Mesh(new THREE2.BoxGeometry(0.05, 0.5, 0.4), new THREE2.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.4 })); mcb.position.set(mx, 1.5, mz); root.add(mcb);
+    const mcbL = xPlane(bcSignTex(["⚡ MCB", "listrik"], "#1f2937"), 0.5, 0.22); mcbL.rotation.y = -Math.PI / 2; mcbL.position.set(mx - 0.04, 1.9, mz); root.add(mcbL);
+    const sw = new THREE2.Mesh(new THREE2.BoxGeometry(0.06, 0.12, 0.08), new THREE2.MeshBasicMaterial({ color: 0x22c55e })); sw.position.set(mx - 0.04, 1.5, mz); root.add(sw); self.W.sw = sw;
+    bcObj(k, mcb, "mcb", -3, 1.6); bcObj(k, mcbL, "mcb", -3, 1.6);
+    const [tx, tz] = bcAt(k, -3.2, -1.4); const bench = new THREE2.Mesh(new THREE2.BoxGeometry(0.6, 0.45, 1.6), new THREE2.MeshStandardMaterial({ color: 0x8b5a2b })); bench.position.set(tx, 0.225, tz); root.add(bench);
+    const bag = new THREE2.Mesh(new THREE2.BoxGeometry(0.45, 0.55, 0.3), new THREE2.MeshStandardMaterial({ color: 0xea580c, roughness: 0.6 })); bag.position.set(tx, 0.73, tz); root.add(bag); self.W.bag = bag;
+    bcObj(k, bag, "tas", -3.2, -1.4);
+    // papan pantau tinggi muka air
+    const [gx, gz] = bcAt(k, -13.6, 3); const gc = l2Canvas(64, 512, (x, w, h) => { const cols = ["#dc2626", "#f59e0b", "#facc15", "#22c55e"]; for (let i = 0; i < 4; i++) { x.fillStyle = cols[i]; x.fillRect(0, i * 128, w, 128); } x.fillStyle = "#fff"; for (let i = 0; i < 16; i++) x.fillRect(0, i * 32, i % 4 ? 24 : 44, 3); });
+    const gauge = new THREE2.Mesh(new THREE2.BoxGeometry(0.3, 4, 0.1), new THREE2.MeshStandardMaterial({ map: xTex(gc) })); gauge.position.set(gx, 1.0, gz); root.add(gauge);
+    const gs = xPlane(bcSignTex(["PAPAN PANTAU", "tinggi muka air"], "#1e3a8a"), 1.6, 0.7); gs.position.set(gx + 0.6, 3.4, gz); gs.rotation.y = Math.PI / 2; root.add(gs);
+    bcObj(k, gauge, "papan", -12.5, 3); bcObj(k, gs, "papan", -12.5, 3);
+    // menara sirene EWS
+    const [sx, sz] = bcAt(k, 8, -6); const tw = new THREE2.Mesh(new THREE2.CylinderGeometry(0.12, 0.16, 7, 8), new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.6 })); tw.position.set(sx, 3.5, sz); root.add(tw);
+    for (let i = 0; i < 3; i++) { const horn = new THREE2.Mesh(new THREE2.ConeGeometry(0.35, 0.8, 12, 1, true), new THREE2.MeshStandardMaterial({ color: 0xe5e7eb, side: THREE2.DoubleSide })); horn.rotation.z = Math.PI / 2; horn.rotation.y = i * 2.1; horn.position.set(sx, 7, sz); root.add(horn); }
+    const ews = xPlane(bcSignTex(["SIRENE EWS", "peringatan dini banjir"], "#b91c1c"), 1.8, 0.79); ews.position.set(sx, 2.2, sz + 0.2); root.add(ews);
+    // jalur evakuasi & bukit
+    bcEvac(k, root, 4, 2.6, -Math.PI / 2, "JALUR EVAKUASI ➜"); bcEvac(k, root, 13, 2.6, -Math.PI / 2, "JALUR EVAKUASI ➜"); bcEvac(k, root, 23, 2.6, -Math.PI / 2, "JALUR EVAKUASI ➜");
+    bcTK(k, root, 31, -4, -Math.PI / 2); bcPosko(k, root, 38, 2, "POSKO PENGUNGSIAN");
+    const hp = bcTreePts(70, 313, (x, z) => x > 18 && !(Math.abs(z) < 7) && !bcIn(x, z, 34, 0, 9)); bcTrees(k, root, hp, "leaf");
+    const vp = bcTreePts(40, 314, (x, z) => (x < -29 || (x > -13 && x < 13 && Math.abs(x) > 4)) && !bcIn(x, z, 0, 0, 7) && Math.abs(z + 12) > 4); bcTrees(k, root, vp, "leaf");
+    bcRain(k, root, 900, 0xbfdbfe, 30);
+    bcNpc(k, root, "farhan", -5.5, 3.5, { b: "N", tn: "L", top: "#f97316", bot: "#1e3a8a", hat: ["cap", "#1e3a8a"], it: "tablet", x: ["vest:#facc15", "badge"] });
+    self.marks = {}; bcMark(k, root, "papan", -12.5, 3, 0); bcMark(k, root, "mcb", -3, 1.6, 0); bcMark(k, root, "tas", -3.9, -1.4, 0); bcMark(k, root, "tk", 32, 0); bcMark(k, root, "posko", 38, 4.6);
+  },
+  reset(R) { const W = this.W; W.flood = false; W.lvl = -0.3; if (W.water) W.water.position.y = -0.3; if (W.sw) W.sw.material.color.set(0x22c55e); if (W.bag) W.bag.visible = true; if (W.bridge) { W.bridge.visible = true; W.bridge.rotation.z = 0; } },
+  start(R) { },
+  target(R) { return ["papan", "mcb", "tas", "tk", "posko"][R.step]; },
+  act(R, w) {
+    const st = R.step, W = this.W;
+    if (w === "papan") { if (st !== 0) return bcOrder(R); bcAsk(R, "📏 Papan pantau tinggi muka air", "Hujan deras sudah turun berjam-jam di hulu. Mana yang merupakan TANDA banjir bandang akan datang?", [
+      ["Air sungai tiba-tiba naik & keruh membawa lumpur dan potongan kayu, terdengar gemuruh dari arah hulu.", true],
+      ["Air sungai jernih dan tenang, jadi pasti aman.", false, "Kamu salah membaca tanda bahaya dan tidak bersiap.", "Waspadai hujan deras lama di hulu, air sungai tiba-tiba keruh berlumpur membawa kayu, dan suara gemuruh."],
+      ["Banjir bandang selalu diumumkan sehari sebelumnya, jadi tidak perlu waspada.", false, "Kamu mengabaikan tanda bahaya; banjir bandang bisa datang dalam hitungan menit.", "Banjir bandang datang tiba-tiba. Begitu tanda bahaya atau sirene muncul, segera bersiap dan evakuasi."]
+    ], () => { bcStep(R, 0, "Tanda bahaya dikenali — sirene peringatan dini berbunyi!"); W.flood = true; R.f.flood0 = performance.now(); BCSND.siren(); setTimeout(() => BCSND.siren(), 2600); BCSND.rumble(4); }); return; }
+    if (w === "mcb") { if (st !== 1) return bcOrder(R); W.sw.material.color.set(0xdc2626); bcStep(R, 1, "Listrik dimatikan — mencegah korsleting dan sengatan listrik."); return; }
+    if (w === "tas") { if (st !== 2) return bcOrder(R); W.bag.visible = false; bcStep(R, 2, "Tas siaga dibawa. Sekarang evakuasi ke bukit!"); return; }
+    if (w === "posko") { if (st !== 4) return bcOrder(R); bcQuizEnd(R, "Petugas bertanya: setelah air mulai surut, kapan kamu boleh kembali ke rumah?", "Setelah petugas menyatakan aman; tetap waspada banjir susulan dan periksa listrik sebelum dinyalakan.", ["Segera, supaya barang-barang di rumah bisa diselamatkan.", false, "Kamu kembali saat bahaya banjir susulan masih tinggi.", "Jangan kembali sebelum dinyatakan aman oleh petugas — banjir bandang bisa datang bergelombang."], ["Saat arus masih deras, asal berjalan pelan-pelan.", false, "Berjalan di arus deras sangat berbahaya — arus 15 cm bisa menjatuhkan orang dewasa.", "Jangan menembus arus. Tunggu sampai petugas menyatakan aman."]); }
+  },
+  tick(R, dt, lx, lz, now) {
+    const W = this.W; if (!R || R.end) return;
+    if (W.flood && R.f.flood0) { const e = (now - R.f.flood0) / 1000; W.lvl = Math.min(3.4, -0.3 + Math.max(0, e - 28) * 0.032 + Math.min(e, 28) * 0.004); W.water.position.y = W.lvl; if (W.bridge.visible && e > 34) { W.bridge.rotation.z = Math.min(0.5, (e - 34) * 0.1); if (e > 40) W.bridge.visible = false; } R.timer = `🌊 air ${Math.max(0, W.lvl).toFixed(1)} m`; }
+    const gh = this.ground(lx, lz);
+    if (lx > -27.5 && lx < -14.5 && Math.abs(lz + 12) < 2.2) return bcFail(R, "Kamu menyeberang jembatan saat banjir bandang — jembatan bisa hanyut diterjang arus.", "Jangan menyeberang jembatan atau sungai saat banjir; ikuti jalur evakuasi ke tempat tinggi.");
+    if (lx > -27.5 && lx < -14.5) return bcFail(R, "Kamu masuk ke aliran sungai dan terseret arus deras.", "Jauhi sungai saat banjir. Arus setinggi 15 cm bisa menjatuhkan orang dewasa.");
+    if (R.step >= 1 && lx < -9 && lz < -16) return bcFail(R, "Kamu menyusuri tepi sungai — jalur yang pertama kali diterjang banjir bandang.", "Evakuasi menjauhi sungai, ke tempat yang tinggi lewat jalur evakuasi resmi.");
+    if (W.flood && W.lvl - gh > 0.35) return bcFail(R, "Air bah sudah setinggi lutut lebih dan kamu terseret arus.", "Segera evakuasi ke tempat tinggi begitu sirene berbunyi; jangan menunda karena barang-barang.");
+    if (R.step >= 1 && R.step < 3 && Math.hypot(lx + 2, lz) > 9) return bcFail(R, "Kamu meninggalkan rumah sebelum mematikan listrik dan membawa tas siaga.", "Matikan listrik (MCB) dan ambil tas siaga yang sudah disiapkan — butuh beberapa detik saja — lalu evakuasi.");
+    if (R.step === 3 && bcIn(lx, lz, 32, 0, 4.5)) bcStep(R, 3, "Kamu tiba di bukit yang aman.");
+  }
+};
+
+// =====================================================================
+// 3) TANAH LONGSOR — Adrin
+// =====================================================================
+BCS.longsor = {
+  about: "Tanah longsor adalah bergeraknya massa tanah/batuan menuruni lereng karena lereng tidak stabil — dipicu hujan lebat yang membuat tanah jenuh air, lereng terjal, hutan gundul, atau getaran. Material longsor mengalir ke bawah mengikuti alur lereng.",
+  intro: "Kita di desa kaki lereng saat hujan deras. Periksa tanda longsor, peringatkan warga dengan kentongan, lalu evakuasi MENYAMPING ke punggung bukit yang stabil.",
+  steps: [
+    "Periksa 3 tanda longsor di sekitar lereng: retakan tanah, tiang/pohon miring, dan rembesan air keruh.",
+    "Bunyikan kentongan di pos ronda untuk memperingatkan warga.",
+    "Evakuasi menyamping ke punggung bukit timur yang stabil — jangan lari ke bawah mengikuti alur longsor, jangan naik lereng, jangan berlindung di rumah.",
+    "Lapor ke posko di titik kumpul."
+  ],
+  edu: [
+    "Kenali tanda longsor: retakan tanah di lereng, pohon/tiang listrik miring, munculnya rembesan atau mata air keruh, dan suara gemuruh.",
+    "Saat longsor, menjauhlah MENYAMPING dari alur longsoran — bukan ke bawah searah aliran material.",
+    "Tanam pohon berakar kuat dan dalam, buat terasering dan saluran drainase di lereng.",
+    "Jangan membangun rumah di bawah atau di tepi tebing yang curam.",
+    "Waspada saat hujan lebat berlangsung lama, terutama malam hari."
+  ],
+  spawn: { x: 0, z: 9, yaw: 0 }, exit: { x: -14, z: 12, ry: Math.PI / 2 },
+  fog: [0.5, 0.55, 0.55, 0.013], skyCols: ["#475569", "#94a3b8", "#cbd5e1"], sky: 0xcbd5e1, sun: 0xe2e8f0, sunK: 0.75,
+  ground(lx, lz) { const sl = lz < -12 ? Math.min(20, (-12 - lz) * 0.6) : 0, rg = lx > 18 ? Math.min(4.6, (lx - 18) * 0.3) : 0; return Math.max(sl, rg); },
+  L: { debris: null, houses: [] },
+  build(root) {
+    const k = "longsor", M = BC_META[k], self = this;
+    bcTerrain(k, root, (x, z, h, c) => { if (Math.abs(x) < 13 && z < -12) c.setHSL(0.08, 0.35, 0.3 + Math.min(0.1, h * 0.004)); else if (h > 0) c.setHSL(0.26, 0.4, 0.27 + h * 0.008); else c.setHSL(0.24, 0.32, 0.33); }, 80);
+    // lereng bervegetasi jarang di alur, lebat di samping
+    const sp = bcTreePts(90, 515, (x, z) => (z < -14 && Math.abs(x) > 14) || (x > 22 && !bcIn(x, z, 34, -2, 9) && Math.abs(z + 2) > 4) || (x < -22 && z > -12)); bcTrees(k, root, sp, "pine");
+    // desa di kaki lereng (di dalam alur longsor)
+    self.L.houses = [];
+    for (const [x, z, r] of [[-7, -3, 0], [7, -2, 0], [-6, 18, Math.PI], [6, 22, Math.PI], [-9, 30, 0]]) self.L.houses.push(bcHouse(k, root, x, z, r, { wall: ["#e7dcc5", "#fde68a", "#bbf7d0"][Math.abs(x + z) % 3], roof: "#7c2d12" }));
+    const [hx, hz] = bcAt(k, -7, -3); const dm = new THREE2.Mesh(new THREE2.PlaneGeometry(0.9, 1.9), new THREE2.MeshStandardMaterial({ color: 0x5b3a1e })); dm.position.set(hx, 0.95, hz + 2.02); root.add(dm);
+    const dt2 = xPlane(bcSignTex(["🏠 Berlindung di rumah?"], "#57534e"), 1.6, 0.7); dt2.position.set(hx, 2.4, hz + 2.05); root.add(dt2);
+    bcObj(k, dm, "rumah", -7, -1); bcObj(k, dt2, "rumah", -7, -1);
+    // tanda-tanda longsor
+    const [cx, cz] = bcAt(k, -5, -10.5); const crack = xPlane(l2Canvas(512, 256, (x, w, h) => { x.strokeStyle = "#1c1917"; x.lineCap = "round"; for (let j = 0; j < 3; j++) { x.lineWidth = 10 - j * 3; x.beginPath(); let px = 10, py = 128 + j * 20; x.moveTo(px, py); while (px < w - 10) { px += 20 + Math.random() * 30; py += (Math.random() - 0.5) * 40; x.lineTo(px, py); } x.stroke(); } }), 4, 2); crack.rotation.x = -Math.PI / 2; crack.position.set(cx, 0.05, cz); root.add(crack);
+    bcObj(k, crack, "retak", -5, -10.5); bcPostSign(k, root, ["🔍 RETAKAN"], "#57534e", -7.6, -10, 0, 1.3).children.forEach((o) => { if (o.isMesh) bcObj(k, o, "retak", -5, -10.5); });
+    const [px, pz] = bcAt(k, 8, -9); const pole = new THREE2.Mesh(new THREE2.CylinderGeometry(0.12, 0.15, 7, 8), new THREE2.MeshStandardMaterial({ color: 0x78716c })); pole.position.set(px + 0.9, 3.4, pz); pole.rotation.z = -0.28; root.add(pole);
+    const tree = new THREE2.Group(); tree.position.set(px - 2.5, 0, pz - 0.5); tree.rotation.z = 0.35; root.add(tree); const tr = new THREE2.Mesh(new THREE2.CylinderGeometry(0.18, 0.26, 4, 7), new THREE2.MeshStandardMaterial({ color: 0x6b4423 })); tr.position.y = 2; tree.add(tr); const tl = new THREE2.Mesh(new THREE2.IcosahedronGeometry(1.4, 0), new THREE2.MeshStandardMaterial({ color: 0x3f8f46, flatShading: true })); tl.position.y = 4.4; tree.add(tl);
+    bcObj(k, pole, "tiang", 8, -9); bcObj(k, tr, "tiang", 8, -9); bcObj(k, tl, "tiang", 8, -9);
+    const [wx, wz] = bcAt(k, 0, -14.5), wy = self.ground(0, -14.5); const seep = new THREE2.Mesh(new THREE2.CircleGeometry(1.3, 20), new THREE2.MeshStandardMaterial({ color: 0x7c5a32, roughness: 0.2, metalness: 0.1 })); seep.rotation.x = -Math.PI / 2 + 0.5; seep.position.set(wx, wy + 0.25, wz); root.add(seep);
+    const trickle = new THREE2.Mesh(new THREE2.PlaneGeometry(0.5, 4), new THREE2.MeshStandardMaterial({ color: 0x8b6b42, roughness: 0.2, transparent: true, opacity: 0.85 })); trickle.rotation.x = -Math.PI / 2 + 0.5; trickle.position.set(wx, wy / 2 + 0.1, wz + 2); root.add(trickle);
+    bcObj(k, seep, "rembes", 0, -13.5, 6); bcObj(k, trickle, "rembes", 0, -13.5, 6);
+    // pos ronda & kentongan
+    const [rx, rz] = bcAt(k, -13, 4); const ronda = new THREE2.Group(); ronda.position.set(rx, 0, rz); root.add(ronda);
+    const wood = new THREE2.MeshStandardMaterial({ color: 0x8b5a2b, roughness: 0.8 });
+    for (const [a, b] of [[-1.2, -1], [1.2, -1], [-1.2, 1], [1.2, 1]]) { const p = new THREE2.Mesh(new THREE2.BoxGeometry(0.15, 2.6, 0.15), wood); p.position.set(a, 1.3, b); ronda.add(p); }
+    const rf = new THREE2.Mesh(new THREE2.ConeGeometry(2.1, 1.0, 4), new THREE2.MeshStandardMaterial({ color: 0x57534e, flatShading: true })); rf.rotation.y = Math.PI / 4; rf.position.y = 3.1; ronda.add(rf);
+    const fl = new THREE2.Mesh(new THREE2.BoxGeometry(2.6, 0.12, 2.2), wood); fl.position.y = 0.5; ronda.add(fl);
+    const ken = new THREE2.Mesh(new THREE2.CylinderGeometry(0.16, 0.16, 1.2, 10), new THREE2.MeshStandardMaterial({ color: 0xd4a017, roughness: 0.6 })); ken.position.set(0, 1.7, 1.05); ronda.add(ken);
+    const kl = xPlane(bcSignTex(["POS RONDA", "kentongan"], "#57534e"), 1.6, 0.7); kl.position.set(0, 2.55, 1.15); ronda.add(kl);
+    bcObj(k, ken, "kentong", -13, 5); bcObj(k, kl, "kentong", -13, 5);
+    xCol(rx - 1.3, rz - 1.1, rx + 1.3, rz - 1.1, 0.25);
+    // longsoran (massa tanah)
+    const dg = new THREE2.Group(); root.add(dg); dg.visible = false; self.L.debris = dg;
+    const dM = new THREE2.MeshStandardMaterial({ color: 0x5b4127, roughness: 1, flatShading: true }), R2 = rndGen(9);
+    for (let i = 0; i < 26; i++) { const b = new THREE2.Mesh(new THREE2.IcosahedronGeometry(1.4 + R2() * 1.8, 0), dM); b.position.set((R2() - 0.5) * 24, 0.6 + R2() * 1.4, (R2() - 0.5) * 8); b.scale.y = 0.6; dg.add(b); }
+    for (let i = 0; i < 6; i++) { const lg = new THREE2.Mesh(new THREE2.CylinderGeometry(0.2, 0.25, 4, 6), new THREE2.MeshStandardMaterial({ color: 0x6b4423 })); lg.rotation.z = Math.PI / 2; lg.rotation.y = R2() * 3; lg.position.set((R2() - 0.5) * 20, 2.4, (R2() - 0.5) * 6); dg.add(lg); }
+    // jalur & titik kumpul
+    bcEvac(k, root, 12, 3, -Math.PI / 2, "JALUR EVAKUASI ➜ TIMUR"); bcEvac(k, root, 22, 1, -Math.PI / 2, "JALUR EVAKUASI ➜");
+    bcDanger(k, root, -2, 15.5, Math.PI, "⚠ ALUR LONGSORAN"); bcDanger(k, root, 2, -12.6, 0, "⚠ LERENG RAWAN");
+    bcTK(k, root, 30, -6, -Math.PI / 2); bcPosko(k, root, 39, -4, "POSKO LONGSOR");
+    bcRain(k, root, 800, 0xbfdbfe, 28);
+    bcNpc(k, root, "adrin", 3.2, 10.5, { b: "N", tn: "L", top: "#a16207", bot: "#3f3f46", hat: ["hardhat", "#ffffff"], it: "map", x: ["vest:#f97316", "pocket"] });
+    self.marks = {}; bcMark(k, root, "retak", -5, -10.5, 0.1); bcMark(k, root, "tiang", 8, -7.6, 0.1); bcMark(k, root, "rembes", 0, -12.3, 0.2); bcMark(k, root, "kentong", -13, 5.8, 0.1); bcMark(k, root, "tk", 32, -2); bcMark(k, root, "posko", 39, -1.4);
+  },
+  reset(R) { const L = this.L; if (L.debris) L.debris.visible = false; for (const h of L.houses) { h.visible = true; h.rotation.x = 0; } },
+  start(R) { R.f.seen = {}; },
+  target(R) { if (R.step === 0) return ["retak", "tiang", "rembes"].filter((x) => !(R.f.seen || {})[x]); return [null, "kentong", "tk", "posko"][R.step]; },
+  act(R, w) {
+    const st = R.step;
+    const info = { retak: "🔍 Retakan tanah memanjang di kaki lereng — tanda tanah mulai bergerak.", tiang: "🔍 Tiang listrik dan pohon miring searah lereng — tanda tanah bergeser.", rembes: "🔍 Rembesan/mata air keruh muncul tiba-tiba di lereng — tanah sudah jenuh air." };
+    if (info[w]) { if (st !== 0) return toast(info[w], 3000); R.f.seen[w] = true; toast(info[w], 4000); bcMarkUpd(); if (["retak", "tiang", "rembes"].every((x) => R.f.seen[x])) bcStep(R, 0, "Ketiga tanda longsor teridentifikasi — segera peringatkan warga!"); return; }
+    if (w === "kentong") { if (st !== 1) return bcOrder(R); BCSND.kentong(); setTimeout(() => BCSND.kentong(), 1200); R.f.slideAt = performance.now() + 26000; setTimeout(() => BCSND.rumble(3), 9000); bcStep(R, 1, "Warga diperingatkan! Gemuruh terdengar dari lereng — evakuasi sekarang!"); return; }
+    if (w === "rumah") return bcFail(R, "Kamu berlindung di dalam rumah yang berada di jalur longsoran.", "Saat longsor, jangan berlindung di dalam rumah di kaki lereng. Segera menjauh menyamping dari alur longsoran ke tempat yang stabil.");
+    if (w === "posko") { if (st !== 3) return bcOrder(R); bcQuizEnd(R, "Petugas bertanya: bagaimana cara mengurangi risiko longsor di lereng desa ini?", "Menanam pohon berakar kuat dan dalam, membuat terasering, serta saluran drainase agar air tidak meresap berlebihan.", ["Menebang pohon di lereng agar beban lereng berkurang.", false, "Menebang pohon justru menghilangkan akar pengikat tanah.", "Pertahankan dan tanam pohon berakar kuat; buat terasering dan drainase."], ["Membuat kolam ikan di atas lereng agar air tertampung.", false, "Kolam di atas lereng membuat tanah makin jenuh air dan memicu longsor.", "Alirkan air hujan lewat drainase yang baik; hindari genangan di atas lereng."]); }
+  },
+  tick(R, dt, lx, lz, now) {
+    const L = this.L; if (!R || R.end) return;
+    if (R.f.slideAt) {
+      const e = (now - R.f.slideAt) / 1000;
+      R.timer = e < 0 ? `⛰ gemuruh… ${Math.ceil(-e)} dtk` : "⛰ LONGSOR!";
+      if (e >= 0) {
+        if (!R.f.slid) { R.f.slid = true; BCSND.boom(); if (typeof xShake === "function") xShake(2.5, 0.06); L.debris.visible = true; }
+        const front = -40 + Math.min(1, e / 7) * 85, [dx, dz] = bcAt("longsor", 0, front); L.debris.position.set(dx, Math.max(0, this.ground(0, front)) - 0.2, dz);
+        L.debris.children.forEach((c2, i) => { c2.rotation.x += dt * (1 + i % 3); });
+        for (const h of L.houses) { const hz = h.position.z - BC_META.longsor.cz; if (Math.abs(h.position.x - BC_META.longsor.cx) < 13 && hz < front) { h.rotation.x = Math.min(0.6, h.rotation.x + dt); if (hz < front - 6) h.visible = false; } }
+        if (Math.abs(lx) < 14 && lz < front + 3 && lz > -45) return bcFail(R, "Kamu masih berada di jalur longsoran saat tanah meluncur dan tertimbun material longsor.", "Begitu tanda longsor terlihat dan warga diperingatkan, segera menjauh MENYAMPING dari alur longsoran ke punggung bukit yang stabil.");
+      }
+    }
+    if (R.step <= 2) {
+      if (lz > 17 && Math.abs(lx) < 15) return bcFail(R, "Kamu lari ke bawah searah alur longsoran — material longsor mengalir ke arah itu.", "Jangan lari ke bawah mengikuti alur lereng. Menjauhlah menyamping dari alur longsoran.");
+      if (lz < -16 && Math.abs(lx) < 22 && R.step >= 1) return bcFail(R, "Kamu naik ke lereng yang retak dan tidak stabil.", "Jauhi lereng yang menunjukkan tanda longsor; evakuasi menyamping ke tempat stabil.");
+    }
+    if (R.step < 2 && lx > 17) return bcFail(R, "Kamu pergi sebelum memeriksa tanda longsor dan memperingatkan warga.", "Kenali tanda longsor, bunyikan kentongan agar warga waspada, lalu evakuasi bersama-sama.");
+    if (R.step === 2 && bcIn(lx, lz, 32, -2, 4.5)) bcStep(R, 2, "Kamu tiba di punggung bukit yang stabil.");
+  }
+};
+
+// =====================================================================
+// 4) GEMPA BUMI — Ridwan
+// =====================================================================
+BCS.gempa = {
+  about: "Gempa bumi adalah getaran di permukaan bumi akibat pelepasan energi secara tiba-tiba — umumnya karena pergeseran lempeng atau patahan (sesar). Indonesia berada di pertemuan beberapa lempeng sehingga rawan gempa. Bahaya utamanya adalah benda dan bangunan yang runtuh, bukan guncangannya sendiri.",
+  intro: "Kita di ruang kelas lantai 2. Saat guncangan terasa: merunduk, berlindung di bawah meja, dan berpegangan. Setelah berhenti, keluar lewat tangga darurat dan pergi ke titik kumpul di lapangan terbuka.",
+  steps: [
+    "Tetap di kelas. Saat terasa guncangan: MERUNDUK, BERLINDUNG di bawah meja, dan BERPEGANGAN — berdiri di bawah meja lalu tekan X (tombol Duduk).",
+    "Guncangan berhenti. Keluar dengan tertib lewat TANGGA DARURAT — jangan gunakan lift.",
+    "Menuju titik kumpul di lapangan terbuka — jauhi gedung, tiang listrik, dan pohon besar.",
+    "Lapor ke petugas di titik kumpul & waspadai gempa susulan."
+  ],
+  edu: [
+    "Saat gempa: Merunduk, Berlindung, Berpegangan (Drop, Cover, Hold On). Jauhi jendela kaca, lemari, dan benda yang bisa jatuh.",
+    "Jangan berlari keluar saat guncangan masih terjadi; jangan gunakan lift.",
+    "Setelah guncangan berhenti, keluar tertib lewat tangga darurat menuju titik kumpul terbuka.",
+    "Di pantai: gempa kuat ≥ 20 detik atau air laut surut tiba-tiba → segera evakuasi ke tempat tinggi (waspada tsunami).",
+    "Kencangkan lemari ke dinding, siapkan tas siaga, dan kenali jalur evakuasi gedungmu."
+  ],
+  spawn: { x: -32, z: 1, yaw: 0 }, exit: { x: -38.2, z: 0.4, ry: Math.PI / 2 },
+  fog: [0.75, 0.8, 0.85, 0.008], skyCols: ["#60a5fa", "#bfdbfe", "#eff6ff"], sky: 0xeff6ff, sun: 0xfff7e6, sunK: 1.2,
+  ground() { return 0; },
+  G: { desks: [], lamps: [], lemari: null, shaky: [] },
+  DESKS: [[-36, -7], [-32, -7], [-28, -7], [-36, -3], [-32, -3], [-28, -3]],
+  build(root) {
+    const k = "gempa", M = BC_META[k], self = this, G = self.G, A = (x, z) => bcAt(k, x, z);
+    bcTerrain(k, root, (x, z, h, c) => { if (bcIn(x, z, 2, 32, 12)) c.set(0x65a30d); else if (z > 4 && z < 12 && x > -14 && x < 10) c.set(0x9ca3af); else c.setHSL(0.24, 0.4, 0.36); }, 40);
+    // ----- ruang kelas lantai 2 (interior) -----
+    const flc = l2Canvas(256, 256, (x, w, h) => { x.fillStyle = "#e5e7eb"; x.fillRect(0, 0, w, h); x.strokeStyle = "#cbd5e1"; x.lineWidth = 3; for (let i = 0; i <= w; i += 64) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, h); x.moveTo(0, i); x.lineTo(w, i); x.stroke(); } });
+    const ft = xTex(flc); ft.wrapS = ft.wrapT = THREE2.RepeatWrapping; ft.repeat.set(8, 6);
+    const [ix, iz] = A(-28, -4); const floor = new THREE2.Mesh(new THREE2.PlaneGeometry(26, 14), new THREE2.MeshStandardMaterial({ map: ft, roughness: 0.6 })); floor.rotation.x = -Math.PI / 2; floor.position.set(ix + 0.5, 0.02, iz); root.add(floor);
+    const ceil = new THREE2.Mesh(new THREE2.PlaneGeometry(26, 14), new THREE2.MeshStandardMaterial({ color: 0xf8fafc, side: THREE2.DoubleSide })); ceil.rotation.x = Math.PI / 2; ceil.position.set(ix + 0.5, 3.6, iz); root.add(ceil);
+    const wM = new THREE2.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.9 });
+    const wall = (ax, az, bx, bz, h) => { const [x1, z1] = A(ax, az), [x2, z2] = A(bx, bz), len = Math.hypot(x2 - x1, z2 - z1); const m = new THREE2.Mesh(new THREE2.BoxGeometry(len, h || 3.6, 0.2), wM); m.position.set((x1 + x2) / 2, (h || 3.6) / 2, (z1 + z2) / 2); m.rotation.y = -Math.atan2(z2 - z1, x2 - x1); root.add(m); xCol(x1, z1, x2, z2, 0.25); return m; };
+    wall(-40, -10, -24, -10); wall(-40, 2, -24, 2); wall(-24, -10, -24, -3); wall(-24, -1, -24, 2);
+    wall(-24, -5, -15, -5); wall(-24, 1, -15, 1); wall(-15, -5, -15, 1);
+    // dinding barat: jendela kaca
+    const [wx0, wz0] = A(-40, -4); const winC = l2Canvas(512, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#93c5fd"); g.addColorStop(1, "#e0f2fe"); x.fillStyle = g; x.fillRect(0, 0, w, h); x.fillStyle = "#64748b"; for (let i = 0; i < 9; i++) x.fillRect(i * 58, h - 60 - (i % 3) * 30, 44, 200); x.strokeStyle = "#475569"; x.lineWidth = 10; for (let i = 0; i <= 4; i++) { x.beginPath(); x.moveTo(i * 128, 0); x.lineTo(i * 128, h); x.stroke(); } x.strokeRect(0, 0, w, h); });
+    const glass = new THREE2.Mesh(new THREE2.PlaneGeometry(12, 3.2), new THREE2.MeshBasicMaterial({ map: xTex(winC), toneMapped: false })); glass.position.set(wx0 + 0.12, 1.8, wz0); glass.rotation.y = Math.PI / 2; root.add(glass); xCol(wx0, wz0 - 6, wx0, wz0 + 6, 0.25);
+    const ww = xPlane(bcSignTex(["⚠ JENDELA KACA"], "#b91c1c"), 1.3, 0.57); ww.position.set(wx0 + 0.15, 3.25, wz0 + 4.5); ww.rotation.y = Math.PI / 2; root.add(ww);
+    // papan tulis, meja & kursi, lemari, lampu
+    const [bx2, bz2] = A(-32, -9.85); const wb = xPlane(bcSignTex(["SIMULASI GEMPA", "Merunduk · Berlindung · Berpegangan"], "#0f766e", null, 900, 300), 5, 1.67); wb.position.set(bx2, 2.0, bz2); root.add(wb);
+    G.desks = [];
+    for (const [x, z] of self.DESKS) { const g = bcTable(k, root, x, z, 0xd4a373); G.desks.push(g); G.shaky.push(g); const [cx2, cz2] = A(x, z + 0.9); const ch = new THREE2.Mesh(new THREE2.BoxGeometry(0.45, 0.45, 0.45), new THREE2.MeshStandardMaterial({ color: 0x1d4ed8 })); ch.position.set(cx2, 0.23, cz2); root.add(ch); G.shaky.push(ch); }
+    const [lx2, lz2] = A(-26, -9.3); const lemari = new THREE2.Mesh(new THREE2.BoxGeometry(1.6, 2.4, 0.6), new THREE2.MeshStandardMaterial({ color: 0x92400e, roughness: 0.7 })); lemari.position.set(lx2, 1.2, lz2); root.add(lemari); G.lemari = lemari; G.shaky.push(lemari);
+    const ls = xPlane(bcSignTex(["⚠ LEMARI"], "#b91c1c"), 0.9, 0.39); ls.position.set(lx2, 2.7, lz2 + 0.32); root.add(ls);
+    for (const [x, z] of [[-35, -4], [-29, -4]]) { const [ax, az] = A(x, z); const lamp = new THREE2.Group(); lamp.position.set(ax, 3.6, az); root.add(lamp); const cord = new THREE2.Mesh(new THREE2.CylinderGeometry(0.01, 0.01, 0.8, 4), new THREE2.MeshBasicMaterial({ color: 0x111111 })); cord.position.y = -0.4; lamp.add(cord); const sh = new THREE2.Mesh(new THREE2.ConeGeometry(0.35, 0.3, 12, 1, true), new THREE2.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff7d6, emissiveIntensity: 0.6, side: THREE2.DoubleSide })); sh.position.y = -0.85; lamp.add(sh); G.lamps.push(lamp); }
+    { const pl = new THREE2.PointLight(0xfff7e6, 10, 18, 1.5); const [ax, az] = A(-32, -4); pl.position.set(ax, 3.2, az); root.add(pl); }
+    // koridor: lift & tangga darurat
+    const [lfx, lfz] = A(-19.5, -4.9); const lift = new THREE2.Mesh(new THREE2.PlaneGeometry(1.6, 2.4), new THREE2.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.8, roughness: 0.25 })); lift.position.set(lfx, 1.2, lfz); root.add(lift);
+    const lifS = xPlane(bcSignTex(["🛗 LIFT"], "#334155"), 1.2, 0.53); lifS.position.set(lfx, 2.85, lfz + 0.02); root.add(lifS);
+    bcObj(k, lift, "lift", -19.5, -4, 3.5); bcObj(k, lifS, "lift", -19.5, -4, 3.5);
+    const [tgx, tgz] = A(-15.1, -2); const tg = new THREE2.Mesh(new THREE2.PlaneGeometry(1.5, 2.3), new THREE2.MeshStandardMaterial({ color: 0x15803d })); tg.position.set(tgx, 1.15, tgz); tg.rotation.y = -Math.PI / 2; root.add(tg);
+    const tgS = xPlane(bcSignTex(["🏃 TANGGA DARURAT", "EXIT"], "#15803d"), 1.5, 0.66); tgS.position.set(tgx - 0.03, 2.75, tgz); tgS.rotation.y = -Math.PI / 2; root.add(tgS);
+    bcObj(k, tg, "tangga", -16, -2, 3.5); bcObj(k, tgS, "tangga", -16, -2, 3.5);
+    // ----- gedung (luar), lapangan, tiang listrik, pohon -----
+    const [gx, gz] = A(-3, -5); const bld = new THREE2.Mesh(new THREE2.BoxGeometry(22, 9, 18), new THREE2.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.8 })); bld.position.set(gx, 4.5, gz); root.add(bld);
+    for (let i = 0; i < 8; i++) for (let j = 0; j < 2; j++) { const wn = new THREE2.Mesh(new THREE2.PlaneGeometry(1.6, 1.4), new THREE2.MeshStandardMaterial({ color: 0x93c5fd, metalness: 0.5, roughness: 0.2 })); wn.position.set(gx - 9.5 + i * 2.7, 2.4 + j * 3.6, gz + 9.02); root.add(wn); }
+    const exS = xPlane(bcSignTex(["GEDUNG KELAS", "pintu keluar tangga darurat"], "#15803d"), 3.2, 1.4); exS.position.set(gx + 7, 2.3, gz + 9.05); root.add(exS);
+    for (const [ax, az, bx3, bz3] of [[-14, -14, 8, -14], [8, -14, 8, 4], [8, 4, -14, 4], [-14, 4, -14, -14]]) { const [p1, q1] = A(ax, az), [p2, q2] = A(bx3, bz3); xCol(p1, q1, p2, q2, 0.3); }
+    G.poles = [[11, 13], [-9, 15]]; G.trees = [[16, 22], [-16, 26]];
+    for (const [x, z] of G.poles) { const [a, b] = A(x, z); const p = new THREE2.Mesh(new THREE2.CylinderGeometry(0.12, 0.16, 8, 8), new THREE2.MeshStandardMaterial({ color: 0x78716c })); p.position.set(a, 4, b); root.add(p); const cb = new THREE2.Mesh(new THREE2.BoxGeometry(1.6, 0.1, 0.1), p.material); cb.position.set(a, 7.6, b); root.add(cb); bcDanger(k, root, x + 1.2, z + 1, 0, "⚠ TIANG LISTRIK"); }
+    bcTrees(k, root, G.trees.map(([x, z]) => [x, z, 1.8]), "leaf");
+    bcEvac(k, root, 4, 8, Math.PI, "JALUR EVAKUASI ⬇"); bcTK(k, root, -3, 30, Math.PI); bcPosko(k, root, 6, 34, "POSKO TITIK KUMPUL");
+    const fp = bcTreePts(30, 616, (x, z) => (Math.abs(x) > 30 || z > 42) && x > -12); bcTrees(k, root, fp, "leaf");
+    bcNpc(k, root, "ridwan", -26.5, -1, { b: "N", tn: "T", top: "#1e3a8a", bot: "#1f2937", hat: ["hardhat", "#facc15"], it: "tablet", x: ["vest:#f97316"] });
+    self.marks = {}; for (let i = 0; i < 6; i++) bcMark(k, root, "meja" + i, self.DESKS[i][0], self.DESKS[i][1] + 0.9, 0.05); bcMark(k, root, "tangga", -16.2, -2, 0.05); bcMark(k, root, "tk", 0, 32); bcMark(k, root, "posko", 6, 36.6);
+  },
+  reset(R) { const G = this.G; for (const o of G.shaky) { if (o.userData.p0) o.position.copy(o.userData.p0); } $("bcShake")?.remove(); },
+  start(R) { const G = this.G; for (const o of G.shaky) o.userData.p0 = o.userData.p0 || o.position.clone(); R.f.shakeAt = performance.now() + 7000; R.f.cover = false; toast("🏫 Kamu sedang belajar di kelas lantai 2… tetap waspada.", 4000); },
+  target(R) { if (R.step === 0) return R.f.shaking ? ["meja0", "meja1", "meja2", "meja3", "meja4", "meja5"] : null; return [null, "tangga", "tk", "posko"][R.step]; },
+  underDesk(lx, lz) { return this.DESKS.some(([x, z]) => Math.abs(lx - x) < 0.95 && Math.abs(lz - z) < 0.8); },
+  act(R, w) {
+    const st = R.step;
+    if (w === "lift") { if (st === 0) return bcOrder(R); return bcFail(R, "Kamu menggunakan lift setelah gempa — listrik padam dan lift macet di antara lantai.", "Jangan gunakan lift saat/sesudah gempa. Keluar tertib lewat tangga darurat."); }
+    if (w === "tangga") {
+      if (st !== 1) return bcOrder(R);
+      const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+      setTimeout(() => { const [x, z] = bcAt("gempa", 2, 7); xTeleport(x, z, Math.PI); BC.grace = performance.now() + 1500; R.f.outAt = performance.now(); setTimeout(() => f.remove(), 700); bcStep(R, 1, "Kamu menuruni tangga darurat dan keluar gedung."); }, 450);
+      return;
+    }
+    if (w === "posko") { if (st !== 3) return bcOrder(R); bcQuizEnd(R, "Petugas bertanya: jika kamu sedang di pantai lalu merasakan gempa kuat yang lama (≥ 20 detik), apa yang harus dilakukan?", "Segera evakuasi ke tempat tinggi atau menjauh dari pantai tanpa menunggu peringatan resmi — waspada tsunami.", ["Mendekat ke pantai untuk melihat air laut yang surut.", false, "Air laut surut tiba-tiba adalah tanda tsunami akan datang.", "Gempa kuat lama atau air laut surut tiba-tiba = segera lari ke tempat tinggi."], ["Tetap di rumah menunggu kabar di media sosial.", false, "Tsunami bisa tiba dalam hitungan menit setelah gempa.", "Jangan menunggu; evakuasi mandiri ke tempat tinggi segera setelah gempa kuat."]); }
+  },
+  tick(R, dt, lx, lz, now) {
+    const G = this.G; if (!R || R.end) return;
+    if (R.step === 0 && R.f.shakeAt) {
+      const e = (now - R.f.shakeAt) / 1000;
+      if (e < 0) { R.timer = ""; return; }
+      if (!R.f.shaking) { R.f.shaking = true; BCSND.rumble(3); if (typeof xShake === "function") xShake(12, 0.07); const b = document.createElement("div"); b.id = "bcShake"; b.textContent = "⚠ GEMPA! Merunduk, berlindung di bawah meja, berpegangan (tekan X)"; document.body.appendChild(b); bcMarkUpd(); }
+      if (e < 12) { R.timer = `🏚 guncangan ${Math.ceil(12 - e)} dtk`; for (const o of G.shaky) if (o.userData.p0) { o.position.x = o.userData.p0.x + Math.sin(now * 0.05 + o.id) * 0.05; o.position.z = o.userData.p0.z + Math.cos(now * 0.043 + o.id) * 0.05; } for (const l of G.lamps) l.rotation.z = Math.sin(now * 0.008) * 0.35; if (G.lemari && e > 5) G.lemari.rotation.x = Math.min(0.25, (e - 5) * 0.08); if (Math.random() < dt * 0.8) BCSND.rumble(1.2); }
+      const under = this.underDesk(lx, lz) && P.sit;
+      if (lx < -38.4 && e < 12) return bcFail(R, "Kamu berada di dekat jendela kaca saat guncangan — kaca pecah dan melukaimu.", "Jauhi jendela kaca. Merunduk dan berlindung di bawah meja yang kokoh.");
+      if (e < 12 && Math.abs(lx + 26) < 1.6 && lz < -7.5) return bcFail(R, "Kamu berdiri di dekat lemari yang roboh saat guncangan.", "Jauhi lemari dan benda tinggi yang bisa roboh; berlindung di bawah meja.");
+      if (e < 12 && (lx > -24 || !bcIn(lx, lz, -32, -4, 10))) return bcFail(R, "Kamu berlari keluar kelas saat guncangan masih berlangsung.", "Jangan berlari saat guncangan. Merunduk, berlindung di bawah meja, dan berpegangan sampai guncangan berhenti.");
+      if (under) R.f.cover = true;
+      if (e > 5 && e < 12 && !under) return bcFail(R, R.f.cover ? "Kamu keluar dari bawah meja sebelum guncangan berhenti." : "Kamu tidak segera berlindung di bawah meja dan tertimpa benda yang berjatuhan.", "Saat gempa: MERUNDUK, BERLINDUNG di bawah meja yang kokoh, dan BERPEGANGAN pada kaki meja sampai guncangan berhenti.");
+      if (e >= 12) { $("bcShake")?.remove(); for (const o of G.shaky) if (o.userData.p0) o.position.copy(o.userData.p0); for (const l of G.lamps) l.rotation.z = 0; R.f.shaking = false; bcStep(R, 0, "Guncangan berhenti. Kamu selamat berlindung di bawah meja."); }
+      return;
+    }
+    if (R.step === 2 && R.f.outAt) {
+      const e = (now - R.f.outAt) / 1000;
+      if (!R.f.after && e > 10) { R.f.after = true; BCSND.rumble(2.5); if (typeof xShake === "function") xShake(3, 0.05); toast("⚠ GEMPA SUSULAN!", 2500); const nearB = lz < 9 && lx > -16 && lx < 10, nearP = G.poles.concat(G.trees).some(([x, z]) => Math.hypot(lx - x, lz - z) < 4); if (nearB) return bcFail(R, "Saat gempa susulan kamu masih berada dekat dinding gedung dan tertimpa pecahan kaca/reruntuhan.", "Setelah keluar gedung, segera menjauh dari bangunan menuju lapangan terbuka."); if (nearP) return bcFail(R, "Saat gempa susulan kamu berada di dekat tiang listrik/pohon besar yang roboh.", "Di luar ruangan, jauhi tiang listrik, pohon besar, dan papan reklame; menuju titik kumpul terbuka."); }
+      R.timer = R.f.after ? "" : `⚠ waspada susulan`;
+      if (bcIn(lx, lz, 0, 32, 4.5)) bcStep(R, 2, "Kamu tiba di titik kumpul terbuka.");
+    }
+  }
+};
+
+// =====================================================================
+// 5) GUNUNG MELETUS — Salsa
+// =====================================================================
+BCS.gunung = {
+  about: "Gunung meletus (erupsi) terjadi ketika magma dari dalam bumi keluar ke permukaan. Bahayanya antara lain awan panas (piroklastik) dan lahar yang mengalir lewat lembah/sungai berhulu di gunung, lontaran batu, serta hujan abu yang mengganggu pernapasan dan bisa merobohkan atap.",
+  intro: "Kita di desa di kaki gunung api. Dengarkan informasi resmi, lindungi diri dari abu, lalu mengungsi lewat jalur evakuasi resmi menjauhi lembah sungai dan kawah.",
+  steps: [
+    "Dengarkan informasi resmi: periksa papan status gunung api di pos informasi.",
+    "Lindungi diri dari abu vulkanik: ambil masker dan kacamata pelindung.",
+    "Mengungsi ke pos pengungsian lewat jalur evakuasi resmi (timur-selatan) — jauhi lembah sungai dan jangan mendekat ke kawah.",
+    "Lapor ke petugas di pos pengungsian & ikuti arahan."
+  ],
+  edu: [
+    "Pahami 4 tingkat status gunung api: Normal (I), Waspada (II), Siaga (III), Awas (IV). Ikuti informasi resmi PVMBG/BPBD.",
+    "Saat status Awas atau diminta petugas, segera mengungsi keluar Kawasan Rawan Bencana (KRB).",
+    "Jauhi lembah dan aliran sungai yang berhulu di gunung — jalur awan panas dan lahar.",
+    "Gunakan masker dan kacamata saat hujan abu; tutup sumber air.",
+    "Bersihkan abu tebal di atap agar tidak roboh, dan jangan kembali sebelum status diturunkan."
+  ],
+  spawn: { x: 2, z: 7, yaw: 0 }, exit: { x: 12, z: 10, ry: -Math.PI / 2 },
+  fog: [0.62, 0.6, 0.58, 0.009], skyCols: ["#78716c", "#a8a29e", "#e7e5e4"], sky: 0xe7e5e4, sun: 0xffedd5, sunK: 0.9,
+  ground(lx, lz) { if (lx > -22 && lx < -10 && lz < 46) return -1.0; return lz < -10 ? Math.min(9, (-10 - lz) * 0.18) : 0; },
+  V: { cone: null, col: [], ash: null, ap: null },
+  build(root) {
+    const k = "gunung", M = BC_META[k], self = this, V = self.V;
+    bcTerrain(k, root, (x, z, h, c) => { if (x > -22.5 && x < -9.5 && z < 46) c.set(0x57534e); else if (Math.abs(x) < 2.2 && z < -6) c.set(0x6b7280); else if (bcIn(x, z, 34, 38, 9)) c.set(0x9ca3af); else c.setHSL(0.2, 0.3, 0.3 + h * 0.005); }, 80);
+    // gunung api (di luar area jalan)
+    const cone = new THREE2.Mesh(new THREE2.ConeGeometry(75, 58, 40, 8, true), new THREE2.MeshStandardMaterial({ color: 0x57534e, roughness: 1, flatShading: true })); cone.position.set(M.cx, 22, M.cz - 125); root.add(cone); V.cone = cone;
+    const crater = world.glowSprite("#ff4d00", 30, 0.0); crater.position.set(M.cx, 52, M.cz - 125); root.add(crater); V.crater = crater;
+    const sm = bcSmokeMat("rgba(80,75,70,.95)"); V.col = [];
+    for (let i = 0; i < 14; i++) { const s = new THREE2.Sprite(sm); s.position.set(M.cx + (Math.random() - 0.5) * 10, 56 + i * 6, M.cz - 125); s.scale.setScalar(16 + i * 3); s.visible = false; root.add(s); V.col.push(s); }
+    BC.anims.push((dt, zk) => { if (zk !== "gunung") return; V.col.forEach((s, i) => { s.position.y += dt * 4; if (s.position.y > 150) s.position.y = 56; s.material.rotation = t * 0.04 + i; }); });
+    // lembah sungai (jalur lahar)
+    const riv = new THREE2.Mesh(new THREE2.PlaneGeometry(12, 100), new THREE2.MeshStandardMaterial({ color: 0x78716c, roughness: 0.4 })); riv.rotation.x = -Math.PI / 2; riv.position.set(M.cx - 16, -0.8, M.cz); root.add(riv);
+    bcDanger(k, root, -8.5, 4, Math.PI / 2, "⚠ LEMBAH SUNGAI · JALUR LAHAR"); bcDanger(k, root, 3, -9, 0, "⚠ KE KAWAH · DILARANG");
+    // jalan ke kawah
+    // desa
+    for (const [x, z, r] of [[-4, -1, 0], [8, -2, 0], [-3, 13, Math.PI], [10, 16, Math.PI], [20, 6, -Math.PI / 2]]) bcHouse(k, root, x, z, r, { wall: ["#e7dcc5", "#fed7aa", "#e5e7eb"][Math.abs(x + z) % 3], roof: "#57534e" });
+    // pos informasi & kotak masker
+    const [ix, iz] = bcAt(k, -3, 5); const info = xPlane(l2Canvas(640, 520, (x, w, h) => { x.fillStyle = "#1f2937"; rr(x, 0, 0, w, h, 24); x.fill(); x.fillStyle = "#fbbf24"; x.textAlign = "center"; x.font = `900 46px ${FONT}`; x.fillText("STATUS GUNUNG API", w / 2, 70); const lv = [["IV · AWAS", "#dc2626"], ["III · SIAGA", "#f97316"], ["II · WASPADA", "#facc15"], ["I · NORMAL", "#22c55e"]]; lv.forEach(([t2, c], i) => { x.fillStyle = c; rr(x, 70, 100 + i * 96, w - 140, 80, 14); x.fill(); x.fillStyle = "#111"; x.font = `800 40px ${FONT}`; x.fillText(t2, w / 2, 154 + i * 96); }); }), 1.8, 1.46);
+    info.position.set(ix, 2.2, iz); info.material.side = THREE2.DoubleSide; root.add(info);
+    const ip = new THREE2.Mesh(new THREE2.CylinderGeometry(0.06, 0.06, 1.6, 8), new THREE2.MeshStandardMaterial({ color: 0x9ca3af })); ip.position.set(ix, 0.8, iz - 0.05); root.add(ip);
+    bcObj(k, info, "info", -3, 6);
+    bcTable(k, root, 6, 4.5);
+    const [mx, mz] = bcAt(k, 6, 4.5); const box = new THREE2.Mesh(new THREE2.BoxGeometry(0.7, 0.35, 0.45), new THREE2.MeshStandardMaterial({ color: 0x0ea5e9 })); box.position.set(mx, 1.06, mz); root.add(box);
+    const bl = xPlane(bcSignTex(["😷 MASKER &", "KACAMATA"], "#0369a1"), 1.0, 0.44); bl.position.set(mx, 1.6, mz + 0.25); root.add(bl);
+    bcObj(k, box, "masker", 6, 4.5); bcObj(k, bl, "masker", 6, 4.5);
+    // jalur evakuasi & pos pengungsian
+    bcEvac(k, root, 14, 4, -Math.PI / 2, "JALUR EVAKUASI ➜"); bcEvac(k, root, 26, 10, Math.PI, "JALUR EVAKUASI ⬇"); bcEvac(k, root, 30, 26, Math.PI, "JALUR EVAKUASI ⬇");
+    bcTK(k, root, 28, 36, Math.PI); bcPosko(k, root, 38, 40, "POS PENGUNGSIAN");
+    const tp = bcTreePts(70, 717, (x, z) => !(x > -23 && x < -9) && !(Math.abs(x) < 4 && z < -6) && !bcIn(x, z, 3, 5, 12) && !bcIn(x, z, 34, 38, 9) && !(x > 10 && x < 32 && z > 0 && z < 34 && Math.abs(x - 26) < 5) && !(z > 0 && z < 8 && x > 8 && x < 30)); bcTrees(k, root, tp, "pine");
+    // hujan abu
+    V.ash = bcRain(k, root, 600, 0x9ca3af, 6); V.ash.visible = false;
+    // awan panas (menuruni lembah)
+    const apM = bcSmokeMat("rgba(120,110,100,.95)"); V.ap = new THREE2.Group(); V.ap.visible = false; root.add(V.ap);
+    for (let i = 0; i < 18; i++) { const s = new THREE2.Sprite(apM); s.position.set((Math.random() - 0.5) * 12, 2 + Math.random() * 8, (Math.random() - 0.5) * 14); s.scale.setScalar(9 + Math.random() * 8); V.ap.add(s); }
+    bcNpc(k, root, "salsa", 5, 8.5, { b: "N", tn: "L", top: "#0f766e", bot: "#0f766e", hat: ["hijab", "#f97316"], it: "binoculars", x: ["vest:#f97316", "skirtlong"] });
+    self.marks = {}; bcMark(k, root, "info", -3, 6.4); bcMark(k, root, "masker", 6, 5.7); bcMark(k, root, "tk", 30, 38); bcMark(k, root, "posko", 38, 42.6);
+  },
+  reset(R) { const V = this.V; V.col.forEach((s) => s.visible = false); if (V.ash) V.ash.visible = false; if (V.ap) V.ap.visible = false; if (V.crater) V.crater.material.opacity = 0; this.fog = [0.62, 0.6, 0.58, 0.009]; },
+  start(R) { },
+  target(R) { return ["info", "masker", "tk", "posko"][R.step]; },
+  act(R, w) {
+    const st = R.step, V = this.V;
+    if (w === "info") { if (st !== 0) return bcOrder(R); bcAsk(R, "📢 Informasi resmi PVMBG/BPBD", "Status gunung baru saja dinaikkan menjadi AWAS (Level IV) dan petugas meminta warga mengungsi. Apa yang kamu lakukan?", [
+      ["Segera mengungsi keluar Kawasan Rawan Bencana sesuai arahan petugas dan jalur evakuasi.", true],
+      ["Naik mendekati kawah untuk merekam erupsi dari dekat.", false, "Kamu mendekati kawah saat status Awas — terkena lontaran batu dan awan panas.", "Saat status Awas, jauhi kawah dan segera mengungsi keluar KRB sesuai arahan petugas."],
+      ["Menunggu di rumah sampai letusan reda, karena rumah cukup kuat.", false, "Kamu tetap tinggal di KRB — awan panas dan hujan abu tebal mengancam keselamatanmu.", "Ikuti perintah evakuasi. Rumah tidak melindungi dari awan panas; mengungsilah segera."]
+    ], () => { bcStep(R, 0, "Perintah evakuasi diterima. Gunung mulai erupsi!"); BCSND.boom(); if (typeof xShake === "function") xShake(2, 0.05); V.col.forEach((s) => s.visible = true); V.crater.material.opacity = 0.8; V.ash.visible = true; this.fog = [0.5, 0.47, 0.44, 0.02]; R.f.apAt = performance.now() + 40000; }); return; }
+    if (w === "masker") { if (st !== 1) return bcOrder(R); bcStep(R, 1, "Masker & kacamata terpasang — terlindung dari abu vulkanik."); return; }
+    if (w === "posko") { if (st !== 3) return bcOrder(R); bcQuizEnd(R, "Petugas bertanya: setelah hujan abu reda, apa yang sebaiknya dilakukan?", "Tetap memakai masker, membersihkan abu tebal di atap agar tidak roboh, dan tidak kembali ke KRB sebelum status diturunkan.", ["Kembali ke rumah begitu letusan pertama berhenti.", false, "Erupsi bisa terjadi berulang; status belum diturunkan.", "Tetap di pengungsian sampai PVMBG/BPBD menurunkan status dan menyatakan aman."], ["Melepas masker karena abu sudah tidak turun.", false, "Abu halus masih beterbangan dan berbahaya bagi paru-paru.", "Gunakan masker selama abu masih ada di lingkungan; bersihkan abu dengan dibasahi."]); }
+  },
+  tick(R, dt, lx, lz, now) {
+    const V = this.V; if (!R || R.end) return;
+    if (R.f.apAt) {
+      const e = (now - R.f.apAt) / 1000;
+      R.timer = e < 0 ? `🌋 awan panas ±${Math.ceil(-e)} dtk` : "🌋 AWAN PANAS!";
+      if (e >= 0) { V.ap.visible = true; const fz = -48 + Math.min(1, e / 9) * 96, [ax, az] = bcAt("gunung", -16, fz); V.ap.position.set(ax, 0, az); V.ap.children.forEach((s, i) => { s.position.y = 2 + ((i * 1.7 + e * 2) % 9); }); if (lx > -24 && lx < -8 && lz < fz + 6) return bcFail(R, "Kamu berada di lembah saat awan panas meluncur turun.", "Jauhi lembah dan aliran sungai berhulu di gunung — jalur awan panas dan lahar."); }
+    }
+    if (lx > -22.5 && lx < -9.5 && R.step <= 2) return bcFail(R, "Kamu turun ke lembah sungai yang berhulu di gunung — jalur lahar dan awan panas.", "Jangan melewati lembah/sungai berhulu di gunung saat erupsi; gunakan jalur evakuasi resmi.");
+    if (lz < -12 && Math.abs(lx) < 10 && R.step <= 2) return bcFail(R, "Kamu berjalan mendekat ke arah kawah.", "Jangan mendekati kawah untuk melihat atau merekam erupsi; menjauhlah sesuai jalur evakuasi.");
+    if (R.step === 1 && Math.hypot(lx - 3, lz - 5) > 14) return bcFail(R, "Kamu mengungsi tanpa masker dan kacamata pelindung di tengah hujan abu.", "Gunakan masker dan kacamata pelindung sebelum keluar saat hujan abu vulkanik.");
+    if (R.step === 2 && bcIn(lx, lz, 30, 38, 5)) bcStep(R, 2, "Kamu tiba di pos pengungsian yang aman.");
+  }
+};
+
+
+
+// =====================================================================
 // src/ext_hud.js — HUD tantangan ringkas di pojok kanan atas
 //  • Semua panel tantangan (nyawa, progres, keterangan) dipindah ke pojok
 //    kanan atas, tembus pandang, dan ringkas agar tidak menghalangi
 //    pandangan. Ketuk judul panel (▾/▴) untuk membuka detail & tombol.
 // =====================================================================
-var HUD_IDS = ["cvHud", "ioHud", "kwHud", "svHud", "isHud", "tmHud", "prHud", "saHud", "tyHud", "kpHud"];
+var HUD_IDS = ["cvHud", "ioHud", "kwHud", "svHud", "isHud", "tmHud", "prHud", "saHud", "tyHud", "kpHud", "bcHud"];
 var HUDX = (() => { try { return JSON.parse(localStorage.getItem("itlab.hudx") || "{}") || {}; } catch { return {}; } })();
 function hudSaveX() { try { localStorage.setItem("itlab.hudx", JSON.stringify(HUDX)); } catch { /* */ } }
 (() => {

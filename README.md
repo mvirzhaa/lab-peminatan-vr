@@ -423,3 +423,24 @@ Setelah memperbarui berkas: `pm2 restart all`.
 - **Anti-Gravity UI Race:** semua pijakan (termasuk PUBLISH) bisa dipijak sejak awal.
   - Pemain boleh melompati dua pijakan atau lebih. Soal hanya muncul di pijakan yang benar-benar dipijak, dan mendarat di PUBLISH kapan saja langsung menang.
   - Kembali ke pijakan yang sudah dilewati tidak memunculkan soal lagi.
+
+## Pembaruan v19.2 — Perbaikan booster & rintangan Raptor Run
+- Booster dan perisai kini dimiliki masing-masing pembalap: kalau Azis lewat lebih dulu, booster tetap ada untuk pemain (sebelumnya ikut hilang sehingga terasa "tembus").
+- Jangkauan ambil booster/perisai sedikit diperlebar, termasuk saat raptor baru saja pindah jalur.
+- Booster tidak bisa diambil lagi selama efeknya masih aktif, begitu juga perisai selama masih terpasang. Item yang belum bisa diambil tampil redup, dan HUD menampilkan sisa detik booster.
+- Batang kayu dan lava kini berlaku di ketiga jalur sesuai tampilannya (sebelumnya hanya jalur tengah yang dihitung). Loncati untuk menghindar.
+- Pemeriksaan tabrakan dibuat tersapu (memeriksa seluruh jarak yang ditempuh dalam satu frame) sehingga tidak ada rintangan atau item yang terlewat saat frame melambat.
+
+## Pembaruan v20 — Ruang Simulasi Bencana
+- **Ruang baru** di barat Ruang E-Portal, lewat pintu oranye di dinding barat E-Portal. Juga tersedia di daftar teleport dan denah.
+  - Isinya 5 gerbang simulasi di dinding barat, papan status kelulusan, meja peta risiko bencana, poster tas siaga, dan nomor darurat 112.
+  - **Smart board video edukasi** di dinding utara memuat 10 video YouTube tentang kelima bencana. Pilih video dari panel smart board (tombol "🎬 Pilih video"). Video diputar oleh masing-masing pemain.
+- **Lima simulasi**, masing-masing dengan lingkungan dan pemandu sendiri:
+  - 🔥 **Kebakaran Hutan** — pemandu Renda: lapor lewat radio, pakai masker, baca arah angin, evakuasi menyamping dari arah angin ke sungai, lapor ke posko. Api merambat searah angin dan ke atas bukit; asap berbahaya tanpa masker.
+  - 🌊 **Banjir Bandang** — pemandu Farhan: kenali tanda bahaya, sirene, matikan MCB, bawa tas siaga, evakuasi ke bukit lewat jalur evakuasi (bukan jembatan atau tepi sungai). Air naik bertahap.
+  - ⛰ **Tanah Longsor** — pemandu Adrin: periksa 3 tanda (retakan, tiang/pohon miring, rembesan), bunyikan kentongan, evakuasi menyamping ke punggung bukit. Longsoran turun mengikuti alurnya.
+  - 🏚 **Gempa Bumi** — pemandu Ridwan: merunduk, berlindung di bawah meja, dan berpegangan (tekan X) selama guncangan; keluar lewat tangga darurat (bukan lift); menuju titik kumpul, menjauhi gedung, tiang, dan pohon. Ada gempa susulan.
+  - 🌋 **Gunung Meletus** — pemandu Salsa: dengarkan status resmi (Awas), pakai masker dan kacamata, mengungsi lewat jalur resmi menjauhi lembah sungai dan kawah. Ada hujan abu dan awan panas.
+- **Panel langkah:** panel di kanan atas menampilkan langkah yang sedang dikerjakan, dan cincin kuning menandai sasarannya. Tombol "📋 Langkah mitigasi" berisi urutan langkah penyelamatan serta pencegahan dan kesiapsiagaan.
+- **Gagal:** tindakan berbahaya atau yang tidak sesuai instruksi penyelamatan membuat simulasi gagal. Muncul penjelasan kesalahan dan cara yang benar, lalu simulasi diulang dari awal.
+- **Lulus:** pemain mendapat sertifikat simulasi. Lulus kelimanya memberi status **Siaga Bencana** di Capaian (bagian "Simulasi Bencana").
