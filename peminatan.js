@@ -45,6 +45,13 @@ function createPeminatan({ dataDir, onChange }) {
       if (!Array.isArray(D.entries)) D.entries = [];
     }
   } catch { /* belum ada */ }
+  // token pendaftaran: diminta Kak Tias sebelum formulir dibuka; diatur admin peminatan
+  const KODE_CH = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const genKode = () => { let s = ''; const b = crypto.randomBytes(6); for (let i = 0; i < 6; i++) s += KODE_CH[b[i] % KODE_CH.length]; return s; };
+  const normKode = (v) => String(v || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 20);
+  if (typeof D.kode !== 'string' || normKode(D.kode).length < 4) { D.kode = genKode(); setTimeout(() => save(), 0); }
+  const kodeOK = (v) => { const a = Buffer.from(normKode(v)), b = Buffer.from(normKode(D.kode)); return a.length === b.length && a.length >= 4 && crypto.timingSafeEqual(a, b); };
+  const kodeLimit = new Map();
   let saveT = null;
   function save() {
     D.updated = Date.now();
@@ -287,7 +294,7 @@ function createPeminatan({ dataDir, onChange }) {
 
   function adminState() {
     return {
-      user: ADMIN_USER, period: D.period, open: !!D.open, stats: publicStats(),
+      user: ADMIN_USER, period: D.period, open: !!D.open, kode: D.kode, stats: publicStats(),
       entries: D.entries.map((e) => ({ id: e.id, t: e.t, u: e.u || 0, nim: e.nim, nama: e.nama, angkatan: e.angkatan, email: e.email, hp: e.hp, p1: e.p1, p2: e.p2, alasan: e.alasan, vr: e.vr })),
       final: D.final ? { title: D.final.title, note: D.final.note, published: !!D.final.published, publishedAt: D.final.publishedAt || 0, uploadedAt: D.final.uploadedAt, source: D.final.source, rows: D.final.rows, counts: countBy(D.final.rows, 'lab') } : null,
       archives: listArchives()
@@ -307,6 +314,17 @@ function createPeminatan({ dataDir, onChange }) {
         const r = nimOK(nim) ? F.rows.find((x) => x.nim === nim) : null;
         return json(res, 200, r ? { published: true, found: true, nama: r.nama, lab: r.lab } : { published: true, found: false });
       }
+      if (p === '/api/peminatan/token' && req.method === 'POST') {
+        if (!sameOrigin(req)) return json(res, 403, { ok: false, err: 'Permintaan ditolak.' });
+        const ip = clientIp(req), now = Date.now(), rl = kodeLimit.get(ip) || { n: 0, t: now };
+        if (now - rl.t > 10 * 60e3) { rl.n = 0; rl.t = now; }
+        if (++rl.n > 20) { kodeLimit.set(ip, rl); return json(res, 429, { ok: false, err: 'Terlalu banyak percobaan token. Coba lagi 10 menit lagi.' }); }
+        kodeLimit.set(ip, rl);
+        if (kodeLimit.size > 5000) kodeLimit.clear();
+        if (!D.open) return json(res, 403, { ok: false, err: 'Pendaftaran peminatan sedang ditutup.' });
+        const b = await readJson(req, 1024);
+        return kodeOK(b.kode) ? json(res, 200, { ok: true }) : json(res, 403, { ok: false, err: 'Token pendaftaran salah. Minta token yang berlaku kepada admin/panitia peminatan.' });
+      }
       if (p === '/api/peminatan/daftar' && req.method === 'POST') {
         if (!sameOrigin(req)) return json(res, 403, { ok: false, err: 'Permintaan ditolak.' });
         const ip = clientIp(req), now = Date.now();
@@ -318,6 +336,7 @@ function createPeminatan({ dataDir, onChange }) {
         if (++regGlobal.n > 400) return json(res, 503, { ok: false, err: 'Server sedang sibuk, coba sebentar lagi.' });
         if (!D.open) return json(res, 403, { ok: false, err: 'Pendaftaran peminatan sedang ditutup.' });
         const b = await readJson(req);
+        if (!kodeOK(b.kode)) return json(res, 403, { ok: false, kode: true, err: 'Token pendaftaran salah atau sudah diganti admin. Minta token yang berlaku lalu coba lagi.' });
         const nama = cleanName(b.nama), nim = cleanNim(b.nim), angkatan = clean(b.angkatan, 4).replace(/\D/g, '');
         const email = clean(b.email, 80), hp = clean(b.hp, 20).replace(/[^0-9+ -]/g, ''), p1 = normLab(b.p1), p2 = normLab(b.p2);
         const alasan = clean(b.alasan, 500), vr = clean(b.vr, 16), tok = clean(b.tok, 64);
@@ -396,6 +415,11 @@ function createPeminatan({ dataDir, onChange }) {
         return sendXlsx(res, wb, `template-hasil-final-${slug(D.period)}.xlsx`);
       }
       if (p === '/api/admin/open' && req.method === 'POST') { const b = await readJson(req); D.open = !!b.open; changed(false); return json(res, 200, { ok: true, open: D.open }); }
+      if (p === '/api/admin/kode' && req.method === 'POST') {
+        const b = await readJson(req); const v = b.acak ? genKode() : normKode(b.kode);
+        if (v.length < 4) return json(res, 400, { ok: false, err: 'Token minimal 4 karakter (huruf/angka).' });
+        D.kode = v; changed(false); return json(res, 200, { ok: true, kode: D.kode });
+      }
       if (p === '/api/admin/period' && req.method === 'POST') {
         const b = await readJson(req); const v = clean(b.period, 40);
         if (v.length < 4) return json(res, 400, { ok: false, err: 'Label periode minimal 4 karakter (mis. 2026/2027).' });

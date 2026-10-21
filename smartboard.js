@@ -1,5 +1,5 @@
 // =====================================================================
-//  Smart Board Kelas 1, Kelas 2 & Ruang Rapat
+//  Smart Board Auditorium Budi Susetyo, Auditorium Puspa Eosina, Ruang Rapat & RK 1–3
 //  - Konten (slide gambar atau video YouTube) diatur admin di /admin → tab "Smart Board".
 //  - Pengunjung: GET /api/sb (konfigurasi), GET /sb/<id>.<ext> (gambar slide).
 //  - Keadaan langsung per ruang ?room= (slide aktif, coretan anotasi, putar/jeda YouTube)
@@ -13,7 +13,7 @@ const { execFile } = require('child_process');
 const path = require('path');
 const crypto = require('crypto');
 
-const BOARDS = { kelas1: 'Kelas 1 · Auditorium', kelas2: 'Kelas 2 · Auditorium', rapat: 'Ruang Rapat', keris: 'Lab KERIS', git: 'Lab GIT', se: 'Lab Software Engineering', csn: 'Lab CSN' };
+const BOARDS = { kelas1: 'Auditorium Budi Susetyo', kelas2: 'Auditorium Puspa Eosina', rapat: 'Ruang Rapat', rk1: 'RK 1 · Ruang Kelas', rk2: 'RK 2 · Ruang Kelas', rk3: 'RK 3 · Ruang Kelas', keris: 'Lab KERIS', git: 'Lab GIT', se: 'Lab Software Engineering', csn: 'Lab CSN' };
 // smart board lab: diputar masing-masing pemain (tidak disinkronkan); ruang kelas & rapat: dibagikan ke semua pemain
 const LOCAL = new Set(['keris', 'git', 'se', 'csn']);
 const WELCOME_DEFAULT = 'o3LwrgW86U8';

@@ -444,3 +444,56 @@ Setelah memperbarui berkas: `pm2 restart all`.
 - **Panel langkah:** panel di kanan atas menampilkan langkah yang sedang dikerjakan, dan cincin kuning menandai sasarannya. Tombol "📋 Langkah mitigasi" berisi urutan langkah penyelamatan serta pencegahan dan kesiapsiagaan.
 - **Gagal:** tindakan berbahaya atau yang tidak sesuai instruksi penyelamatan membuat simulasi gagal. Muncul penjelasan kesalahan dan cara yang benar, lalu simulasi diulang dari awal.
 - **Lulus:** pemain mendapat sertifikat simulasi. Lulus kelimanya memberi status **Siaga Bencana** di Capaian (bagian "Simulasi Bencana").
+
+## Pembaruan v20.1 — Perbaikan banjir bandang & simulasi tsunami
+- **Banjir bandang (perbaikan):** sebelumnya simulasi langsung gagal ("meninggalkan rumah…") tepat setelah pemain membaca papan pantau di tepi sungai, karena papan itu berada di luar radius rumah.
+  - Aturan ini sekarang hanya berlaku bila pemain sudah menuju bukit (timur) atau menjauh ke utara/selatan sebelum mematikan MCB dan membawa tas siaga.
+  - Papan pantau digeser sedikit dari tepi sungai, dan tepi sungai diberi pagar pengaman. Satu-satunya akses ke sungai adalah jembatan, yang tetap terlarang saat banjir.
+- **Simulasi baru 🌊 Tsunami** (gerbang ke-6, pemandu Helmi):
+  - Gempa kuat ±22 detik: berlutut dan lindungi kepala di tempat terbuka (tekan X), jauhi pohon kelapa dan bangunan.
+  - Air laut surut tiba-tiba: pemain memilih evakuasi mandiri tanpa menunggu sirene.
+  - Evakuasi lewat jalur evakuasi tsunami ke bukit di utara. Jangan kembali ke pantai, menyusuri pantai ke muara, atau berlindung di rumah.
+  - Gelombang tsunami datang dan menggenangi dataran rendah.
+  - Di posko: pertanyaan kapan boleh turun kembali.
+- Smart board mendapat 2 video edukasi tsunami. Status **Siaga Bencana** kini membutuhkan kelulusan keenam simulasi.
+
+## Pembaruan v21 — Tantangan 6 Portal Ring 1: Terjun Payung (Danu)
+- **Masuk:** lewat gerbang di Ruang Komando (terbuka bagi pemegang Batu Oranye) ke **Lapangan Terjun**. Di sana ada hanggar, landasan, papan rekor, dan lingkaran pendaratan.
+- **Skin:** pemain dan Danu memakai skin baru **Penerjun Payung** (SKN-061), yang masuk Lemari Skin. Gambar katalognya ada di `assets/skins/SKN-061.jpg`.
+- **Alur:** naik pesawat, lalu lompat dari **1.000 m** setelah hitung mundur.
+  - Jatuh bebas sampai kecepatan terminal ±55 m/s (±200 km/j).
+  - **Booster** ⚡ di udara: menukik ±75 m/s selama 3 detik. Booster tidak bisa diambil lagi selama efeknya masih aktif atau setelah parasut terbuka.
+  - **Parasut** dibuka dengan Spasi atau tombol besar "🪂 BUKA PARASUT". Kecepatan turun ke ±5 m/s dalam ±3 detik.
+  - **Indikator kecepatan & ketinggian:** panel besar di kiri layar tampil sejak di pesawat sampai mendarat. Isinya kecepatan turun (m/s & km/j), status (jatuh bebas, booster, buka parasut, melambat, aman mendarat) dengan warna hijau/kuning/merah, dan batang ketinggian. Setelah mendarat, panel menunjukkan kecepatan saat menyentuh tanah.
+  - **Kendali & angin:** arahkan tubuh dengan WASD/joystick. Angin bertiup acak setiap lompatan dan bisa dilihat dari kantong angin. Alarm berbunyi di bawah 160 m bila parasut belum dibuka.
+- **Mendarat selamat:** di dalam lingkaran (Ø 16 m) dengan kecepatan **≤ 6 m/s**. Yang lebih dulu mendarat dengan selamat menang dan mendapat **Batu Ungu** dari Teh Isna.
+  - **Bonus:** mendarat ≤ 2 m dari pusat memberi skin **Mahasiswa TI Ungu**.
+- **Gagal:** mendarat di luar lingkaran, terlalu keras, atau didahului Danu membuat pemain **mengulang dari pesawat**.
+- **Server & admin:** tantangan `terjun` dan syarat Batu Ungu (setelah Batu Oranye) ditambahkan. Admin menampilkan "Terjun Payung N dtk ✓".
+- **Ruang Simulasi Bencana dipindah:** ruang ini sekarang berada di **barat Lab GIT**, dengan pintu oranye di dinding barat Lab GIT. Pintu di Ruang E-Portal ditutup kembali, dan panel slide dinding barat Lab GIT dirapatkan agar ada tempat untuk pintu.
+- **Pemeriksaan ulang semua simulasi bencana:** keenam simulasi diuji dengan berjalan sungguhan dari langkah pertama sampai posko.
+  - Longsor: aturan "lari ke bawah alur longsor" baru berlaku saat evakuasi (setelah kentongan), dan aturan "pergi sebelum memeriksa tanda" baru berlaku di punggung bukit, agar pemain yang masih menjelajah tidak langsung gagal.
+  - Semua simulasi: portal keluar kini juga berfungsi setelah simulasi selesai.
+- **Notulen rapat & perkuliahan dirapikan** (unduhan dari dalam ruangan maupun dari admin, untuk Ruang Rapat dan Auditorium Kelas 1/2):
+  - Format resmi siap cetak A4 dengan kop Galeri VR TI UIKA dan judul "Notulen Rapat" atau "Notulen Perkuliahan".
+  - Tabel identitas: kegiatan, ruang, hari/tanggal, waktu WIB, pimpinan rapat atau dosen pengajar, notulis, dan jumlah hadir.
+  - **Daftar hadir ditempatkan paling atas** sebagai tabel bernomor (pimpinan/pengajar di baris pertama). Unduhan admin juga menampilkan durasi hadir.
+  - Agenda, ringkasan, keputusan, dan tindak lanjut diberi nomor bagian. Baris yang diawali "-" atau angka otomatis menjadi daftar.
+  - Hasil polling ditampilkan dengan batang suara, dan di bagian akhir ada blok tanda tangan pimpinan/pengajar dan notulis.
+- **Perbaikan tabrakan dinding:** sejak v17.1, variabel jari-jari pemain bentrok nama dengan data modul Purba. Akibatnya semua tabrakan dinding dan benda tidak berfungsi, dan pemain bisa menembus tembok. Variabel ini diganti nama (`PLAYER_R`) sehingga dinding, pagar, dan benda kembali padat.
+
+## Pembaruan v22 — Ruang Informasi Kegiatan Akademik, RK 1–3 & token pendaftaran
+- **Ruang Informasi Kegiatan Akademik (baru):** ruang luas 36 × 26 m di barat Ruang E-Portal, masuk lewat pintu kaca biru di dinding barat E-Portal.
+  - **Meja resepsionis** melengkung di tengah, dijaga **Barkan** (laki-laki berkumis). Barkan menjelaskan kelas dan rapat yang **sedang** dan **akan** berlangsung sesuai jadwal di halaman admin (tab "Kelas & Jadwal"), kapasitas ruangan, dan arah ke ruangannya, serta bisa mengantar pemain ke depan pintu.
+  - Barkan **tidak pernah memberikan token peserta atau kode pengajar**. Server memang hanya mengirim judul, pengajar, dan waktu jadwal ke pemain; token dan kode tidak pernah dikirim.
+  - **Ruang tunggu** 24 kursi menghadap layar besar "Jadwal Kegiatan Akademik" yang diperbarui otomatis (sedang berlangsung & akan datang dalam 14 hari).
+  - Papan petunjuk ruangan, papan tata cara masuk kelas, dan jam dinding.
+- **Pintu dipindahkan:** Auditorium Budi Susetyo (sebelumnya Kelas 1), Auditorium Puspa Eosina (sebelumnya Kelas 2), dan Ruang Rapat kini dimasuki dari Ruang Informasi Kegiatan Akademik (dinding selatan). Pintu lama di Ruang E-Portal ditutup. Auditorium Puspa Eosina dan Ruang Rapat dipindah ke selatan ruang informasi.
+- **RK 1, RK 2, RK 3 (baru):** ruang kelas sedang di utara ruang informasi, masing-masing **40 kursi** bertingkat bergaya auditorium dengan smart board.
+  - Fungsinya sama dengan auditorium: slide/video dari admin, coretan bersama, jadwal & token sesi, peran pengajar, presensi, notulen, polling, dan suara ruangan.
+  - Admin: RK 1–3 muncul di pilihan ruangan jadwal (tab "Kelas & Jadwal") dan di daftar smart board.
+- **Token pendaftaran peminatan:** Kak Tias kini meminta **token pendaftaran** sebelum formulir peminatan terbuka.
+  - Token diatur di halaman admin peminatan (kartu "Token pendaftaran" di bagian atas): bisa diisi sendiri, dibuat acak, dan disalin.
+  - Saat server pertama kali berjalan, token acak 6 huruf dibuat otomatis. Server memeriksa token saat verifikasi dan saat formulir dikirim, dengan batas percobaan per IP.
+- **Simulasi bencana:** pemandu tsunami kini **Helmi** (laki-laki), menggantikan Nadia. Salsa (gunung meletus) tetap perempuan berhijab.
+- **Bilah atas dirapikan:** bilah petunjuk misi (mis. "Taman Apresiasi · temui Kang Santo…") dihapus dari layar dan dipindah ke menu ☰ → "Petunjuk misi berikutnya". Tombol **Masuk VR** dipindah ke menu ☰ (muncul bila perangkat mendukung VR).

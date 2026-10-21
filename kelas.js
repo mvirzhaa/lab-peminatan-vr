@@ -1,5 +1,6 @@
 // =====================================================================
-//  KELAS FUNGSIONAL — Kelas 1, Kelas 2 & Ruang Rapat
+//  KELAS FUNGSIONAL — Auditorium Budi Susetyo, Auditorium Puspa Eosina,
+//  Ruang Rapat & RK 1–3 (ruang kelas sedang)
 //  - Jadwal (sekali / mingguan) dikelola admin. Di luar jadwal ruang terbuka
 //    bebas; selama jadwal berlangsung hanya pemain dengan TOKEN PESERTA atau
 //    KODE PENGAJAR yang boleh masuk.
@@ -7,7 +8,9 @@
 //    keluarkan peserta, kuis/polling, berbagi layar.
 //  - Peserta: angkat tangan, chat ruang, notulen bersama, ikut polling.
 //  - Presensi otomatis per sesi (masuk, keluar, durasi) → Excel di admin.
-//  - Kapasitas: kursi yang tersedia (kelas 128, rapat 25).
+//  - Kapasitas: kursi yang tersedia (auditorium 128, rapat 25, RK 40).
+//  - Jadwal publik (tanpa token/kode) dikirim ke semua pemain untuk papan
+//    jadwal & resepsionis Barkan di Ruang Informasi Kegiatan Akademik.
 //  Data: DATA_DIR/kelas.json
 // =====================================================================
 'use strict';
@@ -15,8 +18,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const RUANG = { kelas1: 'Kelas 1 · Auditorium', kelas2: 'Kelas 2 · Auditorium', rapat: 'Ruang Rapat' };
-const CAP = { kelas1: 128, kelas2: 128, rapat: 25 };
+const RUANG = { kelas1: 'Auditorium Budi Susetyo', kelas2: 'Auditorium Puspa Eosina', rapat: 'Ruang Rapat', rk1: 'RK 1 · Ruang Kelas', rk2: 'RK 2 · Ruang Kelas', rk3: 'RK 3 · Ruang Kelas' };
+const CAP = { kelas1: 128, kelas2: 128, rapat: 25, rk1: 40, rk2: 40, rk3: 40 };
 const WEEK = 7 * 864e5;
 // bagian notulen (rangkuman tertulis)
 const NOTE_F = ['agenda', 'ringkasan', 'keputusan', 'tindak'];
@@ -68,9 +71,21 @@ function createKelas({ dataDir, pem, getRooms, sfu, sb }) {
     return best;
   }
   const pubSesi = (a) => a ? { judul: a.j.judul, pengajar: a.j.pengajar, mulai: a.s, selesai: a.e } : null;
+  // kemunculan jadwal yang akan datang dalam rentang [t, t + span) — hanya judul, pengajar & waktu (token/kode tidak pernah ikut)
+  function daftarRuang(r, t, span, max) {
+    const out = [];
+    for (const j of D.jadwal) {
+      if (j.ruang !== r) continue;
+      const dur = j.selesai - j.mulai;
+      if (j.ulang === 'mingguan') {
+        for (let k = Math.max(0, Math.ceil((t - j.mulai) / WEEK)); k < 400; k++) { const s = j.mulai + k * WEEK; if (s >= t + span || (j.sampai && s > j.sampai)) break; if (s >= t) out.push({ judul: j.judul, pengajar: j.pengajar, mulai: s, selesai: s + dur }); }
+      } else if (j.mulai >= t && j.mulai < t + span) out.push({ judul: j.judul, pengajar: j.pengajar, mulai: j.mulai, selesai: j.selesai });
+    }
+    return out.sort((a, b) => a.mulai - b.mulai).slice(0, max);
+  }
   function jadwalPub() {
     const o = {}, now = Date.now();
-    for (const r of Object.keys(RUANG)) { const n = berikut(r, now); o[r] = { aktif: pubSesi(aktif(r, now)), berikut: n ? { judul: n.j.judul, pengajar: n.j.pengajar, mulai: n.s, selesai: n.e } : null, cap: CAP[r] }; }
+    for (const r of Object.keys(RUANG)) { const n = berikut(r, now); o[r] = { aktif: pubSesi(aktif(r, now)), berikut: n ? { judul: n.j.judul, pengajar: n.j.pengajar, mulai: n.s, selesai: n.e } : null, daftar: daftarRuang(r, now, 14 * 864e5, 8), cap: CAP[r] }; }
     return o;
   }
   function overlap(a, b) {
@@ -290,16 +305,88 @@ function createKelas({ dataDir, pem, getRooms, sfu, sb }) {
   // ---------- notulen (HTML siap cetak / simpan PDF) ----------
   const esc = (v) => String(v == null ? '' : v).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const fmtT = (t) => new Date(t).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'full', timeStyle: 'short' });
+  function notulenDoc(d) {
+    // d: { rapat, judul, ruang, tanggal, waktu, pimpinan, notulis, hadirJudul, hadir:[{nama,peran,durasi?}], sec:[[label,teks]], polls:[{q,hasil:[[opsi,n]]}], dibuat }
+    const E = (v) => String(v == null ? "" : v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const lPim = d.rapat ? "Pimpinan rapat" : "Dosen pengajar";
+    const teks = (t) => {
+      t = String(t || "").trim(); if (!t) return '<p class="kosong">Tidak ada catatan.</p>';
+      const L = t.split(/\n+/).map((x) => x.trim()).filter(Boolean);
+      if (L.length > 1 && L.every((x) => /^([-•*]|\d+[.)])\s*/.test(x))) return "<ul>" + L.map((x) => "<li>" + E(x.replace(/^([-•*]|\d+[.)])\s*/, "")) + "</li>").join("") + "</ul>";
+      return L.map((x) => "<p>" + E(x) + "</p>").join("");
+    };
+    const ada = d.hadir.some((h) => h.durasi != null);
+    const hadir = d.hadir.length ? d.hadir.map((h, i) => `<tr${h.peran === "pengajar" ? ' class="pim"' : ""}><td class="c">${i + 1}</td><td>${E(h.nama)}</td><td>${h.peran === "pengajar" ? lPim : "Peserta"}</td>${ada ? `<td class="c">${h.durasi != null ? Math.max(1, Math.round(h.durasi / 60000)) + " menit" : "—"}</td>` : ""}</tr>`).join("") : `<tr><td colspan="${ada ? 4 : 3}" class="kosong c">Belum ada peserta tercatat.</td></tr>`;
+    const nPes = d.hadir.filter((h) => h.peran !== "pengajar").length, nPim = d.hadir.length - nPes;
+    let no = 1;
+    const secs = d.sec.map(([l, t]) => `<section><h2><span>${++no}</span>${E(l)}</h2>${teks(t)}</section>`).join("");
+    const polls = (d.polls || []).length ? `<section><h2><span>${++no}</span>Hasil polling</h2>${d.polls.map((p) => { const tot = p.hasil.reduce((a, [, n]) => a + n, 0) || 1; return `<div class="poll"><b>${E(p.q)}</b><table>${p.hasil.map(([o, n]) => `<tr><td>${E(o)}</td><td class="bar"><i style="width:${Math.round((n / tot) * 100)}%"></i></td><td class="c">${n} suara</td></tr>`).join("")}</table></div>`; }).join("")}</section>` : "";
+    const info = [["Kegiatan", d.judul], ["Ruang", d.ruang], ["Hari, tanggal", d.tanggal], ["Waktu", d.waktu], [lPim, d.pimpinan || "—"], ["Notulis", d.notulis || "—"], ["Jumlah hadir", `${d.hadir.length} orang (${nPim} ${lPim.toLowerCase()}, ${nPes} peserta)`]];
+    return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Notulen ${E(d.judul)}</title><style>
+  @page{size:A4;margin:16mm 16mm 18mm}
+  *{box-sizing:border-box}
+  body{margin:0;background:#eef0f4;color:#1f2330;font:14px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+  .doc{max-width:820px;margin:28px auto;background:#fff;padding:40px 48px 36px;border-radius:6px;box-shadow:0 2px 14px rgba(20,20,50,.1)}
+  .kop{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px double #4c1d95;padding-bottom:10px}
+  .kop .ins{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#4c1d95;font-weight:700;line-height:1.4}
+  .kop .ins small{display:block;letter-spacing:.04em;text-transform:none;color:#6b7280;font-weight:500;font-size:12px}
+  .kop .jen{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;text-align:right}
+  h1{font-size:24px;line-height:1.25;margin:22px 0 4px;text-align:center;letter-spacing:.06em}
+  .sub{text-align:center;color:#4b5563;margin:0 0 20px;font-size:15px}
+  table{border-collapse:collapse;width:100%}
+  .info td{padding:4px 0;vertical-align:top;font-size:13.5px}
+  .info td:first-child{width:150px;color:#6b7280}
+  .info td:nth-child(2){width:16px;color:#6b7280}
+  h2{display:flex;align-items:center;gap:10px;font-size:15.5px;color:#2e1065;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid #e5e7eb}
+  h2 span{flex:0 0 24px;height:24px;border-radius:50%;background:#4c1d95;color:#fff;font-size:12.5px;display:grid;place-items:center}
+  section p{margin:0 0 6px;text-align:justify}
+  section ul{margin:0;padding-left:22px}
+  section li{margin:2px 0}
+  .kosong{color:#9ca3af;font-style:italic}
+  .hd{font-size:13.5px}
+  .hd th{background:#4c1d95;color:#fff;font-weight:600;text-align:left;padding:7px 10px;font-size:12.5px;letter-spacing:.02em}
+  .hd td{padding:6px 10px;border-bottom:1px solid #e5e7eb}
+  .hd tr:nth-child(even) td{background:#faf9fd}
+  .hd tr.pim td{background:#f3efff;font-weight:600}
+  .c{text-align:center}
+  .hd th.c{text-align:center}
+  .cat{font-size:12px;color:#6b7280;margin:6px 0 0}
+  .poll{margin:0 0 12px}
+  .poll table{margin-top:4px;font-size:13px}
+  .poll td{padding:3px 6px}
+  .poll td:first-child{width:38%}
+  .poll .bar{width:44%}
+  .poll .bar i{display:block;height:10px;border-radius:5px;background:#7c3aed;min-width:2px}
+  .ttd{display:flex;justify-content:space-between;gap:40px;margin-top:40px;page-break-inside:avoid}
+  .ttd div{flex:1;text-align:center;font-size:13.5px}
+  .ttd .gar{margin:64px auto 4px;width:75%;border-top:1px solid #1f2330;padding-top:4px;font-weight:600}
+  .ttd small{color:#6b7280}
+  .foot{margin-top:30px;padding-top:8px;border-top:1px solid #e5e7eb;font-size:11.5px;color:#9ca3af;text-align:center}
+  @media (max-width:640px){.doc{margin:0;padding:24px 18px;border-radius:0}.info td:first-child{width:110px}.ttd{gap:16px}}
+  @media print{body{background:#fff}.doc{margin:0;padding:0;box-shadow:none;max-width:none}h2,.hd tr{page-break-inside:avoid;page-break-after:auto}h2{page-break-after:avoid}.hd th,h2 span,.hd tr.pim td,.poll .bar i{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style></head><body><div class="doc">
+  <div class="kop"><div class="ins">Galeri VR Teknik Informatika<small>Universitas Ibn Khaldun (UIKA) Bogor</small></div><div class="jen">${d.rapat ? "Notulen Rapat" : "Notulen Perkuliahan"}<br>${E(d.ruang)}</div></div>
+  <h1>NOTULEN ${d.rapat ? "RAPAT" : "PERKULIAHAN"}</h1><p class="sub">${E(d.judul)}</p>
+  <table class="info">${info.map(([k, v]) => `<tr><td>${E(k)}</td><td>:</td><td>${E(v)}</td></tr>`).join("")}</table>
+  <section><h2><span>1</span>${E(d.hadirJudul || "Daftar hadir")}</h2><table class="hd"><tr><th class="c" style="width:48px">No</th><th>Nama</th><th style="width:170px">Peran</th>${ada ? '<th class="c" style="width:130px">Durasi hadir</th>' : ""}</tr>${hadir}</table>${d.hadirCat ? `<p class="cat">${E(d.hadirCat)}</p>` : ""}</section>
+  ${secs}${polls}
+  <div class="ttd"><div>Mengetahui,<br>${lPim}<div class="gar">${E(d.pimpinan || "………………………")}</div></div><div>Bogor, ${E(d.tglTtd || d.tanggal)}<br>Notulis<div class="gar">${E(d.notulis || "………………………")}</div></div></div>
+  <div class="foot">Dokumen dibuat otomatis oleh Galeri VR Teknik Informatika UIKA Bogor · ${E(d.dibuat)}</div>
+  </div></body></html>`;
+  }
   function notulenHtml(S) {
-    const c = D.catatan['sesi:' + S.key], t = noteText(c && c.t);
-    const hadir = Object.values(S.peserta).sort((a, b) => (a.peran === b.peran ? a.nama.localeCompare(b.nama, 'id') : a.peran === 'pengajar' ? -1 : 1));
-    const sec = NOTE_F.map((f) => `<h2>${NOTE_L[f]}</h2>${t[f] ? '<p>' + esc(t[f]).replace(/\n/g, '<br>') + '</p>' : '<p class="k">—</p>'}`).join('');
-    const polls = (S.polls || []).map((p) => `<li><b>${esc(p.q)}</b><br>${p.hasil.map(([o, n]) => `${esc(o)}: ${n} suara`).join(' · ')}</li>`).join('');
-    return `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Notulen ${esc(S.judul)}</title><style>body{font:15px/1.6 system-ui,Segoe UI,sans-serif;max-width:780px;margin:32px auto;padding:0 20px;color:#111}h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:22px 0 6px;color:#4c1d95;border-bottom:1px solid #ddd;padding-bottom:3px}.m{color:#555;margin:0}.k{color:#999}table{border-collapse:collapse;width:100%;font-size:13px}td,th{border:1px solid #ccc;padding:4px 8px;text-align:left}th{background:#f3f0ff}@media print{body{margin:0}}</style></head><body>
-<h1>NOTULEN · ${esc(S.judul)}</h1><p class="m">${esc(RUANG[S.ruang])} · Galeri VR Teknik Informatika UIKA Bogor</p><p class="m">${esc(fmtT(S.mulai))} – ${esc(new Date(S.selesai).toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', timeStyle: 'short' }))} WIB</p><p class="m">Pengajar / pimpinan: ${esc(S.pengajar || '-')}${c && c.by ? ' · Notulis terakhir: ' + esc(c.by) : ''}</p>
-${sec}${polls ? `<h2>Hasil polling</h2><ul>${polls}</ul>` : ''}
-<h2>Daftar hadir (${hadir.length} orang)</h2><table><tr><th>No</th><th>Nama</th><th>Peran</th><th>Durasi hadir</th></tr>${hadir.map((e, i) => `<tr><td>${i + 1}</td><td>${esc(e.nama)}</td><td>${e.peran === 'pengajar' ? 'Pengajar' : 'Peserta'}</td><td>${Math.round(e.durasi / 60000)} menit</td></tr>`).join('')}</table>
-</body></html>`;
+    const c = D.catatan['sesi:' + S.key], t = noteText(c && c.t), TZ = { timeZone: 'Asia/Jakarta' };
+    const jam = (x) => new Date(x).toLocaleTimeString('id-ID', { ...TZ, hour: '2-digit', minute: '2-digit' });
+    const hadir = Object.values(S.peserta).sort((a, b) => (a.peran === b.peran ? a.nama.localeCompare(b.nama, 'id') : a.peran === 'pengajar' ? -1 : 1)).map((e) => ({ nama: e.nama, peran: e.peran, durasi: e.durasi || 0 }));
+    const now = Date.now();
+    return notulenDoc({
+      rapat: S.ruang === 'rapat', judul: S.judul, ruang: RUANG[S.ruang] || S.ruang,
+      tanggal: new Date(S.mulai).toLocaleDateString('id-ID', { ...TZ, dateStyle: 'full' }), tglTtd: new Date(S.mulai).toLocaleDateString('id-ID', { ...TZ, day: 'numeric', month: 'long', year: 'numeric' }),
+      waktu: `${jam(S.mulai)} – ${jam(S.selesai)} WIB`, pimpinan: S.pengajar || '', notulis: (c && c.by) || '',
+      hadirJudul: 'Daftar hadir', hadir, sec: NOTE_F.map((f) => [NOTE_L[f], t[f]]),
+      polls: (S.polls || []).map((p) => ({ q: p.q, hasil: p.hasil })),
+      dibuat: 'diunduh ' + new Date(now).toLocaleString('id-ID', { ...TZ, dateStyle: 'long', timeStyle: 'short' }) + ' WIB'
+    });
   }
 
   // ---------- HTTP admin ----------

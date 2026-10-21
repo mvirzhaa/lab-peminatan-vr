@@ -48,6 +48,7 @@
     $('hPeriod').textContent = S.period;
     $('openSw').checked = S.open;
     $('openTxt').textContent = S.open ? 'Pendaftaran dibuka' : 'Pendaftaran ditutup';
+    $('kodeNow').textContent = S.kode || '—';
     $('sTotal').textContent = S.entries.length;
     $('sUpd').textContent = 'Diperbarui ' + fmt(S.stats.updated);
     drawPie($('pie'), S.stats.counts);
@@ -146,6 +147,10 @@
   $('openSw').onchange = async () => {
     try { const r = await post('/api/admin/open', { open: $('openSw').checked }); toast(r.open ? 'Pendaftaran dibuka.' : 'Pendaftaran ditutup.'); load(true); } catch (e) { toast(e.message); $('openSw').checked = !$('openSw').checked; }
   };
+  const kodeSet = async (body) => { try { const r = await post('/api/admin/kode', body); toast('Token pendaftaran: ' + r.kode); $('kodeIn').value = ''; load(true); } catch (e) { toast(e.message); } };
+  $('kodeSave').onclick = () => kodeSet({ kode: $('kodeIn').value });
+  $('kodeAcak').onclick = () => kodeSet({ acak: true });
+  $('kodeCopy').onclick = () => { const t = $('kodeNow').textContent; try { navigator.clipboard.writeText(t).then(() => toast('Token disalin.'), () => toast(t)); } catch { toast(t); } };
   $('savePeriod').onclick = async () => { try { await post('/api/admin/period', { period: $('period').value }); toast('Label periode disimpan.'); load(true); } catch (e) { toast(e.message); } };
   $('saveMeta').onclick = async () => { try { await post('/api/admin/final/meta', { title: $('fTitle').value, note: $('fNote').value }); toast('Judul & catatan disimpan.'); load(true); } catch (e) { toast(e.message); } };
   $('pubBtn').onclick = async () => {
@@ -208,7 +213,7 @@
       const tr = el('tr'), td = el('td', 'nw'), b = el('button', k.cabut ? 'ghost' : 'del', k.cabut ? 'Aktifkan' : 'Cabut');
       b.onclick = async () => { try { await post('/api/admin/kartu/status', { no: k.no, cabut: !k.cabut }); toast(k.cabut ? 'Kartu diaktifkan kembali.' : 'Kartu dicabut — Nan tidak akan membuka gerbang untuknya.'); loadCards(); } catch (e) { toast(e.message); } };
       td.appendChild(b);
-      tr.append(el('td', 'nw', k.no), el('td', '', k.nama), el('td', 'nw', fmt(k.t)), el('td', 'nw', k.ver ? k.ver + '× · ' + fmt(k.lv) : '-'), el('td', 'nw', ['kognitif', 'inggris', 'sahabat', 'coding'].filter((c) => (k.ch || {})[c]).length + '/4' + ((k.ch || {}).pustaka ? ' · Gua ✓' : '') + ((k.ch || {}).iot ? ' · Hanggar ✓' + ((k.ch.iot.bintang) ? ' ' + '⭐'.repeat(k.ch.iot.bintang) : '') : '') + ((k.ch || {}).jari ? ' · Kawah ✓' : '') + ((k.ch || {}).server ? ' · Server ✓' : '') + ((k.ch || {}).islam ? ' · Lembah ✓' : '') + ((k.ch || {}).pohon ? ' · Pohon Purba ✓' : '') + ((k.ch || {}).raptor ? ' · Raptor ✓' : '') + ((k.ch || {}).gravitasi ? ' · Anti-Gravitasi ✓' : '') + ((k.ch || {}).ketik ? ' · Mengetik ' + k.ch.ketik.best + ' kata ✓' : '') + ((k.ch || {}).kapal ? ' · Tembak Kapal ' + k.ch.kapal.best + ' tembakan ✓' : '') + ((k.tm || {}).ikut ? ' · Tim ' + k.tm.ikut + '×' : '') + ((k.rw || {}).trooper ? ' 🪖' : '') + (Object.values(k.ch || {}).some((c) => c.jalur === 'kode') ? ' (kode)' : '')), el('td', 'nw', Object.keys(k.lb || {}).map((b) => ({ dasar: '🔷 Dasar', umum: '💡 Umum', iot: '🛸 IoT & Drone', jari: '👆 Jari', coding: '💻 Coding', islam: '🕌 Agama Islam', tim: '🤝 Kerjasama Tim' })[b] || b).join(', ') + (Object.keys(k.bt || {}).length ? ' · Batu: ' + Object.keys(k.bt).map((b) => ({ kuning: '🟡', hijau: '🟢', merah: '🔴', birutua: '🔵', oranye: '🟠', ungu: '🟣', birulangit: '🩵', putih: '⚪', hitam: '⚫' })[b] || b).join('') : '') || '-'), el('td', 'nw', k.cabut ? '⛔ dicabut' : '✅ aktif'), td);
+      tr.append(el('td', 'nw', k.no), el('td', '', k.nama), el('td', 'nw', fmt(k.t)), el('td', 'nw', k.ver ? k.ver + '× · ' + fmt(k.lv) : '-'), el('td', 'nw', ['kognitif', 'inggris', 'sahabat', 'coding'].filter((c) => (k.ch || {})[c]).length + '/4' + ((k.ch || {}).pustaka ? ' · Gua ✓' : '') + ((k.ch || {}).iot ? ' · Hanggar ✓' + ((k.ch.iot.bintang) ? ' ' + '⭐'.repeat(k.ch.iot.bintang) : '') : '') + ((k.ch || {}).jari ? ' · Kawah ✓' : '') + ((k.ch || {}).server ? ' · Server ✓' : '') + ((k.ch || {}).islam ? ' · Lembah ✓' : '') + ((k.ch || {}).pohon ? ' · Pohon Purba ✓' : '') + ((k.ch || {}).raptor ? ' · Raptor ✓' : '') + ((k.ch || {}).gravitasi ? ' · Anti-Gravitasi ✓' : '') + ((k.ch || {}).ketik ? ' · Mengetik ' + k.ch.ketik.best + ' kata ✓' : '') + ((k.ch || {}).kapal ? ' · Tembak Kapal ' + k.ch.kapal.best + ' tembakan ✓' : '') + ((k.ch || {}).terjun ? ' · Terjun Payung ' + k.ch.terjun.best + ' dtk ✓' : '') + ((k.tm || {}).ikut ? ' · Tim ' + k.tm.ikut + '×' : '') + ((k.rw || {}).trooper ? ' 🪖' : '') + (Object.values(k.ch || {}).some((c) => c.jalur === 'kode') ? ' (kode)' : '')), el('td', 'nw', Object.keys(k.lb || {}).map((b) => ({ dasar: '🔷 Dasar', umum: '💡 Umum', iot: '🛸 IoT & Drone', jari: '👆 Jari', coding: '💻 Coding', islam: '🕌 Agama Islam', tim: '🤝 Kerjasama Tim' })[b] || b).join(', ') + (Object.keys(k.bt || {}).length ? ' · Batu: ' + Object.keys(k.bt).map((b) => ({ kuning: '🟡', hijau: '🟢', merah: '🔴', birutua: '🔵', oranye: '🟠', ungu: '🟣', birulangit: '🩵', putih: '⚪', hitam: '⚫' })[b] || b).join('') : '') || '-'), el('td', 'nw', k.cabut ? '⛔ dicabut' : '✅ aktif'), td);
       tb.appendChild(tr);
     }
   }
@@ -258,7 +263,7 @@
       const f = pickedFile;
       if (!f) { m.className = 'msg bad'; m.textContent = 'Pilih file PDF.'; return; }
       if (!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') { m.className = 'msg bad'; m.textContent = 'Hanya file PDF yang diterima.'; return; }
-      if (f.size > 20 * 1024 * 1024) { m.className = 'msg bad'; m.textContent = 'File terlalu besar (maks. 20 MB).'; return; }
+      if (f.size > 40 * 1024 * 1024) { m.className = 'msg bad'; m.textContent = 'File terlalu besar (maks. 40 MB).'; return; }
       m.textContent = 'Mengunggah ' + f.name + '…';
       await api('/api/admin/buku/upload', { method: 'POST', body: f, headers: { 'Content-Type': 'application/pdf', 'X-Filename': encodeURIComponent(f.name), 'X-Meta': encodeURIComponent(JSON.stringify(meta)) } });
       m.className = 'msg ok'; m.textContent = '✅ Buku masuk rak. Server sedang membaca isi PDF untuk Ivy…';
@@ -398,7 +403,7 @@
 
   // ---------- Kelas & Jadwal ----------
   let KJ = null, kjEdit = null;
-  const RN = { kelas1: 'Kelas 1', kelas2: 'Kelas 2', rapat: 'Ruang Rapat' };
+  const RN = { kelas1: 'Aud. Budi Susetyo', kelas2: 'Aud. Puspa Eosina', rapat: 'Ruang Rapat', rk1: 'RK 1', rk2: 'RK 2', rk3: 'RK 3' };
   const pad2 = (n) => String(n).padStart(2, '0');
   const dIn = (t) => { const d = new Date(t); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
   const tIn = (t) => { const d = new Date(t); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };

@@ -36,6 +36,11 @@
   <section class="stats">
     <div class="card total"><small>Total pendaftar</small><b id="sTotal">0</b><span id="sUpd" class="mut"></span></div>
     <div class="card pie"><canvas id="pie" width="360" height="360" aria-label="Diagram lingkaran peminatan pilihan 1"></canvas><ul id="legend" class="legend"></ul></div>
+    <div class="card kode"><small>Token pendaftaran (diminta Kak Tias)</small><b id="kodeNow">—</b>
+      <p class="mut">Pendaftar wajib memasukkan token ini sebelum formulir peminatan terbuka. Bagikan hanya kepada mahasiswa yang berhak; ganti token bila tersebar.</p>
+      <div class="row"><input id="kodeIn" maxlength="20" placeholder="Token baru (min. 4 huruf/angka)" style="text-transform:uppercase"><button class="ghost" id="kodeSave">Simpan</button></div>
+      <div class="row"><button class="ghost" id="kodeAcak">🎲 Buat token acak</button><button class="ghost" id="kodeCopy">📋 Salin</button></div>
+    </div>
   </section>
 
   <nav class="tabs" role="tablist">
@@ -120,7 +125,7 @@
   <div class="grid2">
     <div class="card">
       <h3>Tambah buku (PDF)</h3>
-      <p class="mut">Hanya file <b>PDF</b> (maks. 20 MB). Buku langsung muncul di Rak Buku Digital IT-Mart dan bisa diunduh pengunjung. Isi teks PDF dibaca server agar NPC <b>Ivy</b> bisa menjelaskan isinya.</p>
+      <p class="mut">Hanya file <b>PDF</b> (maks. 40 MB). Buku langsung muncul di Rak Buku Digital IT-Mart dan bisa diunduh pengunjung. Isi teks PDF dibaca server agar NPC <b>Ivy</b> bisa menjelaskan isinya.</p>
       <label>Judul *<input id="bkJ" maxlength="140" placeholder="mis. Pengantar Machine Learning"></label>
       <label>Penulis<input id="bkP" maxlength="100"></label>
       <label>Kategori<input id="bkK" maxlength="60" placeholder="mis. KERIS / Pemrograman / Skripsi"></label>
@@ -163,7 +168,7 @@
   <div class="card">
     <h3>🖥 Smart Board</h3>
     <p class="mut">Setiap smart board menampilkan <b>slide</b> (gambar JPG/PNG/WebP, maks. 8 MB per slide, urutan bisa diatur) atau <b>video YouTube</b>.
-    Di <b>Kelas 1, Kelas 2, dan Ruang Rapat</b> isinya <b>dibagikan ke semua pemain</b> di ruangan itu: slide yang dibuka, coretan, dan putar/jeda video ikut berubah untuk semua.
+    Di <b>Auditorium Budi Susetyo, Auditorium Puspa Eosina, Ruang Rapat, dan RK 1–3</b> isinya <b>dibagikan ke semua pemain</b> di ruangan itu: slide yang dibuka, coretan, dan putar/jeda video ikut berubah untuk semua.
     Di <b>keempat lab</b> setiap pemain memutar dan menggeser slide <b>masing-masing</b>. File <b>PDF</b> dan <b>PowerPoint (.pptx)</b> bisa langsung diunggah — tiap halaman otomatis menjadi satu slide.</p>
     <div class="bar"><label class="inl">Smart board <select id="sbSel"></select></label><span id="sbKind" class="pill"></span></div>
     <div class="grid2">
@@ -188,8 +193,8 @@
   <div class="grid2">
     <div class="card">
       <h3 id="kjTitle">➕ Jadwal baru</h3>
-      <p class="mut">Di luar jadwal, Kelas 1, Kelas 2, dan Ruang Rapat terbuka untuk siapa saja. Selama jadwal berlangsung, ruangan hanya bisa dimasuki dengan <b>Token Peserta</b>; dosen/pimpinan masuk dengan <b>Kode Pengajar</b> untuk memegang kontrol kelas. Kedua kode dibuat otomatis setelah jadwal disimpan.</p>
-      <label>Ruangan<select id="kjR"><option value="kelas1">Kelas 1 · Auditorium (128 kursi)</option><option value="kelas2">Kelas 2 · Auditorium (128 kursi)</option><option value="rapat">Ruang Rapat (25 kursi)</option></select></label>
+      <p class="mut">Di luar jadwal, kedua auditorium, Ruang Rapat, dan RK 1–3 terbuka untuk siapa saja. Selama jadwal berlangsung, ruangan hanya bisa dimasuki dengan <b>Token Peserta</b>; dosen/pimpinan masuk dengan <b>Kode Pengajar</b> untuk memegang kontrol kelas. Kedua kode dibuat otomatis setelah jadwal disimpan.</p>
+      <label>Ruangan<select id="kjR"><option value="kelas1">Auditorium Budi Susetyo (128 kursi)</option><option value="kelas2">Auditorium Puspa Eosina (128 kursi)</option><option value="rapat">Ruang Rapat (25 kursi)</option><option value="rk1">RK 1 · Ruang Kelas (40 kursi)</option><option value="rk2">RK 2 · Ruang Kelas (40 kursi)</option><option value="rk3">RK 3 · Ruang Kelas (40 kursi)</option></select></label>
       <label>Judul kegiatan<input id="kjJ" maxlength="100" placeholder="mis. Kecerdasan Buatan — Kelas A / Rapat Prodi"></label>
       <label>Pengajar / pimpinan rapat<input id="kjP" maxlength="80" placeholder="mis. Dr. Puspa Eosina, M.Kom."></label>
       <div class="row kjt"><label>Tanggal<input id="kjD" type="date"></label><label>Mulai<input id="kjS" type="time" value="08:00"></label><label>Selesai<input id="kjE" type="time" value="09:40"></label></div>

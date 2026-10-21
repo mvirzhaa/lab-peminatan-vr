@@ -54,7 +54,10 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .switch em { font-style: normal; font-weight: 600; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; margin-bottom: 14px; }
 .card.warn { border-color: color-mix(in srgb, var(--bad) 35%, var(--line)); }
-.stats { display: grid; grid-template-columns: 240px 1fr; gap: 14px; }
+.stats { display: grid; grid-template-columns: 240px 1fr 300px; gap: 14px; }
+.stats .card.kode b { display: block; font-size: 30px; letter-spacing: .18em; margin: 6px 0; font-family: ui-monospace, Consolas, monospace; }
+.stats .card.kode .row { margin-top: 6px; }
+@media (max-width: 1100px) { .stats { grid-template-columns: 240px 1fr; } .stats .card.kode { grid-column: 1 / -1; } }
 .stats .card { margin: 0; }
 .total { display: flex; flex-direction: column; justify-content: center; }
 .total b { font-size: 52px; line-height: 1.1; color: var(--pri); }

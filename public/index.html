@@ -139,7 +139,8 @@ body.touch #joy{display:block}
 #loader .sub{font-size:14px;opacity:.8}
 #loader .bar{width:min(320px,70vw);height:6px;border-radius:3px;background:rgba(255,255,255,.18);overflow:hidden}
 #loader .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#a78bfa,#f0abfc);transition:width .2s}
-#vrBtn{display:none}
+#vrBtn{display:none!important}
+#questHud{display:none!important}
 #fade{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:45;transition:opacity .25s}
 #emojiPop{position:fixed;z-index:31;background:var(--chrome);border-radius:12px;padding:6px;display:none;gap:2px;flex-wrap:wrap;width:208px}
 #emojiPop button{background:none;border:0;font-size:22px;width:48px;height:42px;border-radius:8px}
@@ -2744,10 +2745,14 @@ var ROOMS = {
   csn: { x0: 12, x1: 40, z0: -12, z1: 12, h: 5.5, name: "Lab CSN", short: "CSN", col: "#0ea5e9", lab: "csn" },
   cafe: { x0: 9, x1: 27, z0: 12, z1: 30, h: 4.6, name: "IT-Mart", short: "IT-Mart", col: "#c08457" },
   eportal: { x0: -20, x1: 9, z0: 30, z1: 56, h: 6, name: "Ruang E-Portal UIKA", short: "E-Portal", col: "#34d399" },
-  kelas1: { x0: -26, x1: -8, z0: 56, z1: 80, h: 6, name: "Kelas 1 · Auditorium", short: "Kelas 1", col: "#60a5fa" },
-  rapat: { x0: -8, x1: 10, z0: 56, z1: 80, h: 4.6, name: "Ruang Rapat", short: "R. Rapat", col: "#b45309" },
-  kelas2: { x0: 9, x1: 27, z0: 30, z1: 56, h: 6, name: "Kelas 2 · Auditorium", short: "Kelas 2", col: "#2dd4bf" },
-  bencana: { x0: -40, x1: -20, z0: 30, z1: 56, h: 6, name: "Ruang Simulasi Bencana", short: "Sim. Bencana", col: "#f97316" }
+  kelas1: { x0: -26, x1: -8, z0: 56, z1: 80, h: 6, name: "Auditorium Budi Susetyo", short: "Aud. Budi Susetyo", col: "#60a5fa" },
+  rapat: { x0: -56, x1: -44, z0: 56, z1: 80, h: 4.6, name: "Ruang Rapat", short: "R. Rapat", col: "#b45309" },
+  kelas2: { x0: -44, x1: -26, z0: 56, z1: 80, h: 6, name: "Auditorium Puspa Eosina", short: "Aud. Puspa Eosina", col: "#2dd4bf" },
+  bencana: { x0: -44, x1: -24, z0: -38, z1: -12, h: 6, name: "Ruang Simulasi Bencana", short: "Sim. Bencana", col: "#f97316" },
+  akademik: { x0: -56, x1: -20, z0: 30, z1: 56, h: 6, name: "Ruang Informasi Kegiatan Akademik", short: "Info Akademik", col: "#1d4ed8" },
+  rk1: { x0: -56, x1: -44, z0: 12, z1: 30, h: 6, name: "RK 1 · Ruang Kelas", short: "RK 1", col: "#8b5cf6" },
+  rk2: { x0: -44, x1: -32, z0: 12, z1: 30, h: 6, name: "RK 2 · Ruang Kelas", short: "RK 2", col: "#ec4899" },
+  rk3: { x0: -32, x1: -20, z0: 12, z1: 30, h: 6, name: "RK 3 · Ruang Kelas", short: "RK 3", col: "#22c55e" }
 };
 var SPOTS = [
   { id: "welcome", name: "Ruang Sambutan (video)", x: 0, z: 18.5, yaw: Math.PI },
@@ -2759,10 +2764,15 @@ var SPOTS = [
   { id: "csn", name: "Lab CSN", x: 15, z: 0, yaw: -Math.PI / 2 },
   { id: "cafe", name: "☕ IT-Mart", x: 18, z: 22.5, yaw: Math.PI },
   { id: "eportal", name: "🌐 Ruang E-Portal UIKA", x: -5.5, z: 36.5, yaw: Math.PI },
-  { id: "kelas1", name: "🎓 Kelas 1 · Auditorium", x: -12.4, z: 59.5, yaw: 0 },
-  { id: "kelas2", name: "🎓 Kelas 2 · Auditorium", x: 12.6, z: 33.6, yaw: 0 },
-  { id: "rapat", name: "🤝 Ruang Rapat", x: 3, z: 58.4, yaw: Math.PI },
-  { id: "bencana", name: "🧯 Ruang Simulasi Bencana", x: -23.5, z: 33.5, yaw: -Math.PI / 2 }
+  { id: "akademik", name: "📅 Ruang Informasi Kegiatan Akademik", x: -22.2, z: 39.5, yaw: Math.PI / 2 },
+  { id: "barkan", name: "Resepsionis · Barkan", x: -35.2, z: 43, yaw: Math.PI / 2, room: "akademik" },
+  { id: "kelas1", name: "🎓 Auditorium Budi Susetyo", x: -23.2, z: 58.2, yaw: 0 },
+  { id: "kelas2", name: "🎓 Auditorium Puspa Eosina", x: -41.8, z: 58.2, yaw: 0 },
+  { id: "rapat", name: "🤝 Ruang Rapat", x: -46.8, z: 58.4, yaw: Math.PI },
+  { id: "rk1", name: "🏫 RK 1 · Ruang Kelas", x: -45.6, z: 27.6, yaw: 0 },
+  { id: "rk2", name: "🏫 RK 2 · Ruang Kelas", x: -33.6, z: 27.6, yaw: 0 },
+  { id: "rk3", name: "🏫 RK 3 · Ruang Kelas", x: -21.6, z: 27.6, yaw: 0 },
+  { id: "bencana", name: "🧯 Ruang Simulasi Bencana", x: -27, z: -15.3, yaw: Math.PI / 2 }
 ];
 var NPC_POS = {
   tia: { x: 0, z: -0.35, yaw: 0, room: "atrium" },
@@ -2780,50 +2790,66 @@ var WALLS = [
   { x: -9, z: [12, 30], f: "welcome", b: "welcome", h: 6 },
   { x: 9, z: [12, 30], d: [[12.75, 14.85, 3.1]], f: "welcome", b: "cafe", h: 6 }, // pintu ke IT-Mart
   // IT-Mart (timur Ruang Sambutan)
-  { z: 30, x: [9, 27], f: "kelas2", b: "cafe", h: 6 }, // IT-Mart | Kelas 2
+  { z: 30, x: [9, 27], f: "cafe", b: "cafe", h: 6 },
   { x: 27, z: [12, 30], f: "cafe", b: "cafe", h: 4.6 },
   { z: 30, x: [-9, 9], d: [[-7.7, -5.3, 3.3]], f: "eportal", b: "welcome", h: 6 }, // pintu ke Ruang E-Portal
   // Ruang E-Portal UIKA (selatan Ruang Sambutan)
   { z: 30, x: [-20, -9], f: "eportal", b: "eportal", h: 6 },
-  { x: -20, z: [30, 56], d: [[31.4, 33.6, 3.1]], f: "bencana", b: "eportal", h: 6, dc: "#f97316" }, // pintu ke Ruang Simulasi Bencana
-  // Ruang Simulasi Bencana (barat E-Portal)
-  { z: 30, x: [-40, -20], f: "bencana", b: "bencana", h: 6 },
-  { x: -40, z: [30, 56], f: "bencana", b: "bencana", h: 6 },
-  { z: 56, x: [-40, -26], f: "bencana", b: "bencana", h: 6 },
-  { x: 9, z: [30, 56], d: [[31.6, 33.6, 3.1]], f: "eportal", b: "kelas2", h: 6, dc: "#2dd4bf" }, // pintu ke Kelas 2
-  { z: 56, x: [-20, -8], d: [[-11.8, -9.8, 3.1]], f: "kelas1", b: "eportal", h: 6, dc: "#60a5fa" }, // pintu ke Kelas 1
-  { z: 56, x: [-8, 9], d: [[2, 4, 3.1]], f: "rapat", b: "eportal", h: 6, dc: "#f59e0b" }, // pintu ke Ruang Rapat
+  { x: -20, z: [30, 56], d: [[38.5, 40.5, 3.1]], f: "akademik", b: "eportal", h: 6, dc: "#1d4ed8" }, // pintu ke Ruang Informasi Kegiatan Akademik
+  { x: 9, z: [30, 56], f: "eportal", b: "eportal", h: 6 },
+  { z: 56, x: [-20, -8], f: "kelas1", b: "eportal", h: 6 },
+  { z: 56, x: [-8, 9], f: "eportal", b: "eportal", h: 6 },
   // Kelas 1 · Auditorium (selatan-barat E-Portal)
-  { z: 56, x: [-26, -20], f: "kelas1", b: "bencana", h: 6 },
-  { x: -26, z: [56, 80], f: "kelas1", b: "kelas1", h: 6 },
+  { z: 56, x: [-26, -20], d: [[-24.2, -22.2, 3.1]], f: "kelas1", b: "akademik", h: 6, dc: "#60a5fa" }, // pintu ke Auditorium Budi Susetyo
+  { x: -26, z: [56, 80], f: "kelas2", b: "kelas1", h: 6 },
   { z: 80, x: [-26, -8], f: "kelas1", b: "kelas1", h: 6 },
-  { x: -8, z: [56, 80], f: "kelas1", b: "rapat", h: 6 },
+  { x: -8, z: [56, 80], f: "kelas1", b: "kelas1", h: 6 },
   // Ruang Rapat (selatan E-Portal)
-  { z: 56, x: [9, 10], f: "rapat", b: "kelas2", h: 6 },
-  { x: 10, z: [56, 80], f: "rapat", b: "rapat", h: 4.6 },
-  { z: 80, x: [-8, 10], f: "rapat", b: "rapat", h: 4.6 },
+  // Ruang Informasi Kegiatan Akademik (barat E-Portal): RK 1–3 di utara, Ruang Rapat & Auditorium Puspa Eosina di selatan
+  { z: 30, x: [-56, -44], d: [[-46.6, -44.6, 3.1]], f: "akademik", b: "rk1", h: 6, dc: "#8b5cf6" },
+  { z: 30, x: [-44, -32], d: [[-34.6, -32.6, 3.1]], f: "akademik", b: "rk2", h: 6, dc: "#ec4899" },
+  { z: 30, x: [-32, -20], d: [[-22.6, -20.6, 3.1]], f: "akademik", b: "rk3", h: 6, dc: "#22c55e" },
+  { x: -56, z: [30, 56], f: "akademik", b: "akademik", h: 6 },
+  { z: 56, x: [-56, -44], d: [[-47.8, -45.8, 3.1]], f: "rapat", b: "akademik", h: 6, dc: "#f59e0b" },
+  { z: 56, x: [-44, -26], d: [[-42.8, -40.8, 3.1]], f: "kelas2", b: "akademik", h: 6, dc: "#2dd4bf" },
+  // RK 1–3 (ruang kelas sedang)
+  { x: -56, z: [12, 30], f: "rk1", b: "rk1", h: 6 },
+  { z: 12, x: [-56, -44], f: "rk1", b: "rk1", h: 6 },
+  { z: 12, x: [-44, -40], f: "rk2", b: "rk2", h: 6 },
+  { x: -44, z: [12, 30], f: "rk1", b: "rk2", h: 6 },
+  { x: -32, z: [12, 30], f: "rk2", b: "rk3", h: 6 },
+  { x: -20, z: [12, 30], f: "rk3", b: "rk3", h: 6 },
+  // Ruang Rapat & Auditorium Puspa Eosina
+  { x: -56, z: [56, 80], f: "rapat", b: "rapat", h: 4.6 },
+  { z: 80, x: [-56, -44], f: "rapat", b: "rapat", h: 4.6 },
+  { x: -44, z: [56, 80], f: "rapat", b: "kelas2", h: 6 },
+  { z: 80, x: [-44, -26], f: "kelas2", b: "kelas2", h: 6 },
   // Kelas 2 · Auditorium (timur E-Portal, selatan IT-Mart)
-  { x: 27, z: [30, 56], f: "kelas2", b: "kelas2", h: 6 },
-  { z: 56, x: [10, 27], f: "kelas2", b: "kelas2", h: 6 },
   // Atrium barat/timur
   { x: -12, z: [-12, 12], d: [[-2.5, 2.5, 4]], f: "keris", b: "atrium", h: 7 },
   { x: 12, z: [-12, 12], d: [[-2.5, 2.5, 4]], f: "atrium", b: "csn", h: 7 },
   // Dinding z = -12 (utara atrium & selatan GIT/SE)
-  { z: -12, x: [-40, -24], f: "keris", b: "keris", h: 5.5 },
+  { z: -12, x: [-40, -24], f: "keris", b: "bencana", h: 6 },
   { z: -12, x: [-24, -12], f: "keris", b: "git", h: 5.5 },
   { z: -12, x: [-12, 0], d: [[-7, -3, 4]], f: "atrium", b: "git", h: 7 },
   { z: -12, x: [0, 12], d: [[3, 7, 4]], f: "atrium", b: "se", h: 7 },
   { z: -12, x: [12, 24], f: "csn", b: "se", h: 5.5 },
   { z: -12, x: [24, 40], f: "csn", b: "csn", h: 5.5 },
   // KERIS
-  { z: 12, x: [-40, -12], f: "keris", b: "keris", h: 5.5 },
+  { z: 12, x: [-40, -32], f: "rk2", b: "keris", h: 6 },
+  { z: 12, x: [-32, -20], f: "rk3", b: "keris", h: 6 },
+  { z: 12, x: [-20, -12], f: "keris", b: "keris", h: 5.5 },
   { x: -40, z: [-12, 12], f: "keris", b: "keris", h: 5.5 },
   // CSN
   { z: 12, x: [12, 27], f: "cafe", b: "csn", h: 5.5 },
   { z: 12, x: [27, 40], f: "csn", b: "csn", h: 5.5 },
   { x: 40, z: [-12, 12], f: "csn", b: "csn", h: 5.5 },
   // GIT
-  { x: -24, z: [-38, -12], f: "git", b: "git", h: 5.5 },
+  { x: -24, z: [-38, -12], d: [[-16.4, -14.2, 3.1]], f: "bencana", b: "git", h: 6, dc: "#f97316" }, // pintu ke Ruang Simulasi Bencana
+  // Ruang Simulasi Bencana (barat Lab GIT)
+  { z: -38, x: [-44, -24], f: "bencana", b: "bencana", h: 6 },
+  { x: -44, z: [-38, -12], f: "bencana", b: "bencana", h: 6 },
+  { z: -12, x: [-44, -40], f: "bencana", b: "bencana", h: 6 },
   { z: -38, x: [-24, 0], f: "git", b: "git", h: 5.5 },
   { x: 0, z: [-38, -12], f: "git", b: "se", h: 5.5 },
   // SE
@@ -2940,9 +2966,16 @@ function wallCanvas(kind) {
     for (let i = 0; i < 7; i++) { x.beginPath(); x.arc(110, 120, 30 + i * 46, 0, 7); x.stroke(); }
     x.fillStyle = "rgba(16,185,129,.08)";
     x.fillRect(0, 470, 512, 42);
-  } else if (kind === "kelas1" || kind === "kelas2") {
+  } else if (kind === "akademik") {
+    // ruang informasi akademik: krem terang, lis kayu bawah, pita biru tua + garis emas
+    x.fillStyle = "#f5f1e8"; x.fillRect(0, 0, 512, 512);
+    x.fillStyle = "rgba(30,58,138,.05)"; for (let i = 0; i < 512; i += 64) x.fillRect(i, 0, 2, 380);
+    x.fillStyle = "#8b6b4a"; x.fillRect(0, 380, 512, 132);
+    x.fillStyle = "rgba(0,0,0,.12)"; for (let i = 0; i < 512; i += 128) x.fillRect(i, 380, 3, 132);
+    x.fillStyle = "#1e3a8a"; x.fillRect(0, 352, 512, 28); x.fillStyle = "#d4a017"; x.fillRect(0, 348, 512, 5);
+  } else if (kind === "kelas1" || kind === "kelas2" || /^rk\d$/.test(kind)) {
     // ruang kelas auditorium: dinding terang + panel akustik bilah kayu
-    const acc = kind === "kelas1" ? "#2563eb" : "#0d9488";
+    const acc = { kelas1: "#2563eb", kelas2: "#0d9488", rk1: "#7c3aed", rk2: "#db2777", rk3: "#16a34a" }[kind];
     x.fillStyle = "#eef1f6";
     x.fillRect(0, 0, 512, 512);
     for (let i = 0; i < 16; i++) {
@@ -3113,7 +3146,21 @@ function floorCanvas(k, r) {
     x.fillStyle = "#cbd5e1"; x.fillRect(0, 0, c.width, c.height);
     const tl = 1.0 * sx;
     for (let i = 0; i < c.width; i += tl) for (let j = 0; j < c.height; j += tl) { x.fillStyle = (Math.floor(i / tl) + Math.floor(j / tl)) % 2 ? "#d4d4d8" : "#e4e4e7"; x.fillRect(i + 1, j + 1, tl - 2, tl - 2); }
-    x.fillStyle = "rgba(249,115,22,.55)"; x.fillRect(X(-37.8), Z(31.5), 1.0 * sx, (54.5 - 31.5) * sz); x.fillRect(X(-37.8), Z(31.5), (37.8 - 20) * sx, 1.0 * sz);
+    x.fillStyle = "rgba(249,115,22,.55)"; x.fillRect(X(r.x0 + 2.2), Z(r.z0 + 1.5), 1.0 * sx, (r.z1 - r.z0 - 3) * sz); x.fillRect(X(r.x0 + 2.2), Z(-15.8), (r.x1 - r.x0 - 2.2) * sx, 1.0 * sz);
+  } else if (k === "akademik") {
+    // lantai granit krem mengilap + jalur biru dari pintu E-Portal ke meja resepsionis + karpet ruang tunggu
+    const tl = 1.2 * sx; x.fillStyle = "#e7e2d8"; x.fillRect(0, 0, c.width, c.height);
+    for (let i = 0; i < c.width; i += tl) for (let j = 0; j < c.height; j += tl) { x.fillStyle = (Math.floor(i / tl) + Math.floor(j / tl)) % 2 ? "#ece8df" : "#e2dccf"; x.fillRect(i + 1, j + 1, tl - 2, tl - 2); }
+    x.fillStyle = "rgba(30,58,138,.55)"; x.fillRect(X(-35.6), Z(39.1), (r.x1 - -35.6) * sx, 0.8 * sz);
+    x.fillStyle = "#1e3a8a"; x.beginPath(); x.arc(X(-38.6), Z(43), 2.6 * sx, 0, 7); x.fill(); x.fillStyle = "#2b4aa0"; x.beginPath(); x.arc(X(-38.6), Z(43), 2.2 * sx, 0, 7); x.fill();
+    x.fillStyle = "#3b4a6b"; x.fillRect(X(r.x0 + 1.8), Z(r.z0 + 2.4), 6.8 * sx, (r.z1 - r.z0 - 4.8) * sz);
+    x.strokeStyle = "#d4a017"; x.lineWidth = 0.06 * sx; x.strokeRect(X(r.x0 + 1.8), Z(r.z0 + 2.4), 6.8 * sx, (r.z1 - r.z0 - 4.8) * sz);
+  } else if (/^rk\d$/.test(k)) {
+    // karpet RK + area depan (di sisi pintu/selatan) berlantai vinil terang
+    x.fillStyle = { rk1: "#3b3355", rk2: "#4a2f3d", rk3: "#2f4a35" }[k]; x.fillRect(0, 0, c.width, c.height);
+    for (let i = 0; i < 6000; i++) { x.fillStyle = `rgba(255,255,255,${R() * 0.05})`; x.fillRect(R() * c.width, R() * c.height, 2, 2); }
+    x.fillStyle = "#e7e5ee"; x.fillRect(0, c.height - 5 * sz, c.width, 5 * sz);
+    x.strokeStyle = "rgba(15,23,42,.15)"; x.lineWidth = 2; for (let i = 0; i < c.width; i += 1.2 * sx) { x.beginPath(); x.moveTo(i, c.height - 5 * sz); x.lineTo(i, c.height); x.stroke(); }
   } else if (k === "kelas1" || k === "kelas2") {
     // karpet kelas (abu kebiruan / hijau toska) + jalur depan
     x.fillStyle = k === "kelas1" ? "#3b4a63" : "#2f5650";
@@ -3130,7 +3177,7 @@ function floorCanvas(k, r) {
     x.strokeStyle = "rgba(250,204,21,.10)"; x.lineWidth = 3;
     for (let i = -c.height; i < c.width; i += 0.8 * sx) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i + c.height, c.height); x.stroke(); }
     x.fillStyle = "rgba(120,53,15,.55)";
-    x.beginPath(); x.ellipse(X(1), Z(68.5), 3.4 * sx, 8.8 * sz, 0, 0, 7); x.fill();
+    x.beginPath(); x.ellipse(X((r.x0 + r.x1) / 2), Z((r.z0 + r.z1) / 2 + 0.5), 3.4 * sx, 8.8 * sz, 0, 0, 7); x.fill();
   } else if (k === "cafe") {
     // lantai papan kayu
     const pw = 0.22 * sx;
@@ -3464,7 +3511,7 @@ function buildWorld(scene2, quality) {
   };
   api.texFrom = texFrom;
   const wallC = {};
-  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat", "bencana"]) wallC[k] = wallCanvas(k);
+  for (const k of ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat", "bencana", "akademik", "rk1", "rk2", "rk3"]) wallC[k] = wallCanvas(k);
   const wallMatCache = {};
   const wallMat = (k, len, h) => {
     const key = k + "|" + len.toFixed(1) + "|" + h;
@@ -3565,7 +3612,7 @@ function buildWorld(scene2, quality) {
     }
   }
   // lantai, plafon, lampu strip
-  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528", eportal: "#ffffff", kelas1: "#e8edf5", kelas2: "#e6f2f0", rapat: "#2a1d14", bencana: "#e2e8f0" };
+  const ceilCol = { welcome: "#1d1530", atrium: "#fbf9ff", keris: "#0a0e24", git: "#14061f", se: "#f5f3ff", csn: "#061423", cafe: "#6b4528", eportal: "#ffffff", kelas1: "#e8edf5", kelas2: "#e6f2f0", rapat: "#2a1d14", bencana: "#e2e8f0", akademik: "#f8fafc", rk1: "#ede9fe", rk2: "#fce7f3", rk3: "#dcfce7" };
   for (const [k, r] of Object.entries(ROOMS)) {
     const w = r.x1 - r.x0, d = r.z1 - r.z0;
     const fc = floorCanvas(k, r);
@@ -3597,7 +3644,7 @@ function buildWorld(scene2, quality) {
     ce.rotation.x = Math.PI / 2;
     ce.position.y = r.h;
     scene2.add(ce);
-    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : k === "eportal" ? "#10b981" : k === "kelas1" ? "#93c5fd" : k === "kelas2" ? "#5eead4" : k === "rapat" ? "#fcd34d" : k === "bencana" ? "#f97316" : "#ffffff";
+    const stripCol = r.lab ? LABS[r.lab].col : k === "welcome" ? "#f5c66b" : k === "cafe" ? "#fbbf77" : k === "eportal" ? "#10b981" : k === "kelas1" ? "#93c5fd" : k === "kelas2" ? "#5eead4" : k === "rapat" ? "#fcd34d" : k === "bencana" ? "#f97316" : k === "akademik" ? "#93c5fd" : k === "rk1" ? "#c4b5fd" : k === "rk2" ? "#f9a8d4" : k === "rk3" ? "#86efac" : "#ffffff";
     const sm = basicCol(stripCol);
     for (const [ax, az, bx, bz] of [[r.x0 + 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z0 + 0.5], [r.x0 + 0.5, r.z1 - 0.5, r.x1 - 0.5, r.z1 - 0.5], [r.x0 + 0.5, r.z0 + 0.5, r.x0 + 0.5, r.z1 - 0.5], [r.x1 - 0.5, r.z0 + 0.5, r.x1 - 0.5, r.z1 - 0.5]]) {
       const len = Math.hypot(bx - ax, bz - az), led = new THREE.Mesh(new THREE.BoxGeometry(ax === bx ? 0.08 : len, 0.03, ax === bx ? len : 0.08), sm);
@@ -4312,7 +4359,7 @@ function buildWorld(scene2, quality) {
     const nx = [-21, -15, -9, -3], wz = [-34.75, -28.25, -21.75, -15.25];
     S2.slice(0, 4).forEach((s, i) => imgPanel(id, s, "git", "N", nx[i]));
     S2.slice(4, 8).forEach((s, i) => imgPanel(id, s, "git", "E", wz[i]));
-    S2.slice(8, 12).forEach((s, i) => imgPanel(id, s, "git", "W", wz[3 - i]));
+    S2.slice(8, 12).forEach((s, i) => imgPanel(id, s, "git", "W", [-35.4, -30.6, -25.8, -21.0][3 - i]));
     imgPanel(id, S2[12], "git", "S", -21.3, 3.6);
     videoScreen(id, "git", "S", -16.4, 4.2, "VIDEO KEGIATAN LAPANGAN GIT", []);
     const sh = showOf(id, 0);
@@ -5453,6 +5500,7 @@ function collide(x, z, fromX, fromZ) {
 // atau frame tersendat di ponsel) satu langkah bisa melewati garis tengah dinding tipis, lalu
 // collide() mendorong pemain ke SISI SEBALIKNYA — pemain "menembus" dinding (mis. Labirin Lorong 1).
 var MOVE_STEP = 0.12;
+var PLAYER_R = PLAYER_RADIUS;
 function tryMove(nx, nz) {
   const dx = nx - P.x, dz = nz - P.z, d = Math.hypot(dx, dz);
   if (d <= MOVE_STEP) return tryMoveStep(nx, nz);
@@ -6403,13 +6451,13 @@ $("menuBtn").onclick = () => dropdown($("menuBtn"), (d) => {
   item(d, "\u{1F455}", openSkins).append(skinsUnlocked() ? " Lemari Skin" : " Lemari Skin \u{1F512}");
   item(d, "\u{1F3C5}", openCapaian).append(" Capaian (sertifikat, kartu & lencana)");
   item(d, "\u{1F465}", openNpcDir).append(" Daftar NPC (kunjungi cepat)");
+  if (xrSupported) item(d, "\u{1F97D}", enterVR).append(" Masuk VR");
   item(d, "\u2754", showHelp).append(" Bantuan & kontrol");
+  if (typeof showQuestCard === "function") item(d, "\u{1F9ED}", showQuestCard).append(" Petunjuk misi berikutnya");
   item(d, "\u{1F5FA}", () => toggleMap(true)).append(" Denah lokasi");
   item(d, "\u26F6", toggleFull).append(" Layar penuh");
   item(d, "\u21BA", () => teleportSpot("welcome")).append(" Kembali ke Ruang Sambutan");
   item(d, "\u270D", () => openRegister(null)).append(" Formulir pendaftaran");
-  if (xrSupported)
-    item(d, "\u{1F97D}", enterVR).append(" Masuk VR");
 });
 function toggleFull() {
   try {
@@ -6710,10 +6758,10 @@ function closeAll() {
   if (drawMode)
     setDrawMode(false);
 }
-var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat", "bencana"];
+var mapLabelRooms = ["welcome", "atrium", "keris", "git", "se", "csn", "cafe", "eportal", "kelas1", "kelas2", "rapat", "bencana", "akademik", "rk1", "rk2", "rk3"];
 function drawMap(c, opt = {}) {
   const x = c.getContext("2d"), W = c.width, H = c.height;
-  const bx0 = -42, bx1 = 42, bz0 = -40, bz1 = 82;
+  const bx0 = -58, bx1 = 42, bz0 = -40, bz1 = 82;
   const sc = Math.min((W - 40) / (bx1 - bx0), (H - 40) / (bz1 - bz0));
   const ox = (W - (bx1 - bx0) * sc) / 2 - bx0 * sc, oz = (H - (bz1 - bz0) * sc) / 2 - bz0 * sc;
   const X = (v) => ox + v * sc, Z = (v) => oz + v * sc;
@@ -6936,7 +6984,7 @@ async function checkXR() {
   } catch {
     xrSupported = false;
   }
-  $("vrBtn").style.display = xrSupported ? "inline-flex" : "none";
+  $("vrBtn").style.display = "none"; // tombol Masuk VR kini ada di menu ☰
 }
 async function enterVR() {
   if (!xrSupported) {
@@ -7288,7 +7336,7 @@ function setAvatarNameOf(av, n) {
 }
 var VOICE_NEAR = 3, VOICE_FAR = 20;
 // ruangan tanpa batas jarak suara: semua yang berada di ruangan yang sama terdengar jelas tanpa pengeras suara
-var VOICE_ROOMS = new Set(["kelas1", "kelas2", "rapat"]);
+var VOICE_ROOMS = new Set(["kelas1", "kelas2", "rapat", "rk1", "rk2", "rk3"]);
 function mpTick(dt) {
   for (const r of remotes.values()) {
     const k = Math.min(1, dt * 8);
@@ -7653,6 +7701,7 @@ function update(dt) {
   if (typeof SA !== "undefined" && (SA.lock || SA.cd && SA.on)) { mx = mz = 0; P.walkTo = null; }
   if (typeof TY !== "undefined" && TY.lock) { mx = mz = 0; P.walkTo = null; }
   if (typeof KP !== "undefined" && KP.lock) { mx = mz = 0; P.walkTo = null; }
+  if (typeof TJ !== "undefined" && TJ.lock) { mx = mz = 0; P.walkTo = null; }
   if (mx || mz) {
     if (P.sit) {
       P.sit = false;
@@ -7882,7 +7931,7 @@ async function boot() {
   }
   go.hidden = false;
   go.onclick = enter;
-  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, BC, BCS, BC_META, BC_ORDER, BC_VIDS, bcStart, bcEnter, bcGateAsk, bcAct, bcStep, bcToHub, bcDone, bcGrid, bcSbPick, SB, KP, KP_FLEET, KP_AI, kpStart, kpBattle, kpShoot, kpAiPick, kpFire, kpRandom, kpBoard, kpAlive, kpEnd, kpEnter, kpEnterAsk, kpExit, kpPlaceAt, ISN, isnaGive, prAwardBatu, __saVis: () => saPlatVis(), ADZ, adzanLock, adzanUnlock, VT, KLS, SB, TY, tyStart, tyEnter, tyEnterAsk, tySubmit, tyEnd, tyExit, TY_KATA, cht, chtTry, CHT, CV, IO, SV, IS, stgRestart, kwLose, svLose, isLose, cvLoseLife, ioLose, svBegin, isBegin, svGoStage, isGoStage, cvB1Start, ioBegin, kwBegin, chtFly, SA, SAG, SAP, SAE, SA_PL, SA_BANK, saEnter, saEnterAsk, saStart, saQuizAns, saExit, saOff, buildSeni, saBack, openCapaian, capMine, openProfile, mkRaptor, mkSauropod, mkTrike, mkPtero, KWF, KWR, kwfxTick, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
+  window.__galeri = { Q, XT, SECRET_ROOMS, xTeleport, kuriAnswer, openSkins, applySkin, xOnName, saveQ, skinPreview, SN, snakeRoll, snTilePos, HOF, openHofForm, openHofGallery, spAnswer, xShake, getAvatar: () => avatar, S, remotes, getNet: () => net, step: update, P, world, teleport, teleportSpot, openZoom, npcAnswer, NPCS, toggleMap, camera, renderer, scene, openRegister, openNpc, Music, yt, ytCmd, quranOpen, quranVR, bukuCard, askNpc, openDiskusi, SPOTS, openExplorerCard, XC, L2, cogStart, l2Stairs, roomAt, xRoomAt, chStart, chConfirm, openCapaian, openProfile, capPamer, CH_LIST, CH_BANK, fetyGo, chAllDone, capMine, BADGES, badgeReveal, nanAnswer, CV, cvEnter, cvB1Start, cvB2Open, cvPick, cvExit, snReplayGo, snakeRoll, SN, capSync, capCek, IO, ioEnter, ioStart, ioBegin, ioWireOpen, ioRuleOpen, ioPreOpen, ioFlyStart, ioDrop, iotSimulate, IO_PARTS, IO_PLOTS, IO_RINGS, haryaniVerify, droneCam, keys: () => keys, TJ, TJC, tjStart, tjOpen, tjEnter, tjEnterAsk, tjExit, tjStop, BC, BCS, BC_META, BC_ORDER, BC_VIDS, bcStart, bcEnter, bcGateAsk, bcAct, bcStep, bcToHub, bcDone, bcGrid, bcSbPick, SB, KP, KP_FLEET, KP_AI, kpStart, kpBattle, kpShoot, kpAiPick, kpFire, kpRandom, kpBoard, kpAlive, kpEnd, kpEnter, kpEnterAsk, kpExit, kpPlaceAt, ISN, isnaGive, prAwardBatu, __saVis: () => saPlatVis(), ADZ, adzanLock, adzanUnlock, VT, KLS, SB, TY, tyStart, tyEnter, tyEnterAsk, tySubmit, tyEnd, tyExit, TY_KATA, cht, chtTry, CHT, CV, IO, SV, IS, stgRestart, kwLose, svLose, isLose, cvLoseLife, ioLose, svBegin, isBegin, svGoStage, isGoStage, cvB1Start, ioBegin, kwBegin, chtFly, SA, SAG, SAP, SAE, SA_PL, SA_BANK, saEnter, saEnterAsk, saStart, saQuizAns, saExit, saOff, buildSeni, saBack, openCapaian, capMine, openProfile, mkRaptor, mkSauropod, mkTrike, mkPtero, KWF, KWR, kwfxTick, PR, TR, TRG, PH, RR, RT, BATU, prEnter, prEnterAsk, prExit, trStart, rrStart, rrLane, rrEnd, trWin, trQuizAns, PR_QGEN, batuGrid, batuReveal, openNpcDir, npcVisit, ndMark, aftafCheat, SKT, SKT_BY, sktGrant, sktOwned, openSkinsV2, mySkin, refreshMySkin, applySkin, hasBlackCard, KLS, KLS_DOOR, akBarkanAns, akData, AUD, PEM, klsRx, KW, KWL, KWF, KWD, KWR, kwEnter, kwBegin, kwGoStage, kwStageDone, kwExit, kwIntro, sugiVerify, harisCheat, AMB, doJump, mySkin, silviaGate, cvOpenBookcase, CV_BS, CV_LM, CV_OBJ, CV_KP, xRoomAt, inCave };
 }
 boot().catch((err) => {
   console.error(err);
@@ -9056,7 +9105,9 @@ function zoneTick(dt) {
     toast("🧯 Ruang Simulasi Bencana — pilih gerbang simulasi di dinding barat; pemandu menunggumu di dalam.", 4500);
   } else if (r === "eportal") {
     toast("🌐 Ruang E-Portal UIKA — temui Virzha di gerbang portal untuk akses eportal.uika-bogor.ac.id (masih dalam pengembangan).", 4500);
-  } else if (r === "kelas1" || r === "kelas2") {
+  } else if (r === "akademik") {
+    toast("📅 Ruang Informasi Kegiatan Akademik — tanya Barkan di meja tengah soal jadwal kelas & rapat. Pintu RK 1–3 di utara; Ruang Rapat dan kedua auditorium di selatan.", 5200);
+  } else if (r === "kelas1" || r === "kelas2" || /^rk\d$/.test(r)) {
     toast(`🎓 ${ROOMS[r].name} — suara semua orang di ruangan ini terdengar jelas tanpa pengeras suara. Klik smart board untuk slide/video; tekan tombol duduk di dekat kursi.`, 5200);
   } else if (r === "rapat") {
     toast("🤝 Ruang Rapat — suara semua peserta terdengar jelas tanpa pengeras suara. Klik layar di dinding selatan untuk slide/video.", 4800);
@@ -10189,7 +10240,9 @@ function xHandleAct(act, hit, e) {
   if (typeof saAct === "function" && saAct(act, hit, e)) return;
   if (typeof tyAct === "function" && tyAct(act, hit, e)) return;
   if (typeof kpAct === "function" && kpAct(act, hit, e)) return;
+  if (typeof tjAct === "function" && tjAct(act, hit, e)) return;
   if (typeof bcAct === "function" && bcAct(act, hit, e)) return;
+  if (typeof akAct === "function" && akAct(act, hit, e)) return;
   if (typeof kwAct === "function" && kwAct(act, hit, e)) return;
   if (typeof svAct === "function" && svAct(act, hit, e)) return;
   if (typeof isAct === "function" && isAct(act, hit, e)) return;
@@ -10326,6 +10379,7 @@ function buildExtras() {
     try { buildSeni(); } catch (err) { console.error("Dunia Seni & Desain gagal dibangun:", err); }
     try { buildKetik(); } catch (err) { console.error("Arena Mengetik gagal dibangun:", err); }
     try { buildKapal(); } catch (err) { console.error("Ruang Komando gagal dibangun:", err); }
+    try { buildTerjun(); } catch (err) { console.error("Lapangan Terjun gagal dibangun:", err); }
     try { buildBencanaHub(); } catch (err) { console.error("Ruang Simulasi Bencana gagal dibangun:", err); }
     try { buildBencana(); } catch (err) { console.error("Simulasi bencana gagal dibangun:", err); }
     const hud = document.createElement("button");
@@ -10487,7 +10541,7 @@ function applySkin(av, id, color) {
   av.add(s.group);
   ud.skinG = s.group; ud.body = s.body; ud.headG = s.headG; ud.mat = s.mat; ud.skinAnim = s.anim;
 }
-function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof KP !== "undefined" && KP.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === KP.forceSkin) ? S.skin : KP.forceSkin; if (typeof TY !== "undefined" && TY.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TY.forceSkin) ? S.skin : TY.forceSkin; if (typeof SA !== "undefined" && SA.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === SA.forceSkin) ? S.skin : SA.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === PR.forceSkin) ? S.skin : PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
+function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof TJ !== "undefined" && TJ.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TJ.forceSkin) ? S.skin : TJ.forceSkin; if (typeof KP !== "undefined" && KP.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === KP.forceSkin) ? S.skin : KP.forceSkin; if (typeof TY !== "undefined" && TY.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TY.forceSkin) ? S.skin : TY.forceSkin; if (typeof SA !== "undefined" && SA.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === SA.forceSkin) ? S.skin : SA.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === PR.forceSkin) ? S.skin : PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
 function refreshMySkin() { if (avatar && (avatar.userData.skinId || "default") !== mySkin()) applySkin(avatar, mySkin(), S.color); }
 function skinTick() {
   if (avatar && avatar.userData.skinAnim) avatar.userData.skinAnim(t);
@@ -11756,6 +11810,7 @@ function pemRegister(lab) {
     $("pemFin").onclick = () => pemFinalCard(); $("pemSt").onclick = () => pemStatsCard();
     return;
   }
+  if (!(me && me.nim && !pemRegister.edit) && !PEM.kode) { pemKodeGate(lab); return; }
   if (me && me.nim && !pemRegister.edit) {
     genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>✅ Kamu sudah terdaftar</h2><p>Data pendaftaran peminatanmu tersimpan di server.</p>
     <div class="kbox"><b>DATA PENDAFTARAN</b><table class="ktab" id="pemMe"></table></div>
@@ -11792,7 +11847,7 @@ function pemRegister(lab) {
   $("pemF").onsubmit = async (e) => {
     e.preventDefault();
     const msg = $("pfMsg"), btn = $("pfSend");
-    const d = { nama: $("pfNama").value.trim(), nim: $("pfNimR").value.trim(), angkatan: $("pfAng").value.trim(), hp: $("pfHp").value.trim(), email: $("pfEmail").value.trim(), p1: $("pfP1").value, p2: $("pfP2").value, alasan: $("pfAl").value.trim(), vr: S.name || "", tok: me && me.nim === $("pfNimR").value.trim().toUpperCase() ? me.tok : "" };
+    const d = { nama: $("pfNama").value.trim(), nim: $("pfNimR").value.trim(), angkatan: $("pfAng").value.trim(), hp: $("pfHp").value.trim(), email: $("pfEmail").value.trim(), p1: $("pfP1").value, p2: $("pfP2").value, alasan: $("pfAl").value.trim(), kode: PEM.kode || "", vr: S.name || "", tok: me && me.nim === $("pfNimR").value.trim().toUpperCase() ? me.tok : "" };
     const err = !d.nama || d.nama.length < 3 ? "Isi nama lengkap." : !/^[0-9A-Za-z.\-]{5,20}$/.test(d.nim) ? "NIM tidak valid." : !/^(19|20)\d\d$/.test(d.angkatan) ? "Angkatan harus tahun, mis. 2024." : !d.hp && !d.email ? "Isi minimal nomor WhatsApp atau email." : !d.p1 || !d.p2 ? "Pilih lab pilihan 1 dan pilihan 2." : d.p1 === d.p2 ? "Pilihan 1 dan 2 harus berbeda." : "";
     if (err) { msg.textContent = err; msg.style.color = "#f87171"; return; }
     btn.disabled = true; msg.style.color = "var(--mut)"; msg.textContent = "Mengirim…";
@@ -11805,7 +11860,23 @@ function pemRegister(lab) {
       toast(r.updated ? "✅ Perubahan pendaftaran tersimpan." : `✅ Pendaftaran berhasil! Pilihan 1: ${LABS[r.e.p1].code}, pilihan 2: ${LABS[r.e.p2].code}.`, 6000);
       setTimeout(() => sayBubble(`Terima kasih, ${r.e.nama.split(" ")[0]}! Pendaftaranmu sudah kucatat. Pantau hasilnya di papan pengumuman ya 😊`, "npc_tia"), 500);
       pemLoadStats();
-    } catch (er) { msg.textContent = "❌ " + er.message; msg.style.color = "#f87171"; btn.disabled = false; }
+    } catch (er) { msg.textContent = "❌ " + er.message; msg.style.color = "#f87171"; btn.disabled = false; if (/token pendaftaran/i.test(er.message)) { PEM.kode = ""; setTimeout(() => pemKodeGate(lab), 1800); } }
+  };
+}
+// Kak Tias meminta TOKEN PENDAFTARAN (diatur di halaman admin peminatan) sebelum formulir dibuka
+function pemKodeGate(lab) {
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🔑 Token Pendaftaran</h2>
+  <p>Kak Tias: “Sebelum mengisi formulir peminatan, masukkan dulu <b>token pendaftaran</b> yang dibagikan admin/panitia peminatan ya.”</p>
+  <form id="pemKF" class="rowf" autocomplete="off"><input id="pemKI" maxlength="20" placeholder="Token pendaftaran" style="text-transform:uppercase;letter-spacing:.15em;font-weight:700" aria-label="Token pendaftaran"><button class="btn" type="submit">Lanjut</button></form>
+  <p id="pemKM" style="min-height:20px;font-size:13px;color:#fca5a5"></p>
+  <p class="kk" style="font-size:12.5px;color:var(--mut)">Belum punya token? Tanyakan kepada admin peminatan atau dosen wali.</p>`);
+  setTimeout(() => $("pemKI") && $("pemKI").focus(), 60);
+  $("pemKF").onsubmit = async (e) => {
+    e.preventDefault();
+    const v = $("pemKI").value.trim(); if (!v) { $("pemKM").textContent = "Masukkan token dari admin peminatan."; return; }
+    $("pemKM").style.color = "var(--mut)"; $("pemKM").textContent = "Memeriksa…";
+    try { await pemFetch("api/peminatan/token", { method: "POST", body: JSON.stringify({ kode: v }) }); PEM.kode = v.toUpperCase(); closeGen(); toast("✅ Token diterima — silakan isi formulir.", 2500); pemRegister(lab); }
+    catch (er) { $("pemKM").style.color = "#fca5a5"; $("pemKM").textContent = "❌ " + er.message; }
   };
 }
 
@@ -12617,14 +12688,18 @@ function buildEportal() {
 // =====================================================================
 // lantai bertingkat: area depan (panggung dosen) datar, lalu 8 baris naik ke belakang
 var AUD = {
-  kelas1: { front: 6, rows: 8, rowD: 2, step: 0.25, carpet: 0x34425a, seat: "#1e3a8a", acc: "#60a5fa", title: "KELAS 1" },
-  kelas2: { front: 6, rows: 8, rowD: 2, step: 0.25, carpet: 0x2b4f4a, seat: "#115e59", acc: "#2dd4bf", title: "KELAS 2" }
+  kelas1: { front: 6, rows: 8, rowD: 2, step: 0.25, carpet: 0x34425a, seat: "#1e3a8a", acc: "#60a5fa", title: "AUDITORIUM BUDI SUSETYO", sign: "AUDITORIUM BUDI SUSETYO" },
+  kelas2: { front: 6, rows: 8, rowD: 2, step: 0.25, carpet: 0x2b4f4a, seat: "#115e59", acc: "#2dd4bf", title: "AUDITORIUM PUSPA EOSINA", sign: "AUDITORIUM PUSPA EOSINA" },
+  // RK 1–3: ruang kelas sedang 40 kursi (5 baris × 8); depan (smart board) di dinding pintu (selatan)
+  rk1: { front: 5, rows: 5, rowD: 2, step: 0.25, carpet: 0x3b3355, seat: "#6d28d9", acc: "#8b5cf6", title: "RK 1 · RUANG KELAS", flip: true, per: 4, deskOff: 2.8, lecOff: 2.6, sbW: 4.4, sbH: 2.48, sbY: 2.6 },
+  rk2: { front: 5, rows: 5, rowD: 2, step: 0.25, carpet: 0x4a2f3d, seat: "#9d174d", acc: "#ec4899", title: "RK 2 · RUANG KELAS", flip: true, per: 4, deskOff: 2.8, lecOff: 2.6, sbW: 4.4, sbH: 2.48, sbY: 2.6 },
+  rk3: { front: 5, rows: 5, rowD: 2, step: 0.25, carpet: 0x2f4a35, seat: "#166534", acc: "#22c55e", title: "RK 3 · RUANG KELAS", flip: true, per: 4, deskOff: 2.8, lecOff: 2.6, sbW: 4.4, sbH: 2.48, sbY: 2.6 }
 };
 function audGround(x, z) {
   for (const k in AUD) {
     const r = ROOMS[k], A = AUD[k];
     if (x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1) {
-      const d = z - (r.z0 + A.front);
+      const d = A.flip ? (r.z1 - A.front) - z : z - (r.z0 + A.front);
       return d <= 0 ? 0 : Math.min(A.rows, Math.floor(d / A.rowD) + 1) * A.step;
     }
   }
@@ -12663,7 +12738,7 @@ function kDoorTick(dt) {
 function kSign(txt, col, x, z, ry) {
   const c = mkCanvas(900, 170), t2 = c.getContext("2d");
   t2.fillStyle = col; rr(t2, 0, 0, 900, 170, 30); t2.fill();
-  t2.fillStyle = "#fff"; t2.font = `700 62px ${FONT}`; t2.textAlign = "center"; t2.textBaseline = "middle"; t2.fillText(txt, 450, 88);
+  t2.fillStyle = "#fff"; t2.textAlign = "center"; t2.textBaseline = "middle"; { let fs = 62; t2.font = `700 ${fs}px ${FONT}`; while (t2.measureText(txt).width > 850 && fs > 26) { fs -= 2; t2.font = `700 ${fs}px ${FONT}`; } t2.fillText(txt, 450, 88); }
   const m = xPlane(c, 2.2, 0.42); m.position.set(x, 3.72, z); m.rotation.y = ry; scene.add(m);
   return m;
 }
@@ -13007,13 +13082,13 @@ function sbTools(B) {
   btn("⬇ Unduh PNG", () => downloadCanvas(B.c, `smart-board-${B.id}.png`));
 }
 function kSmartBoard(room, id, title, acc, along, w, h, y) {
-  const p = world.onWall(room, room === "rapat" ? "S" : "N", along, y), g = world.group(p);
+  const p = world.onWall(room, room === "rapat" || (AUD[room] && AUD[room].flip) ? "S" : "N", along, y), g = world.group(p);
   const bez = new THREE2.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4, metalness: 0.4 });
   xBox(w + 0.22, h + 0.22, 0.08, bez, 0, 0, 0, 0, g);
   if (room !== "rapat") {
     xBox(w * 0.6, 0.06, 0.16, new THREE2.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 }), 0, -h / 2 - 0.16, 0.08, 0, g); // baki pena
     for (const sx of [-1, 1]) xBox(0.18, h * 0.8, 0.12, bez, sx * (w / 2 + 0.28), 0, 0, 0, g);                                // speaker
-    const lc = mkCanvas(900, 120), lx = lc.getContext("2d"); lx.fillStyle = acc; lx.font = `700 64px ${FONT}`; lx.textAlign = "center"; lx.fillText(title + " · SMART BOARD", 450, 84);
+    const lc = mkCanvas(900, 120), lx = lc.getContext("2d"); lx.fillStyle = acc; lx.textAlign = "center"; { const st = title + " · SMART BOARD"; let fs = 64; lx.font = `700 ${fs}px ${FONT}`; while (lx.measureText(st).width > 880 && fs > 28) { fs -= 2; lx.font = `700 ${fs}px ${FONT}`; } lx.fillText(st, 450, 84); }
     const lb = xPlane(lc, 3.2, 0.43); lb.position.set(0, h / 2 + 0.5, 0.05); g.add(lb);
   }
   const B = sbMake(id, title, acc, g, w, h, room, false);
@@ -13051,8 +13126,8 @@ function buildLabBoards() {
 
 // ---------- KELAS FUNGSIONAL (jadwal & token, peran pengajar, presensi, SFU, berbagi layar, chat, notulen, polling) ----------
 var KLS = { jad: {}, pass: {}, tok: {}, tokTry: null, joined: null, role: null, st: {}, spk: new Set(), tab: "p", min: false, prompt: 0, joinT: 0, note: {}, chat: {}, sfu: null, inRoomOnce: false };
-var KLS_ROOMS = ["kelas1", "kelas2", "rapat"];
-var KLS_DOOR = { kelas1: { x: -10.8, z: 54.4, yaw: Math.PI, dx: -10.8, dz: 56 }, kelas2: { x: 7.4, z: 32.6, yaw: Math.PI / 2, dx: 9, dz: 32.6 }, rapat: { x: 3, z: 54.4, yaw: Math.PI, dx: 3, dz: 56 } };
+var KLS_ROOMS = ["kelas1", "kelas2", "rapat", "rk1", "rk2", "rk3"];
+var KLS_DOOR = { kelas1: { x: -23.2, z: 54.4, yaw: Math.PI, dx: -23.2, dz: 56 }, kelas2: { x: -41.8, z: 54.4, yaw: Math.PI, dx: -41.8, dz: 56 }, rapat: { x: -46.8, z: 54.4, yaw: Math.PI, dx: -46.8, dz: 56 }, rk1: { x: -45.6, z: 31.6, yaw: 0, dx: -45.6, dz: 30 }, rk2: { x: -33.6, z: 31.6, yaw: 0, dx: -33.6, dz: 30 }, rk3: { x: -21.6, z: 31.6, yaw: 0, dx: -21.6, dz: 30 } };
 var KLS_NOTE_F = [["agenda", "Agenda"], ["ringkasan", "Ringkasan pembahasan"], ["keputusan", "Keputusan / kesimpulan"], ["tindak", "Tindak lanjut (siapa · apa · tenggat)"]];
 var klsSend = (o) => { if (net && typeof net.raw === "function") net.raw(o); };
 var klsFmtJam = (t) => new Date(t).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }).replace(".", ":");
@@ -13367,10 +13442,7 @@ function klsRender() {
   const canScreen = !!KLS.sfu && (!ses || T) && (!st.screen || (net && st.screen.id === net.selfId));
   if (canScreen) btn(KLS.sfu && KLS.sfu.screen ? "⏹ Hentikan berbagi layar" : "🖥 Bagikan layar", klsShareScreen, KLS.sfu && KLS.sfu.screen ? "btn" : "ghost", "Tampilkan layar laptopmu di smart board");
   if (KLS.sfu && KLS.sfu.net) { const n = KLS.sfu.net, bad = Object.values(n).some((v) => v === "failed"), ok = Object.values(n).length && Object.values(n).every((v) => v === "connected"); const s = document.createElement("span"); s.className = "kmut"; s.textContent = bad ? "📡 Media: GAGAL tersambung (port 44444?)" : ok ? "📡 Media: tersambung" : "📡 Media: menyambung…"; if (bad) s.style.color = "#fca5a5"; c.appendChild(s); }
-  if (st.screen) {
-    if (!KLS.sfu || !KLS.sfu.net) { const s = document.createElement("span"); s.className = "kmut"; s.textContent = `🖥 ${st.screen.n} sedang berbagi layar`; c.appendChild(s); }
-    btn("⛶ Perbesar layar", () => sbOpen(r), "btn", "Buka layar pengajar dalam ukuran besar");
-  }
+  else if (st.screen) { const s = document.createElement("span"); s.className = "kmut"; s.textContent = `🖥 ${st.screen.n} sedang berbagi layar`; c.appendChild(s); }
   if (T) {
     btn(st.ctl.muteAll ? "🔊 Buka mic semua" : "🔇 Bisukan semua", () => klsSend({ type: "kls_muteall", on: !st.ctl.muteAll }), st.ctl.muteAll ? "btn" : "ghost");
     btn(st.ctl.lock ? "🔒 Papan: hanya pengajar" : "🔓 Papan: semua boleh", () => klsSend({ type: "kls_lock", on: !st.ctl.lock }));
@@ -13406,12 +13478,94 @@ function klsRenderNote(force) {
   if (force) KLS.noteDirty = false;
   const sv = $("klsNoteSave"); if (sv) sv.hidden = !can;
 }
+function notulenDoc(d) {
+  // d: { rapat, judul, ruang, tanggal, waktu, pimpinan, notulis, hadirJudul, hadir:[{nama,peran,durasi?}], sec:[[label,teks]], polls:[{q,hasil:[[opsi,n]]}], dibuat }
+  const E = (v) => String(v == null ? "" : v).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const lPim = d.rapat ? "Pimpinan rapat" : "Dosen pengajar";
+  const teks = (t) => {
+    t = String(t || "").trim(); if (!t) return '<p class="kosong">Tidak ada catatan.</p>';
+    const L = t.split(/\n+/).map((x) => x.trim()).filter(Boolean);
+    if (L.length > 1 && L.every((x) => /^([-•*]|\d+[.)])\s*/.test(x))) return "<ul>" + L.map((x) => "<li>" + E(x.replace(/^([-•*]|\d+[.)])\s*/, "")) + "</li>").join("") + "</ul>";
+    return L.map((x) => "<p>" + E(x) + "</p>").join("");
+  };
+  const ada = d.hadir.some((h) => h.durasi != null);
+  const hadir = d.hadir.length ? d.hadir.map((h, i) => `<tr${h.peran === "pengajar" ? ' class="pim"' : ""}><td class="c">${i + 1}</td><td>${E(h.nama)}</td><td>${h.peran === "pengajar" ? lPim : "Peserta"}</td>${ada ? `<td class="c">${h.durasi != null ? Math.max(1, Math.round(h.durasi / 60000)) + " menit" : "—"}</td>` : ""}</tr>`).join("") : `<tr><td colspan="${ada ? 4 : 3}" class="kosong c">Belum ada peserta tercatat.</td></tr>`;
+  const nPes = d.hadir.filter((h) => h.peran !== "pengajar").length, nPim = d.hadir.length - nPes;
+  let no = 1;
+  const secs = d.sec.map(([l, t]) => `<section><h2><span>${++no}</span>${E(l)}</h2>${teks(t)}</section>`).join("");
+  const polls = (d.polls || []).length ? `<section><h2><span>${++no}</span>Hasil polling</h2>${d.polls.map((p) => { const tot = p.hasil.reduce((a, [, n]) => a + n, 0) || 1; return `<div class="poll"><b>${E(p.q)}</b><table>${p.hasil.map(([o, n]) => `<tr><td>${E(o)}</td><td class="bar"><i style="width:${Math.round((n / tot) * 100)}%"></i></td><td class="c">${n} suara</td></tr>`).join("")}</table></div>`; }).join("")}</section>` : "";
+  const info = [["Kegiatan", d.judul], ["Ruang", d.ruang], ["Hari, tanggal", d.tanggal], ["Waktu", d.waktu], [lPim, d.pimpinan || "—"], ["Notulis", d.notulis || "—"], ["Jumlah hadir", `${d.hadir.length} orang (${nPim} ${lPim.toLowerCase()}, ${nPes} peserta)`]];
+  return `<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Notulen ${E(d.judul)}</title><style>
+@page{size:A4;margin:16mm 16mm 18mm}
+*{box-sizing:border-box}
+body{margin:0;background:#eef0f4;color:#1f2330;font:14px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+.doc{max-width:820px;margin:28px auto;background:#fff;padding:40px 48px 36px;border-radius:6px;box-shadow:0 2px 14px rgba(20,20,50,.1)}
+.kop{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px double #4c1d95;padding-bottom:10px}
+.kop .ins{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#4c1d95;font-weight:700;line-height:1.4}
+.kop .ins small{display:block;letter-spacing:.04em;text-transform:none;color:#6b7280;font-weight:500;font-size:12px}
+.kop .jen{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6b7280;text-align:right}
+h1{font-size:24px;line-height:1.25;margin:22px 0 4px;text-align:center;letter-spacing:.06em}
+.sub{text-align:center;color:#4b5563;margin:0 0 20px;font-size:15px}
+table{border-collapse:collapse;width:100%}
+.info td{padding:4px 0;vertical-align:top;font-size:13.5px}
+.info td:first-child{width:150px;color:#6b7280}
+.info td:nth-child(2){width:16px;color:#6b7280}
+h2{display:flex;align-items:center;gap:10px;font-size:15.5px;color:#2e1065;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid #e5e7eb}
+h2 span{flex:0 0 24px;height:24px;border-radius:50%;background:#4c1d95;color:#fff;font-size:12.5px;display:grid;place-items:center}
+section p{margin:0 0 6px;text-align:justify}
+section ul{margin:0;padding-left:22px}
+section li{margin:2px 0}
+.kosong{color:#9ca3af;font-style:italic}
+.hd{font-size:13.5px}
+.hd th{background:#4c1d95;color:#fff;font-weight:600;text-align:left;padding:7px 10px;font-size:12.5px;letter-spacing:.02em}
+.hd td{padding:6px 10px;border-bottom:1px solid #e5e7eb}
+.hd tr:nth-child(even) td{background:#faf9fd}
+.hd tr.pim td{background:#f3efff;font-weight:600}
+.c{text-align:center}
+.hd th.c{text-align:center}
+.cat{font-size:12px;color:#6b7280;margin:6px 0 0}
+.poll{margin:0 0 12px}
+.poll table{margin-top:4px;font-size:13px}
+.poll td{padding:3px 6px}
+.poll td:first-child{width:38%}
+.poll .bar{width:44%}
+.poll .bar i{display:block;height:10px;border-radius:5px;background:#7c3aed;min-width:2px}
+.ttd{display:flex;justify-content:space-between;gap:40px;margin-top:40px;page-break-inside:avoid}
+.ttd div{flex:1;text-align:center;font-size:13.5px}
+.ttd .gar{margin:64px auto 4px;width:75%;border-top:1px solid #1f2330;padding-top:4px;font-weight:600}
+.ttd small{color:#6b7280}
+.foot{margin-top:30px;padding-top:8px;border-top:1px solid #e5e7eb;font-size:11.5px;color:#9ca3af;text-align:center}
+@media (max-width:640px){.doc{margin:0;padding:24px 18px;border-radius:0}.info td:first-child{width:110px}.ttd{gap:16px}}
+@media print{body{background:#fff}.doc{margin:0;padding:0;box-shadow:none;max-width:none}h2,.hd tr{page-break-inside:avoid;page-break-after:auto}h2{page-break-after:avoid}.hd th,h2 span,.hd tr.pim td,.poll .bar i{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body><div class="doc">
+<div class="kop"><div class="ins">Galeri VR Teknik Informatika<small>Universitas Ibn Khaldun (UIKA) Bogor</small></div><div class="jen">${d.rapat ? "Notulen Rapat" : "Notulen Perkuliahan"}<br>${E(d.ruang)}</div></div>
+<h1>NOTULEN ${d.rapat ? "RAPAT" : "PERKULIAHAN"}</h1><p class="sub">${E(d.judul)}</p>
+<table class="info">${info.map(([k, v]) => `<tr><td>${E(k)}</td><td>:</td><td>${E(v)}</td></tr>`).join("")}</table>
+<section><h2><span>1</span>${E(d.hadirJudul || "Daftar hadir")}</h2><table class="hd"><tr><th class="c" style="width:48px">No</th><th>Nama</th><th style="width:170px">Peran</th>${ada ? '<th class="c" style="width:130px">Durasi hadir</th>' : ""}</tr>${hadir}</table>${d.hadirCat ? `<p class="cat">${E(d.hadirCat)}</p>` : ""}</section>
+${secs}${polls}
+<div class="ttd"><div>Mengetahui,<br>${lPim}<div class="gar">${E(d.pimpinan || "………………………")}</div></div><div>Bogor, ${E(d.tglTtd || d.tanggal)}<br>Notulis<div class="gar">${E(d.notulis || "………………………")}</div></div></div>
+<div class="foot">Dokumen dibuat otomatis oleh Galeri VR Teknik Informatika UIKA Bogor · ${E(d.dibuat)}</div>
+</div></body></html>`;
+}
+
 function klsNoteDownload() {
   const r = KLS.joined, st = KLS.st[r], n = KLS.note[r] || { t: {} }, ses = st && st.sesi;
   const fields = {}; ($("klsPane") ? [...$("klsPane").querySelectorAll("textarea")] : []).forEach((t) => { fields[t.dataset.f] = t.value; });
   const t = Object.assign({}, n.t, fields), now = new Date();
   const poll = st && st.poll ? `<h2>Polling</h2><p><b>${klsEsc(st.poll.q)}</b><br>${st.poll.opsi.map((o, i) => `${klsEsc(o)}: ${st.poll.hasil[i]} suara`).join(" · ")}</p>` : "";
-  const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Notulen</title><style>body{font:15px/1.6 system-ui,sans-serif;max-width:780px;margin:32px auto;padding:0 20px}h1{font-size:22px;margin:0}h2{font-size:16px;color:#4c1d95;border-bottom:1px solid #ddd;margin:20px 0 6px}.m{color:#555;margin:2px 0}</style></head><body><h1>NOTULEN · ${klsEsc(ses ? ses.judul : ROOMS[r].name)}</h1><p class="m">${klsEsc(ROOMS[r].name)} · Galeri VR Teknik Informatika UIKA Bogor</p><p class="m">${now.toLocaleString("id-ID", { dateStyle: "full", timeStyle: "short" })}${ses && ses.pengajar ? " · Pengajar/pimpinan: " + klsEsc(ses.pengajar) : ""}</p>${KLS_NOTE_F.map(([k, l]) => `<h2>${l}</h2><p>${t[k] ? klsEsc(t[k]).replace(/\n/g, "<br>") : "—"}</p>`).join("")}${poll}<h2>Hadir saat diunduh (${st ? st.peserta.length : 0})</h2><p>${st ? st.peserta.map((p) => klsEsc(p.n) + (p.role === "pengajar" ? " (pengajar)" : "")).join(", ") : ""}</p></body></html>`;
+  const TZ = { timeZone: "Asia/Jakarta" }, t0 = ses && ses.mulai ? new Date(ses.mulai) : now;
+  const jam = (x) => x.toLocaleTimeString("id-ID", { ...TZ, hour: "2-digit", minute: "2-digit" });
+  const hadir = (st ? st.peserta.slice() : []).sort((a, b) => (a.role === b.role ? a.n.localeCompare(b.n, "id") : a.role === "pengajar" ? -1 : 1)).map((p) => ({ nama: p.n, peran: p.role === "pengajar" ? "pengajar" : "peserta" }));
+  const html = notulenDoc({
+    rapat: r === "rapat", judul: ses ? ses.judul : ROOMS[r].name, ruang: ROOMS[r].name,
+    tanggal: t0.toLocaleDateString("id-ID", { ...TZ, dateStyle: "full" }), tglTtd: now.toLocaleDateString("id-ID", { ...TZ, day: "numeric", month: "long", year: "numeric" }),
+    waktu: ses && ses.mulai ? `${jam(new Date(ses.mulai))} – ${ses.selesai ? jam(new Date(ses.selesai)) : "selesai"} WIB` : jam(now) + " WIB",
+    pimpinan: (ses && ses.pengajar) || (hadir.find((h) => h.peran === "pengajar") || {}).nama || "", notulis: n.by || "",
+    hadirJudul: "Daftar hadir", hadirCat: "Daftar ini berisi peserta yang berada di ruangan saat notulen diunduh. Rekap kehadiran lengkap dengan durasi tersedia di panel admin.",
+    hadir, sec: KLS_NOTE_F.map(([k, l]) => [l, t[k]]),
+    polls: st && st.poll ? [{ q: st.poll.q, hasil: st.poll.opsi.map((o, i) => [o, st.poll.hasil[i] || 0]) }] : [],
+    dibuat: "diunduh " + now.toLocaleString("id-ID", { ...TZ, dateStyle: "long", timeStyle: "short" }) + " WIB"
+  });
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([html], { type: "text/html" })); a.download = `notulen-${r}-${now.toISOString().slice(0, 10)}.html`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 function klsRenderPoll() {
@@ -13522,7 +13676,7 @@ function buildAud(k) {
   // jam dinding di dinding belakang + tulisan aturan kelas
   const rc = mkCanvas(1200, 260), rx = rc.getContext("2d");
   rx.fillStyle = "rgba(255,255,255,.92)"; rr(rx, 0, 0, 1200, 260, 30); rx.fill();
-  rx.fillStyle = A.seat; rx.font = `800 72px ${FONT}`; rx.textAlign = "center"; rx.fillText(A.title + " · AUDITORIUM", 600, 110);
+  rx.fillStyle = A.seat; rx.textAlign = "center"; { let fs = 72; const st = A.sign || A.title + " · AUDITORIUM"; rx.font = `800 ${fs}px ${FONT}`; while (rx.measureText(st).width > 1140 && fs > 36) { fs -= 2; rx.font = `800 ${fs}px ${FONT}`; } rx.fillText(st, 600, 110); }
   rx.fillStyle = "#475569"; rx.font = `500 40px ${FONT}`; rx.fillText("Teknik Informatika · Universitas Ibn Khaldun Bogor", 600, 190);
   const rp = world.onWall(k, "S", cx, 4.4), rg = world.group(rp), rm = xPlane(rc, 4.6, 1.0); rm.position.z = 0.02; rg.add(rm);
 }
@@ -13530,7 +13684,7 @@ function buildAud(k) {
 // ---------- RUANG RAPAT ----------
 function buildRapat() {
   // meja elips panjang membujur utara–selatan: 12 kursi tiap sisi + 1 kursi pimpinan di ujung utara = 25 kursi
-  const R = ROOMS.rapat, cx = 1, cz = 68.4, a = 7.0, b = 1.9;
+  const R = ROOMS.rapat, cx = (R.x0 + R.x1) / 2, cz = (R.z0 + R.z1) / 2 + 0.4, a = 7.0, b = 1.9;
   const walnut = new THREE2.MeshStandardMaterial({ color: 0x4a2e1c, roughness: 0.25, metalness: 0.1 });
   const top = new THREE2.Mesh(new THREE2.CylinderGeometry(1, 1, 0.08, 96), walnut); top.scale.set(b, 1, a); top.position.set(cx, 0.76, cz); scene.add(top);
   const rim = new THREE2.Mesh(new THREE2.TorusGeometry(1, 0.012, 6, 128), new THREE2.MeshStandardMaterial({ color: 0xd4a017, metalness: 0.8, roughness: 0.3 })); rim.rotation.x = Math.PI / 2; rim.scale.set(b * 0.86, a * 0.93, 1); rim.position.set(cx, 0.802, cz); scene.add(rim);
@@ -13574,18 +13728,25 @@ function buildRapat() {
 
 function buildKelas() {
   buildAud("kelas1"); buildAud("kelas2"); buildRapat();
+  for (const k of ["rk1", "rk2", "rk3"]) { try { akAud(k); } catch (e) { console.error("RK gagal dibangun:", k, e); } }
   try { buildLabBoards(); } catch (e) { console.error("Smart board lab gagal dibangun:", e); }
   sbLoadCfg();
   // pintu kaca geser + papan nama di kedua sisi
-  kDoor(-10.8, 56, true, "#60a5fa", "kelas1"); kSign("KELAS 1 · AUDITORIUM", "#1e40af", -10.8, 55.82, Math.PI); kSign("↑ RUANG E-PORTAL", "#047857", -10.8, 56.18, 0);
-  kDoor(3, 56, true, "#f59e0b", "rapat"); kSign("RUANG RAPAT", "#92400e", 3, 55.82, Math.PI); kSign("↑ RUANG E-PORTAL", "#047857", 3, 56.18, 0);
-  kDoor(9, 32.6, false, "#2dd4bf", "kelas2"); kSign("KELAS 2 · AUDITORIUM →", "#0f766e", 8.82, 32.6, -Math.PI / 2); kSign("← RUANG E-PORTAL", "#047857", 9.18, 32.6, Math.PI / 2);
+  // semua pintu kelas & rapat kini dari Ruang Informasi Kegiatan Akademik
+  kDoor(-23.2, 56, true, "#60a5fa", "kelas1"); kSign("AUDITORIUM BUDI SUSETYO", "#1e40af", -23.2, 55.82, Math.PI); kSign("↑ INFORMASI AKADEMIK", "#1d4ed8", -23.2, 56.18, 0);
+  kDoor(-41.8, 56, true, "#2dd4bf", "kelas2"); kSign("AUDITORIUM PUSPA EOSINA", "#0f766e", -41.8, 55.82, Math.PI); kSign("↑ INFORMASI AKADEMIK", "#1d4ed8", -41.8, 56.18, 0);
+  kDoor(-46.8, 56, true, "#f59e0b", "rapat"); kSign("RUANG RAPAT", "#92400e", -46.8, 55.82, Math.PI); kSign("↑ INFORMASI AKADEMIK", "#1d4ed8", -46.8, 56.18, 0);
+  kDoor(-45.6, 30, true, "#8b5cf6", "rk1"); kSign("RK 1 · RUANG KELAS", "#6d28d9", -45.6, 30.18, 0); kSign("↓ INFORMASI AKADEMIK", "#1d4ed8", -45.6, 29.82, Math.PI);
+  kDoor(-33.6, 30, true, "#ec4899", "rk2"); kSign("RK 2 · RUANG KELAS", "#be185d", -33.6, 30.18, 0); kSign("↓ INFORMASI AKADEMIK", "#1d4ed8", -33.6, 29.82, Math.PI);
+  kDoor(-21.6, 30, true, "#22c55e", "rk3"); kSign("RK 3 · RUANG KELAS", "#15803d", -21.6, 30.18, 0); kSign("↓ INFORMASI AKADEMIK", "#1d4ed8", -21.6, 29.82, Math.PI);
+  kDoor(-20, 39.5, false, "#1d4ed8", null); kSign("INFORMASI AKADEMIK", "#1d4ed8", -19.82, 39.5, Math.PI / 2); kSign("RUANG E-PORTAL", "#047857", -20.18, 39.5, -Math.PI / 2);
+  try { buildAkademik(); } catch (e) { console.error("Ruang Informasi Kegiatan Akademik gagal dibangun:", e); }
   XT.anim.push((dt) => { kDoorTick(dt); sbTick(); klsTick(dt); });
 }
 
 // ---------- Patimah: waitress IT-Mart, pemandu ruangan di denah ----------
 var ROOM_INFO = {
-  bencana: ["Ruang Simulasi Bencana", "lewat pintu oranye di dinding barat Ruang E-Portal", "Ruang edukasi kebencanaan: 5 gerbang simulasi (kebakaran hutan, banjir bandang, tanah longsor, gempa bumi, gunung meletus) dengan pemandu Renda, Farhan, Adrin, Ridwan, dan Salsa, serta smart board video edukasi."],
+  bencana: ["Ruang Simulasi Bencana", "lewat pintu oranye di dinding barat Lab GIT", "Ruang edukasi kebencanaan: 6 gerbang simulasi (kebakaran hutan, banjir bandang, tanah longsor, gempa bumi, gunung meletus, tsunami) dengan pemandu Renda, Farhan, Adrin, Ridwan, Salsa, dan Helmi, serta smart board video edukasi."],
   welcome: ["Ruang Sambutan", "titik awal kamu tiba", "Ada layar besar video sambutan, slideshow “Kenali Lab Peminatan”, galeri Kepala Program Studi, logo TI 3D, denah, headset VR, dan robot Haris yang hafal kurikulum OBE serta visi-misi.", /sambutan|awal|video|kaprodi|kepala program|\bdul\b|haris|kurikulum|obe/],
   atrium: ["Atrium Pendaftaran", "di utara Ruang Sambutan, pusat semua ruangan", "Sudut Al-Qur'an berkubah di sisi timur laut (baca 114 surah + terjemahan + murattal), meja resepsionis Kak Tias untuk mendaftar peminatan, layar persentase peminatan, papan pengumuman hasil final, kuis “Kasus ini cocok di lab mana?”, papan tulis, papan pesan, dan pita Hall of Fame.", /atrium|resepsionis|\btias\b|daftar|pendaftaran|pengumuman|kuis|papan tulis/],
   keris: ["Lab KERIS", "lewat pintu barat Atrium", "Lab AI, data mining, machine learning & computer vision — ada rak server berkedip, hologram jaringan saraf, video lab, dan robot Keri.", /keris|\bkeri\b|\bai\b|machine learning|kecerdasan/],
@@ -13594,9 +13755,13 @@ var ROOM_INFO = {
   csn: ["Lab CSN", "lewat pintu timur Atrium", "Network Operation Center: layar monitoring, hologram topologi jaringan, rak server, robot Neta, dan lift menuju Hanggar Drone (diaktifkan Haryani di IT-Mart Lantai 2).", /\bcsn\b|neta|jaringan|network/],
   cafe: ["IT-Mart", "di timur Ruang Sambutan, lewat pintu kayu di dinding timurnya (tempat aku bekerja)", "Meja bar barista Rahman (kopi, info dosen & saran pembimbing), tangga ke Lantai 2 (Ananda memverifikasi Explorer Card), papan menu kopi, Rak Buku Digital berisi PDF yang bisa diunduh (dijaga Silvia), papan keahlian dosen TI, sofa, dan rak buku.", /cafe|kafe|kopi|rahman|it-?mart|\bmart\b|ivy|rak buku|perpus|lantai ?2|\bnan\b|ananda|silvia|patimah|gua pustaka/],
   eportal: ["Ruang E-Portal UIKA", "lewat pintu hijau di dinding selatan Ruang Sambutan", "Ruang luas berisi slide 9 aplikasi E-Portal SSO (CBT, E-Library, Meeting, Short Course, SIAKAD, SIMPEG, UCL, dan 2 aplikasi mobile) serta robot Virzha yang memberi akses ke eportal.uika-bogor.ac.id.", /e-?portal|portal|\bvir\b|virzha|\bsso\b|siakad|simpeg|\bucl\b|\bcbt\b|library/],
-  kelas1: ["Kelas 1 · Auditorium", "dari Ruang E-Portal, pintu biru di dinding selatan (kiri)", "Ruang kelas bergaya auditorium: 8 baris kursi bertingkat dengan meja lipat, mimbar dosen, dan smart board besar di depan untuk papan tulis dan presentasi slide lab.", /kelas ?1|kelas satu|auditorium|ruang kelas|kuliah/],
-  kelas2: ["Kelas 2 · Auditorium", "dari Ruang E-Portal, pintu toska di dinding timur", "Ruang kelas auditorium kedua (di selatan IT-Mart): kursi bertingkat, mimbar dosen, dan smart board di depan.", /kelas ?2|kelas dua/],
-  rapat: ["Ruang Rapat", "dari Ruang E-Portal, pintu kuning di dinding selatan (kanan, di balik gerbang portal)", "Ruang rapat berpanel kayu dengan meja elips panjang 14 meter, 25 kursi eksekutif, dan layar presentasi besar di dinding selatan.", /rapat|meeting|diskusi tim|ruang pertemuan/]
+  kelas1: ["Auditorium Budi Susetyo", "dari Ruang Informasi Kegiatan Akademik, pintu biru di dinding selatan (paling timur)", "Ruang kuliah bergaya auditorium (128 kursi): 8 baris kursi bertingkat dengan meja lipat, mimbar dosen, dan smart board besar di depan untuk papan tulis dan presentasi.", /budi|susetyo|auditorium ?1|kelas ?1|kelas satu|auditorium|ruang kelas|kuliah/],
+  kelas2: ["Auditorium Puspa Eosina", "dari Ruang Informasi Kegiatan Akademik, pintu toska di dinding selatan (tengah)", "Auditorium kedua (128 kursi): kursi bertingkat, mimbar dosen, dan smart board di depan.", /puspa|eosina|auditorium ?2|kelas ?2|kelas dua/],
+  rapat: ["Ruang Rapat", "dari Ruang Informasi Kegiatan Akademik, pintu kuning di dinding selatan (paling barat)", "Ruang rapat berpanel kayu dengan meja elips panjang 14 meter, 25 kursi eksekutif, dan layar presentasi besar di dinding selatan.", /rapat|meeting|diskusi tim|ruang pertemuan/],
+  akademik: ["Ruang Informasi Kegiatan Akademik", "lewat pintu biru di dinding barat Ruang E-Portal", "Ruang luas berisi meja resepsionis Barkan (info jadwal kelas & rapat), ruang tunggu 24 kursi dengan layar jadwal besar, papan petunjuk, dan pintu ke kedua auditorium, Ruang Rapat, serta RK 1–3.", /informasi|akademik|barkan|jadwal|resepsionis kelas/],
+  rk1: ["RK 1 · Ruang Kelas", "dari Ruang Informasi Kegiatan Akademik, pintu ungu di dinding utara (paling barat)", "Ruang kelas sedang 40 kursi bergaya auditorium dengan smart board.", /\brk ?1\b|ruang kelas ?1/],
+  rk2: ["RK 2 · Ruang Kelas", "dari Ruang Informasi Kegiatan Akademik, pintu merah muda di dinding utara (tengah)", "Ruang kelas sedang 40 kursi bergaya auditorium dengan smart board.", /\brk ?2\b|ruang kelas ?2/],
+  rk3: ["RK 3 · Ruang Kelas", "dari Ruang Informasi Kegiatan Akademik, pintu hijau di dinding utara (paling timur)", "Ruang kelas sedang 40 kursi bergaya auditorium dengan smart board.", /\brk ?3\b|ruang kelas ?3/]
 };
 function sitAnswer(q) {
   const ql = norm(q).replace(/\s+/g, " ").trim(), nm = S.name || "IT'ers";
@@ -21240,12 +21405,13 @@ var SKT = [
   { n: 57, nm: "Wanita Kebaya", b: "N", tn: "T", top: "#E8B6C8", bot: "#7A4B2B", hr: ["bun", "#111111"], hat: ["hairflower", "#f43f5e"], it: "fan:#d4a017", x: ["skirtlong", "batikbot"], ds: "Wanita berkebaya dengan kain batik, sanggul, bunga, dan kipas." },
   { n: 58, nm: "Ranger Hutan", b: "N", tn: "L", top: "#7B8A4A", bot: "#4E5A2E", hat: ["ranger", "#6b4f2a"], it: "binoculars", x: ["pocket", "belt:#3b2a1a"], ds: "Ranger hutan bertopi lebar dengan seragam khaki, ransel, dan teropong." },
   { n: 59, nm: "Nelayan Pesisir", b: "N", tn: "D", top: "#F8FAFC", bot: "#E8E0CC", hat: ["bucket", "#f5f5f4"], it: "rod", x: ["stripes:#1e40af"], ds: "Nelayan bertopi bucket, kaus bergaris, celana digulung, dan pancing." },
-  { n: 60, nm: "Petani Padi Modern", b: "N", tn: "T", top: "#3F8F4A", bot: "#6B5A3A", hat: ["caping", "#d9b86c"], it: "hoe", il: "rice", sh: "#166534", x: ["collar"], ds: "Petani modern bercaping dengan bot karet, cangkul, dan seikat padi." }
+  { n: 60, nm: "Petani Padi Modern", b: "N", tn: "T", top: "#3F8F4A", bot: "#6B5A3A", hat: ["caping", "#d9b86c"], it: "hoe", il: "rice", sh: "#166534", x: ["collar"], ds: "Petani modern bercaping dengan bot karet, cangkul, dan seikat padi." },
+  { n: 61, nm: "Penerjun Payung", tm: "Olahraga & Petualangan", b: "A", tn: "T", top: "#F97316", bot: "#1E40AF", hr: ["short", "#1f1a17"], gl: "sun", hat: ["hardhat", "#1e40af"], bk: ["backpack", "#111827"], x: ["stripe:#ffffff", "belt:#111827"], sh: "#111827", ds: "Penerjun payung berjumpsuit oranye-biru, helm, kacamata, dan ransel parasut." }
 ];
 var sktId = (n) => "SKN-" + String(n).padStart(3, "0");
-var SKT_BY = {}; SKT.forEach((s) => { s.id = sktId(s.n); s.tema = SKT_TEMA[Math.floor((s.n - 1) / 6)]; SKT_BY[s.id] = s; });
+var SKT_BY = {}; SKT.forEach((s) => { s.id = sktId(s.n); s.tema = s.tm || SKT_TEMA[Math.floor((s.n - 1) / 6)]; SKT_BY[s.id] = s; });
 // skin Portal Ring 1 (terlihat hanya bagi pemegang Black Card)
-var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run", "SKN-052": "Dunia Seni & Desain", "SKN-049": "Arena Mengetik", "SKN-024": "Ruang Komando" };
+var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run", "SKN-052": "Dunia Seni & Desain", "SKN-049": "Arena Mengetik", "SKN-024": "Ruang Komando", "SKN-061": "Lapangan Terjun" };
 
 // ---------- tekstur ----------
 function sktCanvas(w, h, fn) { const c = mkCanvas(w, h), x = c.getContext("2d"); fn(x, w, h); const t2 = new THREE2.CanvasTexture(c); t2.colorSpace = THREE2.SRGBColorSpace; t2.magFilter = THREE2.NearestFilter; return t2; }
@@ -21686,8 +21852,8 @@ function openSkinsV2() {
 var ND_GROUPS = [
   ["sambut", "🏛 Penyambut & Pemandu Lab", ["tia", "kuri", "vir", "keris", "git", "se", "csn"]],
   ["mart", "☕ IT-Mart & Kafe", ["rahman", "sit", "ivy", "jejen", "bayu", "aftaf", "nan", "haryani"]],
-  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azis", "eq", "azka", "guido"]],
-  ["bencana", "🧯 Pemandu Simulasi Bencana", ["renda", "farhan", "adrin", "ridwan", "salsa"]],
+  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azis", "eq", "azka", "guido", "danu"]],
+  ["bencana", "🧯 Pemandu Simulasi Bencana", ["renda", "farhan", "adrin", "ridwan", "salsa", "helmi"]],
   ["lencana", "🏅 Pemberi Lencana & Hadiah", ["tama", "fety", "puspa", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "dewi", "eko"]]
 ];
 var ND = { q: "", g: "all" };
@@ -21714,7 +21880,7 @@ function ndSeed() {
 }
 function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka", "azis", "eq", "guido", "isna"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
 function ndGroupOf(id) { for (const [k, , ids] of ND_GROUPS) if (ids.includes(id)) return k; return "lain"; }
-var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)", m_kapal: "Ruang Komando (Portal Ring 1)", bencana: "Ruang Simulasi Bencana", b_api: "Simulasi Kebakaran Hutan", b_banjir: "Simulasi Banjir Bandang", b_longsor: "Simulasi Tanah Longsor", b_gempa: "Simulasi Gempa Bumi", b_gunung: "Simulasi Gunung Meletus" };
+var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)", m_kapal: "Ruang Komando (Portal Ring 1)", m_terjun: "Lapangan Terjun (Portal Ring 1)", bencana: "Ruang Simulasi Bencana", b_api: "Simulasi Kebakaran Hutan", b_banjir: "Simulasi Banjir Bandang", b_longsor: "Simulasi Tanah Longsor", b_gempa: "Simulasi Gempa Bumi", b_gunung: "Simulasi Gunung Meletus", b_tsunami: "Simulasi Tsunami" };
 function ndWhere(n) { const r = n.custom && n.custom.room || n.room; return ND_ZONE_NAME[r] || (ROOMS[r] && ROOMS[r].name) || (XROOMS[r] && (XROOMS[r].short || XROOMS[r].name)) || ""; }
 function openNpcDir() {
   hidePopups(); ndSeed();
@@ -21772,7 +21938,8 @@ function ndZonePrep(room, n) {
     if (room === "p_valley" && typeof prVisitPrep === "function") { if (typeof SA !== "undefined" && SA.on) saOff(); prVisitPrep(); return true; }
     if (room === "s_art" && typeof saVisitPrep === "function") { if (typeof TY !== "undefined" && TY.on) tyOff(); saVisitPrep(); return true; }
     if (room === "m_ketik" && typeof tyVisitPrep === "function") { if (typeof KP !== "undefined" && KP.on) kpOff(); tyVisitPrep(); return true; }
-    if (room === "m_kapal" && typeof kpVisitPrep === "function") { kpVisitPrep(); return true; }
+    if (room === "m_kapal" && typeof kpVisitPrep === "function") { if (typeof TJ !== "undefined" && TJ.on) tjOff(); kpVisitPrep(); return true; }
+    if (room === "m_terjun" && typeof tjVisitPrep === "function") { tjVisitPrep(); return true; }
     if (/^b_/.test(room) && typeof bcVisitPrep === "function") { if (typeof KP !== "undefined" && KP.on) kpOff(); bcVisitPrep(room.slice(2)); return true; }
   } catch (e) { console.error("persiapan kunjungan gagal:", e); }
   return false;
@@ -21863,7 +22030,7 @@ var BATU = [
   { id: "merah", nama: "Batu Merah", c: "#ef4444", c2: "#7f1d1d", dari: "Anti-Gravitasi", tempat: "Dunia Seni & Desain" },
   { id: "birutua", nama: "Batu Biru Tua", c: "#1d4ed8", c2: "#172554", dari: "Typing Master", tempat: "Arena Mengetik" },
   { id: "oranye", nama: "Batu Oranye", c: "#f97316", c2: "#7c2d12", dari: "Tembak Kapal", tempat: "Ruang Komando" },
-  { id: "ungu", nama: "Batu Ungu", c: "#a855f7", c2: "#3b0764" },
+  { id: "ungu", nama: "Batu Ungu", c: "#a855f7", c2: "#3b0764", dari: "Terjun Payung", tempat: "Lapangan Terjun" },
   { id: "birulangit", nama: "Batu Biru Langit", c: "#38bdf8", c2: "#0c4a6e" },
   { id: "putih", nama: "Batu Putih", c: "#f8fafc", c2: "#94a3b8" },
   { id: "hitam", nama: "Batu Hitam", c: "#27272a", c2: "#000000" }
@@ -21937,7 +22104,7 @@ function batuReveal(id, isna) {
 }
 async function prSync() {
   const q = chMigrate(); if (!q.card || !q.card.no || !q.card.tok) return;
-  for (const id of ["pohon", "raptor", "gravitasi", "ketik", "kapal"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
+  for (const id of ["pohon", "raptor", "gravitasi", "ketik", "kapal", "terjun"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
   const B2 = batuQ();
   for (const id of Object.keys(B2)) { const b = B2[id]; if (b.srv) continue; try { const j = await xcPost("api/kartu/batu", { no: q.card.no, tok: q.card.tok, id }); if (j.ok) b.srv = true; } catch { /* nanti */ } }
   saveQ();
@@ -24977,6 +25144,7 @@ function kpTickAll(dt) {
   if (!here) return;
   kpTick();
   if (KP.on && KP.phase !== "battle" && KP.phase !== "place" && !grace && Math.hypot(P.x - KP_EXIT.x, P.z - KP_EXIT.z) < 1.2) kpToKetik();
+  if (KP.on && KP.phase !== "battle" && KP.phase !== "place" && KP.next && KP.next.visible && batuQ().oranye && typeof tjEnterAsk === "function" && Math.hypot(P.x - KP.next.position.x, P.z - KP.next.position.z) < 1.8 && now > (KP.askNextT || 0)) { KP.askNextT = now + 8000; tjEnterAsk(); }
   for (const e of KP.anims) e(dt);
 }
 document.addEventListener("keydown", (e) => { if (KP.phase === "place" && $("kpOv") && (e.key === "r" || e.key === "R")) { e.preventDefault(); e.stopPropagation(); kpRotate(); } }, true);
@@ -25079,7 +25247,7 @@ function buildKapal() {
   KP.anims.push((dt) => { er.rotation.z += dt; });
   const nx = new THREE2.Group(); nx.position.set(KPV.x1 - 5, 0, KPV.z1 - 7); nx.rotation.y = -Math.PI / 2 - 0.5; root.add(nx);
   const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.6, 0.22, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x7c2d12, emissive: 0xf97316, emissiveIntensity: 0.9, metalness: 0.5 })); nr.position.y = 2.1; nx.add(nr);
-  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#f97316", 2.8); ns.position.y = 4.4; nx.add(ns);
+  const ns = prSign("◆ LAPANGAN TERJUN", "tantangan 6 · Danu", "#f97316", 2.8); ns.position.y = 4.4; nx.add(ns);
   KP.next = nx; nx.visible = !!batuQ().oranye; KP.anims.push((dt) => { nr.rotation.z += dt * 0.7; });
   xAct(nr, { type: "x_kpnext" }); xAct(ns, { type: "x_kpnext" });
   // batas ruangan
@@ -25104,32 +25272,34 @@ function guidoAns(q) {
 function kpAct(act) {
   const ty = act.type;
   if (ty === "x_kpexit") { kpToKetik(); return true; }
-  if (ty === "x_kpnext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
+  if (ty === "x_kpnext") { if (batuQ().oranye && typeof tjEnterAsk === "function") { if (KP.phase === "battle") { toast("Selesaikan dulu pertempuran yang sedang berjalan."); return true; } tjEnterAsk(); } else toast("◆ Gerbang ini terbuka bagi pemegang Batu Oranye (juara Tembak Kapal).", 4000); return true; }
   return false;
 }
 
 
 
 // =====================================================================
-// src/ext_bencana.js — RUANG SIMULASI BENCANA (barat Ruang E-Portal)
-//  • Ruang utama kecil berisi 5 gerbang holodeck. Tiap gerbang membawa
+// src/ext_bencana.js — RUANG SIMULASI BENCANA (barat Lab GIT)
+//  • Ruang utama kecil berisi 6 gerbang holodeck. Tiap gerbang membawa
 //    pemain ke lingkungan simulasi sendiri dengan pemandu:
-//      🔥 Kebakaran Hutan (Renda) · 🌊 Banjir Bandang (Farhan)
+//      🔥 Kebakaran Hutan (Renda) · 🌧 Banjir Bandang (Farhan) · 🌊 Tsunami (Helmi)
 //      ⛰ Tanah Longsor (Adrin) · 🏚 Gempa Bumi (Ridwan)
 //      🌋 Gunung Meletus (Salsa)
 //  • Simulasi berisi langkah-langkah mitigasi. Tindakan yang tidak sesuai
 //    instruksi penyelamatan = simulasi GAGAL dan harus diulang dari awal.
-//  • Lulus → sertifikat; lulus kelimanya → status "Siaga Bencana" di Capaian.
+//  • Lulus → sertifikat; lulus semuanya → status "Siaga Bencana" di Capaian.
 // =====================================================================
-var BC_HUB = { x0: -40, x1: -20, z0: 30, z1: 56 };
+var BC_HUB = { x0: -44, x1: -24, z0: -38, z1: -12 }; // barat Lab GIT (pintu di dinding barat GIT)
+var BC_HUB_IN = { x: -27, z: -15.3, yaw: Math.PI / 2 };
 var BCS = {}; // definisi simulasi per kunci (diisi ext_bencana_sims.js)
-var BC_ORDER = ["api", "banjir", "longsor", "gempa", "gunung"];
+var BC_ORDER = ["api", "banjir", "longsor", "gempa", "gunung", "tsunami"];
 var BC_META = {
   api: { nm: "Kebakaran Hutan", icon: "🔥", col: "#f97316", npc: "renda", npcNm: "Renda", cx: 750, cz: -70 },
-  banjir: { nm: "Banjir Bandang", icon: "🌊", col: "#0ea5e9", npc: "farhan", npcNm: "Farhan", cx: 750, cz: 50 },
+  banjir: { nm: "Banjir Bandang", icon: "🌧", col: "#0ea5e9", npc: "farhan", npcNm: "Farhan", cx: 750, cz: 50 },
   longsor: { nm: "Tanah Longsor", icon: "⛰", col: "#a16207", npc: "adrin", npcNm: "Adrin", cx: 750, cz: 170 },
   gempa: { nm: "Gempa Bumi", icon: "🏚", col: "#eab308", npc: "ridwan", npcNm: "Ridwan", cx: 870, cz: -70 },
-  gunung: { nm: "Gunung Meletus", icon: "🌋", col: "#ef4444", npc: "salsa", npcNm: "Salsa", cx: 870, cz: 50 }
+  gunung: { nm: "Gunung Meletus", icon: "🌋", col: "#ef4444", npc: "salsa", npcNm: "Salsa", cx: 870, cz: 50 },
+  tsunami: { nm: "Tsunami", icon: "🌊", col: "#2563eb", npc: "helmi", npcNm: "Helmi", cx: 870, cz: 170 }
 };
 for (const k of BC_ORDER) { const M = BC_META[k]; XROOMS["b_" + k] = { x0: M.cx - 50, x1: M.cx + 50, z0: M.cz - 50, z1: M.cz + 50, h: 30, name: `Simulasi ${M.nm} · Ruang Simulasi Bencana`, short: `Sim. ${M.nm}` }; }
 var BC = { at: null, grace: 0, arrive: null, hidden: null, fogged: false, built: false, run: null, roots: {}, ownW: new Set(), anims: [], objs: {}, hubAskT: 0 };
@@ -25175,7 +25345,7 @@ var BCSND = (() => {
 .bc-opts button{text-align:left;white-space:normal;line-height:1.35;padding:10px 12px;height:auto}
 .bc-cert{border:3px double #facc15;border-radius:16px;padding:14px;background:linear-gradient(135deg,rgba(250,204,21,.12),rgba(255,255,255,.03))}
 .bc-cert small{letter-spacing:.14em;color:#fde68a;font-weight:700}
-.bc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:6px 0 10px}
+.bc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0 10px}
 .bc-grid div{border-radius:12px;padding:8px 4px;text-align:center;background:rgba(255,255,255,.05);font-size:11px;line-height:1.25;opacity:.55}
 .bc-grid div.on{opacity:1;background:rgba(34,197,94,.16);outline:1px solid rgba(34,197,94,.5)}
 .bc-grid b{display:block;font-size:22px}
@@ -25267,7 +25437,7 @@ function bcWin(R) {
     genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="bc-card bc-cert" style="text-align:center"><small>SERTIFIKAT SIMULASI</small><div style="font-size:52px">${M.icon}</div>
     <h2>Lulus Simulasi ${M.nm}</h2><p id="bcCertNm"></p>
     <ol class="bc-steps">${BCS[k].steps.map((s) => `<li class="done">${s}</li>`).join("")}</ol>
-    ${all ? `<p><b>🏅 Kelima simulasi lulus — status <span style="color:#86efac">SIAGA BENCANA</span> tercatat di Capaian!</b></p>` : `<p style="font-size:13px">Lulus ${BC_ORDER.filter((x) => D[x]).length} dari 5 simulasi. Selesaikan semuanya untuk status <b>Siaga Bencana</b>.</p>`}
+    ${all ? `<p><b>🏅 Semua ${BC_ORDER.length} simulasi lulus — status <span style="color:#86efac">SIAGA BENCANA</span> tercatat di Capaian!</b></p>` : `<p style="font-size:13px">Lulus ${BC_ORDER.filter((x) => D[x]).length} dari ${BC_ORDER.length} simulasi. Selesaikan semuanya untuk status <b>Siaga Bencana</b>.</p>`}
     <div class="rowf"><button class="btn" id="bcHubB">🏠 Kembali ke ruang utama</button><button class="ghost" id="bcAgain2">🔁 Ulangi simulasi</button></div></div>`);
     $("bcCertNm").textContent = `Diberikan kepada ${S.name} karena berhasil menjalankan langkah-langkah penyelamatan diri dengan benar.`;
     $("bcHubB").onclick = () => { closeGen(); bcToHub(); };
@@ -25319,7 +25489,7 @@ function bcEnter(k) {
 }
 function bcVisitPrep(k) { if (BC.at !== k) { try { buildBencana(); } catch (e) { console.error(e); } BC.run = null; BC.at = k; BC.grace = performance.now() + 3500; try { BCS[k].reset && BCS[k].reset(null); } catch { /* */ } bcHud(true); bcHudUpd(); } }
 function bcOff() { BC.at = null; BC.run = null; BC.grace = performance.now() + 3500; $("bcShake")?.remove(); bcHud(false); bcMarkUpd(); }
-function bcToHub() { bcOff(); xTeleport(-23.5, 33.5, -Math.PI / 2); toast("🏠 Kembali ke Ruang Simulasi Bencana.", 2500); }
+function bcToHub() { bcOff(); xTeleport(BC_HUB_IN.x, BC_HUB_IN.z, BC_HUB_IN.yaw); toast("🏠 Kembali ke Ruang Simulasi Bencana.", 2500); }
 function bcIsolate(on) {
   if (on === !!BC.hidden) return;
   if (on) {
@@ -25337,7 +25507,7 @@ function bcTickAll(dt) {
   const S2 = zk ? BCS[zk] : null;
   if (zk) { const fg = S2.fog || [0.6, 0.7, 0.75, 0.01]; scene.fog.color.setRGB(fg[0], fg[1], fg[2]); scene.fog.density = fg[3]; BC.fogged = true; }
   else if (BC.fogged && typeof xFogBase !== "undefined" && xFogBase) { scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; BC.fogged = false; }
-  if (zk && BC.at !== zk && !grace && !BC.arrive) { xTeleport(-23.5, 33.5, -Math.PI / 2); toast("◆ Ruang simulasi hanya bisa dimasuki lewat gerbang di Ruang Simulasi Bencana."); return; }
+  if (zk && BC.at !== zk && !grace && !BC.arrive) { xTeleport(BC_HUB_IN.x, BC_HUB_IN.z, BC_HUB_IN.yaw); toast("◆ Ruang simulasi hanya bisa dimasuki lewat gerbang di Ruang Simulasi Bencana."); return; }
   if (!zk && BC.at && !grace && !BC.arrive && roomAt(P.x, P.z)) bcOff();
   // ruang utama: gerbang bisa didatangi langsung
   if (!zk && roomAt(P.x, P.z) === "bencana") bcHubTick(now);
@@ -25345,7 +25515,7 @@ function bcTickAll(dt) {
   const [lx, lz] = bcLocal(zk, P.x, P.z);
   try { S2.tick && S2.tick(BC.run && BC.run.key === zk ? BC.run : null, dt, lx, lz, now); } catch (e) { console.error(e); }
   if (BC.run && BC.run.key === zk && !BC.run.end && Math.floor(now / 500) !== BC.hudT) { BC.hudT = Math.floor(now / 500); bcHudUpd(); }
-  if (!BC.run && !grace && S2.exit && Math.hypot(lx - S2.exit.x, lz - S2.exit.z) < 1.3) bcToHub();
+  if ((!BC.run || BC.run.end) && !grace && S2.exit && Math.hypot(lx - S2.exit.x, lz - S2.exit.z) < 1.3) bcToHub();
   for (const e of BC.anims) e(dt, zk);
 }
 // penanda sasaran langkah saat ini (cincin berdenyut)
@@ -25473,8 +25643,8 @@ function bcHubBoard() {
   B.draw((x, w, h) => {
     x.fillStyle = "#0f172a"; rr(x, 0, 0, w, h, 24); x.fill(); x.strokeStyle = "#f97316"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 20); x.stroke();
     x.textAlign = "center"; x.fillStyle = "#fdba74"; x.font = `900 52px ${FONT}`; x.fillText("🧯 RUANG SIMULASI BENCANA", w / 2, 74);
-    x.fillStyle = "#cbd5e1"; x.font = `500 28px ${FONT}`; x.fillText(`${S.name ? String(S.name).slice(0, 20) + " · " : ""}lulus ${BC_ORDER.filter((k) => D[k]).length}/5 simulasi`, w / 2, 116);
-    BC_ORDER.forEach((k, i) => { const M = BC_META[k], y = 170 + i * 64; x.textAlign = "left"; x.fillStyle = D[k] ? "#86efac" : "#e2e8f0"; x.font = `700 34px ${FONT}`; x.fillText(`${M.icon}  ${M.nm}`, 60, y); x.fillStyle = "#94a3b8"; x.font = `500 26px ${FONT}`; x.fillText(`pemandu: ${M.npcNm}`, 440, y); x.textAlign = "right"; x.fillStyle = D[k] ? "#86efac" : "#64748b"; x.font = `800 30px ${FONT}`; x.fillText(D[k] ? "✓ LULUS" : "belum", w - 60, y); });
+    x.fillStyle = "#cbd5e1"; x.font = `500 28px ${FONT}`; x.fillText(`${S.name ? String(S.name).slice(0, 20) + " · " : ""}lulus ${BC_ORDER.filter((k) => D[k]).length}/${BC_ORDER.length} simulasi`, w / 2, 116);
+    BC_ORDER.forEach((k, i) => { const M = BC_META[k], y = 166 + i * 60; x.textAlign = "left"; x.fillStyle = D[k] ? "#86efac" : "#e2e8f0"; x.font = `700 34px ${FONT}`; x.fillText(`${M.icon}  ${M.nm}`, 60, y); x.fillStyle = "#94a3b8"; x.font = `500 26px ${FONT}`; x.fillText(`pemandu: ${M.npcNm}`, 440, y); x.textAlign = "right"; x.fillStyle = D[k] ? "#86efac" : "#64748b"; x.font = `800 30px ${FONT}`; x.fillText(D[k] ? "✓ LULUS" : "belum", w - 60, y); });
   });
 }
 function buildBencanaHub() {
@@ -25482,7 +25652,7 @@ function buildBencanaHub() {
   const H = R.h;
   // 5 gerbang holodeck di dinding barat
   BC_ORDER.forEach((k, i) => {
-    const M = BC_META[k], z = 33.6 + i * 4.6, x = R.x0 + 0.9;
+    const M = BC_META[k], z = R.z0 + 2.8 + i * (21 / (BC_ORDER.length - 1)), x = R.x0 + 0.9;
     const g = new THREE2.Group(); g.position.set(x, 0, z); g.rotation.y = Math.PI / 2; scene.add(g);
     const frM = new THREE2.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.6, roughness: 0.35 });
     for (const sx of [-1, 1]) { const p = new THREE2.Mesh(new THREE2.BoxGeometry(0.28, 3.3, 0.4), frM); p.position.set(sx * 1.45, 1.65, 0); g.add(p); }
@@ -25497,24 +25667,24 @@ function buildBencanaHub() {
   });
   // smart board video edukasi (dinding utara) · papan status (dinding timur) · meja peta risiko
   try { bcSmartBoard(); } catch (e) { console.error("smart board bencana:", e); }
-  BCH.board = cvScreen(5.0, 2.86, 1120, 640); BCH.board.m.position.set(R.x1 - 0.2, 2.9, 48.6); BCH.board.m.rotation.y = -Math.PI / 2; scene.add(BCH.board.m); bcHubBoard();
+  BCH.board = cvScreen(5.0, 2.86, 1120, 640); BCH.board.m.position.set(R.x1 - 0.2, 2.9, R.z0 + 8); BCH.board.m.rotation.y = -Math.PI / 2; scene.add(BCH.board.m); bcHubBoard();
   const map = l2Canvas(1024, 520, (x, w, h) => {
     x.fillStyle = "#0c4a6e"; x.fillRect(0, 0, w, h);
     const R2 = rndGen(77);
     for (let i = 0; i < 9; i++) { const cx = 90 + i * 100 + R2() * 40, cy = 200 + Math.sin(i * 1.3) * 90; x.fillStyle = ["#65a30d", "#4d7c0f", "#84cc16"][i % 3]; x.beginPath(); x.ellipse(cx, cy, 70 + R2() * 50, 28 + R2() * 30, R2(), 0, 7); x.fill(); }
-    const hz = [["🔥", 300, 170], ["🌊", 520, 260], ["⛰", 640, 200], ["🏚", 420, 330], ["🌋", 760, 250]];
+    const hz = [["🔥", 300, 170], ["🌧", 520, 260], ["⛰", 640, 200], ["🏚", 420, 330], ["🌋", 760, 250], ["🌊", 880, 360]];
     x.font = `46px ${FONT}`; x.textAlign = "center"; for (const [e, a, b] of hz) { x.fillStyle = "rgba(239,68,68,.35)"; x.beginPath(); x.arc(a, b, 38, 0, 7); x.fill(); x.fillText(e, a, b + 16); }
     x.fillStyle = "#fff"; x.font = `800 40px ${FONT}`; x.fillText("PETA RISIKO BENCANA", w / 2, 60); x.font = `500 26px ${FONT}`; x.fillStyle = "#bae6fd"; x.fillText("Kenali risiko di sekitarmu · siapkan tas siaga · hafalkan jalur evakuasi", w / 2, 480);
   });
-  const tb = new THREE2.Mesh(new THREE2.BoxGeometry(4.6, 0.85, 2.6), new THREE2.MeshStandardMaterial({ color: 0x334155, metalness: 0.4, roughness: 0.5 })); tb.position.set(-29, 0.425, 43); scene.add(tb);
-  const mp = xPlane(map, 4.4, 2.3); mp.rotation.x = -Math.PI / 2; mp.position.set(-29, 0.86, 43); scene.add(mp);
-  xCol(-31.4, 41.6, -26.6, 41.6, 0.3); xCol(-31.4, 44.4, -26.6, 44.4, 0.3); xCol(-31.4, 41.6, -31.4, 44.4, 0.3); xCol(-26.6, 41.6, -26.6, 44.4, 0.3);
+  const tb = new THREE2.Mesh(new THREE2.BoxGeometry(4.6, 0.85, 2.6), new THREE2.MeshStandardMaterial({ color: 0x334155, metalness: 0.4, roughness: 0.5 })); tb.position.set(R.x0 + 11, 0.425, R.z0 + 13); scene.add(tb);
+  const mp = xPlane(map, 4.4, 2.3); mp.rotation.x = -Math.PI / 2; mp.position.set(R.x0 + 11, 0.86, R.z0 + 13); scene.add(mp);
+  { const ax = R.x0 + 8.6, bx = R.x0 + 13.4, az = R.z0 + 11.6, bz = R.z0 + 14.4; xCol(ax, az, bx, az, 0.3); xCol(ax, bz, bx, bz, 0.3); xCol(ax, az, ax, bz, 0.3); xCol(bx, az, bx, bz, 0.3); }
   // poster tas siaga (dinding selatan)
   const tas = l2Canvas(900, 640, (x, w, h) => { x.fillStyle = "#fff7ed"; x.fillRect(0, 0, w, h); x.fillStyle = "#c2410c"; x.fillRect(0, 0, w, 100); x.fillStyle = "#fff"; x.textAlign = "center"; x.font = `900 52px ${FONT}`; x.fillText("🎒 TAS SIAGA BENCANA", w / 2, 68); x.fillStyle = "#1f2937"; x.textAlign = "left"; x.font = `600 32px ${FONT}`; ["📄 Dokumen penting (plastik kedap air)", "💧 Air minum & makanan tahan lama", "💊 Obat-obatan & P3K", "🔦 Senter, peluit, baterai/powerbank", "😷 Masker & pakaian ganti", "📻 Radio kecil & uang tunai secukupnya"].forEach((s, i) => x.fillText(s, 60, 170 + i * 72)); });
-  const tp = xPlane(tas, 3.6, 2.56); tp.position.set(-33, 2.8, R.z1 - 0.2); tp.rotation.y = Math.PI; scene.add(tp);
+  const tp = xPlane(tas, 3.6, 2.56); tp.position.set(R.x0 + 7, 2.8, R.z1 - 0.2); tp.rotation.y = Math.PI; scene.add(tp);
   const no = l2Canvas(900, 300, (x, w, h) => { x.fillStyle = "#b91c1c"; rr(x, 0, 0, w, h, 30); x.fill(); x.fillStyle = "#fff"; x.textAlign = "center"; x.font = `900 120px ${FONT}`; x.fillText("☎ 112", w / 2, 150); x.font = `600 36px ${FONT}`; x.fillText("Panggilan darurat · gratis · 24 jam", w / 2, 240); });
-  const np = xPlane(no, 2.4, 0.8); np.position.set(-25, 2.8, R.z1 - 0.2); np.rotation.y = Math.PI; scene.add(np);
-  const sg = xPlane(bcSignTex(["🧯 RUANG SIMULASI BENCANA", "pilih gerbang simulasi di dinding barat"], "#9a3412"), 4.2, 1.84); sg.position.set(R.x1 - 0.2, 3.8, 39); sg.rotation.y = -Math.PI / 2; scene.add(sg);
+  const np = xPlane(no, 2.4, 0.8); np.position.set(R.x0 + 14, 2.8, R.z1 - 0.2); np.rotation.y = Math.PI; scene.add(np);
+  const sg = xPlane(bcSignTex(["🧯 RUANG SIMULASI BENCANA", "pilih gerbang simulasi di dinding barat"], "#9a3412"), 4.2, 1.84); sg.position.set(R.x1 - 0.2, 3.8, R.z0 + 17); sg.rotation.y = -Math.PI / 2; scene.add(sg);
   XT.anim.push(() => { if (Math.floor(t * 2) % 20 === 0 && curRoom === "bencana") bcHubBoard(); });
 }
 
@@ -25551,7 +25721,7 @@ function buildBencana() {
 }
 function bcGrid() {
   const D = bcDone(), n = BC_ORDER.filter((k) => D[k]).length;
-  return `<h3 class="cap-h">Simulasi Bencana <span class="pill">${n}/5${n === 5 ? " · 🏅 SIAGA BENCANA" : ""}</span></h3><div class="bc-grid">${BC_ORDER.map((k) => { const M = BC_META[k]; return `<div class="${D[k] ? "on" : ""}"><b>${M.icon}</b>${M.nm}<br>${D[k] ? "✓ lulus" : "belum"}</div>`; }).join("")}</div>`;
+  return `<h3 class="cap-h">Simulasi Bencana <span class="pill">${n}/${BC_ORDER.length}${n === BC_ORDER.length ? " · 🏅 SIAGA BENCANA" : ""}</span></h3><div class="bc-grid">${BC_ORDER.map((k) => { const M = BC_META[k]; return `<div class="${D[k] ? "on" : ""}"><b>${M.icon}</b>${M.nm}<br>${D[k] ? "✓ lulus" : "belum"}</div>`; }).join("")}</div>`;
 }
 
 // ---------- smart board: video edukasi kelima bencana (diputar masing-masing pemain) ----------
@@ -25565,10 +25735,12 @@ var BC_VIDS = [
   { id: "DeafytS3Rjw", t: "🏚 Animasi mitigasi gempa bumi (BMKG)" },
   { id: "4c4Gc5ZJGtA", t: "🏚 Panduan mitigasi saat gempa bumi & tsunami" },
   { id: "GlzpBn0CSOY", t: "🌋 Kesiapsiagaan bencana gunung berapi (animasi)" },
-  { id: "z3IIitKGa9A", t: "🌋 Sahabat Siaga · Gunung Meletus" }
+  { id: "z3IIitKGa9A", t: "🌋 Sahabat Siaga · Gunung Meletus" },
+  { id: "n7acRThtShY", t: "🌊 Siaga Tsunami · Kesiapsiagaan menghadapi tsunami" },
+  { id: "q8I5rh3cJfQ", t: "🌊 Tanda-tanda sebelum tsunami terjadi" }
 ];
 function bcSmartBoard() {
-  const p = world.onWall("bencana", "N", -30, 3.1), g = world.group(p), w = 6.0, h = 3.38;
+  const p = world.onWall("bencana", "N", BC_HUB.x0 + 10, 3.1), g = world.group(p), w = 6.0, h = 3.38;
   const bez = new THREE2.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4, metalness: 0.4 });
   xBox(w + 0.22, h + 0.22, 0.08, bez, 0, 0, 0, 0, g);
   for (const sx of [-1, 1]) xBox(0.18, h * 0.8, 0.12, bez, sx * (w / 2 + 0.28), 0, 0, 0, g);
@@ -25790,10 +25962,13 @@ BCS.banjir = {
     const bag = new THREE2.Mesh(new THREE2.BoxGeometry(0.45, 0.55, 0.3), new THREE2.MeshStandardMaterial({ color: 0xea580c, roughness: 0.6 })); bag.position.set(tx, 0.73, tz); root.add(bag); self.W.bag = bag;
     bcObj(k, bag, "tas", -3.2, -1.4);
     // papan pantau tinggi muka air
-    const [gx, gz] = bcAt(k, -13.6, 3); const gc = l2Canvas(64, 512, (x, w, h) => { const cols = ["#dc2626", "#f59e0b", "#facc15", "#22c55e"]; for (let i = 0; i < 4; i++) { x.fillStyle = cols[i]; x.fillRect(0, i * 128, w, 128); } x.fillStyle = "#fff"; for (let i = 0; i < 16; i++) x.fillRect(0, i * 32, i % 4 ? 24 : 44, 3); });
+    const [gx, gz] = bcAt(k, -12.6, 3); const gc = l2Canvas(64, 512, (x, w, h) => { const cols = ["#dc2626", "#f59e0b", "#facc15", "#22c55e"]; for (let i = 0; i < 4; i++) { x.fillStyle = cols[i]; x.fillRect(0, i * 128, w, 128); } x.fillStyle = "#fff"; for (let i = 0; i < 16; i++) x.fillRect(0, i * 32, i % 4 ? 24 : 44, 3); });
     const gauge = new THREE2.Mesh(new THREE2.BoxGeometry(0.3, 4, 0.1), new THREE2.MeshStandardMaterial({ map: xTex(gc) })); gauge.position.set(gx, 1.0, gz); root.add(gauge);
     const gs = xPlane(bcSignTex(["PAPAN PANTAU", "tinggi muka air"], "#1e3a8a"), 1.6, 0.7); gs.position.set(gx + 0.6, 3.4, gz); gs.rotation.y = Math.PI / 2; root.add(gs);
-    bcObj(k, gauge, "papan", -12.5, 3); bcObj(k, gs, "papan", -12.5, 3);
+    bcObj(k, gauge, "papan", -11.5, 3); bcObj(k, gs, "papan", -11.5, 3);
+    // pagar pengaman di tepi sungai (celah hanya di jembatan)
+    const fM = new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.4, roughness: 0.5 });
+    for (const [z0, z1] of [[-48, -13.3], [-10.7, 48]]) { const [ax, az] = bcAt(k, -14, z0), [, bz] = bcAt(k, -14, z1); xCol(ax, az, ax, bz, 0.25); const rail = new THREE2.Mesh(new THREE2.BoxGeometry(0.08, 0.08, z1 - z0), fM); rail.position.set(ax, 0.9, (az + bz) / 2); root.add(rail); for (let z = z0; z <= z1; z += 2.5) { const [, pz2] = bcAt(k, -14, z); const post = new THREE2.Mesh(new THREE2.BoxGeometry(0.1, 1.0, 0.1), fM); post.position.set(ax, 0.5, pz2); root.add(post); } }
     // menara sirene EWS
     const [sx, sz] = bcAt(k, 8, -6); const tw = new THREE2.Mesh(new THREE2.CylinderGeometry(0.12, 0.16, 7, 8), new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.6 })); tw.position.set(sx, 3.5, sz); root.add(tw);
     for (let i = 0; i < 3; i++) { const horn = new THREE2.Mesh(new THREE2.ConeGeometry(0.35, 0.8, 12, 1, true), new THREE2.MeshStandardMaterial({ color: 0xe5e7eb, side: THREE2.DoubleSide })); horn.rotation.z = Math.PI / 2; horn.rotation.y = i * 2.1; horn.position.set(sx, 7, sz); root.add(horn); }
@@ -25805,7 +25980,7 @@ BCS.banjir = {
     const vp = bcTreePts(40, 314, (x, z) => (x < -29 || (x > -13 && x < 13 && Math.abs(x) > 4)) && !bcIn(x, z, 0, 0, 7) && Math.abs(z + 12) > 4); bcTrees(k, root, vp, "leaf");
     bcRain(k, root, 900, 0xbfdbfe, 30);
     bcNpc(k, root, "farhan", -5.5, 3.5, { b: "N", tn: "L", top: "#f97316", bot: "#1e3a8a", hat: ["cap", "#1e3a8a"], it: "tablet", x: ["vest:#facc15", "badge"] });
-    self.marks = {}; bcMark(k, root, "papan", -12.5, 3, 0); bcMark(k, root, "mcb", -3, 1.6, 0); bcMark(k, root, "tas", -3.9, -1.4, 0); bcMark(k, root, "tk", 32, 0); bcMark(k, root, "posko", 38, 4.6);
+    self.marks = {}; bcMark(k, root, "papan", -11.4, 3, 0); bcMark(k, root, "mcb", -3, 1.6, 0); bcMark(k, root, "tas", -3.9, -1.4, 0); bcMark(k, root, "tk", 32, 0); bcMark(k, root, "posko", 38, 4.6);
   },
   reset(R) { const W = this.W; W.flood = false; W.lvl = -0.3; if (W.water) W.water.position.y = -0.3; if (W.sw) W.sw.material.color.set(0x22c55e); if (W.bag) W.bag.visible = true; if (W.bridge) { W.bridge.visible = true; W.bridge.rotation.z = 0; } },
   start(R) { },
@@ -25829,7 +26004,7 @@ BCS.banjir = {
     if (lx > -27.5 && lx < -14.5) return bcFail(R, "Kamu masuk ke aliran sungai dan terseret arus deras.", "Jauhi sungai saat banjir. Arus setinggi 15 cm bisa menjatuhkan orang dewasa.");
     if (R.step >= 1 && lx < -9 && lz < -16) return bcFail(R, "Kamu menyusuri tepi sungai — jalur yang pertama kali diterjang banjir bandang.", "Evakuasi menjauhi sungai, ke tempat yang tinggi lewat jalur evakuasi resmi.");
     if (W.flood && W.lvl - gh > 0.35) return bcFail(R, "Air bah sudah setinggi lutut lebih dan kamu terseret arus.", "Segera evakuasi ke tempat tinggi begitu sirene berbunyi; jangan menunda karena barang-barang.");
-    if (R.step >= 1 && R.step < 3 && Math.hypot(lx + 2, lz) > 9) return bcFail(R, "Kamu meninggalkan rumah sebelum mematikan listrik dan membawa tas siaga.", "Matikan listrik (MCB) dan ambil tas siaga yang sudah disiapkan — butuh beberapa detik saja — lalu evakuasi.");
+    if (R.step >= 1 && R.step < 3 && (lx > 7 || Math.abs(lz) > 12)) return bcFail(R, "Kamu meninggalkan rumah sebelum mematikan listrik dan membawa tas siaga.", "Matikan listrik (MCB) dan ambil tas siaga yang sudah disiapkan — butuh beberapa detik saja — lalu evakuasi.");
     if (R.step === 3 && bcIn(lx, lz, 32, 0, 4.5)) bcStep(R, 3, "Kamu tiba di bukit yang aman.");
   }
 };
@@ -25924,11 +26099,11 @@ BCS.longsor = {
         if (Math.abs(lx) < 14 && lz < front + 3 && lz > -45) return bcFail(R, "Kamu masih berada di jalur longsoran saat tanah meluncur dan tertimbun material longsor.", "Begitu tanda longsor terlihat dan warga diperingatkan, segera menjauh MENYAMPING dari alur longsoran ke punggung bukit yang stabil.");
       }
     }
-    if (R.step <= 2) {
+    if (R.step === 2) {
       if (lz > 17 && Math.abs(lx) < 15) return bcFail(R, "Kamu lari ke bawah searah alur longsoran — material longsor mengalir ke arah itu.", "Jangan lari ke bawah mengikuti alur lereng. Menjauhlah menyamping dari alur longsoran.");
-      if (lz < -16 && Math.abs(lx) < 22 && R.step >= 1) return bcFail(R, "Kamu naik ke lereng yang retak dan tidak stabil.", "Jauhi lereng yang menunjukkan tanda longsor; evakuasi menyamping ke tempat stabil.");
+      if (lz < -16 && Math.abs(lx) < 22) return bcFail(R, "Kamu naik ke lereng yang retak dan tidak stabil.", "Jauhi lereng yang menunjukkan tanda longsor; evakuasi menyamping ke tempat stabil.");
     }
-    if (R.step < 2 && lx > 17) return bcFail(R, "Kamu pergi sebelum memeriksa tanda longsor dan memperingatkan warga.", "Kenali tanda longsor, bunyikan kentongan agar warga waspada, lalu evakuasi bersama-sama.");
+    if (R.step < 2 && lx > 19) return bcFail(R, "Kamu pergi sebelum memeriksa tanda longsor dan memperingatkan warga.", "Kenali tanda longsor, bunyikan kentongan agar warga waspada, lalu evakuasi bersama-sama.");
     if (R.step === 2 && bcIn(lx, lz, 32, -2, 4.5)) bcStep(R, 2, "Kamu tiba di punggung bukit yang stabil.");
   }
 };
@@ -26127,6 +26302,904 @@ BCS.gunung = {
   }
 };
 
+// =====================================================================
+// 6) TSUNAMI — Helmi
+// =====================================================================
+BCS.tsunami = {
+  about: "Tsunami adalah rangkaian gelombang laut besar yang dipicu gempa bumi di bawah laut, longsor bawah laut, atau letusan gunung api. Gelombangnya bisa sampai di pantai hanya beberapa menit setelah gempa, datang berkali-kali, dan gelombang berikutnya bisa lebih besar dari yang pertama.",
+  intro: "Kita di desa pantai. Kalau gempa terasa sangat kuat dan lama, atau air laut tiba-tiba surut, jangan menunggu sirene: segera evakuasi mandiri ke tempat tinggi lewat jalur evakuasi tsunami.",
+  steps: [
+    "Gempa kuat! Berlutut dan lindungi kepala di tempat terbuka — jauhi pohon kelapa dan bangunan (tekan X) sampai guncangan berhenti.",
+    "Air laut tiba-tiba surut! Putuskan tindakanmu.",
+    "Evakuasi mandiri ke bukit di utara lewat JALUR EVAKUASI TSUNAMI — jangan kembali ke pantai, jangan menyusuri pantai.",
+    "Lapor ke posko di titik kumpul & tetap di tempat tinggi sampai peringatan dinyatakan berakhir."
+  ],
+  edu: [
+    "Tanda alam tsunami: gempa kuat atau lama (≥ 20 detik) di pantai, air laut surut tiba-tiba, dan suara gemuruh dari laut.",
+    "Lakukan evakuasi mandiri ke tempat tinggi (≥ 10 m) atau gedung evakuasi — jangan menunggu sirene.",
+    "Ikuti rambu jalur evakuasi tsunami; jauhi pantai dan muara/sungai karena gelombang masuk lewat sungai.",
+    "Gelombang datang berkali-kali — jangan turun sebelum BMKG/BPBD menyatakan peringatan berakhir.",
+    "Kenali jalur evakuasi & titik kumpul di daerah pantai tempat tinggal atau berlibur."
+  ],
+  spawn: { x: 0, z: 17, yaw: Math.PI }, exit: { x: -10, z: 9, ry: Math.PI / 2 },
+  fog: [0.62, 0.74, 0.82, 0.008], skyCols: ["#38bdf8", "#bae6fd", "#f0f9ff"], sky: 0xf0f9ff, sun: 0xfff7e6, sunK: 1.2,
+  ground(lx, lz) { if (lz > 22) return Math.max(-3, -(lz - 22) * 0.25); if (lz < -12) return Math.min(11, (-12 - lz) * 0.42); return 0; },
+  T: { sea: null, wave: null, flood: null, palms: [] },
+  build(root) {
+    const k = "tsunami", M = BC_META[k], self = this, T = self.T;
+    bcTerrain(k, root, (x, z, h, c) => { if (z > 22) c.set(0xc8b48a); else if (z > 11) c.set(0xf1dfb0); else if (Math.abs(x - 2) < 2.4 && z < 11) c.set(0x9ca3af); else if (h > 0) c.setHSL(0.27, 0.42, 0.28 + h * 0.008); else c.setHSL(0.24, 0.35, 0.36); }, 80);
+    // laut
+    const sc = l2Canvas(256, 256, (x, w, h) => { x.fillStyle = "#1d6fa5"; x.fillRect(0, 0, w, h); for (let i = 0; i < 60; i++) { x.strokeStyle = `rgba(255,255,255,${0.1 + Math.random() * 0.25})`; x.lineWidth = 2; x.beginPath(); const y = Math.random() * h; x.moveTo(0, y); x.bezierCurveTo(w * 0.3, y - 6, w * 0.6, y + 6, w, y); x.stroke(); } });
+    const st = xTex(sc); st.wrapS = st.wrapT = THREE2.RepeatWrapping; st.repeat.set(10, 6);
+    const sea = new THREE2.Mesh(new THREE2.PlaneGeometry(240, 120), new THREE2.MeshStandardMaterial({ map: st, roughness: 0.2, metalness: 0.2, transparent: true, opacity: 0.92 })); sea.rotation.x = -Math.PI / 2; sea.position.set(M.cx, -0.35, M.cz + 82); root.add(sea); T.sea = sea; T.seaTex = st;
+    BC.anims.push((dt, zk) => { if (zk === "tsunami") st.offset.y += dt * 0.05; });
+    // gelombang tsunami & genangan di belakangnya
+    const wv = new THREE2.Group(); wv.visible = false; root.add(wv); T.wave = wv;
+    const wM = new THREE2.MeshStandardMaterial({ color: 0x1e5f8c, roughness: 0.3, transparent: true, opacity: 0.95 });
+    const body = new THREE2.Mesh(new THREE2.BoxGeometry(110, 7, 5), wM); body.position.y = 3.5; wv.add(body);
+    const crest = new THREE2.Mesh(new THREE2.CylinderGeometry(2.6, 2.6, 110, 12, 1, false, 0, Math.PI), new THREE2.MeshStandardMaterial({ color: 0xe0f2fe, roughness: 0.4 })); crest.rotation.z = Math.PI / 2; crest.position.set(0, 7, -1.2); wv.add(crest);
+    const fl = new THREE2.Mesh(new THREE2.PlaneGeometry(110, 1), new THREE2.MeshStandardMaterial({ map: st, color: 0x8db3c7, roughness: 0.3, transparent: true, opacity: 0.9 })); fl.rotation.x = -Math.PI / 2; fl.visible = false; root.add(fl); T.flood = fl;
+    // pohon kelapa
+    const trunkM = new THREE2.MeshStandardMaterial({ color: 0x8b6b42, roughness: 0.8 }), leafM = new THREE2.MeshStandardMaterial({ color: 0x3f8f46, side: THREE2.DoubleSide, flatShading: true });
+    T.palms = [[-12, 16], [10, 19], [18, 14], [-20, 19], [26, 18], [-6, 21]];
+    for (const [x, z] of T.palms) { const [px, pz] = bcAt(k, x, z), g = new THREE2.Group(); g.position.set(px, 0, pz); g.rotation.z = 0.15; root.add(g); const tr = new THREE2.Mesh(new THREE2.CylinderGeometry(0.16, 0.24, 6, 7), trunkM); tr.position.y = 3; g.add(tr); for (let i = 0; i < 7; i++) { const lf = new THREE2.Mesh(new THREE2.PlaneGeometry(0.6, 3), leafM); lf.position.y = 6; lf.rotation.set(1.0, i * 0.9, 0); lf.translateY(1.3); g.add(lf); } xCol(px - 0.2, pz, px + 0.2, pz, 0.3); }
+    // desa pesisir
+    for (const [x, z] of [[-12, 4], [12, 3], [-20, -4], [18, -6], [-8, -8]]) bcHouse(k, root, x, z, 0, { wall: ["#e0f2fe", "#fde68a", "#fecaca"][Math.abs(x + z) % 3], roof: "#0e7490" });
+    const [hx, hz] = bcAt(k, -12, 4);
+    const ds = xPlane(bcSignTex(["🏠 Berlindung di rumah?"], "#57534e"), 1.6, 0.7); ds.position.set(hx, 2.4, hz + 2.05); root.add(ds);
+    bcObj(k, ds, "rumah", -12, 6.5);
+    const warung = bcHouse(k, root, 8, 12.5, 0, { w: 4, d: 3, h: 2.4, wall: "#fef3c7", roof: "#f97316" });
+    // menara sirene tsunami
+    const [sx, sz] = bcAt(k, -4, 10); const tw = new THREE2.Mesh(new THREE2.CylinderGeometry(0.14, 0.18, 9, 8), new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.6 })); tw.position.set(sx, 4.5, sz); root.add(tw);
+    for (let i = 0; i < 4; i++) { const horn = new THREE2.Mesh(new THREE2.ConeGeometry(0.35, 0.8, 12, 1, true), new THREE2.MeshStandardMaterial({ color: 0xe5e7eb, side: THREE2.DoubleSide })); horn.rotation.z = Math.PI / 2; horn.rotation.y = i * 1.57; horn.position.set(sx, 9, sz); root.add(horn); }
+    const ews = xPlane(bcSignTex(["SIRENE TSUNAMI", "InaTEWS · BMKG"], "#1e3a8a"), 1.8, 0.79); ews.position.set(sx, 2.3, sz + 0.2); root.add(ews);
+    // rambu
+    bcPostSign(k, root, ["JALUR EVAKUASI TSUNAMI", "⬆ ke bukit (utara)"], "#1d4ed8", 5.2, 9, Math.PI, 2.2);
+    bcPostSign(k, root, ["JALUR EVAKUASI TSUNAMI", "⬆"], "#1d4ed8", 5.2, -6, Math.PI, 2.0);
+    bcPostSign(k, root, ["JALUR EVAKUASI TSUNAMI", "⬆"], "#1d4ed8", 5.2, -20, Math.PI, 2.0);
+    bcDanger(k, root, -21, 10, Math.PI / 2, "⚠ PANTAI BARAT · MUARA");
+    bcTK(k, root, -1, -32, Math.PI); bcPosko(k, root, 11, -38, "POSKO EVAKUASI TSUNAMI");
+    const tp = bcTreePts(70, 919, (x, z) => z < -14 && !(Math.abs(x - 2) < 4) && !bcIn(x, z, 4, -34, 9)); bcTrees(k, root, tp, "leaf");
+    bcNpc(k, root, "helmi", 3, 15, { b: "N", tn: "T", top: "#0e7490", bot: "#1f2937", hat: ["cap", "#0e7490"], it: "tablet", x: ["vest:#f97316", "badge"] });
+    self.marks = {}; bcMark(k, root, "tk", 4, -34); bcMark(k, root, "posko", 11, -35.4);
+  },
+  reset(R) { const T = this.T; if (T.sea) T.sea.position.z = BC_META.tsunami.cz + 82; if (T.wave) T.wave.visible = false; if (T.flood) T.flood.visible = false; $("bcShake")?.remove(); },
+  start(R) { R.f.shakeAt = performance.now() + 6000; R.f.cover = false; toast("🏖 Kamu sedang bersantai di pantai…", 3500); },
+  target(R) { return [null, null, "tk", "posko"][R.step]; },
+  act(R, w) {
+    if (w === "rumah") return bcFail(R, "Kamu berlindung di dalam rumah satu lantai di tepi pantai.", "Rumah di tepi pantai tidak melindungi dari tsunami. Segera evakuasi ke tempat tinggi (bukit atau gedung evakuasi bertingkat).");
+    if (w === "posko") { if (R.step !== 3) return bcOrder(R); bcQuizEnd(R, "Petugas bertanya: kapan kamu boleh turun kembali ke pantai?", "Setelah BMKG/BPBD menyatakan peringatan tsunami berakhir — gelombang bisa datang berkali-kali.", ["Setelah gelombang pertama surut.", false, "Gelombang tsunami datang berulang, dan gelombang berikutnya bisa lebih besar.", "Tetap di tempat tinggi sampai peringatan resmi dinyatakan berakhir."], ["Sepuluh menit kemudian, kalau laut terlihat tenang.", false, "Laut yang tampak tenang belum tentu aman; gelombang susulan bisa datang puluhan menit kemudian.", "Tunggu pernyataan resmi berakhirnya peringatan dari BMKG/BPBD."]); }
+  },
+  tick(R, dt, lx, lz, now) {
+    const T = this.T; if (!R || R.end) return;
+    const nearHazard = T.palms.some(([x, z]) => Math.hypot(lx - x, lz - z) < 3.2) || bcIn(lx, lz, 8, 12.5, 3.6);
+    if (R.step === 0 && R.f.shakeAt) {
+      const e = (now - R.f.shakeAt) / 1000;
+      if (e < 0) return;
+      if (!R.f.shaking) { R.f.shaking = true; BCSND.rumble(4); if (typeof xShake === "function") xShake(22, 0.06); const b = document.createElement("div"); b.id = "bcShake"; b.textContent = "⚠ GEMPA KUAT! Berlutut & lindungi kepala di tempat terbuka (tekan X)"; document.body.appendChild(b); }
+      if (e < 22) { R.timer = `🌊 guncangan ${Math.ceil(22 - e)} dtk`; if (Math.random() < dt * 0.7) BCSND.rumble(1.4); }
+      if (e > 6 && e < 22 && nearHazard) return bcFail(R, "Saat guncangan kamu berada dekat pohon kelapa/bangunan yang roboh.", "Saat gempa di luar ruangan, menjauhlah dari pohon, tiang, dan bangunan; berlutut dan lindungi kepala di tempat terbuka.");
+      if (e > 6 && e < 22 && !P.sit) return bcFail(R, R.f.cover ? "Kamu berlari saat guncangan masih kuat dan terjatuh." : "Kamu tidak segera berlutut dan melindungi kepala saat gempa kuat.", "Saat gempa: berlutut/merunduk, lindungi kepala dan leher, tunggu guncangan berhenti — baru evakuasi.");
+      if (P.sit) R.f.cover = true;
+      if (e >= 22) {
+        $("bcShake")?.remove(); R.f.shaking = false; R.f.recede = now; bcStep(R, 0, "Guncangan berhenti — guncangannya sangat kuat dan lama!");
+        setTimeout(() => { if (BC.run !== R || R.end) return; toast("😮 Air laut tiba-tiba surut jauh…", 3500); bcAsk(R, "🌊 Air laut surut tiba-tiba", "Gempa terasa sangat kuat dan lama (lebih dari 20 detik), lalu air laut surut jauh dan ikan-ikan terdampar di pasir. Apa yang kamu lakukan?", [
+          ["Segera evakuasi mandiri ke tempat tinggi lewat jalur evakuasi tsunami — tanpa menunggu sirene.", true],
+          ["Mendekat ke bibir pantai untuk melihat dan memungut ikan yang terdampar.", false, "Kamu mendekati laut yang surut — itu tanda gelombang tsunami akan segera datang.", "Air laut surut tiba-tiba adalah tanda tsunami. Segera menjauh dari pantai ke tempat tinggi."],
+          ["Menunggu sirene atau kabar resmi dulu di rumah sebelum pergi.", false, "Kamu menunggu sirene; tsunami bisa tiba dalam hitungan menit setelah gempa.", "Gempa kuat/lama di pantai = peringatan alami. Lakukan evakuasi mandiri tanpa menunggu sirene."]
+        ], () => { bcStep(R, 1, "Keputusan tepat! Evakuasi ke bukit sekarang."); BCSND.siren(); setTimeout(() => BCSND.siren(), 2600); R.f.waveAt = performance.now() + 42000; }); }, 1800);
+      }
+      return;
+    }
+    if (R.f.recede) { const k2 = Math.min(1, (now - R.f.recede) / 9000); T.sea.position.z = BC_META.tsunami.cz + 82 + k2 * 22; }
+    if (R.f.waveAt) {
+      const e = (now - R.f.waveAt) / 1000;
+      R.timer = e < 0 ? `🌊 gelombang ±${Math.ceil(-e)} dtk` : "🌊 TSUNAMI!";
+      if (e >= 0) {
+        if (!R.f.hit) { R.f.hit = true; BCSND.boom(); BCSND.rumble(5); T.wave.visible = true; T.flood.visible = true; T.sea.position.z = BC_META.tsunami.cz + 82; }
+        const front = 45 - Math.min(1, e / 14) * 62, M = BC_META.tsunami;
+        T.wave.position.set(M.cx, Math.max(-1, this.ground(0, front)) - 0.5, M.cz + front);
+        const len = 50 - front; T.flood.scale.y = Math.max(0.1, len); T.flood.position.set(M.cx, 4.6, M.cz + front + len / 2);
+        if (lz > front - 2 && this.ground(lx, lz) < 5.2) return bcFail(R, "Gelombang tsunami menerjangmu di dataran rendah.", "Begitu tanda tsunami muncul, langsung evakuasi ke tempat tinggi (≥ 10 m) lewat jalur evakuasi; jangan membuang waktu.");
+      }
+    }
+    if (R.step >= 1 && R.step <= 2) {
+      if (lz > 21 && R.step === 2) return bcFail(R, "Kamu berjalan ke arah laut yang surut.", "Jangan mendekati pantai yang surut; segera menjauh ke tempat tinggi.");
+      if (lx < -21 && lz > -12) return bcFail(R, "Kamu menyusuri pantai ke arah muara — dataran rendah yang pertama diterjang tsunami.", "Gelombang tsunami masuk jauh lewat muara/sungai. Ikuti jalur evakuasi menjauhi pantai ke tempat tinggi.");
+    }
+    if (R.step === 2 && bcIn(lx, lz, 4, -34, 4.5)) bcStep(R, 2, "Kamu tiba di bukit yang aman (± 9 m di atas permukaan laut).");
+  }
+};
+
+
+
+// =====================================================================
+// src/ext_terjun.js — PORTAL RING 1 · TANTANGAN 6: TERJUN PAYUNG (Danu)
+//  • Gerbang di Ruang Komando (terbuka setelah Batu Oranye) → Lapangan
+//    Terjun. Pemain & Danu memakai skin "Penerjun Payung" (SKN-061).
+//  • Lompat dari pesawat di ketinggian 1.000 m. Jatuh bebas ±55 m/s
+//    (kecepatan terminal), booster di udara → ±75 m/s selama 3 detik
+//    (tidak bisa diambil lagi selama masih aktif). Parasut dibuka
+//    (Spasi / tombol) → melambat ke ±5 m/s dalam ±3 detik.
+//  • Mendarat harus di dalam lingkaran (Ø 16 m) dengan kecepatan ≤ 6 m/s.
+//    Yang lebih dulu mendarat dengan selamat menang → Batu Ungu.
+//    Mendarat ≤ 2 m dari pusat → bonus skin "Mahasiswa TI Ungu".
+//    Gagal (di luar lingkaran / terlalu keras / kalah cepat) → ulang dari pesawat.
+// =====================================================================
+var TJ_Z = { m_terjun: { x0: 1000, x1: 1300, z0: -150, z1: 150, h: 1200, name: "Lapangan Terjun Payung · Portal Ring 1", short: "Lapangan Terjun" } };
+Object.assign(XROOMS, TJ_Z);
+var TJV = TJ_Z.m_terjun, TJC = { x: 1150, z: 0 };
+var tjZone = (x, z) => x > TJV.x0 && x < TJV.x1 && z > TJV.z0 && z < TJV.z1;
+var TJ_SPAWN = { x: 1150, z: 74, yaw: 0 }, TJ_EXIT = { x: 1134, z: 80 };
+var TJ_SKIN = "SKN-061", TJ_ALT = 1000, TJ_RING = 8, TJ_SAFE = 6, TJ_VT = 55, TJ_VB = 75, TJ_VC = 5;
+var TJ = { on: false, grace: 0, arrive: null, forceSkin: null, lock: false, root: null, hidden: null, fogged: false, built: false, far0: 900,
+  phase: "idle", me: null, dn: null, orbs: [], wind: { x: 0, z: 0 }, t0: 0, anims: [], hudT: 0, next: null, won: false };
+
+// ---------- suara ----------
+var TJS = (() => {
+  let ac = null, out = null, wind = null, wg = null;
+  const ctx = () => { if (!ac) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ac = new AC(); out = ac.createGain(); out.gain.value = 0.5; out.connect(ac.destination); } if (ac.state === "suspended") ac.resume().catch(() => {}); return ac; };
+  const tone = (f, dur, type, vol, f2) => { if (!ctx()) return; const now = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = type || "sine"; o.frequency.setValueAtTime(f, now); if (f2) o.frequency.exponentialRampToValueAtTime(f2, now + dur); g.gain.setValueAtTime(vol || 0.05, now); g.gain.exponentialRampToValueAtTime(0.0001, now + dur); o.connect(g); g.connect(out); o.start(now); o.stop(now + dur + 0.02); };
+  return {
+    beep(k) { tone(k ? 1046 : 784, 0.12, "square", 0.05); },
+    boost() { tone(500, 0.35, "triangle", 0.07, 1600); },
+    chute() { if (!ctx()) return; const now = ac.currentTime, n = Math.floor(ac.sampleRate * 0.6), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 1.5); const s = ac.createBufferSource(); s.buffer = b; const f = ac.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 900; const g = ac.createGain(); g.gain.value = 0.7; s.connect(f); f.connect(g); g.connect(out); s.start(now); },
+    alarm() { tone(1400, 0.08, "square", 0.04); },
+    thud(hard) { tone(hard ? 60 : 110, hard ? 0.5 : 0.2, "sine", hard ? 0.3 : 0.12, 40); },
+    windOn(v) { if (!ctx()) return; if (!wind) { const n = ac.sampleRate * 2, b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1; wind = ac.createBufferSource(); wind.buffer = b; wind.loop = true; const f = ac.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 700; wg = ac.createGain(); wg.gain.value = 0; wind.connect(f); f.connect(wg); wg.connect(out); wind.start(); } wg.gain.setTargetAtTime(Math.min(0.35, v / 220), ac.currentTime, 0.2); },
+    windOff() { if (wg) wg.gain.setTargetAtTime(0, ac.currentTime, 0.3); }
+  };
+})();
+
+// ---------- gaya ----------
+(() => {
+  const st = document.createElement("style");
+  st.textContent = `
+#tjHud{position:fixed;z-index:30;color:#fff}
+#tjHud .cvh-top{color:#93c5fd}
+#tjHud .tj-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:4px 0}
+#tjHud .tj-row>div{background:rgba(255,255,255,.07);border-radius:10px;padding:4px 8px;font-size:11px;line-height:1.25}
+#tjHud .tj-row b{display:block;font:900 20px/1.1 Poppins,sans-serif}
+#tjHud .tj-row .warn b{color:#f87171}
+#tjHud .tj-row .ok b{color:#86efac}
+#tjBtn{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;padding:14px 26px;border-radius:999px;border:3px solid #fff;background:linear-gradient(135deg,#f97316,#dc2626);color:#fff;font:900 18px/1 Poppins,sans-serif;letter-spacing:.04em;box-shadow:0 10px 30px rgba(0,0,0,.45);cursor:pointer}
+#tjBtn:disabled{opacity:.5}
+#tjSpd{position:fixed;left:max(12px,env(safe-area-inset-left,0px));top:50%;transform:translateY(-50%);z-index:35;width:150px;padding:10px 12px;border-radius:16px;background:rgba(8,12,24,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:2px solid rgba(255,255,255,.18);color:#fff;font-family:Poppins,sans-serif;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+#tjSpd small{display:block;font-size:10px;letter-spacing:.12em;color:#cbd5e1;font-weight:700}
+#tjSpd .sp{font:900 40px/1 Poppins,sans-serif;margin:2px 0}
+#tjSpd .sp i{font-style:normal;font-size:15px;font-weight:700;margin-left:3px}
+#tjSpd .kmh{font-size:12px;color:#cbd5e1;margin-bottom:6px}
+#tjSpd .st{font-size:11px;font-weight:800;border-radius:8px;padding:3px 6px;margin-bottom:8px;text-align:center}
+#tjSpd .alt{display:flex;align-items:flex-end;gap:8px}
+#tjSpd .altb{width:12px;height:70px;border-radius:6px;background:rgba(255,255,255,.12);position:relative;overflow:hidden}
+#tjSpd .altb i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,#ef4444,#f59e0b 25%,#38bdf8 60%);border-radius:6px}
+#tjSpd .altv{font:900 24px/1 Poppins,sans-serif}
+#tjSpd.safe{border-color:#22c55e}#tjSpd.mid{border-color:#facc15}#tjSpd.fast{border-color:#ef4444}
+#tjSpd.safe .sp{color:#86efac}#tjSpd.mid .sp{color:#fde047}#tjSpd.fast .sp{color:#fca5a5}
+body.touch #tjSpd{top:auto;bottom:calc(210px + env(safe-area-inset-bottom,0px));transform:none;width:128px;padding:8px 10px}
+body.touch #tjSpd .sp{font-size:32px}
+#tjCd{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:41;font:900 90px/1 Poppins,sans-serif;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.6);pointer-events:none}
+`;
+  document.head.appendChild(st);
+})();
+
+// =====================================================================
+// PERLOMBAAN
+// =====================================================================
+function tjRacer(me) { return { me, x: 0, z: 0, alt: TJ_ALT, v: 0, chute: false, chuteT: 0, boostT: 0, done: false, res: null, t: 0, got: new Set(), openAt: 0 }; }
+function tjStart() {
+  if (TJ.phase === "plane" || TJ.phase === "fall") return;
+  hidePopups(); if (typeof closeGen === "function") closeGen();
+  // angin & titik lompat acak
+  const wa = Math.random() * Math.PI * 2, ws = 0.8 + Math.random() * 0.6; TJ.wind = { x: Math.cos(wa) * ws, z: Math.sin(wa) * ws };
+  const dx = -TJ.wind.x * 26 + (Math.random() - 0.5) * 50, dz = -TJ.wind.z * 26 + (Math.random() - 0.5) * 50;
+  const sx = TJC.x + dx, sz = TJC.z + dz;
+  TJ.me = tjRacer(true); TJ.dn = tjRacer(false);
+  TJ.me.x = sx; TJ.me.z = sz; TJ.dn.x = sx + 2.2; TJ.dn.z = sz;
+  TJ.dn.openAt = Math.random() < 0.15 ? 120 + Math.random() * 40 : 62 + Math.random() * 26;
+  TJ.dn.aim = { x: TJC.x + (Math.random() - 0.5) * 4, z: TJC.z + (Math.random() - 0.5) * 4 };
+  tjOrbs(sx, sz);
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  setTimeout(() => {
+    TJ.phase = "plane"; TJ.lock = true; TJ.won = false;
+    P.x = sx; P.z = sz; P.jfx = true; P.jcamK = 1; P.jy = TJ_ALT; P.walkTo = null; P.yaw = P.camYaw = Math.PI / 2; P.camDist = 7; P.camPitch = 0.2;
+    TJ.grace = performance.now() + 2500;
+    TJ.plane.visible = true; TJ.plane.position.set(sx + 1, TJ_ALT + 0.9, sz - 1.55); TJ.racer.position.set(TJ.dn.x, TJ_ALT, TJ.dn.z); TJ.racer.rotation.set(0, Math.PI / 2, 0);
+    if (NPCS.danu) NPCS.danu.g.visible = false; TJ.racer.visible = true;
+    tjChute(TJ.me, false); tjChute(TJ.dn, false);
+    tjHud(true); tjBtn(true); tjSpd(true); tjSpdUpd();
+    setTimeout(() => f.remove(), 700);
+    toast("✈ Pesawat di ketinggian 1.000 m. Bersiap melompat!", 3500);
+    let n = 3; const el = document.createElement("div"); el.id = "tjCd"; document.body.appendChild(el);
+    const step = () => { if (TJ.phase !== "plane") { el.remove(); return; } if (n > 0) { el.textContent = n; TJS.beep(0); n--; setTimeout(step, 900); } else { el.textContent = "LONCAT!"; TJS.beep(1); setTimeout(() => el.remove(), 700); tjGo(); } };
+    setTimeout(step, 1600);
+  }, 500);
+}
+function tjOrbs(sx, sz) {
+  for (const o of TJ.orbs) TJ.root.remove(o.m);
+  TJ.orbs = [];
+  const n = 8;
+  for (let i = 0; i < n; i++) {
+    const k = (i + 1) / (n + 1), alt = TJ_ALT - 110 - k * 680;
+    const px = sx + (TJC.x - sx) * k + TJ.wind.x * 4 * k + (Math.random() - 0.5) * 14, pz = sz + (TJC.z - sz) * k + TJ.wind.z * 4 * k + (Math.random() - 0.5) * 14;
+    const g = new THREE2.Group(); g.position.set(px, alt, pz); TJ.root.add(g);
+    const core = new THREE2.Mesh(new THREE2.OctahedronGeometry(0.9), new THREE2.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xf59e0b, emissiveIntensity: 1, transparent: true })); core.scale.y = 1.5; g.add(core);
+    const ring = new THREE2.Mesh(new THREE2.TorusGeometry(2.6, 0.18, 8, 36), new THREE2.MeshBasicMaterial({ color: 0xfde047, transparent: true, opacity: 0.85, toneMapped: false })); ring.rotation.x = Math.PI / 2; g.add(ring);
+    const gl = world.glowSprite("#fbbf24", 9, 0.7); g.add(gl);
+    TJ.orbs.push({ m: g, x: px, z: pz, alt, got: new Set(), mats: [core.material, ring.material, gl.material], dim: false });
+  }
+}
+function tjGo() {
+  TJ.phase = "fall"; TJ.lock = false; TJ.t0 = performance.now();
+  TJS.windOn(10);
+  sayBubble("Sampai jumpa di bawah! 🪂", "npc_danu");
+}
+function tjOpen(r) {
+  if (!r || r.chute || r.done || TJ.phase !== "fall") return;
+  r.chute = true; r.chuteT = 0; r.boostT = 0;
+  if (r.me) { TJS.chute(); toast(`🪂 Parasut terbuka di ketinggian ${Math.round(r.alt)} m`, 2500); const b = $("tjBtn"); if (b) b.disabled = true; }
+  tjChute(r, true);
+}
+function tjChute(r, on) {
+  const C = r.me ? TJ.cMe : TJ.cDn; if (!C) return;
+  C.visible = on; C.scale.setScalar(on ? 0.2 : 1); C.userData.k = 0;
+}
+function tjPhys(r, dt) {
+  if (r.done) return;
+  const tgt = r.chute ? TJ_VC : r.boostT > 0 ? TJ_VB : TJ_VT;
+  if (r.boostT > 0) r.boostT -= dt;
+  if (r.chute) { r.chuteT += dt; r.v += (tgt - r.v) * Math.min(1, dt * 1.5); }
+  else if (r.v < tgt) r.v = Math.min(tgt, r.v + 9.8 * dt * (r.boostT > 0 ? 2.2 : 1));
+  else r.v += (tgt - r.v) * Math.min(1, dt * 0.8);
+  const a0 = r.alt; r.alt -= r.v * dt;
+  // booster (diperiksa tersapu antara ketinggian sebelum & sesudah)
+  if (!r.chute) for (const o of TJ.orbs) {
+    if (o.got.has(r) || o.alt > a0 + 3 || o.alt < r.alt - 3) continue;
+    if (Math.hypot(r.x - o.x, r.z - o.z) > 3.6) continue;
+    o.got.add(r);
+    if (r.boostT > 0) { if (r.me) toast("⚡ Booster masih aktif — booster berikutnya baru bisa diambil setelah efeknya habis.", 2200); continue; }
+    r.boostT = 3; if (r.me) { o.m.visible = false; TJS.boost(); toast("⚡ BOOSTER! Menukik ±270 km/j selama 3 detik", 1800); }
+  }
+  if (r.alt <= 0) tjLand(r);
+}
+function tjLand(r) {
+  r.alt = 0; r.done = true; r.t = (performance.now() - TJ.t0) / 1000;
+  const d = Math.hypot(r.x - TJC.x, r.z - TJC.z), spd = r.v;
+  r.res = spd > TJ_SAFE ? "hard" : d > TJ_RING ? "out" : "ok"; r.dist = d; r.spd = spd;
+  if (r.me) {
+    TJS.thud(r.res !== "ok"); TJS.windOff();
+    P.jy = 0;
+    if (r.res === "ok") { if (!TJ.dn.done || TJ.dn.res !== "ok") tjEnd(true); else tjEnd(false, `Danu mendarat lebih dulu (${TJ.dn.t.toFixed(1)} dtk).`); }
+    else tjEnd(false, r.res === "out" ? `Kamu mendarat di luar lingkaran (${d.toFixed(1)} m dari pusat; batas ${TJ_RING} m).` : `${r.chute ? "Parasut dibuka terlalu rendah — kamu" : "Parasut tidak dibuka! Kamu"} mendarat terlalu keras: ${spd.toFixed(1)} m/s (batas aman ${TJ_SAFE} m/s)${d > TJ_RING ? ` dan di luar lingkaran (${d.toFixed(1)} m dari pusat)` : ""}.`);
+  } else if (r.res === "ok" && !TJ.me.done) { sayBubble("Mendarat! 🪂", "npc_danu"); tjEnd(false, `Danu mendarat lebih dulu dengan selamat (${r.t.toFixed(1)} dtk) saat kamu masih di udara.`); }
+}
+function tjDanu(dt) {
+  const r = TJ.dn; if (r.done) return;
+  // arah tujuan: booster terdekat di bawah (kadang) atau titik pusat
+  let tx = r.aim.x - TJ.wind.x * (r.alt / 30), tz = r.aim.z - TJ.wind.z * (r.alt / 30);
+  if (!r.chute && r.boostT <= 0) { const o = TJ.orbs.find((o2) => !o2.got.has(r) && o2.alt < r.alt && r.alt - o2.alt < 160 && Math.hypot(o2.x - r.x, o2.z - r.z) < 18); if (o && (o.pick ?? (o.pick = Math.random() < 0.55))) { tx = o.x; tz = o.z; } }
+  const dx = tx - r.x, dz = tz - r.z, d = Math.hypot(dx, dz), sp = Math.min(d, 4.2 * dt);
+  if (d > 0.01) { r.x += dx / d * sp; r.z += dz / d * sp; }
+  if (!r.chute && r.alt <= r.openAt) tjOpen(r);
+}
+function tjTick(dt) {
+  if (TJ.phase !== "fall") return;
+  const m = TJ.me, now = performance.now();
+  // pemain: posisi horizontal dari kendali biasa (WASD/joystick) + angin
+  P.x += TJ.wind.x * dt; P.z += TJ.wind.z * dt; m.x = P.x; m.z = P.z;
+  TJ.dn.x += TJ.wind.x * dt; TJ.dn.z += TJ.wind.z * dt;
+  tjDanu(dt);
+  tjPhys(m, dt); tjPhys(TJ.dn, dt);
+  if (TJ.phase !== "fall") return;
+  P.jfx = true; P.jcamK = 1; P.jy = Math.max(0, m.alt);
+  avatar.rotation.x = m.chute ? 0 : -1.15;
+  TJS.windOn(m.v);
+  if (!m.chute && m.alt < 160 && Math.floor(now / 300) !== TJ.alT) { TJ.alT = Math.floor(now / 300); TJS.alarm(); }
+  // Danu
+  const R2 = TJ.racer; R2.position.set(TJ.dn.x, Math.max(0, TJ.dn.alt), TJ.dn.z); R2.rotation.x = TJ.dn.chute || TJ.dn.done ? 0 : -1.15; R2.rotation.y = Math.PI / 2;
+  // parasut mengikuti
+  for (const [r, C, base] of [[m, TJ.cMe, avatar], [TJ.dn, TJ.cDn, R2]]) { if (!C.visible) continue; C.userData.k = Math.min(1, C.userData.k + dt / 1.2); C.scale.setScalar(0.2 + 0.8 * C.userData.k); C.position.set(base.position.x, base.position.y + 2.3, base.position.z); }
+  // pesawat terbang menjauh
+  if (TJ.plane.visible) { TJ.plane.position.x += 45 * dt; if (TJ.plane.position.x > TJC.x + 600) TJ.plane.visible = false; }
+  // redupkan booster yang belum bisa diambil
+  for (const o of TJ.orbs) { const dim = m.boostT > 0 || m.chute; if (dim !== o.dim) { o.dim = dim; for (const mt of o.mats) mt.opacity = dim ? 0.25 : 1; } o.m.rotation.y += dt * 1.5; }
+  tjSpdUpd();
+  if (Math.floor(now / 150) !== TJ.hudT) { TJ.hudT = Math.floor(now / 150); tjHudUpd(); }
+}
+function tjEnd(win, why) {
+  if (TJ.phase !== "fall") return;
+  TJ.phase = "over"; TJ.lock = false; tjBtn(false); TJS.windOff(); tjSpdUpd(!!TJ.me.done); setTimeout(() => { if (TJ.phase !== "fall" && TJ.phase !== "plane") tjSpd(false); }, 5000);
+  const m = TJ.me; avatar.rotation.x = 0; P.jy = Math.max(0, m.alt); P.jfx = false; if (m.alt > 0.5) { P.jfx = true; }
+  tjHudUpd();
+  if (win) {
+    TJ.won = true;
+    const q = chMigrate(), prev = q.chal.terjun, b = m.dist <= 2 ? 3 : m.dist <= 5 ? 2 : 1;
+    q.chal.terjun = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, m.t).toFixed(1), bintang: Math.max(b, (prev && prev.bintang) || 0) };
+    if (prev && prev.srv && (m.t < (prev.best || 1e9) || b > (prev.bintang || 0))) q.chal.terjun.srv = false;
+    saveQ();
+    if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+    sayBubble(`Mantap, ${S.name}! Kamu menyentuh tanah lebih dulu 🪂`, "npc_danu");
+    let bonus = "";
+    if (m.dist <= 2) { const had = typeof sktOwned === "function" && sktOwned("SKN-005"); sktGrant(["SKN-005"], true); bonus = had ? " · 🎯 Tepat di pusat!" : " · 🎯 Tepat di pusat — bonus skin Mahasiswa TI Ungu!"; if (!had) setTimeout(() => toast("🎁 Bonus pendaratan tepat sasaran: skin Mahasiswa TI Ungu masuk Lemari Skin!", 6000), 1500); }
+    tjHudSet(`🏆 TERJUN PAYUNG! ${m.t.toFixed(1)} dtk`, `Mendarat ${m.spd.toFixed(1)} m/s, ${m.dist.toFixed(1)} m dari pusat${bonus}.`);
+    setTimeout(() => { if (TJ.stone) TJ.stone.visible = false; prAwardBatu("ungu"); tjRekorLoad(); if (TJ.next) TJ.next.visible = true; }, 1600);
+  } else {
+    setTimeout(() => {
+      genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><div class="cog-res"><div style="font-size:54px">🪂</div><h2>Belum berhasil…</h2><p id="tjWhy"></p><p style="font-size:13px;color:var(--mut)">Ingat: buka parasut cukup tinggi agar kecepatan mendarat ≤ ${TJ_SAFE} m/s (parasut butuh ±3 detik untuk melambat), arahkan ke lingkaran sambil melawan angin, dan ambil booster saat jatuh bebas.</p><div class="rowf"><button class="btn" id="tjAgain">✈ Ulang dari pesawat</button><button class="ghost" id="tjNo">Nanti saja</button></div></div>`);
+      $("tjWhy").textContent = why || "";
+      $("tjAgain").onclick = () => { closeGen(); tjStart(); };
+      $("tjNo").onclick = () => { closeGen(); tjStop(); };
+    }, 1300);
+  }
+  setTimeout(() => { if (TJ.phase === "over") tjSettle(); }, 3500);
+}
+function tjSettle() { // turunkan pemain ke tanah bila masih di udara & kembalikan Danu
+  const m = TJ.me; if (m && m.alt > 0) { m.alt = 0; } P.jy = 0; P.jfx = false; P.jcamK = 0; avatar.rotation.x = 0;
+  if (TJ.cMe) TJ.cMe.visible = false; if (TJ.cDn) TJ.cDn.visible = false;
+  if (TJ.racer) TJ.racer.visible = false; if (NPCS.danu) NPCS.danu.g.visible = true;
+  for (const o of TJ.orbs) o.m.visible = false; if (TJ.plane) TJ.plane.visible = false;
+}
+function tjStop() { TJ.phase = "idle"; TJ.lock = false; tjBtn(false); tjSpd(false); TJS.windOff(); $("tjCd")?.remove(); tjSettle(); tjHudUpd(); }
+
+// ---------- HUD & tombol ----------
+function tjHud(show) {
+  let el = $("tjHud");
+  if (!show) { el?.remove(); return; }
+  if (!el) {
+    el = document.createElement("div"); el.id = "tjHud";
+    el.innerHTML = `<div class="cvh-top"><b id="tjHB"></b><span id="tjHS"></span></div><div class="tj-row" id="tjRow"></div><div id="tjHT" class="cvh-txt"></div><div class="cvh-btn"><button class="ghost" id="tjOut">⟲ Keluar Lapangan</button></div>`;
+    document.body.appendChild(el);
+    $("tjOut").onclick = () => tjExit();
+  }
+}
+function tjHudSet(t2, txt) { if (!$("tjHud")) tjHud(true); $("tjHB").textContent = t2; $("tjHS").textContent = ""; $("tjRow").innerHTML = ""; $("tjHT").textContent = txt; }
+function tjHudUpd() {
+  if (!$("tjHud")) return;
+  if (TJ.phase !== "fall") { if (TJ.phase === "idle") tjHudSet("🪂 LAPANGAN TERJUN · Portal Ring 1", batuQ().ungu ? "Batu Ungu sudah milikmu. Bicara dengan Danu untuk terjun lagi." : "Bicara dengan Danu untuk memulai Terjun Payung dari ketinggian 1.000 m."); return; }
+  const m = TJ.me, d = TJ.dn, dist = Math.hypot(m.x - TJC.x, m.z - TJC.z), warn = !m.chute && m.alt < 160;
+  $("tjHB").textContent = `🪂 TERJUN PAYUNG · ⏱ ${((performance.now() - TJ.t0) / 1000).toFixed(1)} dtk`;
+  $("tjHS").textContent = m.chute ? "🪂 terbuka" : m.boostT > 0 ? `⚡ ${m.boostT.toFixed(1)}` : "";
+  $("tjRow").innerHTML = `<div class="${warn ? "warn" : ""}"><b>${Math.round(m.alt)} m</b>ketinggian</div><div class="${m.chute && m.v <= TJ_SAFE ? "ok" : m.chute ? "" : "warn"}"><b>${m.v.toFixed(1)} m/s</b>${Math.round(m.v * 3.6)} km/j · aman ≤ ${TJ_SAFE}</div><div class="${dist <= TJ_RING ? "ok" : ""}"><b>${dist.toFixed(0)} m</b>ke pusat lingkaran</div><div><b>${d.done ? (d.res === "ok" ? "✓" : "✗") : Math.round(d.alt) + " m"}</b>Danu${d.chute && !d.done ? " · 🪂" : ""}</div>`;
+  $("tjHT").textContent = m.chute ? "Arahkan ke lingkaran (WASD/joystick) dan tunggu kecepatan turun ≤ 6 m/s sebelum menyentuh tanah." : warn ? "⚠ KETINGGIAN RENDAH — BUKA PARASUT SEKARANG!" : "Jatuh bebas! Ambil booster ⚡, arahkan ke lingkaran, buka parasut (Spasi / tombol) di sekitar 65–90 m — parasut butuh ±50–60 m untuk melambat.";
+}
+function tjSpd(show) {
+  let el = $("tjSpd");
+  if (!show) { el?.remove(); return; }
+  if (!el) { el = document.createElement("div"); el.id = "tjSpd"; el.innerHTML = `<small>KECEPATAN TURUN</small><div class="sp" id="tjSpV">0<i>m/s</i></div><div class="kmh" id="tjSpK"></div><div class="st" id="tjSpS"></div><small>KETINGGIAN</small><div class="alt"><div class="altb"><i id="tjSpB"></i></div><div class="altv" id="tjSpA"></div></div>`; document.body.appendChild(el); }
+}
+function tjSpdUpd(landed) {
+  const el = $("tjSpd"), m = TJ.me; if (!el || !m) return;
+  const v = m.v, safe = v <= TJ_SAFE, mid = !safe && v <= 15;
+  el.className = safe ? "safe" : mid ? "mid" : "fast";
+  $("tjSpV").innerHTML = `${v.toFixed(1)}<i>m/s</i>`;
+  $("tjSpK").textContent = `${Math.round(v * 3.6)} km/j · batas aman ≤ ${TJ_SAFE} m/s`;
+  const S2 = $("tjSpS");
+  if (landed) { S2.textContent = m.res === "ok" ? "✅ MENDARAT AMAN" : m.res === "hard" ? "💥 TERLALU KERAS" : "⭕ DI LUAR LINGKARAN"; S2.style.background = m.res === "ok" ? "rgba(34,197,94,.3)" : "rgba(239,68,68,.35)"; }
+  else if (!m.chute) { S2.textContent = m.boostT > 0 ? `⚡ BOOSTER ${m.boostT.toFixed(1)} dtk` : m.alt < 160 ? "⚠ BUKA PARASUT!" : "🪂 JATUH BEBAS"; S2.style.background = m.alt < 160 ? "rgba(239,68,68,.45)" : m.boostT > 0 ? "rgba(245,158,11,.35)" : "rgba(56,189,248,.25)"; }
+  else { S2.textContent = safe ? "✅ AMAN UNTUK MENDARAT" : "🪂 MELAMBAT…"; S2.style.background = safe ? "rgba(34,197,94,.3)" : "rgba(250,204,21,.3)"; }
+  $("tjSpA").textContent = `${Math.max(0, Math.round(m.alt))} m`;
+  $("tjSpB").style.height = Math.max(0, Math.min(100, m.alt / TJ_ALT * 100)) + "%";
+}
+function tjBtn(show) {
+  let b = $("tjBtn");
+  if (!show) { b?.remove(); return; }
+  if (!b) { b = document.createElement("button"); b.id = "tjBtn"; b.textContent = "🪂 BUKA PARASUT (Spasi)"; b.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); if (TJ.phase === "fall") tjOpen(TJ.me); }); document.body.appendChild(b); }
+  b.disabled = false;
+}
+addEventListener("keydown", (e) => { if (e.code === "Space" && !e.repeat && TJ.phase === "fall" && !(e.target.closest && e.target.closest("input,textarea"))) { e.preventDefault(); tjOpen(TJ.me); } }, true);
+async function tjRekorLoad() { try { const j = await (await fetch("api/kartu/rekor?id=terjun", { credentials: "same-origin" })).json(); if (j.ok) tjBoardDraw(j.list); } catch { /* */ } }
+function tjBoardDraw(list) {
+  const B = TJ.board; if (!B) return;
+  B.draw((x, w, h) => {
+    x.fillStyle = "#0b1a2e"; rr(x, 0, 0, w, h, 26); x.fill(); x.strokeStyle = "#60a5fa"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 22); x.stroke();
+    x.textAlign = "center"; x.fillStyle = "#93c5fd"; x.font = `800 48px ${FONT}`; x.fillText("🪂 REKOR TERJUN PAYUNG", w / 2, 76);
+    x.fillStyle = "#94a3b8"; x.font = `500 26px ${FONT}`; x.fillText("waktu tercepat mendarat dengan selamat", w / 2, 114);
+    x.font = `600 34px ${FONT}`; const L = (list || []).slice(0, 8);
+    if (!L.length) { x.fillStyle = "#94a3b8"; x.fillText("Belum ada juara — jadilah yang pertama!", w / 2, 320); return; }
+    L.forEach((r, i) => { const y = 176 + i * 62; x.textAlign = "left"; x.fillStyle = i === 0 ? "#93c5fd" : "#e2e8f0"; x.fillText(`${i + 1}. ${String(r.nama).slice(0, 18)}`, 50, y); x.textAlign = "right"; x.fillText(`${r.best} dtk`, w - 50, y); });
+  });
+}
+
+// =====================================================================
+// MASUK / KELUAR
+// =====================================================================
+function tjEnterAsk() {
+  hidePopups();
+  const sk = SKT_BY[TJ_SKIN];
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🪂 Gerbang Lapangan Terjun</h2>
+  <p>Di balik gerbang ini <b>Danu</b>, penerjun payung andal, menantangmu terjun dari pesawat di ketinggian <b>1.000 m</b>. Kamu akan mengenakan skin <b>${sk.nm}</b> (masuk koleksi Lemari Skin-mu).</p>
+  <div class="pr-pick"><button class="pr-sk on" id="tjGo1"><img alt="" src="assets/skins/${TJ_SKIN}.jpg"><b>${sk.nm}</b><small>${sk.ds}</small></button></div>
+  <p style="font-size:12.5px;color:var(--mut)">Tantangan 6: <b>Terjun Payung</b> melawan Danu · hadiah <b>Batu Ungu</b>.</p>
+  <div class="rowf"><button class="btn" id="tjGo2">🪂 Masuk</button><button class="ghost" id="tjNo2">Nanti saja</button></div>`);
+  $("tjGo1").onclick = $("tjGo2").onclick = () => { closeGen(); tjEnter(); };
+  $("tjNo2").onclick = () => closeGen();
+}
+function tjEnter() {
+  sktGrant([TJ_SKIN]);
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  setTimeout(() => {
+    if (typeof KP !== "undefined" && KP.on) kpOff();
+    TJ.on = true; TJ.forceSkin = TJ_SKIN; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+    TJ.grace = performance.now() + 3500; TJ.arrive = { x: TJ_SPAWN.x, z: TJ_SPAWN.z, t0: performance.now() };
+    xTeleport(TJ_SPAWN.x, TJ_SPAWN.z, TJ_SPAWN.yaw);
+    if (TJ.next) TJ.next.visible = !!batuQ().ungu; if (TJ.stone) TJ.stone.visible = !batuQ().ungu;
+    tjHud(true); TJ.phase = "idle"; tjHudUpd(); tjRekorLoad();
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => toast("🪂 Selamat datang di Lapangan Terjun! Danu menunggumu di dekat hanggar.", 5000), 1400);
+  }, 650);
+}
+function tjVisitPrep() { if (!TJ.on) { sktGrant([TJ_SKIN], true); if (typeof KP !== "undefined" && KP.on) kpOff(); TJ.on = true; TJ.forceSkin = TJ_SKIN; refreshMySkin(); TJ.grace = performance.now() + 3500; tjHud(true); TJ.phase = "idle"; tjHudUpd(); } }
+function tjOff() {
+  if (TJ.phase !== "idle") tjStop();
+  TJ.on = false; TJ.forceSkin = null; TJ.grace = performance.now() + 3500; P.jfx = false; P.jy = 0; P.jcamK = 0; avatar.rotation.x = 0;
+  refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+  tjHud(false);
+}
+function tjExit() { if (TJ.phase === "fall" && !confirm("Keluar dari Lapangan Terjun? Lompatan akan dihentikan.")) return; tjOff(); xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Kamu kembali ke Taman Apresiasi.", 3000); }
+function tjToKapal() { if (TJ.phase === "fall") return; tjOff(); if (typeof kpEnter === "function") kpEnter(); }
+function tjIsolate(on) {
+  if (on === !!TJ.hidden) return;
+  if (on) {
+    TJ.root.visible = true;
+    const keep = new Set([avatar, camera, TJ.root, typeof ISN !== "undefined" ? ISN.g : null].filter(Boolean)); for (const r of remotes.values()) keep.add(r.av);
+    TJ.hidden = [];
+    for (const o of scene.children) if (o.visible && !keep.has(o) && !o.isLight && !o.isCamera) { o.visible = false; TJ.hidden.push(o); }
+    for (const o of world.walls.children) if (o.visible && !TJ.ownW.has(o)) { o.visible = false; TJ.hidden.push(o); }
+    TJ.far0 = camera.far; camera.far = 3200; camera.updateProjectionMatrix();
+  } else { for (const o of TJ.hidden) o.visible = true; TJ.hidden = null; TJ.root.visible = false; camera.far = TJ.far0 || 900; camera.updateProjectionMatrix(); }
+}
+function tjTickAll(dt) {
+  const now = performance.now(), here = tjZone(P.x, P.z), grace = now < TJ.grace;
+  if (TJ.arrive) { if (Math.hypot(P.x - TJ.arrive.x, P.z - TJ.arrive.z) < 2 || now - TJ.arrive.t0 > 6000) TJ.arrive = null; }
+  tjIsolate(here);
+  if (here) { scene.fog.color.setRGB(0.62, 0.78, 0.92); scene.fog.density = 0.0009; TJ.fogged = true; }
+  else if (TJ.fogged && typeof xFogBase !== "undefined" && xFogBase) { scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; TJ.fogged = false; }
+  if (here && !TJ.on && !grace && !TJ.arrive) { xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Lapangan Terjun hanya bisa dimasuki lewat gerbang di Ruang Komando."); return; }
+  if (!here && TJ.on && !grace && !TJ.arrive && roomAt(P.x, P.z)) tjOff();
+  if (!here) return;
+  tjTick(dt);
+  if (TJ.on && TJ.phase === "idle" && !grace && Math.hypot(P.x - TJ_EXIT.x, P.z - TJ_EXIT.z) < 1.3) tjToKapal();
+  if (TJ.on && TJ.phase === "idle" && TJ.next && TJ.next.visible && Math.hypot(P.x - TJ.next.position.x, P.z - TJ.next.position.z) < 1.8 && now > (TJ.askNextT || 0)) { TJ.askNextT = now + 8000; toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); }
+  for (const e of TJ.anims) e(dt);
+}
+
+// =====================================================================
+// PEMBANGUNAN LAPANGAN TERJUN
+// =====================================================================
+function tjPlane() {
+  const g = new THREE2.Group(), wM = new THREE2.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.4, metalness: 0.2 }), bM = new THREE2.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.4 });
+  const fus = new THREE2.Mesh(new THREE2.CylinderGeometry(1.5, 1.2, 16, 18), wM); fus.rotation.z = Math.PI / 2; g.add(fus);
+  const nose = new THREE2.Mesh(new THREE2.SphereGeometry(1.5, 16, 12), wM); nose.scale.x = 1.6; nose.position.x = 8; g.add(nose);
+  const stripe = new THREE2.Mesh(new THREE2.CylinderGeometry(1.52, 1.22, 16, 18, 1, true, Math.PI * 0.35, Math.PI * 0.3), bM); stripe.rotation.z = Math.PI / 2; g.add(stripe);
+  const wing = new THREE2.Mesh(new THREE2.BoxGeometry(4, 0.25, 22), wM); wing.position.set(1.5, 0.9, 0); g.add(wing);
+  const tail = new THREE2.Mesh(new THREE2.BoxGeometry(2.5, 3.2, 0.25), bM); tail.position.set(-7.4, 1.8, 0); g.add(tail);
+  const tw = new THREE2.Mesh(new THREE2.BoxGeometry(2, 0.2, 7), wM); tw.position.set(-7.4, 0.4, 0); g.add(tw);
+  for (const s of [-1, 1]) { const pr = new THREE2.Mesh(new THREE2.BoxGeometry(0.15, 3, 0.3), new THREE2.MeshStandardMaterial({ color: 0x111827 })); pr.position.set(3.4, 0.9, s * 5.5); g.add(pr); TJ.anims.push((dt) => { pr.rotation.x += dt * 40; }); const eng = new THREE2.Mesh(new THREE2.CylinderGeometry(0.6, 0.6, 2, 12), wM); eng.rotation.z = Math.PI / 2; eng.position.set(2.4, 0.9, s * 5.5); g.add(eng); }
+  const door = new THREE2.Mesh(new THREE2.PlaneGeometry(1.6, 2.0), new THREE2.MeshBasicMaterial({ color: 0x0f172a, side: THREE2.DoubleSide })); door.position.set(-1, 0.1, 1.42); g.add(door);
+  const lb = xPlane(typeof bcSignTex === "function" ? bcSignTex(["UIKA SKYDIVE"], "#1d4ed8") : l2Canvas(8, 8, () => {}), 4, 1.75); lb.position.set(3, 0.6, -1.55); lb.rotation.y = Math.PI; g.add(lb);
+  return g;
+}
+function tjCanopy(col) {
+  const g = new THREE2.Group(); g.visible = false;
+  const cv = l2Canvas(512, 128, (x, w, h) => { const cs = [col, "#ffffff", col, "#facc15"]; for (let i = 0; i < 8; i++) { x.fillStyle = cs[i % 4]; x.fillRect(i * 64, 0, 64, h); } });
+  const dome = new THREE2.Mesh(new THREE2.SphereGeometry(3.4, 24, 10, 0, Math.PI * 2, 0, Math.PI * 0.42), new THREE2.MeshStandardMaterial({ map: xTex(cv), side: THREE2.DoubleSide, roughness: 0.7 })); dome.scale.y = 0.55; dome.position.y = 2.2; g.add(dome);
+  const lineM = new THREE2.LineBasicMaterial({ color: 0x1f2937 }), pts = [];
+  for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; pts.push(new THREE2.Vector3(0, -0.6, 0), new THREE2.Vector3(Math.cos(a) * 3.1, 2.6, Math.sin(a) * 3.1)); }
+  g.add(new THREE2.LineSegments(new THREE2.BufferGeometry().setFromPoints(pts), lineM));
+  return g;
+}
+function buildTerjun() {
+  if (TJ.built) return; TJ.built = true;
+  const root = new THREE2.Group(); root.visible = false; scene.add(root); TJ.root = root;
+  const wBefore = new Set(world.walls.children);
+  const C = TJC;
+  { const hl = new THREE2.HemisphereLight(0xe0f2fe, 0x4d7c0f, 0.6); hl.position.set(C.x, 500, C.z); root.add(hl); const dl = new THREE2.DirectionalLight(0xfff7e6, 0.9); dl.position.set(C.x + 300, 900, C.z + 200); dl.target.position.set(C.x, 0, C.z); root.add(dl); root.add(dl.target); }
+  // langit
+  const skyC = l2Canvas(16, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#1e6fd9"); g.addColorStop(0.55, "#7cc3f5"); g.addColorStop(1, "#e0f2fe"); x.fillStyle = g; x.fillRect(0, 0, w, h); });
+  const dome = new THREE2.Mesh(new THREE2.SphereGeometry(2800, 32, 16), new THREE2.MeshBasicMaterial({ map: xTex(skyC), side: THREE2.BackSide, fog: false, toneMapped: false })); dome.position.set(C.x, 0, C.z); root.add(dome);
+  // tanah: petak sawah/ladang dilihat dari udara
+  const gc = l2Canvas(1024, 1024, (x, w, h) => { const R = rndGen(31); const cols = ["#4d7c0f", "#65a30d", "#3f6212", "#84cc16", "#a3a35a", "#556b2f"]; for (let i = 0; i < 16; i++) for (let j = 0; j < 16; j++) { x.fillStyle = cols[Math.floor(R() * cols.length)]; x.fillRect(i * 64, j * 64, 64, 64); x.strokeStyle = "rgba(60,40,20,.35)"; x.lineWidth = 2; x.strokeRect(i * 64, j * 64, 64, 64); } x.strokeStyle = "#a8a29e"; x.lineWidth = 10; x.beginPath(); x.moveTo(0, 520); x.lineTo(w, 470); x.moveTo(380, 0); x.lineTo(430, h); x.stroke(); });
+  const gt = xTex(gc); gt.wrapS = gt.wrapT = THREE2.RepeatWrapping; gt.repeat.set(6, 6);
+  const far = new THREE2.Mesh(new THREE2.PlaneGeometry(5000, 5000), new THREE2.MeshStandardMaterial({ map: gt, roughness: 1, color: 0x9aa58a })); far.rotation.x = -Math.PI / 2; far.position.set(C.x, -0.05, C.z); root.add(far);
+  const nc = l2Canvas(512, 512, (x, w, h) => { x.fillStyle = "#5f8f3a"; x.fillRect(0, 0, w, h); const R = rndGen(9); for (let i = 0; i < 3000; i++) { x.fillStyle = `rgba(${40 + R() * 40},${90 + R() * 60},${30 + R() * 30},.6)`; x.fillRect(R() * w, R() * h, 3, 3); } });
+  const nt = xTex(nc); nt.wrapS = nt.wrapT = THREE2.RepeatWrapping; nt.repeat.set(40, 40);
+  const near = new THREE2.Mesh(new THREE2.PlaneGeometry(300, 300), new THREE2.MeshStandardMaterial({ map: nt, roughness: 1, color: 0x8fa070 })); near.rotation.x = -Math.PI / 2; near.position.set(C.x, 0.0, C.z); root.add(near);
+  // gunung di cakrawala
+  for (let i = 0; i < 14; i++) { const a = i / 14 * Math.PI * 2, r = 1500 + (i % 3) * 300; const m = new THREE2.Mesh(new THREE2.ConeGeometry(260 + (i % 4) * 60, 300 + (i % 5) * 70, 7), new THREE2.MeshStandardMaterial({ color: 0x4b6b4a, flatShading: true, roughness: 1 })); m.position.set(C.x + Math.cos(a) * r, 120, C.z + Math.sin(a) * r); root.add(m); }
+  // lingkaran pendaratan (bullseye)
+  const tc = l2Canvas(512, 512, (x, w, h) => { const cs = ["#ffffff", "#dc2626", "#ffffff", "#dc2626", "#facc15"]; [256, 200, 150, 100, 52].forEach((r2, i) => { x.fillStyle = cs[i]; x.beginPath(); x.arc(256, 256, r2 - 4, 0, 7); x.fill(); }); x.strokeStyle = "#111"; x.lineWidth = 6; x.beginPath(); x.arc(256, 256, 252, 0, 7); x.stroke(); });
+  const tgt = new THREE2.Mesh(new THREE2.CircleGeometry(TJ_RING, 48), new THREE2.MeshBasicMaterial({ map: xTex(tc), toneMapped: false })); tgt.rotation.x = -Math.PI / 2; tgt.position.set(C.x, 0.04, C.z); root.add(tgt);
+  const bcn = world.glowSprite("#ef4444", 40, 0.35); bcn.position.set(C.x, 2, C.z); root.add(bcn); // penanda terlihat dari udara
+  const smk = new THREE2.Mesh(new THREE2.CylinderGeometry(0.15, 0.15, 6, 8), new THREE2.MeshStandardMaterial({ color: 0x9ca3af })); smk.position.set(C.x + 11, 3, C.z); root.add(smk);
+  const sock = new THREE2.Mesh(new THREE2.ConeGeometry(0.45, 2.2, 12, 1, true), new THREE2.MeshStandardMaterial({ color: 0xf97316, side: THREE2.DoubleSide })); sock.position.set(C.x + 11, 5.8, C.z); root.add(sock); TJ.sock = sock;
+  TJ.anims.push(() => { const a = Math.atan2(TJ.wind.z, TJ.wind.x); sock.rotation.set(0, -a, -Math.PI / 2); sock.position.set(C.x + 11 + Math.cos(a) * 1.1, 5.8, C.z + Math.sin(a) * 1.1); });
+  // awan di berbagai ketinggian
+  const cm = typeof bcSmokeMat === "function" ? bcSmokeMat("rgba(255,255,255,.95)") : new THREE2.SpriteMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
+  for (let i = 0; i < 46; i++) { const s = new THREE2.Sprite(cm); s.position.set(C.x + (Math.random() - 0.5) * 900, 220 + Math.random() * 650, C.z + (Math.random() - 0.5) * 900); s.scale.setScalar(60 + Math.random() * 90); root.add(s); }
+  // hanggar, landasan, papan
+  const hM = new THREE2.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.4, roughness: 0.5 });
+  const hg = new THREE2.Mesh(new THREE2.CylinderGeometry(9, 9, 22, 20, 1, false, 0, Math.PI), hM); hg.rotation.z = Math.PI / 2; hg.rotation.y = Math.PI / 2; hg.position.set(C.x + 30, 0, C.z + 92); root.add(hg);
+  const rw = new THREE2.Mesh(new THREE2.PlaneGeometry(160, 14), new THREE2.MeshStandardMaterial({ color: 0x374151, roughness: 0.9 })); rw.rotation.x = -Math.PI / 2; rw.position.set(C.x, 0.03, C.z + 118); root.add(rw);
+  for (let i = -70; i <= 70; i += 14) { const ln = new THREE2.Mesh(new THREE2.PlaneGeometry(7, 0.6), new THREE2.MeshBasicMaterial({ color: 0xffffff })); ln.rotation.x = -Math.PI / 2; ln.position.set(C.x + i, 0.05, C.z + 118); root.add(ln); }
+  { const pl = tjPlane(); pl.position.set(C.x - 30, 2.2, C.z + 116); root.add(pl); }
+  const sg = prSign("🪂 TERJUN PAYUNG · Tantangan 6", "1.000 m · mendarat di lingkaran · ≤ 6 m/s · lawan: Danu", "#3b82f6", 7); sg.position.set(C.x, 3.2, C.z + 62); root.add(sg);
+  TJ.board = cvScreen(4, 3.25, 900, 750); TJ.board.m.position.set(C.x + 9, 2.4, C.z + 66); TJ.board.m.rotation.y = -0.4; root.add(TJ.board.m); tjBoardDraw([]);
+  // Batu Ungu di alas
+  const ped = new THREE2.Mesh(new THREE2.CylinderGeometry(0.6, 0.75, 1.0, 24), new THREE2.MeshStandardMaterial({ color: 0x1e1b4b, metalness: 0.6, roughness: 0.3, emissive: 0xa855f7, emissiveIntensity: 0.3 })); ped.position.set(C.x - 9, 0.5, C.z + 66); root.add(ped);
+  const gem = prGem("#a855f7", "#3b0764", 0.5); gem.position.set(C.x - 9, 0, C.z + 66); root.add(gem); TJ.stone = gem; gem.visible = !batuQ().ungu;
+  TJ.anims.push((dt) => { gem.rotation.y += dt; gem.userData.gem.position.y = 1.15 + Math.sin(t * 2) * 0.12; });
+  // portal kembali & gerbang berikutnya
+  const ex = new THREE2.Group(); ex.position.set(TJ_EXIT.x, 0, TJ_EXIT.z); ex.rotation.y = Math.PI / 2; root.add(ex);
+  const er = new THREE2.Mesh(new THREE2.TorusGeometry(1.2, 0.12, 10, 36), new THREE2.MeshBasicMaterial({ color: 0x38bdf8, toneMapped: false })); er.position.y = 1.6; ex.add(er);
+  const ed = new THREE2.Mesh(new THREE2.CircleGeometry(1.1, 30), new THREE2.MeshBasicMaterial({ color: 0x082f49, transparent: true, opacity: 0.85, side: THREE2.DoubleSide })); ed.position.y = 1.6; ex.add(ed);
+  const es = prSign("⟲ RUANG KOMANDO", "kembali ke tantangan 5", "#38bdf8", 2.6); es.position.y = 3.3; ex.add(es);
+  xAct(ed, { type: "x_tjexit" }); xAct(es, { type: "x_tjexit" }); TJ.anims.push((dt) => { er.rotation.z += dt; });
+  const nx = new THREE2.Group(); nx.position.set(C.x + 18, 0, C.z + 78); nx.rotation.y = -0.6; root.add(nx);
+  const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.6, 0.22, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x3b0764, emissive: 0xa855f7, emissiveIntensity: 0.9, metalness: 0.5 })); nr.position.y = 2.1; nx.add(nr);
+  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#a855f7", 2.8); ns.position.y = 4.4; nx.add(ns);
+  TJ.next = nx; nx.visible = !!batuQ().ungu; TJ.anims.push((dt) => { nr.rotation.z += dt * 0.7; });
+  xAct(nr, { type: "x_tjnext" }); xAct(ns, { type: "x_tjnext" });
+  // pesawat lompat, parasut, Danu (model pembalap)
+  TJ.plane = tjPlane(); TJ.plane.visible = false; root.add(TJ.plane);
+  TJ.cMe = tjCanopy("#f97316"); root.add(TJ.cMe); TJ.cDn = tjCanopy("#2563eb"); root.add(TJ.cDn);
+  { const rb = SKIN_BUILD[TJ_SKIN]("#ffffff"); rb.headG.position.y = 1.5; TJ.racer = rb.group; TJ.racer.visible = false; root.add(TJ.racer); }
+  // batas
+  for (const [ax, az, bx, bz] of [[TJV.x0 + 2, TJV.z0 + 2, TJV.x1 - 2, TJV.z0 + 2], [TJV.x1 - 2, TJV.z0 + 2, TJV.x1 - 2, TJV.z1 - 2], [TJV.x1 - 2, TJV.z1 - 2, TJV.x0 + 2, TJV.z1 - 2], [TJV.x0 + 2, TJV.z1 - 2, TJV.x0 + 2, TJV.z0 + 2]]) xCol(ax, az, bx, bz, 0.3);
+  // Danu (NPC di darat)
+  makeCustomHuman("danu", { code: "TERJUN", name: "Danu", role: "Penerjun Payung · Lapangan Terjun", col: "#2563eb", icon: "🪂", hint: "🪂", x: C.x + 3, z: C.z + 70, room: "m_terjun", secret: true, hidden: true, tag: "DANU · PENERJUN PAYUNG",
+    look: { shirt: "#f97316", apron: "#f97316", noApron: true }, chips: ["Tantang terjun!", "Aturannya?", "Main ulang"], roleNote: "Tantangan Terjun Payung (Portal Ring 1)",
+    knowText: "Danu, penerjun payung andal, menantang pemain terjun dari pesawat di ketinggian 1.000 meter. Siapa yang lebih dulu mendarat dengan selamat di dalam lingkaran (kecepatan ≤ 6 m/s) menang dan mendapat Batu Ungu.", greetActs: () => danuAns("halo").acts, answer: danuAns });
+  { const n = NPCS.danu; const s = sktOnNpc(n, TJ_SKIN); n.skinG = s.group; n.tag.position.y = 2.25; root.add(n.g); }
+  TJ.own = new Set([root]); TJ.ownW = new Set(world.walls.children.filter((o) => !wBefore.has(o)));
+  XT.anim.push((dt) => tjTickAll(dt));
+}
+function danuAns(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), bt = batuQ();
+  const go = ["🪂 Tantang terjun!", () => { closeGen(); hidePopups(); tjStart(); }];
+  if (/terima ?kasih|makasih/.test(ql)) return { text: "Sama-sama! Blue skies! 🪂" };
+  if (!bt.oranye) return { text: `Aku Danu, penerjun payung. Lapangan ini untuk penjelajah yang sudah membawa Batu Oranye dari Ruang Komando, ${S.name}.` };
+  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Kita melompat dari pesawat di ketinggian 1.000 meter. Saat jatuh bebas kecepatan kita sekitar 55 m/s (±200 km/j). Ambil booster ⚡ untuk menukik ±75 m/s selama 3 detik — booster berikutnya baru bisa diambil setelah efeknya habis. Buka parasut dengan Spasi atau tombol besar; parasut butuh ±3 detik (sekitar 50–60 m, lebih jauh kalau sedang memakai booster) untuk memperlambat sampai ±5 m/s — jadi buka di sekitar 65–90 m. Mendaratlah di dalam lingkaran merah-putih dengan kecepatan paling tinggi 6 m/s. Siapa yang lebih dulu mendarat dengan selamat, dia juaranya — Batu Ungu hadiahnya! Bonus: mendarat ≤ 2 m dari pusat mendapat skin Mahasiswa TI Ungu. Arahkan tubuhmu dengan WASD/joystick dan perhatikan arah angin di kantong angin.", acts: [go] };
+  if (/tantang|mulai|main|terjun|lompat|ulang|siap|tanding/.test(ql)) { if (TJ.phase === "plane" || TJ.phase === "fall") return { text: "Kita sedang terjun!" }; setTimeout(tjStart, 400); return { text: bt.ungu ? `Terjun lagi? Ayo naik pesawat, ${S.name}!` : `Siap, ${S.name}? Naik pesawat — kita lompat dari 1.000 meter!` }; }
+  return { text: bt.ungu ? `Halo lagi, ${S.name}! Batu Ungu sudah milikmu. Mau terjun lagi?` : `Halo ${S.name}, aku Danu. Berani adu cepat terjun payung dari 1.000 meter? Yang lebih dulu mendarat dengan selamat di lingkaran, menang!`, acts: [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "danu")]] };
+}
+function tjAct(act) {
+  const ty = act.type;
+  if (ty === "x_tjexit") { tjToKapal(); return true; }
+  if (ty === "x_tjnext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
+  return false;
+}
+// =====================================================================
+// src/ext_akademik.js — RUANG INFORMASI KEGIATAN AKADEMIK (barat E-Portal)
+//  • Ruang luas dengan meja resepsionis melengkung di tengah, dijaga Barkan
+//    (laki-laki berkumis). Barkan menjelaskan kelas/rapat yang sedang dan
+//    akan berlangsung (jadwal dari halaman admin), tetapi TIDAK PERNAH
+//    memberikan token peserta atau kode pengajar (data itu memang tidak
+//    pernah dikirim server ke pemain).
+//  • Ruang tunggu (24 kursi) menghadap layar besar jadwal kegiatan akademik
+//    yang diperbarui otomatis.
+//  • Pintu ke: Auditorium Budi Susetyo, Auditorium Puspa Eosina, Ruang Rapat
+//    (dinding selatan) dan RK 1–3 (dinding utara).
+//  • RK 1–3: ruang kelas sedang 40 kursi bergaya auditorium + smart board
+//    (fungsi sama dengan auditorium: slide/video, coretan, token sesi).
+// =====================================================================
+var AK = { scr: null, key: "", t: 0, clk: null, clkMin: -1 };
+var AK_ROOMS = ["kelas1", "kelas2", "rapat", "rk1", "rk2", "rk3"];
+var AK_COL = { kelas1: "#60a5fa", kelas2: "#2dd4bf", rapat: "#f59e0b", rk1: "#8b5cf6", rk2: "#ec4899", rk3: "#22c55e" };
+var AK_ARAH = {
+  kelas1: "lewat pintu biru di dinding selatan ruang ini, paling timur (dekat pintu E-Portal)",
+  kelas2: "lewat pintu toska di dinding selatan, di tengah",
+  rapat: "lewat pintu kuning di dinding selatan, paling barat",
+  rk1: "lewat pintu ungu di dinding utara, paling barat",
+  rk2: "lewat pintu merah muda di dinding utara, di tengah",
+  rk3: "lewat pintu hijau di dinding utara, paling timur"
+};
+var AK_TZ = { timeZone: "Asia/Jakarta" };
+var akJam = (t) => new Date(t).toLocaleTimeString("id-ID", { ...AK_TZ, hour: "2-digit", minute: "2-digit" });
+var akTgl = (t) => new Date(t).toLocaleDateString("id-ID", { ...AK_TZ, weekday: "long", day: "numeric", month: "short" });
+var akHari = (t) => new Date(t).toLocaleDateString("en-CA", AK_TZ);
+function akWaktu(s) {
+  const now = Date.now(), d = akHari(s.mulai) === akHari(now) ? "hari ini" : akHari(s.mulai) === akHari(now + 864e5) ? "besok" : akTgl(s.mulai);
+  return `${d} ${akJam(s.mulai)}–${akJam(s.selesai)} WIB`;
+}
+function akCap(r) { const j = (typeof KLS !== "undefined" && KLS.jad[r]) || {}; return j.cap || { kelas1: 128, kelas2: 128, rapat: 25 }[r] || 40; }
+// kumpulan jadwal publik (tanpa token/kode — server memang tidak mengirimkannya)
+function akData() {
+  const J = (typeof KLS !== "undefined" && KLS.jad) || {}, now = Date.now(), aktif = [], next = [];
+  for (const r of AK_ROOMS) {
+    const j = J[r]; if (!j) continue;
+    if (j.aktif) aktif.push({ r, ...j.aktif });
+    const list = Array.isArray(j.daftar) ? j.daftar : j.berikut ? [j.berikut] : [];
+    for (const s of list) if (s.mulai > now && !(j.aktif && s.mulai === j.aktif.mulai)) next.push({ r, ...s });
+  }
+  next.sort((a, b) => a.mulai - b.mulai);
+  return { aktif, next };
+}
+function akRoomOf(ql) {
+  if (/\brk ?1\b|ruang kelas ?1\b|kelas sedang ?1\b/.test(ql)) return "rk1";
+  if (/\brk ?2\b|ruang kelas ?2\b|kelas sedang ?2\b/.test(ql)) return "rk2";
+  if (/\brk ?3\b|ruang kelas ?3\b|kelas sedang ?3\b/.test(ql)) return "rk3";
+  if (/budi|susetyo|auditorium ?1\b|\baud ?1\b|kelas ?1\b/.test(ql)) return "kelas1";
+  if (/puspa|eosina|auditorium ?2\b|\baud ?2\b|kelas ?2\b/.test(ql)) return "kelas2";
+  if (/rapat|meeting/.test(ql)) return "rapat";
+  return null;
+}
+function akSesiTxt(s, withRoom) { return `${withRoom ? ROOMS[s.r].name + ": " : ""}«${s.judul}»${s.pengajar ? " bersama " + s.pengajar : ""} (${akWaktu(s)})`; }
+function akNowText() {
+  const { aktif } = akData();
+  if (!aktif.length) return "Saat ini tidak ada kelas atau rapat yang sedang berlangsung — semua ruangan terbuka untuk umum.";
+  return "Sedang berlangsung: " + aktif.map((s) => akSesiTxt(s, true)).join("; ") + ".";
+}
+function akNextText(n = 6) {
+  const { next } = akData();
+  if (!next.length) return "Belum ada jadwal kelas atau rapat dalam 14 hari ke depan.";
+  return "Jadwal berikutnya: " + next.slice(0, n).map((s) => akSesiTxt(s, true)).join("; ") + ".";
+}
+function akRoomText(r) {
+  const J = (typeof KLS !== "undefined" && KLS.jad[r]) || {}, { next } = akData(), nx = next.filter((s) => s.r === r).slice(0, 3);
+  let t = `${ROOMS[r].name} (kapasitas ${akCap(r)} kursi, ${AK_ARAH[r]}). `;
+  t += J.aktif ? `Sedang berlangsung ${akSesiTxt({ r, ...J.aktif })} — selama sesi, pintunya hanya terbuka bagi pemegang token peserta dari pengajar. ` : "Saat ini tidak ada sesi; ruangannya terbuka untuk umum. ";
+  t += nx.length ? "Berikutnya: " + nx.map((s) => akSesiTxt(s)).join("; ") + "." : "Belum ada jadwal berikutnya dalam 14 hari.";
+  return t;
+}
+function akGo(r) {
+  const D = KLS_DOOR[r]; if (!D) return;
+  closeGen(); if (typeof hidePopups === "function") hidePopups();
+  xTeleport(D.x, D.z, D.yaw);
+}
+var AK_TOKEN_RE = /token|kode|password|sandi|\bpin\b|passcode|kata kunci|akses masuk|bocor/;
+function akBarkanAns(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim();
+  const card = ["📅 Jadwal lengkap", () => akJadwalCard()], antar = ["🗺 Antar ke ruang…", () => akAntarCard()];
+  if (/terima ?kasih|makasih|thanks/.test(ql)) return { text: `Sama-sama, ${S.name}! Semoga kegiatan akademikmu lancar.` };
+  if (/terkunci|dikunci|tidak bisa masuk|gak bisa masuk|ga bisa masuk|pintu.*(tutup|kunci)/.test(ql))
+    return { text: "Selama jadwal kelas atau rapat berlangsung, pintu ruangan hanya terbuka bagi peserta yang memasukkan token peserta dari dosen pengajar atau pimpinan rapat. Di luar jadwal, semua ruangan terbuka bebas. Token itu rahasia — mintalah langsung kepada pengajarnya, bukan kepada saya.", acts: [card] };
+  if (AK_TOKEN_RE.test(ql))
+    return { text: `Maaf, ${S.name}, saya tidak bisa memberikan token peserta maupun kode pengajar untuk kelas atau rapat apa pun — keduanya rahasia. Token peserta dibagikan langsung oleh dosen pengajar atau pimpinan rapat, sedangkan kode pengajar hanya dipegang pengajar dari admin galeri. Yang bisa saya bantu: jadwal, ruangan, dan arah ke sana.`, acts: [card, antar] };
+  const r = akRoomOf(ql);
+  if (r && /di ?mana|antar|lokasi|letak|ke mana|kemana|arah|jalan ke|menuju/.test(ql)) return { text: `${ROOMS[r].name} ada ${AK_ARAH[r]}. Mau saya antar ke depan pintunya?`, acts: [["🚶 Antar saya", () => akGo(r)]] };
+  if (r) return { text: akRoomText(r), acts: [["🚶 Antar ke " + ROOMS[r].short, () => akGo(r)], card] };
+  if (/sedang|sekarang|berlangsung|lagi ada|saat ini|aktif|hari ini/.test(ql)) {
+    const { next } = akData(), today = next.filter((s) => akHari(s.mulai) === akHari(Date.now()));
+    return { text: akNowText() + (today.length ? " Nanti hari ini: " + today.slice(0, 5).map((s) => akSesiTxt(s, true)).join("; ") + "." : " Tidak ada jadwal lain lagi hari ini."), acts: [card, antar] };
+  }
+  if (/besok|berikut|nanti|akan|selanjutnya|minggu|jadwal|kelas apa|kuliah|pertemuan|agenda/.test(ql)) return { text: akNextText(), acts: [card, antar] };
+  if (/kapasitas|kursi|muat|berapa orang/.test(ql)) return { text: "Kapasitas ruangan: " + AK_ROOMS.map((k) => `${ROOMS[k].name} ${akCap(k)} kursi`).join(", ") + ".", acts: [antar] };
+  if (/ruang apa|ruangan apa|daftar ruang|ada ruang/.test(ql)) return { text: "Dari ruang ini kamu bisa ke: " + AK_ROOMS.map((k) => `${ROOMS[k].name} (${AK_ARAH[k].replace(/^lewat /, "")})`).join("; ") + ".", acts: [antar] };
+  return { text: `Selamat datang di Ruang Informasi Kegiatan Akademik, ${S.name}! Saya Barkan, resepsionis di sini. ${akNowText()} Tanyakan jadwal ruang tertentu (mis. “jadwal RK 2” atau “Auditorium Budi Susetyo”), jadwal berikutnya, atau minta saya mengantar ke ruangannya.`, acts: [card, antar] };
+}
+function akBadge(r) { return `<span style="display:inline-block;padding:1px 8px;border-radius:999px;background:${AK_COL[r]}33;border:1px solid ${AK_COL[r]};font-size:12px;white-space:nowrap">${klsEsc(ROOMS[r].short)}</span>`; }
+function akJadwalCard() {
+  const { aktif, next } = akData();
+  const row = (s) => `<tr><td>${akBadge(s.r)}</td><td><b>${klsEsc(s.judul)}</b>${s.pengajar ? `<br><small style="color:var(--mut)">${klsEsc(s.pengajar)}</small>` : ""}</td><td style="white-space:nowrap">${klsEsc(akWaktu(s))}</td><td><button class="ghost" data-ak="${s.r}" style="padding:4px 8px;font-size:12px">Antar</button></td></tr>`;
+  const tb = (L, empty) => L.length ? `<table class="ktab" style="width:100%">${L.map(row).join("")}</table>` : `<p style="color:var(--mut)">${empty}</p>`;
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>📅 Jadwal Kegiatan Akademik</h2>
+  <h3 style="margin:10px 0 6px;font-size:15px">🔴 Sedang berlangsung</h3>${tb(aktif, "Tidak ada kelas atau rapat yang sedang berlangsung.")}
+  <h3 style="margin:14px 0 6px;font-size:15px">⏭ Akan datang (14 hari)</h3>${tb(next.slice(0, 20), "Belum ada jadwal dalam 14 hari ke depan.")}
+  <p style="margin-top:12px;font-size:12.5px;color:var(--mut)">🔒 Token peserta dan kode pengajar tidak dibagikan di sini. Mintalah token kepada dosen pengajar atau pimpinan rapat.</p>`);
+  document.querySelectorAll("[data-ak]").forEach((b) => { b.onclick = () => akGo(b.dataset.ak); });
+}
+function akAntarCard() {
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🗺 Antar ke ruangan</h2><p style="color:var(--mut)">Pilih ruangan — kamu diantar ke depan pintunya.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${AK_ROOMS.map((r) => `<button class="ghost" data-ak="${r}" style="border-color:${AK_COL[r]};text-align:left;padding:10px">${klsEsc(ROOMS[r].name)}<br><small style="color:var(--mut)">${akCap(r)} kursi</small></button>`).join("")}</div>`);
+  document.querySelectorAll("[data-ak]").forEach((b) => { b.onclick = () => akGo(b.dataset.ak); });
+}
+function akAct(act) {
+  if (act.type !== "x_ak") return false;
+  if (act.id === "jadwal") akJadwalCard();
+  else if (act.id === "dir") akAntarCard();
+  return true;
+}
+
+// ---------- layar jadwal besar (ruang tunggu) ----------
+function akDrawScreen() {
+  const c = AK.scr.c, x = c.getContext("2d"), W = c.width, H = c.height, { aktif, next } = akData(), now = Date.now();
+  const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#0b1736"); g.addColorStop(1, "#111c44"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#1d4ed8"; x.fillRect(0, 0, W, 120);
+  x.fillStyle = "#fff"; x.font = `800 58px ${FONT}`; x.textBaseline = "middle"; x.textAlign = "left"; x.fillText("JADWAL KEGIATAN AKADEMIK", 50, 62);
+  x.textAlign = "right"; x.font = `700 40px ${FONT}`; x.fillText(new Date(now).toLocaleDateString("id-ID", { ...AK_TZ, weekday: "long", day: "numeric", month: "long" }) + " · " + akJam(now) + " WIB", W - 50, 62);
+  const col = (X0, w, title, tc, L, empty) => {
+    x.textAlign = "left"; x.fillStyle = tc; x.font = `800 40px ${FONT}`; x.fillText(title, X0, 180);
+    x.fillStyle = "rgba(255,255,255,.15)"; x.fillRect(X0, 210, w, 3);
+    if (!L.length) { x.fillStyle = "rgba(255,255,255,.55)"; x.font = `500 34px ${FONT}`; wrap(x, empty, X0, 270, w, 44, 3); return; }
+    L.slice(0, 6).forEach((s, i) => {
+      const y = 240 + i * 108, cc = AK_COL[s.r] || "#fff";
+      x.fillStyle = "rgba(255,255,255,.06)"; rr(x, X0, y, w, 96, 14); x.fill();
+      x.fillStyle = cc; rr(x, X0, y, 10, 96, 5); x.fill();
+      x.fillStyle = cc; x.font = `700 26px ${FONT}`; x.fillText(ROOMS[s.r].name.toUpperCase(), X0 + 26, y + 26);
+      x.fillStyle = "#fff"; x.font = `700 32px ${FONT}`; let t = s.judul; while (x.measureText(t).width > w - 330 && t.length > 4) t = t.slice(0, -2); if (t !== s.judul) t += "…"; x.fillText(t, X0 + 26, y + 64);
+      x.textAlign = "right"; x.fillStyle = "#e2e8f0"; x.font = `600 28px ${FONT}`;
+      x.fillText(`${akHari(s.mulai) === akHari(now) ? "" : akTgl(s.mulai) + " · "}${akJam(s.mulai)}–${akJam(s.selesai)}`, X0 + w - 20, y + 26);
+      x.fillStyle = "rgba(226,232,240,.7)"; x.font = `500 24px ${FONT}`; let p = s.pengajar || ""; while (x.measureText(p).width > 300 && p.length > 4) p = p.slice(0, -2); x.fillText(p, X0 + w - 20, y + 64);
+      x.textAlign = "left";
+    });
+  };
+  col(50, 700, "● SEDANG BERLANGSUNG", "#f87171", aktif, "Tidak ada kelas atau rapat yang sedang berlangsung. Semua ruangan terbuka untuk umum.");
+  col(850, 700, "⏭ AKAN DATANG", "#93c5fd", next, "Belum ada jadwal dalam 14 hari ke depan.");
+  x.fillStyle = "rgba(255,255,255,.55)"; x.font = `500 26px ${FONT}`; x.textAlign = "center";
+  x.fillText("Tanya Barkan di meja resepsionis untuk detail & arah ruangan · Token kelas hanya dari dosen pengajar", W / 2, H - 34);
+  AK.scr.tex.needsUpdate = true;
+}
+function akClock() {
+  const c = AK.clk.c, x = c.getContext("2d"), d = new Date(), j = +d.toLocaleString("en-US", { ...AK_TZ, hour: "numeric", hour12: false }) % 12, m = +d.toLocaleString("en-US", { ...AK_TZ, minute: "numeric" });
+  x.clearRect(0, 0, 256, 256); x.fillStyle = "#fff"; x.beginPath(); x.arc(128, 128, 120, 0, 7); x.fill(); x.lineWidth = 10; x.strokeStyle = "#1e3a8a"; x.stroke();
+  x.fillStyle = "#1e3a8a"; for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; x.fillRect(128 + Math.sin(a) * 96 - 4, 128 - Math.cos(a) * 96 - 4, 8, 8); }
+  const hand = (a, L, w) => { x.lineWidth = w; x.lineCap = "round"; x.beginPath(); x.moveTo(128, 128); x.lineTo(128 + Math.sin(a) * L, 128 - Math.cos(a) * L); x.stroke(); };
+  x.strokeStyle = "#0f172a"; hand((j + m / 60) / 12 * Math.PI * 2, 58, 10); hand(m / 60 * Math.PI * 2, 86, 6);
+  AK.clk.tex.needsUpdate = true;
+}
+function akTick() {
+  if (!AK.scr) return;
+  const near = curRoom === "akademik" || Math.hypot(P.x + 38, P.z - 43) < 30;
+  if (!near) return;
+  const now = performance.now(); if (now - AK.t < 1000) return; AK.t = now;
+  const { aktif, next } = akData(), key = JSON.stringify([aktif, next.slice(0, 6)]) + akJam(Date.now());
+  if (key !== AK.key) { AK.key = key; akDrawScreen(); }
+  const mm = new Date().getMinutes(); if (mm !== AK.clkMin) { AK.clkMin = mm; akClock(); }
+}
+
+// ---------- auditorium RK (depan di dinding pintu = selatan) ----------
+function akAud(k) {
+  const R = ROOMS[k], A = AUD[k], cx = (R.x0 + R.x1) / 2, W = R.x1 - R.x0, F = !!A.flip, sg = F ? -1 : 1;
+  const Zf = (d) => F ? R.z1 - d : R.z0 + d;
+  const tierM = new THREE2.MeshStandardMaterial({ color: A.carpet, roughness: 0.95 });
+  const noseM = new THREE2.MeshBasicMaterial({ color: new THREE2.Color(A.acc), toneMapped: false });
+  for (let i = 1; i <= A.rows; i++) {
+    const za = Zf(A.front + (i - 1) * A.rowD), zb = F ? R.z0 : R.z1, h = i * A.step, d = Math.abs(zb - za);
+    const tb = xBox(W - 0.02, h, d, tierM, cx, h / 2, (za + zb) / 2); world.floors.push(tb);
+    xBox(W - 0.4, 0.02, 0.05, noseM, cx, h + 0.006, za + 0.04 * sg);
+  }
+  const seatM = new THREE2.MeshStandardMaterial({ color: new THREE2.Color(A.seat), roughness: 0.75 });
+  const darkM = new THREE2.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.5, metalness: 0.4 });
+  const deskM = new THREE2.MeshStandardMaterial({ color: 0xd6b48c, roughness: 0.55 });
+  const per = A.per || 8, sp = 0.9, bw = per * sp, blocks = [cx - 0.6 - bw, cx + 0.6], seatPos = [];
+  for (let i = 1; i <= A.rows; i++) for (const b0 of blocks) for (let j = 0; j < per; j++) seatPos.push([b0 + 0.45 + j * sp, Zf(A.front + (i - 1) * A.rowD + 1.3), i * A.step]);
+  const o = new THREE2.Object3D();
+  const inst = (geo, mat, fn) => { const im = new THREE2.InstancedMesh(geo, mat, seatPos.length); seatPos.forEach((s, i) => { fn(o, s); o.updateMatrix(); im.setMatrixAt(i, o.matrix); }); scene.add(im); return im; };
+  inst(new THREE2.BoxGeometry(0.52, 0.09, 0.48), seatM, (o2, [x, z, y]) => { o2.position.set(x, y + 0.46, z); o2.rotation.set(0, 0, 0); });
+  inst(new THREE2.BoxGeometry(0.52, 0.62, 0.07), seatM, (o2, [x, z, y]) => { o2.position.set(x, y + 0.82, z + 0.25 * sg); o2.rotation.set(-0.12 * sg, 0, 0); });
+  inst(new THREE2.CylinderGeometry(0.05, 0.08, 0.42, 8), darkM, (o2, [x, z, y]) => { o2.position.set(x, y + 0.21, z + 0.05 * sg); o2.rotation.set(0, 0, 0); });
+  for (const [x, z] of seatPos) world.seats.push({ x, z, yaw: F ? Math.PI : 0 });
+  const rowsB = []; for (let i = 1; i <= A.rows; i++) for (const b0 of blocks) rowsB.push([b0 + bw / 2, Zf(A.front + (i - 1) * A.rowD + 0.45), i * A.step]);
+  const L = bw + 0.1;
+  const dt = new THREE2.InstancedMesh(new THREE2.BoxGeometry(L, 0.04, 0.42), deskM, rowsB.length), dp = new THREE2.InstancedMesh(new THREE2.BoxGeometry(L, 0.7, 0.04), deskM, rowsB.length);
+  rowsB.forEach(([x, z, y], i) => {
+    o.position.set(x, y + 0.75, z); o.rotation.set(0, 0, 0); o.updateMatrix(); dt.setMatrixAt(i, o.matrix);
+    o.position.set(x, y + 0.38, z - 0.2 * sg); o.updateMatrix(); dp.setMatrixAt(i, o.matrix);
+    xCol(x - L / 2, z, x + L / 2, z, 0.2);
+  });
+  scene.add(dt); scene.add(dp);
+  const wood = new THREE2.MeshStandardMaterial({ color: 0x8b5e3c, roughness: 0.55 });
+  const tx = cx - (A.deskOff || 4.6), tz = Zf(3.0);
+  xBox(2.2, 0.06, 0.9, wood, tx, 0.76, tz); xBox(2.2, 0.72, 0.05, wood, tx, 0.38, tz - 0.42 * sg);
+  for (const sx of [-1, 1]) xBox(0.05, 0.74, 0.86, wood, tx + sx * 1.07, 0.37, tz);
+  const lap = new THREE2.Group(); lap.position.set(tx + 0.3, 0.79, tz); lap.rotation.y = F ? 0 : Math.PI; scene.add(lap);
+  xBox(0.42, 0.02, 0.3, darkM, 0, 0.01, 0, 0, lap);
+  const scr = xBox(0.42, 0.28, 0.015, new THREE2.MeshBasicMaterial({ color: new THREE2.Color(A.acc), toneMapped: false }), 0, 0.15, -0.15, 0, lap); scr.rotation.x = -0.25;
+  world.colliders.push({ a: [tx - 1.1, tz], b: [tx + 1.1, tz], r: 0.45 });
+  const lx2 = cx + (A.lecOff || 4.2), lz = Zf(3.4), lec = new THREE2.Group(); lec.position.set(lx2, 0, lz); lec.rotation.y = F ? 0 : Math.PI; scene.add(lec);
+  xBox(0.8, 1.1, 0.55, wood, 0, 0.55, 0, 0, lec); const top = xBox(0.86, 0.05, 0.62, wood, 0, 1.16, -0.02, 0, lec); top.rotation.x = 0.18;
+  const lgc = mkCanvas(400, 400), lg = lgc.getContext("2d"); lg.fillStyle = "#fff"; lg.beginPath(); lg.arc(200, 200, 190, 0, 7); lg.fill(); lg.fillStyle = A.acc; lg.font = `800 120px ${FONT}`; lg.textAlign = "center"; lg.textBaseline = "middle"; lg.fillText("TI", 200, 190);
+  const lgp = xPlane(lgc, 0.42, 0.42); lgp.position.set(0, 0.62, -0.28); lgp.rotation.y = Math.PI; lec.add(lgp);
+  world.circles.push({ x: lx2, z: lz, r: 0.5 });
+  kSmartBoard(k, k, A.title, A.acc, cx, A.sbW || 5.6, A.sbH || 3.15, A.sbY || 2.7);
+  kCeilLights(R, 6);
+  if (F) kPlant(R.x0 + 0.7, R.z1 - 0.7); else { kPlant(R.x0 + 0.7, R.z0 + 0.7); kPlant(R.x1 - 0.7, R.z0 + 0.7); }
+  const rc = mkCanvas(1200, 260), rx = rc.getContext("2d");
+  rx.fillStyle = "rgba(255,255,255,.92)"; rr(rx, 0, 0, 1200, 260, 30); rx.fill();
+  rx.fillStyle = A.seat; rx.textAlign = "center"; let fs = 72; rx.font = `800 ${fs}px ${FONT}`; const st = A.sign || A.title; while (rx.measureText(st).width > 1140 && fs > 36) { fs -= 2; rx.font = `800 ${fs}px ${FONT}`; } rx.fillText(st, 600, 110);
+  rx.fillStyle = "#475569"; rx.font = `500 40px ${FONT}`; rx.fillText(`Kapasitas ${seatPos.length} kursi · Teknik Informatika UIKA Bogor`, 600, 190);
+  const rp = world.onWall(k, F ? "N" : "S", cx, 4.2), rg = world.group(rp), rm = xPlane(rc, 4.6, 1.0); rm.position.z = 0.02; rg.add(rm);
+}
+
+// ---------- Ruang Informasi Kegiatan Akademik ----------
+function akPanel(cw, ch, draw, w, side, along, y) {
+  const c = mkCanvas(cw, ch), x = c.getContext("2d"); draw(x, cw, ch);
+  const p = world.onWall("akademik", side, along, y), g = world.group(p), m = xPlane(c, w, w * ch / cw); m.position.z = 0.03; g.add(m);
+  xBox(w + 0.12, w * ch / cw + 0.12, 0.05, new THREE2.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 }), 0, 0, 0, 0, g);
+  return m;
+}
+function buildAkademik() {
+  const R = ROOMS.akademik, cx = (R.x0 + R.x1) / 2, cz = (R.z0 + R.z1) / 2;
+  kCeilLights(R, 6, "#fffaf0");
+  // ===== meja resepsionis melengkung (menghadap timur, ke pintu E-Portal) =====
+  const bx = cx - 0.6, bz = cz, rad = 1.75, a0 = -1.95, a1 = 1.95, N = 14;
+  const bodyM = new THREE2.MeshStandardMaterial({ color: 0x1e3a8a, roughness: 0.5 }), topM = new THREE2.MeshStandardMaterial({ color: 0xf5f0e6, roughness: 0.3 });
+  const ledM = new THREE2.MeshBasicMaterial({ color: 0x60a5fa, toneMapped: false });
+  const pts = [];
+  for (let i = 0; i <= N; i++) { const a = a0 + (a1 - a0) * i / N; pts.push([bx + Math.cos(a) * rad, bz + Math.sin(a) * rad, a]); }
+  for (let i = 0; i < N; i++) {
+    const am = (pts[i][2] + pts[i + 1][2]) / 2, L = rad * (a1 - a0) / N + 0.03, mx = bx + Math.cos(am) * rad, mz = bz + Math.sin(am) * rad, ry = -(am + Math.PI / 2);
+    xBox(L, 1.02, 0.42, bodyM, mx, 0.51, mz, ry);
+    xBox(L + 0.02, 0.05, 0.62, topM, bx + Math.cos(am) * (rad - 0.06), 1.05, bz + Math.sin(am) * (rad - 0.06), ry);
+    xBox(L, 0.03, 0.02, ledM, bx + Math.cos(am) * (rad + 0.22), 0.14, bz + Math.sin(am) * (rad + 0.22), ry);
+    xCol(pts[i][0], pts[i][1], pts[i + 1][0], pts[i + 1][1], 0.3);
+  }
+  // papan nama depan meja
+  { const c = mkCanvas(1000, 200), x = c.getContext("2d"); x.fillStyle = "#f8fafc"; x.font = `800 84px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("INFORMASI", 500, 80); x.fillStyle = "#93c5fd"; x.font = `600 40px ${FONT}`; x.fillText("Kegiatan Akademik", 500, 160);
+    const m = xPlane(c, 1.5, 0.3); m.position.set(bx + rad + 0.22, 0.68, bz); m.rotation.y = Math.PI / 2; scene.add(m); }
+  // monitor & lemari arsip di belakang Barkan
+  const darkM = new THREE2.MeshStandardMaterial({ color: 0x111827, roughness: 0.4, metalness: 0.4 });
+  for (const s of [-1, 1]) { const g = new THREE2.Group(); g.position.set(bx + 1.25, 1.08, bz + s * 0.75); g.rotation.y = -Math.PI / 2 + s * 0.35; scene.add(g); xBox(0.06, 0.2, 0.06, darkM, 0, 0.1, 0, 0, g); xBox(0.55, 0.34, 0.03, darkM, 0, 0.36, 0, 0, g); xBox(0.5, 0.29, 0.005, new THREE2.MeshBasicMaterial({ color: 0x1d4ed8, toneMapped: false }), 0, 0.36, 0.018, 0, g); }
+  const cab = new THREE2.MeshStandardMaterial({ color: 0x8b6b4a, roughness: 0.6 });
+  xBox(0.5, 1.2, 2.6, cab, bx - 1.25, 0.6, bz); world.colliders.push({ a: [bx - 1.25, bz - 1.3], b: [bx - 1.25, bz + 1.3], r: 0.3 });
+  for (let i = 0; i < 9; i++) xBox(0.08, 0.32, 0.06, new THREE2.MeshStandardMaterial({ color: new THREE2.Color(["#1d4ed8", "#dc2626", "#16a34a", "#f59e0b", "#7c3aed"][i % 5]) }), bx - 1.0, 1.36, bz - 1.0 + i * 0.25);
+  // papan gantung "INFORMASI AKADEMIK" di atas meja
+  { const c = mkCanvas(1400, 360), x = c.getContext("2d"); x.fillStyle = "#1e3a8a"; rr(x, 0, 0, 1400, 360, 40); x.fill(); x.strokeStyle = "#facc15"; x.lineWidth = 10; rr(x, 14, 14, 1372, 332, 30); x.stroke();
+    x.fillStyle = "#fff"; x.font = `800 112px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("ℹ INFORMASI AKADEMIK", 700, 140); x.fillStyle = "#bfdbfe"; x.font = `600 56px ${FONT}`; x.fillText("Resepsionis · Barkan", 700, 262);
+    for (const ry of [Math.PI / 2, -Math.PI / 2]) { const m = xPlane(c, 3.6, 0.93); m.position.set(bx + (ry > 0 ? 0.02 : -0.02), 4.25, bz); m.rotation.y = ry; scene.add(m); }
+    const cb = new THREE2.MeshBasicMaterial({ color: 0x111111 }); for (const s of [-1, 1]) xBox(0.01, R.h - 4.72, 0.01, cb, bx, (R.h + 4.72) / 2, bz + s * 1.6); }
+  // karpet bundar bertepi emas di bawah meja
+  { const ring = new THREE2.Mesh(new THREE2.RingGeometry(2.6, 2.8, 64), new THREE2.MeshBasicMaterial({ color: 0xd4a017, toneMapped: false })); ring.rotation.x = -Math.PI / 2; ring.position.set(bx, 0.012, bz); scene.add(ring); }
+  // Barkan — resepsionis, laki-laki berkumis
+  makeCustomHuman("barkan", { code: "AKADEMIK", name: "Barkan", role: "Resepsionis · Ruang Informasi Kegiatan Akademik", col: "#1d4ed8", icon: "📅", hint: "📅", x: bx, z: bz, room: "akademik", tag: "BARKAN · INFO AKADEMIK",
+    look: { shirt: "#1e3a8a", noApron: true, badge: "🎓", hair: "#1c1410", skin: "#b9805a" }, chips: ["Jadwal hari ini", "Sedang berlangsung", "Jadwal berikutnya", "Di mana RK 1?", "Minta token kelas"], roleNote: "Resepsionis jadwal kelas & rapat",
+    knowText: "Barkan, resepsionis Ruang Informasi Kegiatan Akademik, menjelaskan jadwal kelas dan rapat yang sedang atau akan berlangsung di kedua auditorium, Ruang Rapat, dan RK 1–3, serta mengantar ke ruangannya. Ia tidak memberikan token peserta maupun kode pengajar.",
+    greetActs: () => akBarkanAns("halo").acts, answer: akBarkanAns });
+  {
+    const n = NPCS.barkan; n.g.rotation.y = Math.PI / 2;
+    const mm = new THREE2.MeshStandardMaterial({ color: 0x1c1410, roughness: 0.9 });
+    // kumis tebal melengkung: dua sisi miring turun ke ujung
+    for (const s of [-1, 1]) {
+      const half = new THREE2.Mesh(new THREE2.CapsuleGeometry(0.011, 0.042, 4, 8), mm); half.rotation.z = Math.PI / 2 + s * 0.32; half.position.set(s * 0.026, -0.04, 0.151); half.scale.z = 0.7; n.headG.add(half);
+      const tip = new THREE2.Mesh(new THREE2.SphereGeometry(0.01, 8, 6), mm); tip.position.set(s * 0.054, -0.05, 0.146); n.headG.add(tip);
+    }
+    // name tag di dada
+    const tc = mkCanvas(256, 80), tx = tc.getContext("2d"); tx.fillStyle = "#fff"; rr(tx, 0, 0, 256, 80, 12); tx.fill(); tx.fillStyle = "#1e3a8a"; tx.font = `800 40px ${FONT}`; tx.textAlign = "center"; tx.textBaseline = "middle"; tx.fillText("BARKAN", 128, 42);
+    const tg = new THREE2.Mesh(new THREE2.PlaneGeometry(0.1, 0.032), new THREE2.MeshBasicMaterial({ map: xTex(tc), transparent: true })); tg.position.set(-0.07, 1.3, 0.128); n.rig.add(tg);
+  }
+  // ===== ruang tunggu (barat): 24 kursi menghadap layar jadwal =====
+  { const c = mkCanvas(1600, 900), m = xPlane(c, 8, 4.5); AK.scr = { c, tex: m.material.map };
+    m.material.transparent = false; const p = world.onWall("akademik", "W", cz, 3.1), g = world.group(p); m.position.z = 0.07; g.add(m);
+    xBox(8.24, 4.74, 0.08, new THREE2.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4, metalness: 0.3 }), 0, 0, 0, 0, g);
+    xAct(m, { type: "x_ak", id: "jadwal" }); world.panels.ak_jadwal = { id: "ak_jadwal", kind: "ak", title: "Layar Jadwal Kegiatan Akademik", data: { title: "Jadwal Kegiatan Akademik", d: "Layar jadwal kelas dan rapat yang sedang dan akan berlangsung." }, mesh: m, x: p.x + 4, z: p.z, yaw: Math.PI / 2, room: "akademik" };
+    akDrawScreen(); }
+  const seatM = new THREE2.MeshStandardMaterial({ color: 0x1e40af, roughness: 0.6 }), frameM = new THREE2.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.8, roughness: 0.3 });
+  for (const rx of [R.x0 + 3.4, R.x0 + 5.0, R.x0 + 6.6]) for (const bz0 of [cz - 4.4, cz + 4.4]) {
+    xBox(0.12, 0.06, 3.0, frameM, rx + 0.05, 0.4, bz0); for (const s of [-1, 1]) xBox(0.5, 0.4, 0.06, frameM, rx, 0.2, bz0 + s * 1.45);
+    for (let j = 0; j < 4; j++) {
+      const z = bz0 - 1.05 + j * 0.7;
+      xBox(0.5, 0.07, 0.6, seatM, rx, 0.46, z); const bk = xBox(0.07, 0.55, 0.6, seatM, rx + 0.26, 0.78, z); bk.rotation.z = -0.1;
+      world.seats.push({ x: rx, z, yaw: Math.PI / 2 });
+    }
+    world.colliders.push({ a: [rx, bz0 - 1.4], b: [rx, bz0 + 1.4], r: 0.28 });
+  }
+  // meja kecil + majalah, dispenser air, tanaman
+  const tblM = new THREE2.MeshStandardMaterial({ color: 0xd6b48c, roughness: 0.5 });
+  for (const z of [cz - 7.4, cz + 7.4]) { xBox(0.9, 0.04, 0.9, tblM, R.x0 + 5, 0.45, z); xBox(0.08, 0.45, 0.08, frameM, R.x0 + 5, 0.22, z); for (let i = 0; i < 3; i++) xBox(0.28, 0.01, 0.36, new THREE2.MeshStandardMaterial({ color: new THREE2.Color(["#dc2626", "#2563eb", "#16a34a"][i]) }), R.x0 + 4.85 + i * 0.12, 0.475 + i * 0.01, z + (i - 1) * 0.08); world.circles.push({ x: R.x0 + 5, z, r: 0.5 }); }
+  { const dx = R.x0 + 0.6, dz = R.z0 + 2.2; xBox(0.4, 1.0, 0.4, new THREE2.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.4 }), dx, 0.5, dz); const gal = new THREE2.Mesh(new THREE2.CylinderGeometry(0.15, 0.15, 0.42, 16), new THREE2.MeshStandardMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.7, roughness: 0.1 })); gal.position.set(dx, 1.21, dz); scene.add(gal); world.circles.push({ x: dx, z: dz, r: 0.3 }); }
+  kPlant(R.x0 + 0.7, R.z0 + 0.7); kPlant(R.x0 + 0.7, R.z1 - 0.7); kPlant(R.x1 - 0.7, 36.8); kPlant(R.x1 - 0.7, 42.2);
+  // tanda "RUANG TUNGGU"
+  { const c = mkCanvas(800, 160), x = c.getContext("2d"); x.fillStyle = "#1e3a8a"; rr(x, 0, 0, 800, 160, 30); x.fill(); x.fillStyle = "#fff"; x.font = `800 70px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("🪑 RUANG TUNGGU", 400, 84);
+    const m = xPlane(c, 2.4, 0.48); m.position.set(R.x0 + 5, 4.6, cz); m.rotation.y = -Math.PI / 2; scene.add(m); const m2 = xPlane(c, 2.4, 0.48); m2.position.set(R.x0 + 5.02, 4.6, cz); m2.rotation.y = Math.PI / 2; scene.add(m2); }
+  // ===== papan petunjuk ruangan (dinding utara, antara pintu RK 1 & RK 2) =====
+  const dirM = akPanel(1400, 900, (x, W, H) => {
+    x.fillStyle = "#f8fafc"; x.fillRect(0, 0, W, H); x.fillStyle = "#1e3a8a"; x.fillRect(0, 0, W, 130);
+    x.fillStyle = "#fff"; x.font = `800 64px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("PETUNJUK RUANGAN", W / 2, 68);
+    const rows = [["↑", "rk1", "RK 1 · Ruang Kelas", "40 kursi · utara, barat"], ["↑", "rk2", "RK 2 · Ruang Kelas", "40 kursi · utara, tengah"], ["↑", "rk3", "RK 3 · Ruang Kelas", "40 kursi · utara, timur"],
+      ["↓", "rapat", "Ruang Rapat", "25 kursi · selatan, barat"], ["↓", "kelas2", "Auditorium Puspa Eosina", "128 kursi · selatan, tengah"], ["↓", "kelas1", "Auditorium Budi Susetyo", "128 kursi · selatan, timur"], ["→", null, "Ruang E-Portal UIKA", "pintu biru dinding timur"]];
+    rows.forEach(([ar, k, nm, ds], i) => { const y = 180 + i * 102; x.fillStyle = k ? AK_COL[k] : "#10b981"; rr(x, 50, y, 90, 80, 16); x.fill(); x.fillStyle = "#fff"; x.font = `800 52px ${FONT}`; x.textAlign = "center"; x.fillText(ar, 95, y + 42);
+      x.textAlign = "left"; x.fillStyle = "#0f172a"; x.font = `700 44px ${FONT}`; x.fillText(nm, 170, y + 28); x.fillStyle = "#64748b"; x.font = `500 32px ${FONT}`; x.fillText(ds, 170, y + 66); });
+  }, 3.6, "N", -39.6, 2.6);
+  xAct(dirM, { type: "x_ak", id: "dir" });
+  // ===== papan pengumuman (dinding utara, antara RK 2 & RK 3) =====
+  akPanel(1400, 900, (x, W, H) => {
+    x.fillStyle = "#fffbeb"; x.fillRect(0, 0, W, H); x.fillStyle = "#b45309"; x.fillRect(0, 0, W, 130);
+    x.fillStyle = "#fff"; x.font = `800 60px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("TATA CARA MASUK KELAS", W / 2, 68);
+    x.textAlign = "left"; x.textBaseline = "alphabetic"; x.fillStyle = "#1f2937"; x.font = `500 38px ${FONT}`;
+    const L = ["1. Cek jadwal di layar ruang tunggu atau tanya Barkan.", "2. Di luar jadwal, semua ruangan terbuka bebas.", "3. Saat sesi berlangsung, pintu terkunci: masukkan TOKEN PESERTA dari dosen pengajar / pimpinan rapat.", "4. Pengajar masuk dengan KODE PENGAJAR dari admin.", "5. Token & kode bersifat rahasia — resepsionis tidak memberikannya.", "6. Presensi tercatat otomatis selama kamu berada di ruangan."];
+    let y = 200; for (const t of L) { y += wrap(x, t, 60, y, W - 120, 50, 3) + 26; }
+  }, 3.6, "N", -27.6, 2.6);
+  // ===== jam dinding & tulisan ruang (dinding selatan) =====
+  { const c = mkCanvas(256, 256), m = new THREE2.Mesh(new THREE2.CircleGeometry(0.42, 40), new THREE2.MeshBasicMaterial({ map: xTex(c), transparent: true })); AK.clk = { c, tex: m.material.map };
+    const p = world.onWall("akademik", "S", -32.5, 4.3); m.position.set(p.x, p.y, p.z - 0.02); m.rotation.y = Math.PI; scene.add(m); akClock(); }
+  akPanel(1600, 300, (x, W, H) => {
+    x.fillStyle = "#1e3a8a"; rr(x, 0, 0, W, H, 40); x.fill(); x.fillStyle = "#fff"; x.font = `800 84px ${FONT}`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("RUANG INFORMASI KEGIATAN AKADEMIK", W / 2, 120);
+    x.fillStyle = "#bfdbfe"; x.font = `500 46px ${FONT}`; x.fillText("Program Studi Teknik Informatika · Universitas Ibn Khaldun Bogor", W / 2, 220);
+  }, 6.4, "S", -32.5, 2.7);
+  XT.anim.push(() => akTick());
+}
+
 
 
 // =====================================================================
@@ -26135,7 +27208,7 @@ BCS.gunung = {
 //    kanan atas, tembus pandang, dan ringkas agar tidak menghalangi
 //    pandangan. Ketuk judul panel (▾/▴) untuk membuka detail & tombol.
 // =====================================================================
-var HUD_IDS = ["cvHud", "ioHud", "kwHud", "svHud", "isHud", "tmHud", "prHud", "saHud", "tyHud", "kpHud", "bcHud"];
+var HUD_IDS = ["cvHud", "ioHud", "kwHud", "svHud", "isHud", "tmHud", "prHud", "saHud", "tyHud", "kpHud", "bcHud", "tjHud"];
 var HUDX = (() => { try { return JSON.parse(localStorage.getItem("itlab.hudx") || "{}") || {}; } catch { return {}; } })();
 function hudSaveX() { try { localStorage.setItem("itlab.hudx", JSON.stringify(HUDX)); } catch { /* */ } }
 (() => {
