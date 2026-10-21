@@ -317,7 +317,7 @@ canvas {
 /* ---- ekstensi: HUD misi, kartu kurikulum, teka-teki, Ka Prodi ---- */
 #questHud{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left,0px));z-index:19;max-width:calc(100vw - 180px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(20,10,40,.88);border:1px solid #7c3aed;text-transform:none;letter-spacing:0;font-size:12px;font-weight:600}
 #questHud[hidden]{display:none!important}
-.card.wide{max-width:min(980px,100%)}
+.card.wide{max-width:min(980px,100%)}#genCard.sb-screen-wide{max-width:min(1280px,96vw)!important;width:min(1280px,96vw)!important}
 .sb-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}.sb-tabs button.on,.sb-tools button.on{background:var(--acc,#7c3aed);color:#fff;border-color:transparent}
 .sb-wrap{background:#0b1220;border-radius:12px;overflow:hidden;line-height:0}#sbCv{width:100%;height:auto;touch-action:none;cursor:crosshair;display:block}
 .sb-tools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px}.sb-tools button{height:32px;padding:0 10px;font-size:13px}.sb-tools .sb-col{width:32px;padding:0;border:2px solid rgba(255,255,255,.25)}.sb-tools .sb-col.on{outline:3px solid #fff}
@@ -12896,20 +12896,52 @@ function sbOpen(id) {
   const B = SB.boards[id]; if (!B) return;
   if (renderer.xr.isPresenting) { showVRText("Smart board membutuhkan layar biasa. Keluar dari mode VR sebentar."); return; }
   SB.cur = id;
-  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🖥 Smart Board · ${B.title}</h2>
+  const isScr = !!(B.screen && B.screen.v);
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>🖥 Smart Board · ${B.title}${isScr ? " · Layar Bersama" : ""}</h2>
   <p class="sb-note" id="sbInfo"></p>
-  <div class="sb-wrap" id="sbWrap"><canvas id="sbCv" width="${SB_W}" height="${SB_H}"></canvas></div>
+  <div class="sb-wrap" id="sbWrap">${isScr ? '<video id="sbScreenV" autoplay playsinline muted style="width:100%;height:auto;max-height:78vh;object-fit:contain;background:#000;border-radius:8px;display:block"></video>' : `<canvas id="sbCv" width="${SB_W}" height="${SB_H}"></canvas>`}</div>
   <div class="sb-tools" id="sbTools"></div>`);
   $("genCard").classList.add("wide");
-  const close = () => { SB.cur = null; $("genCard").classList.remove("wide"); closeGen(); };
+  if (isScr) $("genCard").classList.add("sb-screen-wide");
+  const close = () => { SB.cur = null; $("genCard").classList.remove("wide"); $("genCard").classList.remove("sb-screen-wide"); closeGen(); };
   $("gx").onclick = close;
   sbPanel(B);
 }
 function sbPanel(B) {
-  if (SB.cur !== B.id || !$("sbCv")) return;
+  if (SB.cur !== B.id) return;
+  const isScr = !!(B.screen && B.screen.v);
+  const wrap = $("sbWrap");
+  if (isScr) {
+    if (wrap && !$("sbScreenV")) {
+      wrap.innerHTML = '<video id="sbScreenV" autoplay playsinline muted style="width:100%;height:auto;max-height:78vh;object-fit:contain;background:#000;border-radius:8px;display:block"></video>';
+    }
+    const sv = $("sbScreenV");
+    if (sv && B.screen && B.screen.v) {
+      if (sv.srcObject !== B.screen.v.srcObject) {
+        sv.srcObject = B.screen.v.srcObject;
+      }
+      sv.play().catch(() => {});
+      sv.ondblclick = () => {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else if (sv.requestFullscreen) sv.requestFullscreen();
+        else if (sv.webkitRequestFullscreen) sv.webkitRequestFullscreen();
+      };
+    }
+    const st = KLS.st[KLS.joined];
+    const presenter = (st && st.screen && st.screen.n) || "Pengajar";
+    if ($("sbInfo")) $("sbInfo").textContent = `🖥 Menampilkan layar bersama dari ${presenter}. Klik tombol '⛶ Layar penuh' atau klik ganda video untuk tampilan monitor penuh.`;
+    if ($("genCard")) $("genCard").classList.add("sb-screen-wide");
+    sbTools(B);
+    return;
+  }
+  if (wrap && !$("sbCv")) {
+    wrap.innerHTML = `<canvas id="sbCv" width="${SB_W}" height="${SB_H}"></canvas>`;
+    if ($("genCard")) $("genCard").classList.remove("sb-screen-wide");
+  }
+  const cv = $("sbCv"); if (!cv) return;
   const yt2 = sbMode(B) === "youtube", shared = !B.local;
   $("sbInfo").textContent = (yt2 ? "Video YouTube" : "Slide") + " diatur admin galeri. " + (shared ? (yt2 ? "Putar/jeda di sini ikut berlaku untuk semua pemain di ruangan ini." : "Slide yang dibuka dan coretanmu terlihat oleh semua pemain di ruangan ini.") : (yt2 ? "Video diputar di perangkatmu sendiri." : "Kamu menggeser slide dan mencoret untuk dirimu sendiri."));
-  const cv = $("sbCv"); cv.style.cursor = yt2 ? "pointer" : "crosshair";
+  cv.style.cursor = yt2 ? "pointer" : "crosshair";
   cv.getContext("2d").drawImage(B.c, 0, 0);
   let pts = null;
   const pt = (e) => { const r = cv.getBoundingClientRect(); return [clamp((e.clientX - r.left) / r.width, 0, 1), clamp((e.clientY - r.top) / r.height, 0, 1)]; };
@@ -12941,6 +12973,20 @@ function sbTools(B) {
   T2.innerHTML = "";
   const btn = (txt, fn, cls = "ghost", st = "") => { const b = document.createElement("button"); b.className = cls; b.textContent = txt; if (st) b.style.cssText = st; b.onclick = fn; T2.appendChild(b); return b; };
   const sep = () => { const s = document.createElement("span"); s.className = "sb-sep"; T2.appendChild(s); };
+  if (B.screen && B.screen.v) {
+    btn("⛶ Layar penuh", () => {
+      const v = $("sbScreenV") || $("sbWrap");
+      if (v) {
+        if (v.requestFullscreen) v.requestFullscreen();
+        else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+      }
+    }, "btn");
+    const isPresenter = KLS.sfu && KLS.sfu.screen;
+    if (isPresenter) {
+      btn("⏹ Hentikan berbagi layar", () => { klsStopScreen(); });
+    }
+    return;
+  }
   if (sbMode(B) === "youtube") {
     if (!EMBED_OK || curRoom !== B.room) { const a = document.createElement("a"); a.className = "btn"; a.textContent = "▶ Tonton di YouTube"; a.href = `https://www.youtube.com/watch?v=${B.cfg.yt}`; a.target = "_blank"; a.rel = "noopener noreferrer"; T2.appendChild(a); return; }
     btn(B.yt.p ? "⏸ Jeda" : "▶ Putar", () => sbYtCtl(B, B.yt.p ? "pause" : "play"), "btn");
@@ -13254,9 +13300,15 @@ function klsScreenShow(stream, peer) {
   v.play().catch(() => {});
   sbCssOff(B); B.screen = { v, tex, peer };
   B.mesh.material = new THREE2.MeshBasicMaterial({ map: tex, toneMapped: false });
+  if (SB.cur === B.id) sbPanel(B);
 }
 function klsScreenHide() {
-  for (const B of Object.values(SB.boards)) if (B.screen) { try { B.screen.v.srcObject = null; B.screen.tex.dispose(); B.mesh.material.dispose(); } catch { } B.screen = null; B.mesh.material = B.mat; }
+  for (const B of Object.values(SB.boards)) if (B.screen) {
+    try { B.screen.v.srcObject = null; B.screen.tex.dispose(); B.mesh.material.dispose(); } catch { }
+    B.screen = null;
+    B.mesh.material = B.mat;
+    if (SB.cur === B.id) sbPanel(B);
+  }
 }
 
 // ---------- panel kelas ----------
@@ -13315,7 +13367,10 @@ function klsRender() {
   const canScreen = !!KLS.sfu && (!ses || T) && (!st.screen || (net && st.screen.id === net.selfId));
   if (canScreen) btn(KLS.sfu && KLS.sfu.screen ? "⏹ Hentikan berbagi layar" : "🖥 Bagikan layar", klsShareScreen, KLS.sfu && KLS.sfu.screen ? "btn" : "ghost", "Tampilkan layar laptopmu di smart board");
   if (KLS.sfu && KLS.sfu.net) { const n = KLS.sfu.net, bad = Object.values(n).some((v) => v === "failed"), ok = Object.values(n).length && Object.values(n).every((v) => v === "connected"); const s = document.createElement("span"); s.className = "kmut"; s.textContent = bad ? "📡 Media: GAGAL tersambung (port 44444?)" : ok ? "📡 Media: tersambung" : "📡 Media: menyambung…"; if (bad) s.style.color = "#fca5a5"; c.appendChild(s); }
-  else if (st.screen) { const s = document.createElement("span"); s.className = "kmut"; s.textContent = `🖥 ${st.screen.n} sedang berbagi layar`; c.appendChild(s); }
+  if (st.screen) {
+    if (!KLS.sfu || !KLS.sfu.net) { const s = document.createElement("span"); s.className = "kmut"; s.textContent = `🖥 ${st.screen.n} sedang berbagi layar`; c.appendChild(s); }
+    btn("⛶ Perbesar layar", () => sbOpen(r), "btn", "Buka layar pengajar dalam ukuran besar");
+  }
   if (T) {
     btn(st.ctl.muteAll ? "🔊 Buka mic semua" : "🔇 Bisukan semua", () => klsSend({ type: "kls_muteall", on: !st.ctl.muteAll }), st.ctl.muteAll ? "btn" : "ghost");
     btn(st.ctl.lock ? "🔒 Papan: hanya pengajar" : "🔓 Papan: semua boleh", () => klsSend({ type: "kls_lock", on: !st.ctl.lock }));
