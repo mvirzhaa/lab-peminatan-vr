@@ -13,6 +13,7 @@
 // =====================================================================
 'use strict';
 const os = require('os');
+const dns = require('dns').promises;
 
 const CODECS = [
   { kind: 'audio', mimeType: 'audio/opus', clockRate: 48000, channels: 2 },
@@ -20,9 +21,42 @@ const CODECS = [
   { kind: 'video', mimeType: 'video/H264', clockRate: 90000, parameters: { 'packetization-mode': 1, 'profile-level-id': '42e01f', 'level-asymmetry-allowed': 1 } }
 ];
 
+function isPrivateIp(ip) {
+  if (!ip || ip === '127.0.0.1' || ip === 'localhost') return true;
+  const parts = ip.split('.').map(Number);
+  if (parts.length !== 4) return false;
+  if (parts[0] === 10) return true;
+  if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
+  if (parts[0] === 192 && parts[1] === 168) return true;
+  if (parts[0] === 127) return true;
+  return false;
+}
+
 function localIp() {
   for (const list of Object.values(os.networkInterfaces())) for (const a of list || []) if (a.family === 'IPv4' && !a.internal) return a.address;
   return '127.0.0.1';
+}
+
+async function resolveAnnouncedIp(customIp) {
+  if (customIp && customIp !== 'auto' && !isPrivateIp(customIp)) {
+    return customIp;
+  }
+  const domain = process.env.PUBLIC_DOMAIN || 'vr.ti.fts.uika-bogor.ac.id';
+  try {
+    const res = await dns.lookup(domain);
+    if (res && res.address && !isPrivateIp(res.address)) {
+      console.log(`[SFU] Menggunakan IP publik dari domain ${domain}: ${res.address}`);
+      return res.address;
+    }
+  } catch (e) {
+    // DNS lookup fallback
+  }
+  if (customIp) return customIp;
+  const lip = localIp();
+  if (isPrivateIp(lip)) {
+    console.warn(`[SFU PERINGATAN] Menggunakan IP privat lokal (${lip}). Peserta di luar jaringan tidak dapat menerima audio/layar. Pastikan SFU_ANNOUNCED_IP disetel ke IP publik server.`);
+  }
+  return lip;
 }
 
 function createSfu({ onSpeak, onProducer }) {
@@ -31,18 +65,19 @@ function createSfu({ onSpeak, onProducer }) {
   try { ms = require('mediasoup'); } catch (err) { console.log('SFU tidak aktif: ' + (err && err.message ? err.message : 'paket "mediasoup" belum terpasang') + '. Suara kelas memakai peer-to-peer.'); return null; }
   const PORT = +process.env.SFU_PORT || 44444;
   const LISTEN = process.env.SFU_LISTEN_IP || '0.0.0.0';
-  const ANNOUNCED = process.env.SFU_ANNOUNCED_IP || localIp();
+  let announcedIp = process.env.SFU_ANNOUNCED_IP || localIp();
   let worker = null, server = null, ready = null, failed = false;
   const rooms = new Map(); // key → { router, alo, peers: Map(ws → peer) }
 
   async function start() {
     worker = await ms.createWorker({ logLevel: 'warn' });
     worker.on('died', () => { console.error('SFU: worker mediasoup mati — suara kelas kembali peer-to-peer sampai server di-restart.'); failed = true; });
+    announcedIp = await resolveAnnouncedIp(process.env.SFU_ANNOUNCED_IP);
     server = await worker.createWebRtcServer({ listenInfos: [
-      { protocol: 'udp', ip: LISTEN, announcedAddress: ANNOUNCED, port: PORT },
-      { protocol: 'tcp', ip: LISTEN, announcedAddress: ANNOUNCED, port: PORT }
+      { protocol: 'udp', ip: LISTEN, announcedAddress: announcedIp, port: PORT },
+      { protocol: 'tcp', ip: LISTEN, announcedAddress: announcedIp, port: PORT }
     ] });
-    console.log(`SFU aktif: media di ${ANNOUNCED}:${PORT} (UDP & TCP). Pastikan port ini dibuka di firewall.`);
+    console.log(`SFU aktif: media di ${announcedIp}:${PORT} (UDP & TCP). Pastikan port ini dibuka di firewall.`);
   }
   ready = start().catch((e) => { failed = true; console.error('SFU gagal dijalankan — suara kelas memakai peer-to-peer:', e.message); });
 
@@ -82,8 +117,8 @@ function createSfu({ onSpeak, onProducer }) {
         if (P.transports.size >= 2) for (const t of P.transports.values()) if (t.appData.dir === m.dir) { try { t.close(); } catch { } P.transports.delete(t.id); }
         const t = await R.router.createWebRtcTransport({ webRtcServer: server, enableUdp: true, enableTcp: true, preferUdp: true, initialAvailableOutgoingBitrate: 800000, appData: { dir: m.dir === 'send' ? 'send' : 'recv' } });
         P.transports.set(t.id, t);
-        t.on('dtlsstatechange', (st) => { if (st === 'failed') console.warn(`SFU: DTLS gagal (${t.appData.dir}) — cek port ${PORT} UDP/TCP & SFU_ANNOUNCED_IP=${ANNOUNCED}`); });
-        setTimeout(() => { if (!t.closed && (t.appData.dir === 'send' ? P.producers.size : P.consumers.size) && t.iceState !== 'connected' && t.iceState !== 'completed') console.warn(`SFU: transport ${t.appData.dir} belum tersambung setelah 20 dtk (ICE ${t.iceState}). Pastikan port ${PORT} UDP & TCP terbuka dan ${ANNOUNCED} adalah IP publik server.`); }, 20000);
+        t.on('dtlsstatechange', (st) => { if (st === 'failed') console.warn(`SFU: DTLS gagal (${t.appData.dir}) — cek port ${PORT} UDP/TCP & SFU_ANNOUNCED_IP=${announcedIp}`); });
+        setTimeout(() => { if (!t.closed && (t.appData.dir === 'send' ? P.producers.size : P.consumers.size) && t.iceState !== 'connected' && t.iceState !== 'completed') console.warn(`SFU: transport ${t.appData.dir} belum tersambung setelah 20 dtk (ICE ${t.iceState}). Pastikan port ${PORT} UDP & TCP terbuka dan ${announcedIp} adalah IP publik server.`); }, 20000);
         return { id: t.id, iceParameters: t.iceParameters, iceCandidates: t.iceCandidates, dtlsParameters: t.dtlsParameters };
       }
       case 'sfu_conn': { const t = P.transports.get(m.tid); if (!t) throw new Error('transport'); await t.connect({ dtlsParameters: m.dtls }); return {}; }
@@ -147,6 +182,6 @@ function createSfu({ onSpeak, onProducer }) {
     const R = rooms.get(key), P = R && R.peers.get(ws); if (!P) return;
     for (const [pid, pr] of [...P.producers]) if (pr.appData.src === 'screen') closeProducer(key, R, ws, pid);
   }
-  return { request, leave, setMic, stopScreen, ok: () => !failed, info: () => ({ port: PORT, ip: ANNOUNCED }) };
+  return { request, leave, setMic, stopScreen, ok: () => !failed, info: () => ({ port: PORT, ip: announcedIp }) };
 }
 module.exports = { createSfu };

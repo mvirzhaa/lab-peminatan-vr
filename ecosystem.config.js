@@ -10,6 +10,9 @@ module.exports = {
       env: {
         PORT: 8080,
         NODE_ENV: 'production',
+        SFU_PORT: 44444,
+        SFU_ANNOUNCED_IP: '103.158.196.135',
+        PUBLIC_DOMAIN: 'vr.ti.fts.uika-bogor.ac.id',
         ADMIN_KEY: 'GANTI-DENGAN-KUNCI-RAHASIA',
         PEMINATAN_USER: 'admin',
         PEMINATAN_PASS: 'GANTI-DENGAN-PASSWORD-ADMIN-PEMINATAN'
@@ -17,6 +20,9 @@ module.exports = {
       env_production: {
         PORT: 8080,
         NODE_ENV: 'production',
+        SFU_PORT: 44444,
+        SFU_ANNOUNCED_IP: '103.158.196.135',
+        PUBLIC_DOMAIN: 'vr.ti.fts.uika-bogor.ac.id',
         ADMIN_KEY: 'GANTI-DENGAN-KUNCI-RAHASIA',
         PEMINATAN_USER: 'admin',
         PEMINATAN_PASS: 'GANTI-DENGAN-PASSWORD-ADMIN-PEMINATAN'
