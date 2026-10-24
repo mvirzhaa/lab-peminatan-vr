@@ -497,3 +497,19 @@ Setelah memperbarui berkas: `pm2 restart all`.
   - Saat server pertama kali berjalan, token acak 6 huruf dibuat otomatis. Server memeriksa token saat verifikasi dan saat formulir dikirim, dengan batas percobaan per IP.
 - **Simulasi bencana:** pemandu tsunami kini **Helmi** (laki-laki), menggantikan Nadia. Salsa (gunung meletus) tetap perempuan berhijab.
 - **Bilah atas dirapikan:** bilah petunjuk misi (mis. "Taman Apresiasi · temui Kang Santo…") dihapus dari layar dan dipindah ke menu ☰ → "Petunjuk misi berikutnya". Tombol **Masuk VR** dipindah ke menu ☰ (muncul bila perangkat mendukung VR).
+
+## Pembaruan v23 — Tantangan 7 Portal Ring 1: Duel Masak (Chef Khalid)
+- **Masuk:** gerbang ungu di Lapangan Terjun (sebelumnya "segera dibuka", kini bertuliskan **Dapur Arena**) terbuka bagi pemegang **Batu Ungu** dan membawa pemain ke **Dapur Arena**: lantai ubin hitam-putih, dinding ubin dengan pita zellige, rak rempah, dua meja masak (kompor, wajan, panci beruap, mangkuk bahan, tudung saji), layar besar, papan rekor, dan alas Batu Biru Langit.
+- **Skin:** pemain dan **Chef Khalid** memakai skin baru **Chef Profesional** (SKN-062, topi koki, sendok sayur), yang masuk Lemari Skin. Gambar katalog: `assets/skins/SKN-062.jpg`. Chef Khalid berjenggot.
+- **Yang diuji: ingatan.** Pemain dan Chef Khalid memasak menu yang sama.
+  1. **Hafalkan resep (3 menit):** kartu resep berisi nama hidangan, bahan + takaran, dan 7 langkah proses. Boleh menekan "Saya sudah hafal" lebih awal. Saat waktu habis, resep otomatis disembunyikan.
+  2. **Pilih bahan:** semua bahan resep harus dipilih dengan **takaran yang tepat**. Ada pengecoh takaran (bahan sama, jumlah berbeda), bahan tambahan lain dari hidangan itu, dan bahan umum yang tidak ada di resep.
+  3. **Susun proses:** ketuk langkah sesuai urutan (✕ untuk mengeluarkan). Ada pengecoh waktu/nilai (mis. "rebus 8 menit" padahal 10) dan langkah yang keliru.
+  4. **Sajikan → penjurian:** semua bahan & urutan tepat → Chef Khalid mengakui pemain menyamainya → **Batu Biru Langit** dari Teh Isna. Satu saja salah → kalah; panel menunjukkan bahan yang terlewat/salah, urutan yang keliru, dan resep yang benar, lalu pemain bisa mencoba lagi dengan **resep baru**.
+- **Resep tidak bisa dibocorkan:** resep dibangkitkan acak di setiap percobaan dari 12 hidangan (Nasi Goreng Kampung, Nasi Kebuli, Shakshuka, Hummus, Soto Ayam, Mie Goreng Jawa, Falafel, Rendang Daging, Martabak Telur, Sayur Asem, Ayam Bakar Madu, Omelet Sayur) × 2 bahan tambahan acak × takaran acak × nilai waktu/suhu acak, dan tidak pernah sama dengan hidangan percobaan sebelumnya. Uji 20.000 kali: 19.900 resep berbeda. Bank resep ada di `DP_DISHES` (`src/ext_dapur.js` di index.html).
+- Chef Khalid ikut memasak di mejanya (progres "Khalid n/7" di HUD & layar), tetapi tidak pernah menyebut isi resep. Tidak ada batas waktu memasak; **rekor = waktu memasak tercepat** (⭐⭐⭐ ≤ 60 dtk, ⭐⭐ ≤ 120 dtk). Papan rekor: `GET /api/kartu/rekor?id=masak`.
+- Penghitung waktu memakai jam permainan, jadi ikut berhenti saat **jeda adzan**.
+- **Server & admin:** tantangan `masak` dan syarat Batu Biru Langit (setelah Batu Ungu) ditambahkan di `kartu.js`. Admin menampilkan "Duel Masak N dtk ✓". Chef Khalid masuk **Daftar NPC** (Penjaga Tantangan) setelah ditemui.
+- Catatan: pemain secara teknis tetap bisa memotret layar saat menghafal; yang dijamin adalah resep setiap pemain/percobaan berbeda sehingga contekan dari pemain lain tidak berguna. Panel tantangan berupa HTML, jadi tidak tampil di dalam headset VR (sama seperti Ruang Komando).
+
+Setelah memperbarui berkas: `pm2 restart all`.

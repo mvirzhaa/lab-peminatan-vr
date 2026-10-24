@@ -7702,6 +7702,7 @@ function update(dt) {
   if (typeof TY !== "undefined" && TY.lock) { mx = mz = 0; P.walkTo = null; }
   if (typeof KP !== "undefined" && KP.lock) { mx = mz = 0; P.walkTo = null; }
   if (typeof TJ !== "undefined" && TJ.lock) { mx = mz = 0; P.walkTo = null; }
+  if (typeof DP !== "undefined" && DP.lock) { mx = mz = 0; P.walkTo = null; }
   if (mx || mz) {
     if (P.sit) {
       P.sit = false;
@@ -10241,6 +10242,7 @@ function xHandleAct(act, hit, e) {
   if (typeof tyAct === "function" && tyAct(act, hit, e)) return;
   if (typeof kpAct === "function" && kpAct(act, hit, e)) return;
   if (typeof tjAct === "function" && tjAct(act, hit, e)) return;
+  if (typeof dpAct === "function" && dpAct(act, hit, e)) return;
   if (typeof bcAct === "function" && bcAct(act, hit, e)) return;
   if (typeof akAct === "function" && akAct(act, hit, e)) return;
   if (typeof kwAct === "function" && kwAct(act, hit, e)) return;
@@ -10380,6 +10382,7 @@ function buildExtras() {
     try { buildKetik(); } catch (err) { console.error("Arena Mengetik gagal dibangun:", err); }
     try { buildKapal(); } catch (err) { console.error("Ruang Komando gagal dibangun:", err); }
     try { buildTerjun(); } catch (err) { console.error("Lapangan Terjun gagal dibangun:", err); }
+    try { buildDapur(); } catch (err) { console.error("Dapur Arena gagal dibangun:", err); }
     try { buildBencanaHub(); } catch (err) { console.error("Ruang Simulasi Bencana gagal dibangun:", err); }
     try { buildBencana(); } catch (err) { console.error("Simulasi bencana gagal dibangun:", err); }
     const hud = document.createElement("button");
@@ -10541,7 +10544,7 @@ function applySkin(av, id, color) {
   av.add(s.group);
   ud.skinG = s.group; ud.body = s.body; ud.headG = s.headG; ud.mat = s.mat; ud.skinAnim = s.anim;
 }
-function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof TJ !== "undefined" && TJ.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TJ.forceSkin) ? S.skin : TJ.forceSkin; if (typeof KP !== "undefined" && KP.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === KP.forceSkin) ? S.skin : KP.forceSkin; if (typeof TY !== "undefined" && TY.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TY.forceSkin) ? S.skin : TY.forceSkin; if (typeof SA !== "undefined" && SA.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === SA.forceSkin) ? S.skin : SA.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === PR.forceSkin) ? S.skin : PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
+function mySkin() { if (typeof TIM !== "undefined" && TIM.forceSkin) return TIM.forceSkin; if (typeof DP !== "undefined" && DP.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === DP.forceSkin) ? S.skin : DP.forceSkin; if (typeof TJ !== "undefined" && TJ.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TJ.forceSkin) ? S.skin : TJ.forceSkin; if (typeof KP !== "undefined" && KP.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === KP.forceSkin) ? S.skin : KP.forceSkin; if (typeof TY !== "undefined" && TY.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === TY.forceSkin) ? S.skin : TY.forceSkin; if (typeof SA !== "undefined" && SA.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === SA.forceSkin) ? S.skin : SA.forceSkin; if (typeof PR !== "undefined" && PR.forceSkin) return (typeof sktBase === "function" && sktBase(S.skin) === PR.forceSkin) ? S.skin : PR.forceSkin; if (/^SKN-/.test(S.skin || "")) return typeof sktOwned === "function" && sktOwned(S.skin) ? S.skin : "default"; if (S.skin === "trooper") return Q().skinTim ? "trooper" : "default"; return skinsUnlocked() && SKIN_IDS.includes(S.skin) ? S.skin : "default"; }
 function refreshMySkin() { if (avatar && (avatar.userData.skinId || "default") !== mySkin()) applySkin(avatar, mySkin(), S.color); }
 function skinTick() {
   if (avatar && avatar.userData.skinAnim) avatar.userData.skinAnim(t);
@@ -21332,7 +21335,7 @@ function stgRestart(sys) {
 
 
 // =====================================================================
-// src/ext_skinkat.js — KATALOG 60 SKIN (SKN-001 … SKN-060)
+// src/ext_skinkat.js — KATALOG SKIN (SKN-001 … SKN-062)
 //  • Data dari "Katalog 60 Skin Karakter VR" (10 tema × 6 skin), model 3D
 //    bergaya kotak (blocky) dibangun prosedural dari data: tipe tubuh,
 //    warna atasan/bawahan, rambut, penutup kepala, barang di tangan,
@@ -21406,12 +21409,13 @@ var SKT = [
   { n: 58, nm: "Ranger Hutan", b: "N", tn: "L", top: "#7B8A4A", bot: "#4E5A2E", hat: ["ranger", "#6b4f2a"], it: "binoculars", x: ["pocket", "belt:#3b2a1a"], ds: "Ranger hutan bertopi lebar dengan seragam khaki, ransel, dan teropong." },
   { n: 59, nm: "Nelayan Pesisir", b: "N", tn: "D", top: "#F8FAFC", bot: "#E8E0CC", hat: ["bucket", "#f5f5f4"], it: "rod", x: ["stripes:#1e40af"], ds: "Nelayan bertopi bucket, kaus bergaris, celana digulung, dan pancing." },
   { n: 60, nm: "Petani Padi Modern", b: "N", tn: "T", top: "#3F8F4A", bot: "#6B5A3A", hat: ["caping", "#d9b86c"], it: "hoe", il: "rice", sh: "#166534", x: ["collar"], ds: "Petani modern bercaping dengan bot karet, cangkul, dan seikat padi." },
-  { n: 61, nm: "Penerjun Payung", tm: "Olahraga & Petualangan", b: "A", tn: "T", top: "#F97316", bot: "#1E40AF", hr: ["short", "#1f1a17"], gl: "sun", hat: ["hardhat", "#1e40af"], bk: ["backpack", "#111827"], x: ["stripe:#ffffff", "belt:#111827"], sh: "#111827", ds: "Penerjun payung berjumpsuit oranye-biru, helm, kacamata, dan ransel parasut." }
+  { n: 61, nm: "Penerjun Payung", tm: "Olahraga & Petualangan", b: "A", tn: "T", top: "#F97316", bot: "#1E40AF", hr: ["short", "#1f1a17"], gl: "sun", hat: ["hardhat", "#1e40af"], bk: ["backpack", "#111827"], x: ["stripe:#ffffff", "belt:#111827"], sh: "#111827", ds: "Penerjun payung berjumpsuit oranye-biru, helm, kacamata, dan ransel parasut." },
+  { n: 62, nm: "Chef Profesional", tm: "Kuliner", b: "N", tn: "T", top: "#FFFFFF", bot: "#27272A", hr: ["short", "#1f1a17"], hat: ["chef", "#ffffff"], it: "ladle", x: ["buttons", "apron:#1f2937", "scarf:#dc2626"], sh: "#111827", ds: "Koki profesional berseragam putih dua baris kancing, topi koki tinggi, syal merah, celemek hitam, dan sendok sayur." }
 ];
 var sktId = (n) => "SKN-" + String(n).padStart(3, "0");
 var SKT_BY = {}; SKT.forEach((s) => { s.id = sktId(s.n); s.tema = s.tm || SKT_TEMA[Math.floor((s.n - 1) / 6)]; SKT_BY[s.id] = s; });
 // skin Portal Ring 1 (terlihat hanya bagi pemegang Black Card)
-var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run", "SKN-052": "Dunia Seni & Desain", "SKN-049": "Arena Mengetik", "SKN-024": "Ruang Komando", "SKN-061": "Lapangan Terjun" };
+var SKT_PORTAL = { "SKN-025": "Pohon Purba", "SKN-029": "Pohon Purba", "SKN-028": "Raptor Run", "SKN-052": "Dunia Seni & Desain", "SKN-049": "Arena Mengetik", "SKN-024": "Ruang Komando", "SKN-061": "Lapangan Terjun", "SKN-062": "Dapur Arena" };
 
 // ---------- tekstur ----------
 function sktCanvas(w, h, fn) { const c = mkCanvas(w, h), x = c.getContext("2d"); fn(x, w, h); const t2 = new THREE2.CanvasTexture(c); t2.colorSpace = THREE2.SRGBColorSpace; t2.magFilter = THREE2.NearestFilter; return t2; }
@@ -21533,6 +21537,7 @@ function sktItem(kind, g) {
     case "fan": { const f = new THREE2.Mesh(new THREE2.CircleGeometry(0.16, 12, 0, Math.PI), sktM(c || "#dc2626", { side: THREE2.DoubleSide })); f.position.set(0, 0.04, -0.06); g.add(f); break; }
     case "binoculars": for (const dx of [-0.04, 0.04]) { const b = sktCyl(0.03, 0.03, 0.12, M("#111827"), dx, 0, -0.08, g, 10); b.rotation.x = Math.PI / 2; } break;
     case "rod": { const r4 = sktCyl(0.01, 0.01, 1.4, M("#7c2d12"), 0, 0.55, -0.2, g, 6); r4.rotation.x = -0.35; break; }
+    case "ladle": { sktCyl(0.014, 0.014, 0.42, M("#cbd5e1", { metalness: 0.7, roughness: 0.3 }), 0, 0.12, -0.05, g, 8); const cup = new THREE2.Mesh(new THREE2.SphereGeometry(0.07, 12, 8, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), M("#cbd5e1", { metalness: 0.7, roughness: 0.3, side: THREE2.DoubleSide })); cup.position.set(0, -0.1, -0.05); g.add(cup); break; }
     case "hoe": sktCyl(0.016, 0.016, 1.0, M("#7c2d12"), 0, 0.25, -0.04, g, 8); sktBox(0.04, 0.12, 0.16, M("#6b7280", { metalness: 0.5 }), 0, 0.72, -0.12, g); break;
     case "rice": for (let i = 0; i < 4; i++) { const r5 = sktCyl(0.006, 0.006, 0.34, M("#ca8a04"), (i - 1.5) * 0.02, 0.1, -0.05, g, 4); r5.rotation.z = (i - 1.5) * 0.12; } break;
     case "shield": { sktBox(0.36, 0.42, 0.05, M(c || "#1d4ed8"), 0, 0, -0.06, g); sktBox(0.06, 0.3, 0.01, glow("#f8fafc"), 0, 0, -0.09, g); sktBox(0.2, 0.06, 0.01, glow("#f8fafc"), 0, 0.05, -0.09, g); break; }
@@ -21724,6 +21729,7 @@ function sktHat(h, hG, hs, top) {
     case "blangkon": { B(hs + 0.04, 0.16, hs + 0.02, M(c), 0, top + 0.0, 0.01); const mb = new THREE2.Mesh(new THREE2.SphereGeometry(0.08, 8, 6), M(c)); mb.position.set(0, top - 0.05, hs / 2 + 0.06); hG.add(mb); break; }
     case "hairflower": { const f = new THREE2.Mesh(new THREE2.SphereGeometry(0.05, 8, 6), M(c)); f.position.set(0.12, top + 0.06, 0.08); hG.add(f); break; }
     case "bucket": { const bk = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * 0.5, hs * 0.58, 0.14, 16), M(c)); bk.position.y = top + 0.04; hG.add(bk); const brm = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * 0.8, hs * 0.8, 0.02, 18), M(c)); brm.position.y = top - 0.02; hG.add(brm); break; }
+    case "chef": { const band = new THREE2.Mesh(new THREE2.CylinderGeometry(hs * 0.56, hs * 0.56, 0.16, 18), M(c)); band.position.y = top + 0.06; hG.add(band); for (const [dx, dz, r] of [[0, 0, 0.2], [-0.1, 0.04, 0.15], [0.1, 0.04, 0.15], [0, -0.08, 0.15], [0, 0.1, 0.14]]) { const puff = new THREE2.Mesh(new THREE2.SphereGeometry(r, 14, 10), M(c)); puff.position.set(dx, top + 0.26, dz); puff.scale.y = 0.9; hG.add(puff); } break; }
     case "caping": { const cp = new THREE2.Mesh(new THREE2.ConeGeometry(hs * 1.3, 0.28, 18), M(c)); cp.position.y = top + 0.1; hG.add(cp); break; }
     default: break;
   }
@@ -21852,7 +21858,7 @@ function openSkinsV2() {
 var ND_GROUPS = [
   ["sambut", "🏛 Penyambut & Pemandu Lab", ["tia", "kuri", "vir", "keris", "git", "se", "csn"]],
   ["mart", "☕ IT-Mart & Kafe", ["rahman", "sit", "ivy", "jejen", "bayu", "aftaf", "nan", "haryani"]],
-  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azis", "eq", "azka", "guido", "danu"]],
+  ["jaga", "🛡 Penjaga Tantangan", ["sugiarti", "hartono", "mila", "ritzkal", "andrian", "azis", "eq", "azka", "guido", "danu", "khalid"]],
   ["bencana", "🧯 Pemandu Simulasi Bencana", ["renda", "farhan", "adrin", "ridwan", "salsa", "helmi"]],
   ["lencana", "🏅 Pemberi Lencana & Hadiah", ["tama", "fety", "puspa", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "dewi", "eko"]]
 ];
@@ -21878,9 +21884,9 @@ function ndSeed() {
   for (const id of add) if (NPCS[id] && !m[id]) { m[id] = 1; ch = true; }
   if (ch) saveQ();
 }
-function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka", "azis", "eq", "guido", "isna"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
+function ndListed(n) { const c = n.custom || {}; const isSec = n.secret || (c.secret || c.hidden) || ["tama", "fety", "puspa", "ritzkal", "hendri", "erwin", "safar", "berlin", "sahid", "gibhta", "fitrah", "freza", "mila", "dewi", "eko", "andrian", "azka", "azis", "eq", "guido", "isna", "khalid"].includes(n.id); return !isSec || !!ndMet()[n.id]; }
 function ndGroupOf(id) { for (const [k, , ids] of ND_GROUPS) if (ids.includes(id)) return k; return "lain"; }
-var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)", m_kapal: "Ruang Komando (Portal Ring 1)", m_terjun: "Lapangan Terjun (Portal Ring 1)", bencana: "Ruang Simulasi Bencana", b_api: "Simulasi Kebakaran Hutan", b_banjir: "Simulasi Banjir Bandang", b_longsor: "Simulasi Tanah Longsor", b_gempa: "Simulasi Gempa Bumi", b_gunung: "Simulasi Gunung Meletus", b_tsunami: "Simulasi Tsunami" };
+var ND_ZONE_NAME = { cave: "Gua Pustaka", hangar: "Hanggar Drone", k_final: "Kawah Api · Aula Juara", s_final: "Dunia Server · Aula", d_lembah: "Lembah Gurun · Serambi", t_aula: "Aula Kerjasama Tim", s_garden: "Taman Apresiasi", p_valley: "Lembah Purba (Portal Ring 1)", s_art: "Dunia Seni & Desain (Portal Ring 1)", m_ketik: "Arena Mengetik (Portal Ring 1)", m_kapal: "Ruang Komando (Portal Ring 1)", m_terjun: "Lapangan Terjun (Portal Ring 1)", m_dapur: "Dapur Arena (Portal Ring 1)", bencana: "Ruang Simulasi Bencana", b_api: "Simulasi Kebakaran Hutan", b_banjir: "Simulasi Banjir Bandang", b_longsor: "Simulasi Tanah Longsor", b_gempa: "Simulasi Gempa Bumi", b_gunung: "Simulasi Gunung Meletus", b_tsunami: "Simulasi Tsunami" };
 function ndWhere(n) { const r = n.custom && n.custom.room || n.room; return ND_ZONE_NAME[r] || (ROOMS[r] && ROOMS[r].name) || (XROOMS[r] && (XROOMS[r].short || XROOMS[r].name)) || ""; }
 function openNpcDir() {
   hidePopups(); ndSeed();
@@ -21939,7 +21945,8 @@ function ndZonePrep(room, n) {
     if (room === "s_art" && typeof saVisitPrep === "function") { if (typeof TY !== "undefined" && TY.on) tyOff(); saVisitPrep(); return true; }
     if (room === "m_ketik" && typeof tyVisitPrep === "function") { if (typeof KP !== "undefined" && KP.on) kpOff(); tyVisitPrep(); return true; }
     if (room === "m_kapal" && typeof kpVisitPrep === "function") { if (typeof TJ !== "undefined" && TJ.on) tjOff(); kpVisitPrep(); return true; }
-    if (room === "m_terjun" && typeof tjVisitPrep === "function") { tjVisitPrep(); return true; }
+    if (room === "m_terjun" && typeof tjVisitPrep === "function") { if (typeof DP !== "undefined" && DP.on) dpOff(); tjVisitPrep(); return true; }
+    if (room === "m_dapur" && typeof dpVisitPrep === "function") { dpVisitPrep(); return true; }
     if (/^b_/.test(room) && typeof bcVisitPrep === "function") { if (typeof KP !== "undefined" && KP.on) kpOff(); bcVisitPrep(room.slice(2)); return true; }
   } catch (e) { console.error("persiapan kunjungan gagal:", e); }
   return false;
@@ -22031,7 +22038,7 @@ var BATU = [
   { id: "birutua", nama: "Batu Biru Tua", c: "#1d4ed8", c2: "#172554", dari: "Typing Master", tempat: "Arena Mengetik" },
   { id: "oranye", nama: "Batu Oranye", c: "#f97316", c2: "#7c2d12", dari: "Tembak Kapal", tempat: "Ruang Komando" },
   { id: "ungu", nama: "Batu Ungu", c: "#a855f7", c2: "#3b0764", dari: "Terjun Payung", tempat: "Lapangan Terjun" },
-  { id: "birulangit", nama: "Batu Biru Langit", c: "#38bdf8", c2: "#0c4a6e" },
+  { id: "birulangit", nama: "Batu Biru Langit", c: "#38bdf8", c2: "#0c4a6e", dari: "Duel Masak", tempat: "Dapur Arena" },
   { id: "putih", nama: "Batu Putih", c: "#f8fafc", c2: "#94a3b8" },
   { id: "hitam", nama: "Batu Hitam", c: "#27272a", c2: "#000000" }
 ];
@@ -22104,7 +22111,7 @@ function batuReveal(id, isna) {
 }
 async function prSync() {
   const q = chMigrate(); if (!q.card || !q.card.no || !q.card.tok) return;
-  for (const id of ["pohon", "raptor", "gravitasi", "ketik", "kapal", "terjun"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
+  for (const id of ["pohon", "raptor", "gravitasi", "ketik", "kapal", "terjun", "masak"]) { const c = q.chal[id]; if (!c || c.srv) continue; try { const j = await xcPost("api/kartu/tantangan", { no: q.card.no, tok: q.card.tok, id, dt: c.best || 0, jalur: "main", bintang: c.bintang || 0 }); if (j.ok) c.srv = true; } catch { /* nanti */ } }
   const B2 = batuQ();
   for (const id of Object.keys(B2)) { const b = B2[id]; if (b.srv) continue; try { const j = await xcPost("api/kartu/batu", { no: q.card.no, tok: q.card.tok, id }); if (j.ok) b.srv = true; } catch { /* nanti */ } }
   saveQ();
@@ -26760,7 +26767,7 @@ function tjTickAll(dt) {
   if (!here) return;
   tjTick(dt);
   if (TJ.on && TJ.phase === "idle" && !grace && Math.hypot(P.x - TJ_EXIT.x, P.z - TJ_EXIT.z) < 1.3) tjToKapal();
-  if (TJ.on && TJ.phase === "idle" && TJ.next && TJ.next.visible && Math.hypot(P.x - TJ.next.position.x, P.z - TJ.next.position.z) < 1.8 && now > (TJ.askNextT || 0)) { TJ.askNextT = now + 8000; toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); }
+  if (TJ.on && TJ.phase === "idle" && TJ.next && TJ.next.visible && Math.hypot(P.x - TJ.next.position.x, P.z - TJ.next.position.z) < 1.8 && now > (TJ.askNextT || 0)) { TJ.askNextT = now + 8000; if (batuQ().ungu && typeof dpEnterAsk === "function") dpEnterAsk(); else toast("◆ Gerbang ini terbuka bagi pemegang Batu Ungu.", 4000); }
   for (const e of TJ.anims) e(dt);
 }
 
@@ -26837,7 +26844,7 @@ function buildTerjun() {
   xAct(ed, { type: "x_tjexit" }); xAct(es, { type: "x_tjexit" }); TJ.anims.push((dt) => { er.rotation.z += dt; });
   const nx = new THREE2.Group(); nx.position.set(C.x + 18, 0, C.z + 78); nx.rotation.y = -0.6; root.add(nx);
   const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.6, 0.22, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x3b0764, emissive: 0xa855f7, emissiveIntensity: 0.9, metalness: 0.5 })); nr.position.y = 2.1; nx.add(nr);
-  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#a855f7", 2.8); ns.position.y = 4.4; nx.add(ns);
+  const ns = prSign("👨‍🍳 DAPUR ARENA", "tantangan 7 · Chef Khalid", "#a855f7", 2.8); ns.position.y = 4.4; nx.add(ns);
   TJ.next = nx; nx.visible = !!batuQ().ungu; TJ.anims.push((dt) => { nr.rotation.z += dt * 0.7; });
   xAct(nr, { type: "x_tjnext" }); xAct(ns, { type: "x_tjnext" });
   // pesawat lompat, parasut, Danu (model pembalap)
@@ -26866,9 +26873,718 @@ function danuAns(q) {
 function tjAct(act) {
   const ty = act.type;
   if (ty === "x_tjexit") { tjToKapal(); return true; }
-  if (ty === "x_tjnext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
+  if (ty === "x_tjnext") { if (TJ.phase === "plane" || TJ.phase === "fall") { toast("Selesaikan dulu lompatan yang sedang berjalan."); return true; } if (batuQ().ungu && typeof dpEnterAsk === "function") dpEnterAsk(); else toast("◆ Gerbang ini terbuka bagi pemegang Batu Ungu.", 4000); return true; }
   return false;
 }
+// =====================================================================
+// src/ext_dapur.js — PORTAL RING 1 · TANTANGAN 7: DUEL MASAK (Chef Khalid)
+//  • Gerbang di Lapangan Terjun (terbuka setelah Batu Ungu) → Dapur Arena.
+//    Pemain & Chef Khalid memakai skin "Chef Profesional" (SKN-062).
+//  • Uji ingatan: pemain dan Chef Khalid memasak menu yang sama. Resep
+//    dibangkitkan acak setiap percobaan (12 hidangan × bahan tambahan ×
+//    takaran × waktu/suhu proses) sehingga tiap pemain & tiap percobaan
+//    mendapat resep berbeda — resep tidak bisa dibocorkan ke pemain lain.
+//  • Babak hafalan 3 menit (resep: bahan + takaran + urutan proses).
+//    Lalu resep disembunyikan: pilih bahan beserta takarannya (ada
+//    pengecoh takaran & bahan lain), lalu susun urutan proses (ada
+//    pengecoh waktu/suhu & langkah keliru).
+//  • Semua tepat → Chef Khalid mengakui pemain menyamainya → Batu Biru
+//    Langit (diserahkan Teh Isna). Satu saja salah → kalah, ulang dengan
+//    resep baru. Rekor = waktu memasak tercepat (GET /api/kartu/rekor?id=masak).
+// =====================================================================
+var DP_Z = { m_dapur: { x0: 680, x1: 720, z0: 354, z1: 390, h: 12, name: "Dapur Arena · Portal Ring 1", short: "Dapur Arena" } };
+Object.assign(XROOMS, DP_Z);
+var DPV = DP_Z.m_dapur, DPC = { x: 700, z: 372 };
+var dpZone = (x, z) => x > DPV.x0 && x < DPV.x1 && z > DPV.z0 && z < DPV.z1;
+var DP_SPAWN = { x: 700, z: 381, yaw: 0 }, DP_EXIT = { x: 684.5, z: 383 };
+var DP_SKIN = "SKN-062", DP_MEM = 180, DP_KH_STEP = [8, 12]; // detik hafalan · jeda langkah Chef Khalid (detik)
+var DP_ME = { x: 694, z: 362 }, DP_KH = { x: 706, z: 362 };   // pusat meja masak pemain & Chef Khalid
+var DP = { on: false, grace: 0, arrive: null, forceSkin: null, lock: false, root: null, hidden: null, fogged: false, built: false,
+  phase: "idle", rc: null, memT0: 0, cookT0: 0, pick: new Set(), seq: [], tab: 1, khStep: 0, khAt: 0, res: null, won: false,
+  anims: [], next: null, stone: null, lastDish: -1, hudT: 0, clockT: 0, st: {} };
+
+// ---------- bank resep ----------
+// bahan: "nama|satuan|takaran1,takaran2,…" · langkah: {a|b|c} = variasi nilai, {X} = 2 bahan tambahan terpilih
+var DP_DISHES = [
+  { nm: "Nasi Goreng Kampung", ic: "🍳", por: "2 porsi",
+    ing: ["nasi putih|piring|2,3", "bawang merah|siung|4,5,6", "bawang putih|siung|2,3,4", "cabai rawit|buah|3,5,7", "telur ayam|butir|1,2", "kecap manis|sdm|1,2,3", "garam|sdt|½,1"],
+    ext: ["terasi bakar|sdt|½,1", "ikan teri goreng|g|30,50", "daun bawang|batang|1,2", "udang kupas|g|100,150", "sawi hijau|lembar|3,4"],
+    st: ["Haluskan bawang merah, bawang putih, dan cabai rawit", "Panaskan {2|3|4} sdm minyak di wajan dengan api sedang", "Tumis bumbu halus selama {2|3|4} menit hingga harum", "Masukkan telur, orak-arik hingga setengah matang", "Masukkan nasi putih dan {X}, aduk rata", "Tambahkan kecap manis dan garam, masak {3|4|5} menit sambil diaduk", "Sajikan dengan taburan bawang goreng"],
+    bad: ["Cuci nasi dengan air dingin sebelum digoreng", "Rebus nasi bersama bumbu selama 10 menit"] },
+  { nm: "Nasi Kebuli", ic: "🍚", por: "4 porsi",
+    ing: ["beras basmati|g|300,400,500", "daging kambing|g|400,500", "bawang bombay|buah|1,2", "bawang putih|siung|3,4,5", "minyak samin|sdm|2,3,4", "kaldu kambing|ml|600,700,800", "garam|sdt|1,2"],
+    ext: ["kayu manis|batang|1,2", "kapulaga|butir|3,4,5", "cengkih|butir|3,5", "jintan bubuk|sdt|½,1", "pala bubuk|sdt|¼,½"],
+    st: ["Cuci beras basmati lalu rendam selama {15|20|30} menit", "Rebus daging kambing hingga empuk, sisihkan kaldunya", "Panaskan minyak samin, tumis bawang bombay dan bawang putih hingga layu", "Masukkan {X}, tumis {1|2|3} menit hingga harum", "Masukkan daging dan beras, aduk hingga bumbu meresap", "Tuang kaldu kambing dan garam, masak hingga kaldu terserap", "Kukus nasi selama {20|25|30} menit dengan api kecil"],
+    bad: ["Goreng beras basmati tanpa dicuci", "Tambahkan santan kental sebelum dikukus"] },
+  { nm: "Shakshuka", ic: "🍅", por: "2 porsi",
+    ing: ["tomat merah|buah|3,4,5", "telur ayam|butir|3,4", "bawang bombay|buah|1,2", "bawang putih|siung|2,3", "paprika merah|buah|1,2", "minyak zaitun|sdm|2,3", "garam|sdt|½,1"],
+    ext: ["jintan bubuk|sdt|½,1", "paprika bubuk|sdt|1,2", "cabai merah|buah|1,2", "keju feta|g|50,80", "daun peterseli|batang|2,3"],
+    st: ["Potong dadu tomat, paprika, dan bawang bombay", "Panaskan minyak zaitun di wajan datar", "Tumis bawang bombay dan bawang putih selama {2|3|4} menit", "Masukkan paprika dan {X}, aduk rata", "Masukkan tomat dan garam, masak {8|10|12} menit hingga mengental", "Pecahkan telur di atas saus, lalu tutup wajan", "Masak dengan api kecil {5|6|7} menit hingga putih telur matang"],
+    bad: ["Kocok telur lalu campurkan ke saus sejak awal", "Panggang di oven 200°C selama 30 menit"] },
+  { nm: "Hummus", ic: "🥙", por: "4 porsi",
+    ing: ["kacang arab rebus|g|250,300,400", "tahini|sdm|2,3,4", "air jeruk lemon|sdm|2,3", "bawang putih|siung|1,2", "minyak zaitun|sdm|3,4", "air es|sdm|2,3,4", "garam|sdt|½,1"],
+    ext: ["jintan bubuk|sdt|½,1", "paprika bubuk|sdt|½,1", "daun peterseli|batang|2,3", "biji wijen sangrai|sdt|1,2", "cabai bubuk|sdt|½,1"],
+    st: ["Tiriskan kacang arab, sisihkan {1|2|3} sdm untuk hiasan", "Blender tahini dan air jeruk lemon selama {30|45|60} detik", "Masukkan bawang putih dan garam, blender lagi", "Masukkan kacang arab, blender {1|2|3} menit", "Tuang air es sedikit demi sedikit hingga lembut", "Pindahkan ke piring, buat cekungan di tengah", "Siram minyak zaitun, lalu taburi {X}"],
+    bad: ["Goreng kacang arab hingga renyah sebelum diblender", "Tambahkan susu cair agar lebih kental"] },
+  { nm: "Soto Ayam", ic: "🍜", por: "4 porsi",
+    ing: ["ayam kampung|g|500,700", "air|ml|1500,2000", "bawang merah|siung|6,8", "bawang putih|siung|4,5", "kunyit|ruas|2,3", "serai|batang|1,2", "daun jeruk|lembar|3,4,5", "garam|sdt|1,2"],
+    ext: ["tauge|g|100,150", "soun|g|50,100", "kol iris|g|100,150", "telur rebus|butir|2,3", "jeruk nipis|buah|1,2"],
+    st: ["Rebus ayam dalam air selama {30|40|45} menit", "Haluskan bawang merah, bawang putih, dan kunyit", "Tumis bumbu halus bersama serai dan daun jeruk hingga harum", "Masukkan tumisan bumbu ke rebusan ayam", "Tambahkan garam, masak {10|15|20} menit dengan api kecil", "Angkat ayam, lalu suwir-suwir dagingnya", "Tata {X} dan ayam suwir di mangkuk, siram kuah panas"],
+    bad: ["Goreng ayam hingga kering sebelum direbus", "Tambahkan santan dan kecap manis ke kuah"] },
+  { nm: "Mie Goreng Jawa", ic: "🍝", por: "2 porsi",
+    ing: ["mi telur|g|150,200,250", "bawang merah|siung|4,5", "bawang putih|siung|3,4", "kemiri|butir|2,3", "telur ayam|butir|1,2", "kecap manis|sdm|2,3,4", "garam|sdt|½,1"],
+    ext: ["kol iris|g|50,100", "sawi hijau|lembar|3,4", "ayam suwir|g|100,150", "bakso iris|butir|3,4", "tomat|buah|1,2"],
+    st: ["Rebus mi telur selama {3|4|5} menit, lalu tiriskan", "Haluskan bawang merah, bawang putih, dan kemiri", "Tumis bumbu halus dengan {2|3} sdm minyak hingga harum", "Masukkan telur, aduk orak-arik", "Masukkan {X}, masak hingga layu", "Masukkan mi, kecap manis, dan garam", "Aduk rata dengan api besar selama {2|3|4} menit"],
+    bad: ["Goreng mi mentah langsung tanpa direbus", "Rendam mi dalam air dingin semalaman"] },
+  { nm: "Falafel", ic: "🧆", por: "16 butir",
+    ing: ["kacang arab rendam|g|250,300", "bawang bombay|buah|½,1", "bawang putih|siung|3,4", "daun peterseli|batang|4,5,6", "jintan bubuk|sdt|1,2", "tepung terigu|sdm|2,3", "garam|sdt|1"],
+    ext: ["daun ketumbar|batang|3,4", "cabai merah|buah|1,2", "baking powder|sdt|½,1", "biji wijen|sdm|1,2", "daun mint|lembar|5,8"],
+    st: ["Tiriskan kacang arab yang sudah direndam semalaman", "Haluskan kacang arab, bawang, dan daun peterseli dengan food processor", "Campurkan jintan, garam, tepung terigu, dan {X}", "Diamkan adonan di kulkas selama {20|30|40} menit", "Bentuk adonan menjadi bulatan sebesar bola pingpong", "Goreng dalam minyak panas {3|4|5} menit hingga kecokelatan", "Tiriskan di atas tisu dapur"],
+    bad: ["Rebus kacang arab hingga hancur sebelum dibentuk", "Kukus bulatan adonan selama 15 menit"] },
+  { nm: "Rendang Daging", ic: "🥘", por: "6 porsi",
+    ing: ["daging sapi|g|500,750,1000", "santan kental|ml|400,500,600", "bawang merah|siung|8,10,12", "bawang putih|siung|5,6", "cabai merah keriting|g|100,150", "lengkuas|ruas|1,2", "serai|batang|2,3", "garam|sdt|1,2"],
+    ext: ["daun kunyit|lembar|1,2", "daun jeruk|lembar|4,5", "asam kandis|buah|2,3", "kelapa sangrai|sdm|3,4", "kayu manis|batang|1,2"],
+    st: ["Potong daging sapi melawan serat", "Haluskan bawang merah, bawang putih, dan cabai merah keriting", "Masak santan bersama bumbu halus, lengkuas, dan serai sambil diaduk", "Masukkan daging dan {X}", "Masak dengan api sedang selama {60|75|90} menit hingga santan menyusut", "Kecilkan api, aduk terus {1|1,5|2} jam hingga kering kecokelatan", "Tambahkan garam, cicipi, lalu angkat"],
+    bad: ["Goreng daging hingga kering sebelum dimasukkan ke santan", "Tambahkan 1 liter air setiap 30 menit"] },
+  { nm: "Martabak Telur", ic: "🥟", por: "5 buah",
+    ing: ["kulit lumpia lebar|lembar|5,6,8", "telur bebek|butir|3,4", "daging cincang|g|150,200", "daun bawang|batang|2,3", "bawang bombay|buah|½,1", "bawang putih|siung|2,3", "garam|sdt|½,1"],
+    ext: ["kari bubuk|sdt|1,2", "merica bubuk|sdt|½,1", "bawang merah|siung|3,4", "jamur kancing|g|50,80", "wortel parut|g|30,50"],
+    st: ["Tumis bawang bombay dan bawang putih hingga harum", "Masukkan daging cincang dan {X}, masak hingga berubah warna", "Angkat tumisan, biarkan dingin {5|10|15} menit", "Kocok telur bersama daun bawang dan garam", "Campurkan tumisan daging ke kocokan telur", "Letakkan adonan di tengah kulit lumpia, lipat membentuk amplop", "Goreng dengan minyak sedang {3|4|5} menit tiap sisi"],
+    bad: ["Kukus martabak selama 20 menit sebelum digoreng", "Celupkan kulit lumpia ke air panas"] },
+  { nm: "Sayur Asem", ic: "🥬", por: "4 porsi",
+    ing: ["air|ml|1000,1500", "jagung manis|buah|1,2", "labu siam|buah|1,2", "kacang panjang|ikat|1", "asam jawa|sdm|1,2", "gula merah|g|20,30", "garam|sdt|1,2", "bawang merah|siung|4,5"],
+    ext: ["melinjo|g|50,100", "daun melinjo|genggam|1,2", "nangka muda|g|100,150", "kacang tanah|g|50,75", "terong|buah|1,2"],
+    st: ["Haluskan bawang merah, lalu didihkan air", "Masukkan bumbu halus dan jagung manis, rebus {8|10|12} menit", "Masukkan labu siam dan {X}", "Tambahkan asam jawa, gula merah, dan garam", "Masukkan kacang panjang, masak {3|4|5} menit", "Cicipi hingga rasa asam manisnya seimbang", "Matikan api dan sajikan selagi hangat"],
+    bad: ["Tumis semua sayuran dengan mentega", "Tambahkan santan kental agar gurih"] },
+  { nm: "Ayam Bakar Madu", ic: "🍗", por: "4 porsi",
+    ing: ["paha ayam|potong|4,6", "madu|sdm|2,3,4", "kecap manis|sdm|3,4", "bawang putih|siung|3,4,5", "jahe|ruas|1,2", "air jeruk nipis|sdm|1,2", "garam|sdt|1"],
+    ext: ["ketumbar bubuk|sdt|1,2", "merica bubuk|sdt|½,1", "mentega|sdm|1,2", "saus tiram|sdm|1,2", "cabai bubuk|sdt|½,1"],
+    st: ["Lumuri ayam dengan air jeruk nipis, diamkan {10|15|20} menit", "Haluskan bawang putih dan jahe", "Campurkan bumbu halus, madu, kecap manis, garam, dan {X}", "Rendam ayam dalam bumbu selama {30|45|60} menit", "Ungkep ayam dengan sisa bumbu hingga airnya menyusut", "Bakar ayam di atas bara {5|8|10} menit sambil dioles bumbu", "Balik ayam dan bakar sisi lainnya hingga kecokelatan"],
+    bad: ["Rebus ayam bersama madu selama satu jam", "Goreng ayam berbalut tepung sebelum dibakar"] },
+  { nm: "Omelet Sayur", ic: "🥚", por: "2 porsi",
+    ing: ["telur ayam|butir|3,4", "susu cair|ml|30,50", "bawang bombay|buah|½,1", "tomat|buah|1", "bayam|genggam|1,2", "mentega|sdm|1,2", "garam|sdt|½"],
+    ext: ["keju parut|g|30,50", "jamur kancing|g|50,80", "paprika hijau|buah|½,1", "daun bawang|batang|1,2", "sosis iris|buah|1,2"],
+    st: ["Kocok telur bersama susu cair dan garam selama {1|2} menit", "Panaskan mentega di wajan antilengket", "Tumis bawang bombay selama {1|2|3} menit", "Masukkan bayam, tomat, dan {X}", "Tuang kocokan telur, lalu ratakan", "Masak dengan api kecil {3|4|5} menit hingga bagian bawah matang", "Lipat omelet menjadi dua, lalu sajikan"],
+    bad: ["Rebus telur terlebih dahulu sebelum dikocok", "Tambahkan 5 sdm tepung terigu ke kocokan telur"] }
+];
+var DP_GEN_ING = ["gula pasir|sdm|1,2,3", "kecap asin|sdm|1,2", "saus tomat|sdm|2,3", "santan kental|ml|100,200", "keju parut|g|30,50", "susu cair|ml|50,100", "cuka|sdm|1,2", "kayu manis|batang|1,2", "tepung terigu|sdm|2,3", "jahe|ruas|1,2", "kunyit|ruas|1,2", "daun salam|lembar|2,3", "serai|batang|1,2", "terasi|sdt|½,1", "mentega|sdm|1,2", "madu|sdm|1,2", "kemiri|butir|2,3", "lada hitam|sdt|½,1", "oregano kering|sdt|½,1", "air jeruk lemon|sdm|1,2", "daun jeruk|lembar|2,3", "gula merah|g|20,30"];
+var DP_BAD_GEN = ["Diamkan semua bahan di kulkas semalaman", "Masak semua bahan sekaligus dalam panci selama 1 jam", "Bilas masakan dengan air dingin, lalu tiriskan"];
+
+var dpRand = (a) => a[Math.floor(Math.random() * a.length)];
+function dpShuf(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function dpParse(s) { const [n, u, q] = s.split("|"); return { n, u, q: String(q).split(",") }; }
+var dpEsc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+var dpIngTxt = (o) => `${o.qty} ${o.u} ${o.n}`;
+function dpFill(tpl, vals) { let k = 0; return tpl.replace(/\{([^}]+)\}/g, () => vals[k++]); }
+
+// resep baru tiap percobaan: hidangan acak (tidak sama dengan percobaan sebelumnya) × 2 bahan tambahan × takaran × nilai proses
+function dpRecipe() {
+  let di; do { di = Math.floor(Math.random() * DP_DISHES.length); } while (DP_DISHES.length > 1 && di === DP.lastDish);
+  DP.lastDish = di; const D = DP_DISHES[di];
+  const extAll = dpShuf(D.ext.map(dpParse)), ext = extAll.slice(0, 2), extOff = extAll.slice(2);
+  const ing = D.ing.map(dpParse).concat(ext).map((o) => { const qty = dpRand(o.q); return { n: o.n, u: o.u, opts: o.q, qty, key: o.n + "|" + qty, ok: true }; });
+  const xs = ext.map((o) => o.n).join(" serta ");
+  const steps = D.st.map((tpl0, i) => {
+    const tpl = tpl0.replace("{X}", xs), groups = [];
+    tpl.replace(/\{([^}]+)\}/g, (m, g) => { groups.push(g.split("|")); return m; });
+    const vals = groups.map((g) => dpRand(g));
+    return { id: "s" + i, tpl, groups, vals, tx: dpFill(tpl, vals), ok: true };
+  });
+  // pengecoh langkah: nilai waktu/suhu berbeda + langkah keliru
+  const taken = new Set(steps.map((s) => s.tx)), dec = [];
+  for (const s of dpShuf(steps.filter((s2) => s2.groups.some((g) => g.length > 1)))) {
+    if (dec.length >= 3) break;
+    const gi = s.groups.findIndex((g) => g.length > 1), v2 = s.vals.slice(); v2[gi] = dpRand(s.groups[gi].filter((v) => v !== s.vals[gi]));
+    const tx = dpFill(s.tpl, v2); if (taken.has(tx)) continue; taken.add(tx); dec.push({ id: "d" + dec.length, tx, ok: false });
+  }
+  for (const tx of D.bad.concat(dpRand(DP_BAD_GEN))) { if (taken.has(tx)) continue; taken.add(tx); dec.push({ id: "d" + dec.length, tx, ok: false }); }
+  // pengecoh bahan: takaran berbeda + bahan tambahan lain + bahan umum yang tidak ada di resep
+  const names = new Set(ing.map((o) => o.n)), chips = ing.slice();
+  for (const o of dpShuf(ing.filter((o2) => o2.opts.length > 1)).slice(0, 4)) { const qty = dpRand(o.opts.filter((v) => v !== o.qty)); chips.push({ n: o.n, u: o.u, qty, key: o.n + "|" + qty, ok: false }); }
+  for (const o of extOff.slice(0, 2)) { const qty = dpRand(o.q); names.add(o.n); chips.push({ n: o.n, u: o.u, qty, key: o.n + "|" + qty, ok: false }); }
+  for (const o of dpShuf(DP_GEN_ING.map(dpParse).filter((g) => !names.has(g.n))).slice(0, 3)) { const qty = dpRand(o.q); chips.push({ n: o.n, u: o.u, qty, key: o.n + "|" + qty, ok: false }); }
+  const code = "KH-" + Math.random().toString(36).slice(2, 6).toUpperCase();
+  return { dish: D, code, ing, steps, chips: dpShuf(chips), pool: dpShuf(steps.concat(dec)) };
+}
+
+// ---------- suara dapur ----------
+var DPS = (() => {
+  let ac = null, out = null, siz = null, sg = null;
+  const ctx = () => { if (!ac) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ac = new AC(); out = ac.createGain(); out.gain.value = 0.5; out.connect(ac.destination); } if (ac.state === "suspended") ac.resume().catch(() => {}); return ac; };
+  const tone = (f, dur, type, vol, f2) => { if (!ctx()) return; const now = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = type || "sine"; o.frequency.setValueAtTime(f, now); if (f2) o.frequency.exponentialRampToValueAtTime(f2, now + dur); g.gain.setValueAtTime(vol || 0.05, now); g.gain.exponentialRampToValueAtTime(0.0001, now + dur); o.connect(g); g.connect(out); o.start(now); o.stop(now + dur + 0.02); };
+  return {
+    tap() { tone(880, 0.06, "triangle", 0.04); },
+    untap() { tone(520, 0.06, "triangle", 0.035); },
+    tick() { tone(1200, 0.04, "square", 0.025); },
+    bell() { tone(1568, 0.6, "sine", 0.08); setTimeout(() => tone(2093, 0.8, "sine", 0.06), 120); },
+    fail() { tone(220, 0.5, "sawtooth", 0.06, 110); },
+    sizzle(on) {
+      if (!ctx()) return;
+      if (!siz) { const n = ac.sampleRate * 2, b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (0.6 + 0.4 * Math.random()); siz = ac.createBufferSource(); siz.buffer = b; siz.loop = true; const f = ac.createBiquadFilter(); f.type = "highpass"; f.frequency.value = 2600; sg = ac.createGain(); sg.gain.value = 0; siz.connect(f); f.connect(sg); sg.connect(out); siz.start(); }
+      sg.gain.setTargetAtTime(on ? 0.05 : 0, ac.currentTime, 0.4);
+    }
+  };
+})();
+
+// ---------- gaya ----------
+(() => {
+  const st = document.createElement("style");
+  st.textContent = `
+#dpHud{position:fixed;z-index:30;color:#fff}
+#dpHud .cvh-top{color:#fcd34d}
+#dpOv{position:fixed;z-index:45;left:max(12px,env(safe-area-inset-left,0px));top:calc(64px + env(safe-area-inset-top,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(470px,calc(100vw - 24px));display:flex;font-family:Poppins,sans-serif}
+#dpOv .dp-card{flex:1;display:flex;flex-direction:column;min-height:0;background:#14211b;border:1px solid #2d4a3c;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.5);color:#eef3ee;overflow:hidden}
+#dpOv .dp-top{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 16px;border-bottom:1px solid #2d4a3c;background:#182a22}
+#dpOv .dp-top b{flex:1;font-size:15px;font-weight:700;line-height:1.2}
+#dpOv .dp-clock{font:800 20px/1 Poppins,sans-serif;color:#f5b014;font-variant-numeric:tabular-nums;min-width:58px;text-align:right}
+#dpOv .dp-clock.low{color:#f87171}
+#dpOv .dp-body{flex:1;overflow-y:auto;padding:14px 16px 6px;-webkit-overflow-scrolling:touch}
+#dpOv .dp-foot{display:flex;align-items:center;gap:8px;padding:10px 16px 12px;border-top:1px solid #2d4a3c;background:#182a22}
+#dpOv .dp-foot .grow{flex:1;font-size:12px;color:#a7bdb1}
+#dpOv .dp-foot .btn{height:40px;font-size:14px;padding:0 16px;background:#f5b014;color:#1b1406;font-weight:700}
+#dpOv .dp-foot .btn:disabled{opacity:.45}
+#dpOv .dp-foot .ghost{height:40px;font-size:13px}
+#dpOv .dp-bar{height:6px;border-radius:6px;background:#244034;overflow:hidden;margin:0 0 12px}
+#dpOv .dp-bar i{display:block;height:100%;background:#f5b014;transition:width .25s linear}
+#dpOv .dp-ticket{background:#fdfcf8;color:#1f1f1c;border-radius:6px;padding:16px 16px 18px;position:relative;box-shadow:0 2px 0 #d9d4c4;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#dpOv .dp-ticket::before,#dpOv .dp-ticket::after{content:"";position:absolute;left:10px;right:10px;height:0;border-top:2px dashed #d0c9b5}
+#dpOv .dp-ticket::before{top:6px}#dpOv .dp-ticket::after{bottom:6px}
+#dpOv .dp-tk-h{display:flex;gap:12px;align-items:center;margin:4px 0 10px}
+#dpOv .dp-tk-h .ic{font-size:40px;line-height:1}
+#dpOv .dp-tk-h h3{margin:0;font-size:21px;line-height:1.15;font-weight:800}
+#dpOv .dp-tk-h small{color:#6b6655;font-size:12px}
+#dpOv .dp-ticket h4{margin:12px 0 6px;font-size:13px;font-weight:800;color:#7a5a00}
+#dpOv .dp-ticket ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:4px 14px}
+#dpOv .dp-ticket li{font-size:13.5px;line-height:1.35}
+#dpOv .dp-ticket li b{color:#a35d00}
+#dpOv .dp-ticket ol{margin:0;padding-left:22px}
+#dpOv .dp-ticket ol li{margin:3px 0}
+#dpOv .dp-note{font-size:12.5px;line-height:1.5;color:#a7bdb1;margin:12px 2px}
+#dpOv .dp-tabs{display:flex;gap:6px;margin-bottom:10px}
+#dpOv .dp-tabs span{flex:1;text-align:center;font-size:12px;font-weight:700;padding:6px;border-radius:8px;background:#1d3329;color:#8fa79a}
+#dpOv .dp-tabs span.on{background:#f5b014;color:#1b1406}
+#dpOv .dp-q{font-size:13px;line-height:1.45;margin:0 0 10px;color:#d6e2da}
+#dpOv .dp-chips{display:flex;flex-wrap:wrap;gap:7px}
+#dpOv .dp-chip{border:1px solid #3a5a4a;background:#1b2e25;color:#eef3ee;border-radius:10px;padding:8px 10px;font:500 13px/1.25 Poppins,sans-serif;text-align:left;cursor:pointer}
+#dpOv .dp-chip b{color:#f5b014;font-weight:800;margin-right:3px}
+#dpOv .dp-chip.on{background:#f5b014;border-color:#f5b014;color:#1b1406}
+#dpOv .dp-chip.on b{color:#1b1406}
+#dpOv .dp-chip:focus-visible,#dpOv .dp-pc:focus-visible,#dpOv .dp-seq button:focus-visible{outline:2px solid #fde68a;outline-offset:2px}
+#dpOv h5{margin:12px 0 6px;font-size:12px;font-weight:800;color:#8fa79a}
+#dpOv .dp-seq{margin:0;padding:0;list-style:none;counter-reset:dpn}
+#dpOv .dp-seq li{counter-increment:dpn;display:flex;gap:8px;align-items:flex-start;background:#21382d;border:1px solid #3a5a4a;border-radius:10px;padding:7px 8px 7px 10px;margin-bottom:6px;font-size:13px;line-height:1.35}
+#dpOv .dp-seq li::before{content:counter(dpn);flex:0 0 22px;height:22px;border-radius:50%;background:#f5b014;color:#1b1406;font-weight:800;font-size:12px;display:grid;place-items:center}
+#dpOv .dp-seq li span{flex:1}
+#dpOv .dp-seq li button{flex:0 0 auto;border:0;background:transparent;color:#fca5a5;font-size:16px;line-height:1;padding:2px 4px;cursor:pointer}
+#dpOv .dp-seq .empty{color:#7f9a8c;font-size:12.5px;padding:10px;border:1px dashed #3a5a4a;border-radius:10px;text-align:center}
+#dpOv .dp-pool{display:flex;flex-direction:column;gap:6px}
+#dpOv .dp-pc{border:1px solid #3a5a4a;background:#1b2e25;color:#eef3ee;border-radius:10px;padding:9px 10px;font:500 13px/1.35 Poppins,sans-serif;text-align:left;cursor:pointer}
+#dpOv .dp-res h3{margin:4px 0 6px;font-size:22px}
+#dpOv .dp-res .big{font-size:56px;text-align:center;line-height:1;margin-top:6px}
+#dpOv .dp-res .say{background:#1d3329;border-left:3px solid #f5b014;border-radius:8px;padding:9px 12px;font-size:13.5px;line-height:1.5;font-style:italic;margin:10px 0}
+#dpOv .dp-res table{width:100%;border-collapse:collapse;font-size:12.5px;margin:4px 0 8px}
+#dpOv .dp-res td{padding:5px 6px;border-bottom:1px solid #2d4a3c;vertical-align:top;line-height:1.35}
+#dpOv .dp-res td:first-child{width:22px;text-align:center}
+#dpOv .dp-res .ok{color:#86efac}#dpOv .dp-res .no{color:#fca5a5}#dpOv .dp-res .miss{color:#fcd34d}
+#dpOv .dp-judge{text-align:center;padding:40px 10px}
+#dpOv .dp-judge .pot{font-size:64px;display:inline-block;animation:dpBob 1s ease-in-out infinite}
+@keyframes dpBob{50%{transform:translateY(-8px) rotate(-6deg)}}
+@media (prefers-reduced-motion:reduce){#dpOv .dp-judge .pot{animation:none}#dpOv .dp-bar i{transition:none}}
+@media (max-width:760px){
+  #dpOv{left:0;right:0;width:auto;top:auto;bottom:0;height:min(74vh,calc(100vh - 150px))}
+  #dpOv .dp-card{border-radius:18px 18px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
+  #dpOv .dp-ticket ul{grid-template-columns:1fr}
+}
+`;
+  document.head.appendChild(st);
+})();
+
+// =====================================================================
+// ALUR TANTANGAN
+// =====================================================================
+function dpStart() {
+  if (DP.phase === "memo" || DP.phase === "cook" || DP.phase === "judge") return;
+  hidePopups(); if (typeof closeGen === "function") closeGen();
+  DP.rc = dpRecipe(); DP.pick = new Set(); DP.seq = []; DP.tab = 1; DP.res = null; DP.won = false;
+  DP.phase = "memo"; DP.lock = true; DP.memT0 = performance.now(); DP.khStep = 0;
+  P.walkTo = null; xTeleport(DP_ME.x, DP_ME.z + 3.4, 0);
+  dpStationReset();
+  dpOv(); dpRender(); dpHudUpd(); dpWallDraw();
+  if (typeof SFX !== "undefined") SFX.chime();
+  sayBubble(`Ini resepku, ${S.name}. Hafalkan baik-baik — kamu punya 3 menit. Resep ini hanya untukmu 📜`, "npc_khalid");
+}
+function dpCook(auto) {
+  if (DP.phase !== "memo") return;
+  DP.phase = "cook"; DP.cookT0 = performance.now(); DP.tab = 1; DP.khStep = 0; DP.khAt = DP.cookT0 + dpKhGap();
+  if (auto) toast("⏰ Waktu menghafal habis! Resep disembunyikan — mulai memasak.", 4000);
+  DPS.bell(); DPS.sizzle(true);
+  dpRender(); dpHudUpd(); dpWallDraw();
+  const st = DP.st.kh; if (st) dpFire(st, true);
+  sayBubble("Kompor menyala! Ayo kita masak bersama 🔥", "npc_khalid");
+}
+var dpKhGap = () => (DP_KH_STEP[0] + Math.random() * (DP_KH_STEP[1] - DP_KH_STEP[0])) * 1000;
+function dpServe() {
+  if (DP.phase !== "cook") return;
+  if (!DP.seq.length) { toast("Susun dulu urutan prosesnya."); return; }
+  if (!confirm("Sajikan masakanmu sekarang? Bahan dan urutan proses tidak bisa diubah lagi.")) return;
+  DP.phase = "judge"; DP.cookDt = (performance.now() - DP.cookT0) / 1000;
+  DPS.sizzle(false); DPS.bell();
+  if (DP.khStep < DP.rc.steps.length) { DP.khStep = DP.rc.steps.length; dpKhServe(); }
+  dpPlate(DP.st.me, true);
+  dpRender(); dpHudUpd(); dpWallDraw();
+  sayBubble("Mari kucicipi… 🥄", "npc_khalid");
+  setTimeout(() => { if (DP.phase === "judge") dpJudge(); }, 2600);
+}
+function dpJudge() {
+  const rc = DP.rc, want = new Set(rc.ing.map((o) => o.key));
+  const missing = rc.ing.filter((o) => !DP.pick.has(o.key)), wrong = rc.chips.filter((c) => DP.pick.has(c.key) && !want.has(c.key));
+  const seqOk = DP.seq.length === rc.steps.length && DP.seq.every((id, i) => id === rc.steps[i].id);
+  const win = !missing.length && !wrong.length && seqOk;
+  DP.res = { win, missing, wrong, seqOk, dt: DP.cookDt };
+  DP.phase = "over"; DP.lock = false;
+  for (const s of [DP.st.me, DP.st.kh]) if (s && s.cloche) s.lift = 1;
+  if (win) {
+    DP.won = true;
+    const q = chMigrate(), prev = q.chal.masak, dt = +DP.cookDt.toFixed(1), b = dt <= 60 ? 3 : dt <= 120 ? 2 : 1;
+    q.chal.masak = { t: (prev && prev.t) || Date.now(), best: +Math.min(prev && prev.best ? prev.best : 1e9, dt).toFixed(1), bintang: Math.max(b, (prev && prev.bintang) || 0) };
+    if (prev && prev.srv && (dt < (prev.best || 1e9) || b > (prev.bintang || 0))) q.chal.masak.srv = false;
+    saveQ();
+    DPS.bell(); if (typeof SFX !== "undefined") SFX.chime(); spawnSparkle(); if (typeof mpFx === "function") mpFx();
+    sayBubble(`Masya Allah… rasanya sama persis dengan masakanku! Kamu menang, ${S.name} 👨‍🍳`, "npc_khalid");
+    setTimeout(() => { if (DP.won && DP.phase === "over") dpAward(); }, 15000);
+  } else {
+    DPS.fail();
+    sayBubble("Hmm… ada yang berbeda dari resepku. Rasanya belum sama 🤔", "npc_khalid");
+  }
+  dpRender(); dpHudUpd(); dpWallDraw();
+}
+function dpAward() {
+  if (!DP.won) return; DP.won = false;
+  dpCloseOv();
+  if (DP.stone) DP.stone.visible = false;
+  prAwardBatu("birulangit"); dpRekorLoad(); if (DP.next) DP.next.visible = true;
+}
+function dpStop() {
+  const was = DP.phase; DP.phase = "idle"; DP.lock = false; DPS.sizzle(false);
+  dpCloseOv(); dpStationReset(); dpHudUpd(); dpWallDraw();
+  if (was === "over" && DP.won) dpAward();
+}
+function dpCloseOv() { $("dpOv")?.remove(); }
+function dpAskStop() {
+  if ((DP.phase === "memo" || DP.phase === "cook") && !confirm("Hentikan duel masak? Resep ini akan hangus dan percobaan berikutnya memakai resep baru.")) return;
+  if (DP.phase === "judge") return;
+  dpStop();
+}
+
+// ---------- tampilan (panel) ----------
+function dpOv() {
+  dpCloseOv();
+  const ov = document.createElement("div"); ov.id = "dpOv";
+  ov.innerHTML = `<div class="dp-card" role="dialog" aria-label="Duel masak"><div class="dp-top"><b id="dpTitle"></b><span class="dp-clock" id="dpClock"></span><button class="ghost" id="dpStopB" aria-label="Hentikan duel">✕</button></div><div class="dp-body" id="dpBody"></div><div class="dp-foot" id="dpFoot"></div></div>`;
+  document.body.appendChild(ov);
+  $("dpStopB").onclick = () => { if (DP.phase === "over") dpStop(); else dpAskStop(); };
+  ov.addEventListener("contextmenu", (e) => { if (DP.phase === "memo") e.preventDefault(); });
+}
+function dpClockTxt(sec) { sec = Math.max(0, Math.ceil(sec)); return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`; }
+function dpRender() {
+  if (!$("dpOv")) dpOv();
+  const B = $("dpBody"), F = $("dpFoot"), T = $("dpTitle"), rc = DP.rc; if (!B || !rc) return;
+  const D = rc.dish;
+  if (DP.phase === "memo") {
+    T.textContent = "Hafalkan resep";
+    B.innerHTML = `<div class="dp-bar"><i id="dpMemBar" style="width:100%"></i></div>
+    <div class="dp-ticket"><div class="dp-tk-h"><span class="ic">${D.ic}</span><div><h3>${dpEsc(D.nm)}</h3><small>${dpEsc(D.por)} · resep ${rc.code} · Chef Khalid</small></div></div>
+    <h4>Bahan (${rc.ing.length})</h4><ul>${rc.ing.map((o) => `<li><b>${dpEsc(o.qty)} ${dpEsc(o.u)}</b> ${dpEsc(o.n)}</li>`).join("")}</ul>
+    <h4>Cara membuat</h4><ol>${rc.steps.map((s) => `<li>${dpEsc(s.tx)}</li>`).join("")}</ol></div>
+    <p class="dp-note">Setelah waktu habis, resep disembunyikan. Kamu akan memilih bahan <b>beserta takarannya</b>, lalu menyusun proses <b>sesuai urutan</b>. Ada pengecoh takaran, waktu, dan langkah yang keliru. Satu kesalahan saja, masakanmu tidak sama dengan masakan Chef Khalid.</p>`;
+    F.innerHTML = `<span class="grow">Resep ini dibuat khusus untuk percobaanmu.</span><button class="btn" id="dpReady">Saya sudah hafal</button>`;
+    $("dpReady").onclick = () => { if (confirm("Mulai memasak sekarang? Resep akan disembunyikan.")) dpCook(false); };
+    dpClockUpd(true);
+    return;
+  }
+  if (DP.phase === "cook" && DP.tab === 1) {
+    T.textContent = `${D.ic} ${D.nm}`;
+    B.innerHTML = `<div class="dp-tabs"><span class="on">1 · Bahan</span><span>2 · Proses</span></div>
+    <p class="dp-q">Pilih semua bahan yang ada di resep, <b>dengan takaran yang tepat</b>. Ketuk lagi untuk membatalkan.</p>
+    <div class="dp-chips" id="dpChips">${rc.chips.map((c, i) => `<button class="dp-chip${DP.pick.has(c.key) ? " on" : ""}" data-i="${i}" aria-pressed="${DP.pick.has(c.key)}"><b>${dpEsc(c.qty)} ${dpEsc(c.u)}</b>${dpEsc(c.n)}</button>`).join("")}</div>`;
+    F.innerHTML = `<span class="grow" id="dpCnt"></span><button class="btn" id="dpNext">Lanjut: susun proses</button>`;
+    const cnt = () => { $("dpCnt").textContent = `${DP.pick.size} bahan dipilih`; $("dpNext").disabled = !DP.pick.size; };
+    $("dpChips").onclick = (e) => {
+      const b = e.target.closest(".dp-chip"); if (!b) return; const c = rc.chips[+b.dataset.i];
+      if (DP.pick.has(c.key)) { DP.pick.delete(c.key); DPS.untap(); } else { DP.pick.add(c.key); DPS.tap(); }
+      b.classList.toggle("on", DP.pick.has(c.key)); b.setAttribute("aria-pressed", DP.pick.has(c.key)); cnt(); dpBowls();
+    };
+    $("dpNext").onclick = () => { DP.tab = 2; dpRender(); $("dpBody").scrollTop = 0; };
+    cnt(); dpClockUpd(true);
+    return;
+  }
+  if (DP.phase === "cook") {
+    T.textContent = `${D.ic} ${D.nm}`;
+    const byId = {}; for (const s of rc.pool) byId[s.id] = s;
+    const left = rc.pool.filter((s) => !DP.seq.includes(s.id));
+    B.innerHTML = `<div class="dp-tabs"><span>1 · Bahan</span><span class="on">2 · Proses</span></div>
+    <p class="dp-q">Ketuk langkah sesuai <b>urutan resep</b>. Ketuk ✕ untuk mengeluarkan langkah dari urutan.</p>
+    <h5>Urutanmu</h5><ol class="dp-seq" id="dpSeq">${DP.seq.length ? DP.seq.map((id, i) => `<li><span>${dpEsc(byId[id].tx)}</span><button data-i="${i}" aria-label="Keluarkan langkah ${i + 1}">✕</button></li>`).join("") : `<div class="empty">Belum ada langkah. Ketuk langkah di bawah.</div>`}</ol>
+    <h5>Pilihan langkah</h5><div class="dp-pool" id="dpPool">${left.map((s) => `<button class="dp-pc" data-id="${s.id}">${dpEsc(s.tx)}</button>`).join("")}</div>`;
+    F.innerHTML = `<button class="ghost" id="dpBack">◀ Bahan</button><span class="grow">${DP.seq.length} langkah disusun</span><button class="btn" id="dpServe">🍽 Sajikan</button>`;
+    $("dpServe").disabled = !DP.seq.length;
+    $("dpPool").onclick = (e) => { const b = e.target.closest(".dp-pc"); if (!b) return; DP.seq.push(b.dataset.id); DPS.tap(); const y = $("dpBody").scrollTop; dpRender(); $("dpBody").scrollTop = y; dpFire(DP.st.me, DP.seq.length > 0); };
+    $("dpSeq").onclick = (e) => { const b = e.target.closest("button[data-i]"); if (!b) return; DP.seq.splice(+b.dataset.i, 1); DPS.untap(); const y = $("dpBody").scrollTop; dpRender(); $("dpBody").scrollTop = y; dpFire(DP.st.me, DP.seq.length > 0); };
+    $("dpBack").onclick = () => { DP.tab = 1; dpRender(); };
+    $("dpServe").onclick = dpServe;
+    dpClockUpd(true);
+    return;
+  }
+  if (DP.phase === "judge") {
+    T.textContent = "Penjurian";
+    B.innerHTML = `<div class="dp-judge"><div class="pot">🍲</div><p style="font-size:15px;margin:14px 0 4px">Chef Khalid sedang mencicipi masakanmu…</p><p style="font-size:12.5px;color:#a7bdb1">Bahan dan urutan prosesmu dibandingkan dengan resep aslinya.</p></div>`;
+    F.innerHTML = "";
+    $("dpClock").textContent = dpClockTxt(DP.cookDt);
+    return;
+  }
+  if (DP.phase === "over" && DP.res) {
+    const R = DP.res;
+    T.textContent = R.win ? "Kamu menang!" : "Belum sama…";
+    $("dpClock").textContent = dpClockTxt(R.dt); $("dpClock").classList.remove("low");
+    const recipe = `<div class="dp-ticket" style="margin-top:10px"><div class="dp-tk-h"><span class="ic">${D.ic}</span><div><h3>${dpEsc(D.nm)}</h3><small>resep ${rc.code} · resep asli Chef Khalid</small></div></div><h4>Bahan</h4><ul>${rc.ing.map((o) => `<li><b>${dpEsc(o.qty)} ${dpEsc(o.u)}</b> ${dpEsc(o.n)}</li>`).join("")}</ul><h4>Cara membuat</h4><ol>${rc.steps.map((s) => `<li>${dpEsc(s.tx)}</li>`).join("")}</ol></div>`;
+    if (R.win) {
+      B.innerHTML = `<div class="dp-res"><div class="big">🏆</div><h3 style="text-align:center">Rasanya sama persis!</h3>
+      <div class="say">“Aku sudah memasak ${dpEsc(D.nm)} ribuan kali, dan masakanmu tak bisa kubedakan dari masakanku. Kamu berhasil menyamaiku, ${dpEsc(S.name)}. Kuakui kamu pemenangnya.” — Chef Khalid</div>
+      <p class="dp-q">Semua ${rc.ing.length} bahan dan ${rc.steps.length} langkah tepat. Waktu memasak: <b>${R.dt.toFixed(1)} detik</b>.</p>${recipe}</div>`;
+      F.innerHTML = `<span class="grow">Teh Isna sudah menunggu.</span><button class="btn" id="dpGet">💎 Terima batu</button>`;
+      $("dpGet").onclick = () => dpAward();
+    } else {
+      const byId = {}; for (const s of rc.pool) byId[s.id] = s;
+      const ingRows = R.missing.map((o) => `<tr><td class="miss">⚠</td><td class="miss">Terlewat: <b>${dpEsc(dpIngTxt(o))}</b></td></tr>`).concat(R.wrong.map((c) => `<tr><td class="no">✗</td><td class="no">Tidak ada di resep: <b>${dpEsc(dpIngTxt(c))}</b></td></tr>`));
+      const seqRows = [], n = Math.max(DP.seq.length, rc.steps.length);
+      for (let i = 0; i < n; i++) { const id = DP.seq[i], ok = id && rc.steps[i] && id === rc.steps[i].id; seqRows.push(`<tr><td class="${ok ? "ok" : "no"}">${ok ? "✓" : "✗"}</td><td class="${ok ? "" : "no"}">${i + 1}. ${id ? dpEsc(byId[id].tx) : "<i>(kosong)</i>"}</td></tr>`); }
+      B.innerHTML = `<div class="dp-res"><div class="big">🍲</div><h3 style="text-align:center">Masakanmu belum sama</h3>
+      <div class="say">“Lidahku tidak bisa dibohongi — ada yang berbeda dari resepku. Ingatan seorang koki harus setajam pisaunya. Coba lagi dengan resep baru!” — Chef Khalid</div>
+      <h5>Bahan</h5>${ingRows.length ? `<table>${ingRows.join("")}</table>` : `<p class="dp-q ok">✓ Semua bahan dan takarannya tepat.</p>`}
+      <h5>Urutan prosesmu</h5>${R.seqOk ? `<p class="dp-q ok">✓ Urutan proses tepat.</p>` : `<table>${seqRows.join("")}</table>`}
+      <h5>Resep yang benar</h5>${recipe}</div>`;
+      F.innerHTML = `<button class="ghost" id="dpNo">Nanti saja</button><span class="grow"></span><button class="btn" id="dpAgain">🔁 Coba lagi · resep baru</button>`;
+      $("dpAgain").onclick = () => { dpCloseOv(); dpStationReset(); DP.phase = "idle"; dpStart(); };
+      $("dpNo").onclick = () => dpStop();
+    }
+    $("dpBody").scrollTop = 0;
+  }
+}
+function dpClockUpd(force) {
+  const el = $("dpClock"); if (!el) return;
+  const now = performance.now();
+  if (!force && Math.floor(now / 250) === DP.clockT) return; DP.clockT = Math.floor(now / 250);
+  if (DP.phase === "memo") {
+    const left = DP_MEM - (now - DP.memT0) / 1000; el.textContent = dpClockTxt(left); el.classList.toggle("low", left <= 20);
+    const bar = $("dpMemBar"); if (bar) bar.style.width = Math.max(0, left / DP_MEM * 100) + "%";
+  } else if (DP.phase === "cook") { el.textContent = dpClockTxt((now - DP.cookT0) / 1000); el.classList.remove("low"); }
+}
+
+// ---------- jalannya pertandingan (tiap frame) ----------
+function dpTick(dt) {
+  const now = performance.now();
+  if (DP.phase === "memo") {
+    const left = DP_MEM - (now - DP.memT0) / 1000;
+    if (left <= 10 && Math.ceil(left) !== DP.lastBeep && left > 0) { DP.lastBeep = Math.ceil(left); DPS.tick(); }
+    if (left <= 0) dpCook(true);
+  }
+  if (DP.phase === "cook" && DP.khStep < DP.rc.steps.length && now >= DP.khAt) {
+    DP.khStep++; DP.khAt = now + dpKhGap();
+    if (DP.khStep >= DP.rc.steps.length) dpKhServe();
+    else sayBubble(DP.khStep === 1 ? "Langkah pertama selesai…" : `Langkah ${DP.khStep} beres ✔`, "npc_khalid");
+  }
+  if (DP.phase === "memo" || DP.phase === "cook") dpClockUpd(false);
+  if (Math.floor(now / 300) !== DP.hudT) { DP.hudT = Math.floor(now / 300); dpHudUpd(); if (DP.phase === "memo" || DP.phase === "cook") dpWallDraw(); }
+  // animasi stasiun: api, uap, wajan, tudung saji
+  for (const s of [DP.st.me, DP.st.kh]) {
+    if (!s) continue;
+    for (const f of s.flames) { f.visible = s.fire; if (s.fire) f.scale.y = 0.75 + Math.sin(t * 22 + f.userData.ph) * 0.2 + Math.random() * 0.1; }
+    for (const p of s.steam) { p.visible = s.fire; if (!s.fire) continue; p.userData.k = (p.userData.k + dt * 0.45) % 1; const k = p.userData.k; p.position.y = 1.15 + k * 1.3; p.material.opacity = 0.35 * (1 - k); p.scale.setScalar(0.25 + k * 0.6); }
+    if (s.pan) s.pan.rotation.z = s.fire ? Math.sin(t * (s === DP.st.kh ? 5 : 3.5)) * 0.08 : 0;
+    if (s.cloche && s.cloche.visible && s.lift) { s.liftY = Math.min(0.55, (s.liftY || 0) + dt * 0.6); s.cloche.position.y = 1.02 + s.liftY; }
+  }
+}
+function dpKhServe() {
+  const s = DP.st.kh; dpPlate(s, true); dpFire(s, false);
+  sayBubble("Masakanku sudah siap. Bagaimana denganmu? Jangan terburu-buru — yang penting tepat.", "npc_khalid");
+}
+
+// ---------- HUD & layar dinding ----------
+function dpHud(show) {
+  let el = $("dpHud");
+  if (!show) { el?.remove(); return; }
+  if (!el) {
+    el = document.createElement("div"); el.id = "dpHud";
+    el.innerHTML = `<div class="cvh-top"><b id="dpHB"></b><span id="dpHS"></span></div><div id="dpHT" class="cvh-txt"></div><div class="cvh-btn"><button class="ghost" id="dpOut">⟲ Keluar Dapur</button></div>`;
+    document.body.appendChild(el);
+    $("dpOut").onclick = () => dpExit();
+  }
+}
+function dpHudUpd() {
+  if (!$("dpHud")) return;
+  const B = $("dpHB"), S2 = $("dpHS"), T = $("dpHT"), now = performance.now();
+  if (DP.phase === "memo") { B.textContent = "👨‍🍳 DUEL MASAK · hafalkan resep"; S2.textContent = "⏱ " + dpClockTxt(DP_MEM - (now - DP.memT0) / 1000); T.textContent = "Hafalkan bahan, takaran, dan urutan proses di panel resep. Setelah 3 menit resep disembunyikan."; return; }
+  if (DP.phase === "cook") { B.textContent = "👨‍🍳 DUEL MASAK · memasak"; S2.textContent = `Khalid ${DP.khStep}/${DP.rc.steps.length}`; T.textContent = DP.khStep >= DP.rc.steps.length ? "Chef Khalid sudah menyajikan masakannya. Selesaikan masakanmu, lalu sajikan." : "Pilih bahan beserta takarannya, susun urutan proses, lalu tekan Sajikan."; return; }
+  if (DP.phase === "judge") { B.textContent = "👨‍🍳 DUEL MASAK · penjurian"; S2.textContent = ""; T.textContent = "Chef Khalid sedang mencicipi masakanmu…"; return; }
+  if (DP.phase === "over" && DP.res) { B.textContent = DP.res.win ? `🏆 DUEL MASAK · ${DP.res.dt.toFixed(1)} dtk` : "👨‍🍳 DUEL MASAK · belum sama"; S2.textContent = ""; T.textContent = DP.res.win ? "Chef Khalid mengakui kamu sebagai pemenang!" : "Ada bahan atau proses yang berbeda. Bicara dengan Chef Khalid untuk mencoba lagi dengan resep baru."; return; }
+  B.textContent = "👨‍🍳 DAPUR ARENA · Portal Ring 1"; S2.textContent = "";
+  T.textContent = batuQ().birulangit ? "Batu Biru Langit sudah milikmu. Bicara dengan Chef Khalid untuk bertanding lagi." : "Bicara dengan Chef Khalid untuk memulai Duel Masak: hafalkan resepnya dalam 3 menit, lalu masak persis sama.";
+}
+function dpWallDraw() {
+  const W = DP.wall; if (!W) return;
+  W.draw((x, w, h) => {
+    x.fillStyle = "#13201a"; rr(x, 0, 0, w, h, 30); x.fill(); x.strokeStyle = "#f5b014"; x.lineWidth = 8; rr(x, 6, 6, w - 12, h - 12, 26); x.stroke();
+    x.textAlign = "center"; x.fillStyle = "#f5b014"; x.font = `800 64px ${FONT}`; x.fillText("DUEL MASAK", w / 2, 96);
+    x.fillStyle = "#a7bdb1"; x.font = `500 30px ${FONT}`; x.fillText("Chef Khalid  ·  uji ingatan resep", w / 2, 142);
+    const now = performance.now(), rc = DP.rc;
+    x.font = `700 46px ${FONT}`; x.fillStyle = "#eef3ee";
+    if (DP.phase === "memo") { x.fillText("📜 Menghafal resep rahasia", w / 2, 250); x.font = `900 120px ${FONT}`; x.fillStyle = "#fde68a"; x.fillText(dpClockTxt(DP_MEM - (now - DP.memT0) / 1000), w / 2, 400); }
+    else if (DP.phase === "cook" || DP.phase === "judge") {
+      x.fillText(`${rc.dish.ic} ${rc.dish.nm}`, w / 2, 240);
+      const bar = (lbl, k, y, col) => { x.textAlign = "left"; x.fillStyle = "#eef3ee"; x.font = `700 34px ${FONT}`; x.fillText(lbl, 90, y - 16); x.fillStyle = "#244034"; rr(x, 90, y, w - 180, 34, 17); x.fill(); x.fillStyle = col; rr(x, 90, y, Math.max(34, (w - 180) * k), 34, 17); x.fill(); };
+      bar(`Chef Khalid · langkah ${DP.khStep}/${rc.steps.length}`, DP.khStep / rc.steps.length, 320, "#f5b014");
+      bar(`${S.name} · ${DP.pick.size} bahan · ${DP.seq.length} langkah`, Math.min(1, DP.seq.length / rc.steps.length), 430, "#38bdf8");
+      x.textAlign = "center"; x.fillStyle = "#a7bdb1"; x.font = `600 30px ${FONT}`; x.fillText(DP.phase === "judge" ? "🥄 Penjurian…" : `⏱ ${dpClockTxt((now - DP.cookT0) / 1000)}`, w / 2, 530);
+    } else if (DP.phase === "over" && DP.res) { x.font = `900 80px ${FONT}`; x.fillStyle = DP.res.win ? "#86efac" : "#fca5a5"; x.fillText(DP.res.win ? "🏆 SAMA PERSIS!" : "BELUM SAMA", w / 2, 320); x.font = `600 34px ${FONT}`; x.fillStyle = "#eef3ee"; x.fillText(`${rc.dish.nm} · ${DP.res.dt.toFixed(1)} detik`, w / 2, 400); }
+    else { x.fillText("Resep berbeda untuk setiap penantang", w / 2, 260); x.font = `500 32px ${FONT}`; x.fillStyle = "#cfe0d5"; ["1. Hafalkan resep selama 3 menit", "2. Pilih bahan beserta takarannya", "3. Susun urutan proses", "Satu kesalahan = belum sama dengan Chef Khalid"].forEach((s, i) => x.fillText(s, w / 2, 340 + i * 54)); }
+  });
+}
+async function dpRekorLoad() { try { const j = await (await fetch("api/kartu/rekor?id=masak", { credentials: "same-origin" })).json(); if (j.ok) dpBoardDraw(j.list); } catch { /* */ } }
+function dpBoardDraw(list) {
+  const B = DP.board; if (!B) return;
+  B.draw((x, w, h) => {
+    x.fillStyle = "#13201a"; rr(x, 0, 0, w, h, 26); x.fill(); x.strokeStyle = "#f5b014"; x.lineWidth = 6; rr(x, 4, 4, w - 8, h - 8, 22); x.stroke();
+    x.textAlign = "center"; x.fillStyle = "#f5b014"; x.font = `800 46px ${FONT}`; x.fillText("👨‍🍳 REKOR DUEL MASAK", w / 2, 76);
+    x.fillStyle = "#a7bdb1"; x.font = `500 26px ${FONT}`; x.fillText("waktu memasak tercepat dengan resep tepat", w / 2, 114);
+    x.font = `600 34px ${FONT}`; const L = (list || []).slice(0, 8);
+    if (!L.length) { x.fillStyle = "#a7bdb1"; x.fillText("Belum ada juara — jadilah yang pertama!", w / 2, 320); return; }
+    L.forEach((r, i) => { const y = 176 + i * 62; x.textAlign = "left"; x.fillStyle = i === 0 ? "#fde68a" : "#eef3ee"; x.fillText(`${i + 1}. ${String(r.nama).slice(0, 18)}`, 50, y); x.textAlign = "right"; x.fillText(`${r.best} dtk`, w - 50, y); });
+  });
+}
+
+// =====================================================================
+// MASUK / KELUAR
+// =====================================================================
+function dpEnterAsk() {
+  hidePopups();
+  const sk = SKT_BY[DP_SKIN];
+  genCard(`<button class="x" id="gx" aria-label="Tutup">×</button><h2>👨‍🍳 Gerbang Dapur Arena</h2>
+  <p>Di balik gerbang ini <b>Chef Khalid</b> menantangmu adu masak. Yang diuji adalah <b>ingatanmu</b>: kalian memasak menu yang sama dari resep Chef Khalid. Kamu akan mengenakan skin <b>${sk.nm}</b> (masuk koleksi Lemari Skin-mu).</p>
+  <div class="pr-pick"><button class="pr-sk on" id="dpGo1"><img alt="" src="assets/skins/${DP_SKIN}.jpg"><b>${sk.nm}</b><small>${sk.ds}</small></button></div>
+  <p style="font-size:12.5px;color:var(--mut)">Tantangan 7: <b>Duel Masak</b> melawan Chef Khalid · hadiah <b>Batu Biru Langit</b>.</p>
+  <div class="rowf"><button class="btn" id="dpGo2">👨‍🍳 Masuk</button><button class="ghost" id="dpNo2">Nanti saja</button></div>`);
+  $("dpGo1").onclick = $("dpGo2").onclick = () => { closeGen(); dpEnter(); };
+  $("dpNo2").onclick = () => closeGen();
+}
+function dpLeaveOthers() {
+  if (typeof TJ !== "undefined" && TJ.on) tjOff();
+  if (typeof KP !== "undefined" && KP.on) kpOff();
+}
+function dpEnter() {
+  sktGrant([DP_SKIN]);
+  const f = document.createElement("div"); f.className = "cv-fade"; document.body.appendChild(f);
+  if (typeof SFX !== "undefined") SFX.whoosh();
+  setTimeout(() => {
+    dpLeaveOthers();
+    DP.on = true; DP.forceSkin = DP_SKIN; refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+    DP.grace = performance.now() + 3500; DP.arrive = { x: DP_SPAWN.x, z: DP_SPAWN.z, t0: performance.now() };
+    xTeleport(DP_SPAWN.x, DP_SPAWN.z, DP_SPAWN.yaw);
+    if (DP.next) DP.next.visible = !!batuQ().birulangit; if (DP.stone) DP.stone.visible = !batuQ().birulangit;
+    dpHud(true); DP.phase = "idle"; dpHudUpd(); dpWallDraw(); dpRekorLoad();
+    setTimeout(() => f.remove(), 900);
+    setTimeout(() => toast("👨‍🍳 Selamat datang di Dapur Arena! Chef Khalid menunggumu di meja masaknya.", 5000), 1400);
+  }, 650);
+}
+function dpVisitPrep() { if (!DP.on) { sktGrant([DP_SKIN], true); dpLeaveOthers(); DP.on = true; DP.forceSkin = DP_SKIN; refreshMySkin(); DP.grace = performance.now() + 3500; dpHud(true); DP.phase = "idle"; dpHudUpd(); dpWallDraw(); } }
+function dpOff() {
+  if (DP.phase !== "idle") dpStop();
+  DP.on = false; DP.forceSkin = null; DP.grace = performance.now() + 3500;
+  refreshMySkin(); if (typeof mpPresence === "function") mpPresence(true);
+  dpHud(false);
+}
+function dpExit() { if ((DP.phase === "memo" || DP.phase === "cook") && !confirm("Keluar dari Dapur Arena? Duel masak akan dihentikan.")) return; dpOff(); xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Kamu kembali ke Taman Apresiasi.", 3000); }
+function dpToTerjun() { if (DP.phase === "memo" || DP.phase === "cook" || DP.phase === "judge") return; dpOff(); if (typeof tjEnter === "function") tjEnter(); }
+function dpIsolate(on) {
+  if (on === !!DP.hidden) return;
+  if (on) {
+    DP.root.visible = true;
+    const keep = new Set([avatar, camera, DP.root, typeof ISN !== "undefined" ? ISN.g : null].filter(Boolean)); for (const r of remotes.values()) keep.add(r.av);
+    DP.hidden = [];
+    for (const o of scene.children) if (o.visible && !keep.has(o) && !o.isLight && !o.isCamera) { o.visible = false; DP.hidden.push(o); }
+    for (const o of world.walls.children) if (o.visible && !DP.ownW.has(o)) { o.visible = false; DP.hidden.push(o); }
+  } else { for (const o of DP.hidden) o.visible = true; DP.hidden = null; DP.root.visible = false; }
+}
+function dpTickAll(dt) {
+  const now = performance.now(), here = dpZone(P.x, P.z), grace = now < DP.grace;
+  if (DP.arrive) { if (Math.hypot(P.x - DP.arrive.x, P.z - DP.arrive.z) < 2 || now - DP.arrive.t0 > 6000) DP.arrive = null; }
+  dpIsolate(here);
+  if (here) { scene.fog.color.setRGB(0.09, 0.07, 0.05); scene.fog.density = 0.01; DP.fogged = true; }
+  else if (DP.fogged && typeof xFogBase !== "undefined" && xFogBase) { scene.fog.color.copy(xFogBase.c); scene.fog.density = xFogBase.d; DP.fogged = false; }
+  if (here && !DP.on && !grace && !DP.arrive) { xTeleport(RING.x + 3.2, RING.z + 4.2, Math.PI); toast("◆ Dapur Arena hanya bisa dimasuki lewat gerbang di Lapangan Terjun."); return; }
+  if (!here && DP.on && !grace && !DP.arrive && roomAt(P.x, P.z)) dpOff();
+  if (!here) return;
+  dpTick(dt);
+  const busy = DP.phase === "memo" || DP.phase === "cook" || DP.phase === "judge";
+  if (DP.on && !busy && !grace && Math.hypot(P.x - DP_EXIT.x, P.z - DP_EXIT.z) < 1.3) dpToTerjun();
+  if (DP.on && !busy && DP.next && DP.next.visible && Math.hypot(P.x - DP.next.position.x, P.z - DP.next.position.z) < 1.8 && now > (DP.askNextT || 0)) { DP.askNextT = now + 8000; toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); }
+  for (const e of DP.anims) e(dt);
+}
+
+// =====================================================================
+// PEMBANGUNAN DAPUR ARENA
+// =====================================================================
+function dpStation(root, cx, cz, label, col) {
+  const s = { flames: [], steam: [], bowls: [], fire: false, lift: 0, liftY: 0 };
+  const steelM = new THREE2.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.75, roughness: 0.28 });
+  const woodM = new THREE2.MeshStandardMaterial({ color: 0x6b3f22, roughness: 0.7 });
+  const darkM = new THREE2.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.5, roughness: 0.4 });
+  // meja: depan kayu, atas baja
+  const base = new THREE2.Mesh(new THREE2.BoxGeometry(5.2, 0.92, 1.6), woodM); base.position.set(cx, 0.46, cz); root.add(base);
+  const top = new THREE2.Mesh(new THREE2.BoxGeometry(5.4, 0.06, 1.75), steelM); top.position.set(cx, 0.95, cz); root.add(top);
+  for (let i = -2; i <= 2; i++) { const p = new THREE2.Mesh(new THREE2.BoxGeometry(0.9, 0.7, 0.02), new THREE2.MeshStandardMaterial({ color: 0x7c4a29, roughness: 0.6 })); p.position.set(cx + i * 1.02, 0.47, cz + 0.81); root.add(p); }
+  // kompor 2 tungku
+  const stove = new THREE2.Mesh(new THREE2.BoxGeometry(1.8, 0.05, 1.1), darkM); stove.position.set(cx - 1.4, 1.0, cz - 0.1); root.add(stove);
+  const fM = new THREE2.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.85, toneMapped: false }), fM2 = new THREE2.MeshBasicMaterial({ color: 0xf97316, transparent: true, opacity: 0.8, toneMapped: false });
+  for (const dx of [-0.45, 0.45]) {
+    const ring = new THREE2.Mesh(new THREE2.TorusGeometry(0.2, 0.03, 6, 20), darkM); ring.rotation.x = Math.PI / 2; ring.position.set(cx - 1.4 + dx, 1.04, cz - 0.1); root.add(ring);
+    for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2, fl = new THREE2.Mesh(new THREE2.ConeGeometry(0.035, 0.12, 5), k % 2 ? fM : fM2); fl.geometry.translate(0, 0.06, 0); fl.position.set(cx - 1.4 + dx + Math.cos(a) * 0.17, 1.03, cz - 0.1 + Math.sin(a) * 0.17); fl.visible = false; fl.userData.ph = k * 1.7 + dx * 5; root.add(fl); s.flames.push(fl); }
+  }
+  // wajan (kiri) & panci (kanan)
+  const pan = new THREE2.Group(); pan.position.set(cx - 1.85, 1.1, cz - 0.1); root.add(pan); s.pan = pan;
+  { const bowl = new THREE2.Mesh(new THREE2.SphereGeometry(0.32, 20, 10, 0, Math.PI * 2, Math.PI * 0.6, Math.PI * 0.4), new THREE2.MeshStandardMaterial({ color: 0x27272a, metalness: 0.6, roughness: 0.35, side: THREE2.DoubleSide })); bowl.position.y = 0.26; pan.add(bowl);
+    const food = new THREE2.Mesh(new THREE2.CircleGeometry(0.24, 18), new THREE2.MeshStandardMaterial({ color: col, roughness: 0.8 })); food.rotation.x = -Math.PI / 2; food.position.y = 0.02; pan.add(food);
+    const hd = new THREE2.Mesh(new THREE2.CylinderGeometry(0.025, 0.025, 0.45, 8), woodM); hd.rotation.z = Math.PI / 2; hd.position.set(-0.5, 0.06, 0); pan.add(hd); }
+  { const pot = new THREE2.Mesh(new THREE2.CylinderGeometry(0.26, 0.24, 0.34, 20), steelM); pot.position.set(cx - 0.95, 1.22, cz - 0.1); root.add(pot);
+    const lid = new THREE2.Mesh(new THREE2.CylinderGeometry(0.27, 0.27, 0.03, 20), steelM); lid.position.set(cx - 0.95, 1.4, cz - 0.1); root.add(lid);
+    const kn = new THREE2.Mesh(new THREE2.SphereGeometry(0.04, 8, 6), darkM); kn.position.set(cx - 0.95, 1.44, cz - 0.1); root.add(kn); }
+  const stM = typeof bcSmokeMat === "function" ? bcSmokeMat("rgba(255,255,255,.9)") : new THREE2.SpriteMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 });
+  for (let k = 0; k < 6; k++) { const sp = new THREE2.Sprite(stM.clone()); sp.position.set(cx - 0.95 + (Math.random() - 0.5) * 0.2, 1.4, cz - 0.1 + (Math.random() - 0.5) * 0.2); sp.userData.k = k / 6; sp.visible = false; root.add(sp); s.steam.push(sp); }
+  // talenan & mangkuk bahan (muncul sesuai jumlah bahan dipilih)
+  const board = new THREE2.Mesh(new THREE2.BoxGeometry(0.9, 0.04, 0.55), new THREE2.MeshStandardMaterial({ color: 0xc08a52, roughness: 0.8 })); board.position.set(cx + 0.35, 1.0, cz + 0.15); root.add(board);
+  const kn = new THREE2.Mesh(new THREE2.BoxGeometry(0.45, 0.01, 0.07), steelM); kn.position.set(cx + 0.35, 1.03, cz + 0.15); kn.rotation.y = 0.4; root.add(kn);
+  const bowlCols = [0xdc2626, 0xf59e0b, 0x16a34a, 0xfef3c7, 0x7c2d12, 0xfacc15, 0x65a30d, 0xf97316, 0xe5e7eb, 0x9a3412, 0x22c55e, 0xb91c1c];
+  for (let k = 0; k < 12; k++) {
+    const g = new THREE2.Group(), c2 = k % 6, r2 = Math.floor(k / 6); g.position.set(cx + 1.05 + c2 * 0.27 - 0.3, 0.99, cz - 0.45 + r2 * 0.32); root.add(g);
+    const b = new THREE2.Mesh(new THREE2.CylinderGeometry(0.11, 0.07, 0.08, 14), new THREE2.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.35 })); b.position.y = 0.04; g.add(b);
+    const fd = new THREE2.Mesh(new THREE2.SphereGeometry(0.085, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), new THREE2.MeshStandardMaterial({ color: bowlCols[k], roughness: 0.85 })); fd.position.y = 0.06; fd.scale.y = 0.5; g.add(fd);
+    g.visible = false; s.bowls.push(g);
+  }
+  // piring & tudung saji
+  const plate = new THREE2.Group(); plate.position.set(cx + 0.35, 0.99, cz + 0.15); plate.visible = false; root.add(plate); s.plate = plate;
+  { const pl = new THREE2.Mesh(new THREE2.CylinderGeometry(0.3, 0.26, 0.03, 24), new THREE2.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 })); pl.position.y = 0.05; plate.add(pl);
+    const fd = new THREE2.Mesh(new THREE2.SphereGeometry(0.2, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), new THREE2.MeshStandardMaterial({ color: col, roughness: 0.8 })); fd.scale.y = 0.45; fd.position.y = 0.07; plate.add(fd); }
+  const cl = new THREE2.Mesh(new THREE2.SphereGeometry(0.33, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), steelM); cl.position.set(cx + 0.35, 1.02, cz + 0.15); cl.visible = false; root.add(cl); s.cloche = cl;
+  const clk = new THREE2.Mesh(new THREE2.SphereGeometry(0.04, 8, 6), steelM); clk.position.y = 0.33; cl.add(clk);
+  // tudung asap (hood) + lampu
+  const hood = new THREE2.Mesh(new THREE2.BoxGeometry(2.0, 0.5, 1.2), steelM); hood.position.set(cx - 1.4, 3.1, cz - 0.3); root.add(hood);
+  const duct = new THREE2.Mesh(new THREE2.BoxGeometry(0.5, 2.2, 0.5), steelM); duct.position.set(cx - 1.4, 4.45, cz - 0.5); root.add(duct);
+  const lamp = new THREE2.Mesh(new THREE2.PlaneGeometry(1.6, 0.8), new THREE2.MeshBasicMaterial({ color: 0xfff1c2, toneMapped: false })); lamp.rotation.x = Math.PI / 2; lamp.position.set(cx - 1.4, 2.84, cz - 0.3); root.add(lamp);
+  const sg = prSign(label, "", "#f5b014", 3.0); sg.position.set(cx, 3.2, cz + 0.4); root.add(sg);
+  xCol(cx - 2.7, cz + 0.9, cx + 2.7, cz + 0.9, 0.25); xCol(cx - 2.7, cz - 0.9, cx + 2.7, cz - 0.9, 0.25); xCol(cx - 2.7, cz - 0.9, cx - 2.7, cz + 0.9, 0.25); xCol(cx + 2.7, cz - 0.9, cx + 2.7, cz + 0.9, 0.25);
+  return s;
+}
+function dpFire(s, on) { if (s) s.fire = !!on; }
+function dpPlate(s, on) { if (!s) return; s.plate.visible = on; s.cloche.visible = on; s.lift = 0; s.liftY = 0; s.cloche.position.y = 1.02; }
+function dpBowls() { const s = DP.st.me; if (!s) return; s.bowls.forEach((b, i) => { b.visible = i < DP.pick.size; }); }
+function dpStationReset() {
+  for (const s of [DP.st.me, DP.st.kh]) { if (!s) continue; dpFire(s, false); dpPlate(s, false); s.bowls.forEach((b) => { b.visible = s === DP.st.kh; }); }
+}
+function buildDapur() {
+  if (DP.built) return; DP.built = true;
+  const root = new THREE2.Group(); root.visible = false; scene.add(root); DP.root = root;
+  const wBefore = new Set(world.walls.children);
+  const CX = DPC.x, CZ = DPC.z, W = DPV.x1 - DPV.x0 - 4, D = DPV.z1 - DPV.z0 - 4, H = 7;
+  // lantai ubin hitam-putih
+  const fl = l2Canvas(512, 512, (x, w, h) => { for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { x.fillStyle = (i + j) % 2 ? "#e7e2d6" : "#2a2a28"; x.fillRect(i * 64, j * 64, 64, 64); } x.strokeStyle = "rgba(0,0,0,.25)"; x.lineWidth = 2; for (let i = 0; i <= 8; i++) { x.beginPath(); x.moveTo(i * 64, 0); x.lineTo(i * 64, h); x.moveTo(0, i * 64); x.lineTo(w, i * 64); x.stroke(); } });
+  const ft = xTex(fl); ft.wrapS = ft.wrapT = THREE2.RepeatWrapping; ft.repeat.set(W / 6, D / 6);
+  const floor = new THREE2.Mesh(new THREE2.PlaneGeometry(W, D), new THREE2.MeshStandardMaterial({ map: ft, roughness: 0.5 })); floor.rotation.x = -Math.PI / 2; floor.position.set(CX, 0.01, CZ); floor.receiveShadow = true; root.add(floor);
+  // langit-langit kayu berbalok
+  const ceil = new THREE2.Mesh(new THREE2.PlaneGeometry(W, D), new THREE2.MeshStandardMaterial({ color: 0x3b2516, roughness: 0.9 })); ceil.rotation.x = Math.PI / 2; ceil.position.set(CX, H, CZ); root.add(ceil);
+  for (let k = -W / 2 + 3; k < W / 2; k += 4) { const bm = new THREE2.Mesh(new THREE2.BoxGeometry(0.35, 0.4, D), new THREE2.MeshStandardMaterial({ color: 0x5b3a22, roughness: 0.8 })); bm.position.set(CX + k, H - 0.2, CZ); root.add(bm); }
+  { const hl = new THREE2.HemisphereLight(0xfff4e0, 0x3b2a1a, 1.05); hl.position.set(CX, H, CZ); root.add(hl);
+    for (const [x, z, k] of [[DP_ME.x, DP_ME.z + 2, 14], [DP_KH.x, DP_KH.z + 2, 14], [CX, CZ + 8, 12]]) { const pl = new THREE2.PointLight(0xffd9a0, k, 22, 1.6); pl.position.set(x, 5.5, z); root.add(pl); } }
+  // dinding: ubin putih (bawah) + pita zellige + dinding hangat (atas)
+  const tile = l2Canvas(512, 512, (x, w, h) => { x.fillStyle = "#f5f3ee"; x.fillRect(0, 0, w, h); x.strokeStyle = "#cfcabd"; x.lineWidth = 4; for (let j = 0; j < 16; j++) { const off = j % 2 ? 32 : 0; x.beginPath(); x.moveTo(0, j * 32); x.lineTo(w, j * 32); x.stroke(); for (let i = -1; i < 9; i++) { x.beginPath(); x.moveTo(i * 64 + off, j * 32); x.lineTo(i * 64 + off, j * 32 + 32); x.stroke(); } } });
+  const zel = l2Canvas(512, 64, (x, w, h) => { x.fillStyle = "#0f5257"; x.fillRect(0, 0, w, h); for (let i = 0; i < 8; i++) { const cx = i * 64 + 32; x.fillStyle = "#e8b04a"; x.beginPath(); for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2, r = k % 2 ? 12 : 26; x.lineTo(cx + Math.cos(a) * r, 32 + Math.sin(a) * r); } x.closePath(); x.fill(); x.fillStyle = "#0f5257"; x.beginPath(); x.arc(cx, 32, 7, 0, 7); x.fill(); } });
+  const tT = xTex(tile); tT.wrapS = tT.wrapT = THREE2.RepeatWrapping; const zT = xTex(zel); zT.wrapS = THREE2.RepeatWrapping;
+  const upM = new THREE2.MeshStandardMaterial({ color: 0x8a5a3c, roughness: 0.85 });
+  for (const [x, z, ry, len] of [[CX, DPV.z0 + 2, 0, W], [CX, DPV.z1 - 2, Math.PI, W], [DPV.x0 + 2, CZ, Math.PI / 2, D], [DPV.x1 - 2, CZ, -Math.PI / 2, D]]) {
+    const t2 = tT.clone(); t2.needsUpdate = true; t2.repeat.set(len / 3, 1);
+    const lo = new THREE2.Mesh(new THREE2.PlaneGeometry(len, 3), new THREE2.MeshStandardMaterial({ map: t2, roughness: 0.4 })); lo.position.set(x, 1.5, z); lo.rotation.y = ry; root.add(lo);
+    const z2 = zT.clone(); z2.needsUpdate = true; z2.repeat.set(len / 2.5, 1);
+    const band = new THREE2.Mesh(new THREE2.PlaneGeometry(len, 0.45), new THREE2.MeshStandardMaterial({ map: z2, roughness: 0.5 })); band.position.set(x + Math.sin(ry) * 0.01, 3.2, z + Math.cos(ry) * 0.01); band.rotation.y = ry; root.add(band);
+    const up = new THREE2.Mesh(new THREE2.PlaneGeometry(len, H - 3.4), upM); up.position.set(x, 3.4 + (H - 3.4) / 2, z); up.rotation.y = ry; root.add(up);
+  }
+  // rak rempah di dinding belakang
+  const jarCols = [0xb91c1c, 0xea580c, 0xca8a04, 0x65a30d, 0x7c2d12, 0xfef3c7, 0x15803d, 0x92400e];
+  for (const sx of [-1, 1]) {
+    const sh = new THREE2.Mesh(new THREE2.BoxGeometry(4.4, 0.08, 0.35), new THREE2.MeshStandardMaterial({ color: 0x5b3a22, roughness: 0.7 })); sh.position.set(CX + sx * 13, 2.3, DPV.z0 + 2.2); root.add(sh);
+    for (let k = 0; k < 10; k++) { const jar = new THREE2.Mesh(new THREE2.CylinderGeometry(0.11, 0.11, 0.3, 10), new THREE2.MeshStandardMaterial({ color: jarCols[(k + (sx > 0 ? 3 : 0)) % jarCols.length], roughness: 0.5 })); jar.position.set(CX + sx * 13 - 1.9 + k * 0.42, 2.49, DPV.z0 + 2.2); root.add(jar); }
+  }
+  // stasiun masak pemain & Chef Khalid
+  DP.st.me = dpStation(root, DP_ME.x, DP_ME.z, "MEJA KAMU", 0xd97706);
+  DP.st.kh = dpStation(root, DP_KH.x, DP_KH.z, "MEJA CHEF KHALID", 0xb45309);
+  dpStationReset();
+  xAct(DP.st.me.plate, { type: "x_dpmeja" });
+  // layar besar di dinding belakang (antara kedua meja)
+  DP.wall = cvScreen(7.6, 4.0, 1520, 800); DP.wall.m.position.set(CX, 4.7, DPV.z0 + 2.1); root.add(DP.wall.m); xAct(DP.wall.m, { type: "x_dpwall" });
+  { const fr = new THREE2.Mesh(new THREE2.BoxGeometry(8.0, 4.4, 0.15), new THREE2.MeshStandardMaterial({ color: 0x3b2516, roughness: 0.6 })); fr.position.set(CX, 4.7, DPV.z0 + 2.02); root.add(fr); }
+  dpWallDraw();
+  // meja saji panjang (pemanis ruangan) & papan tanda
+  { const tb = new THREE2.Mesh(new THREE2.BoxGeometry(6, 0.9, 1.2), new THREE2.MeshStandardMaterial({ color: 0x6b3f22, roughness: 0.6 })); tb.position.set(CX, 0.45, CZ + 4); root.add(tb);
+    const tt = new THREE2.Mesh(new THREE2.BoxGeometry(6.2, 0.06, 1.3), new THREE2.MeshStandardMaterial({ color: 0xe7e2d6, roughness: 0.3 })); tt.position.set(CX, 0.92, CZ + 4); root.add(tt);
+    for (let k = 0; k < 5; k++) { const fr2 = new THREE2.Mesh(new THREE2.SphereGeometry(0.12, 10, 8), new THREE2.MeshStandardMaterial({ color: [0xdc2626, 0xf59e0b, 0x16a34a, 0xf97316, 0x7c3aed][k], roughness: 0.5 })); fr2.position.set(CX - 2 + k, 1.04, CZ + 4); root.add(fr2); }
+    xCol(CX - 3.1, CZ + 3.4, CX + 3.1, CZ + 3.4, 0.25); xCol(CX - 3.1, CZ + 4.6, CX + 3.1, CZ + 4.6, 0.25); xCol(CX - 3.1, CZ + 3.4, CX - 3.1, CZ + 4.6, 0.25); xCol(CX + 3.1, CZ + 3.4, CX + 3.1, CZ + 4.6, 0.25); }
+  const sg = prSign("👨‍🍳 DUEL MASAK · Tantangan 7", "hafalkan resep 3 menit · masak persis sama · lawan: Chef Khalid", "#f5b014", 6.4); sg.position.set(CX, 2.6, DPV.z1 - 2.3); sg.rotation.y = Math.PI; root.add(sg);
+  DP.board = cvScreen(3.2, 2.6, 900, 750); DP.board.m.position.set(DPV.x1 - 2.1, 2.0, CZ + 6); DP.board.m.rotation.y = -Math.PI / 2; root.add(DP.board.m); dpBoardDraw([]);
+  // Batu Biru Langit di alas
+  const px = DPV.x1 - 6, pz = CZ + 12;
+  const ped = new THREE2.Mesh(new THREE2.CylinderGeometry(0.6, 0.75, 1.0, 24), new THREE2.MeshStandardMaterial({ color: 0x0c2a3a, metalness: 0.6, roughness: 0.3, emissive: 0x38bdf8, emissiveIntensity: 0.3 })); ped.position.set(px, 0.5, pz); root.add(ped);
+  const gem = prGem("#38bdf8", "#0c4a6e", 0.5); gem.position.set(px, 0, pz); root.add(gem); DP.stone = gem; gem.visible = !batuQ().birulangit;
+  DP.anims.push((dt) => { gem.rotation.y += dt; gem.userData.gem.position.y = 1.15 + Math.sin(t * 2) * 0.12; });
+  xCol(px - 0.8, pz, px + 0.8, pz, 0.7);
+  // portal kembali & gerbang berikutnya
+  const ex = new THREE2.Group(); ex.position.set(DP_EXIT.x, 0, DP_EXIT.z); ex.rotation.y = Math.PI / 2; root.add(ex);
+  const er = new THREE2.Mesh(new THREE2.TorusGeometry(1.2, 0.12, 10, 36), new THREE2.MeshBasicMaterial({ color: 0xa855f7, toneMapped: false })); er.position.y = 1.6; ex.add(er);
+  const ed = new THREE2.Mesh(new THREE2.CircleGeometry(1.1, 30), new THREE2.MeshBasicMaterial({ color: 0x2e1065, transparent: true, opacity: 0.85, side: THREE2.DoubleSide })); ed.position.y = 1.6; ex.add(ed);
+  const es = prSign("⟲ LAPANGAN TERJUN", "kembali ke tantangan 6", "#a855f7", 2.6); es.position.y = 3.3; ex.add(es);
+  xAct(ed, { type: "x_dpexit" }); xAct(es, { type: "x_dpexit" }); DP.anims.push((dt) => { er.rotation.z += dt; });
+  const nx = new THREE2.Group(); nx.position.set(DPV.x0 + 3, 0, CZ + 4); nx.rotation.y = Math.PI / 2; root.add(nx);
+  const nr = new THREE2.Mesh(new THREE2.TorusGeometry(1.6, 0.22, 12, 40), new THREE2.MeshStandardMaterial({ color: 0x0c4a6e, emissive: 0x38bdf8, emissiveIntensity: 0.9, metalness: 0.5 })); nr.position.y = 2.1; nx.add(nr);
+  const ns = prSign("◆ GERBANG BERIKUTNYA", "segera dibuka", "#38bdf8", 2.8); ns.position.y = 4.4; nx.add(ns);
+  DP.next = nx; nx.visible = !!batuQ().birulangit; DP.anims.push((dt) => { nr.rotation.z += dt * 0.7; });
+  xAct(nr, { type: "x_dpnext" }); xAct(ns, { type: "x_dpnext" });
+  // batas ruangan
+  for (const [ax, az, bx, bz] of [[DPV.x0 + 2, DPV.z0 + 2, DPV.x1 - 2, DPV.z0 + 2], [DPV.x1 - 2, DPV.z0 + 2, DPV.x1 - 2, DPV.z1 - 2], [DPV.x1 - 2, DPV.z1 - 2, DPV.x0 + 2, DPV.z1 - 2], [DPV.x0 + 2, DPV.z1 - 2, DPV.x0 + 2, DPV.z0 + 2]]) xCol(ax, az, bx, bz, 0.3);
+  // Chef Khalid (berjenggot) di balik meja masaknya, menghadap ruangan
+  SKIN_BUILD["NPC-KHALID"] = sktBuild(Object.assign({}, SKT_BY[DP_SKIN], { br: ["full", "#1f1a17"], tn: "T" }));
+  makeCustomHuman("khalid", { code: "MASAK", name: "Chef Khalid", role: "Koki Kepala · Dapur Arena", col: "#f5b014", icon: "👨‍🍳", hint: "👨‍🍳", x: DP_KH.x, z: DP_KH.z - 1.6, room: "m_dapur", secret: true, hidden: true, tag: "CHEF KHALID · KOKI KEPALA",
+    look: { shirt: "#ffffff", apron: "#ffffff", noApron: true }, chips: ["Tantang masak!", "Aturannya?", "Main ulang"], roleNote: "Tantangan Duel Masak (Portal Ring 1)",
+    knowText: "Chef Khalid, koki kepala Dapur Arena, menantang pemain adu masak yang menguji ingatan. Pemain menghafal resep selama 3 menit, lalu memilih bahan beserta takarannya dan menyusun urutan proses. Semua harus tepat untuk menyamai Chef Khalid dan mendapat Batu Biru Langit. Resepnya berbeda di setiap percobaan.", greetActs: () => khalidAns("halo").acts, answer: khalidAns });
+  { const n = NPCS.khalid; const s = sktOnNpc(n, "NPC-KHALID"); n.skinG = s.group; n.tag.position.y = 2.5; root.add(n.g); }
+  DP.own = new Set([root]); DP.ownW = new Set(world.walls.children.filter((o) => !wBefore.has(o)));
+  XT.anim.push((dt) => dpTickAll(dt));
+}
+function khalidAns(q) {
+  const ql = norm(q).replace(/\s+/g, " ").trim(), bt = batuQ();
+  const go = ["👨‍🍳 Tantang masak!", () => { closeGen(); hidePopups(); dpStart(); }];
+  const busy = DP.phase === "memo" || DP.phase === "cook" || DP.phase === "judge";
+  if (/terima ?kasih|makasih|syukron|syukran/.test(ql)) return { text: "Afwan! Semoga ilmumu selezat masakan ibumu 😊" };
+  if (!bt.ungu) return { text: `Ahlan, aku Chef Khalid. Dapur ini hanya untuk penjelajah yang sudah membawa Batu Ungu dari Lapangan Terjun, ${S.name}.` };
+  if (/resep|bocor|contek|kunci jawaban/.test(ql) && !/aturan|cara/.test(ql)) return { text: "Resepku tidak pernah sama dua kali — setiap penantang, setiap percobaan, mendapat resep yang berbeda. Jadi tidak ada gunanya mencontek resep orang lain. Andalkan ingatanmu sendiri!", acts: busy ? [] : [go] };
+  if (/aturan|cara|gimana|bagaimana|tips/.test(ql)) return { text: "Kita memasak menu yang sama dari resepku. Pertama, kamu punya 3 menit untuk menghafal resepnya: bahan, takaran, dan urutan proses. Setelah itu resep kusembunyikan. Kamu harus memilih semua bahan dengan takaran yang tepat — hati-hati, ada pengecoh takaran dan bahan lain — lalu menyusun proses sesuai urutan. Ada juga pengecoh waktu memasak dan langkah yang keliru. Kalau semuanya tepat, masakanmu sama dengan masakanku dan kuakui kamu pemenangnya: Batu Biru Langit untukmu. Satu saja salah, kita ulang dengan resep baru. Tips: hafalkan bahan bersama takarannya sebagai satu kesatuan, dan ingat proses seperti cerita yang berurutan.", acts: busy ? [] : [go] };
+  if (/tantang|mulai|main|masak|ulang|siap|tanding|duel|lagi/.test(ql)) { if (busy) return { text: "Kita sedang bertanding! Fokus pada masakanmu." }; setTimeout(dpStart, 400); return { text: bt.birulangit ? `Bertanding lagi? Ini resep baru untukmu, ${S.name}!` : `Bismillah. Ini resepku, ${S.name} — hafalkan baik-baik!` }; }
+  return { text: bt.birulangit ? `Ahlan lagi, ${S.name}! Batu Biru Langit sudah milikmu. Mau beradu ingatan sekali lagi dengan resep baru?` : `Ahlan wa sahlan, ${S.name}. Aku Chef Khalid. Seorang koki hebat tidak membaca resep sambil memasak — semuanya ada di kepalanya. Berani menyamai masakanku dari ingatan?`, acts: busy ? [] : [go, ["❓ Aturannya?", () => askNpc("Aturannya bagaimana?", "khalid")]] };
+}
+function dpAct(act) {
+  const ty = act.type;
+  if (ty === "x_dpexit") { dpToTerjun(); return true; }
+  if (ty === "x_dpnext") { toast("◆ Gerbang berikutnya masih tersegel — segera dibuka!", 4000); return true; }
+  if (ty === "x_dpwall" || ty === "x_dpmeja") { if (DP.phase === "idle" || DP.phase === "over") { if (typeof askNpc === "function") askNpc("Aturannya bagaimana?", "khalid"); } else if (!$("dpOv")) dpRender(); return true; }
+  return false;
+}
+// =====================================================================
+
 // =====================================================================
 // src/ext_akademik.js — RUANG INFORMASI KEGIATAN AKADEMIK (barat E-Portal)
 //  • Ruang luas dengan meja resepsionis melengkung di tengah, dijaga Barkan
@@ -27208,7 +27924,7 @@ function buildAkademik() {
 //    kanan atas, tembus pandang, dan ringkas agar tidak menghalangi
 //    pandangan. Ketuk judul panel (▾/▴) untuk membuka detail & tombol.
 // =====================================================================
-var HUD_IDS = ["cvHud", "ioHud", "kwHud", "svHud", "isHud", "tmHud", "prHud", "saHud", "tyHud", "kpHud", "bcHud", "tjHud"];
+var HUD_IDS = ["cvHud", "ioHud", "kwHud", "svHud", "isHud", "tmHud", "prHud", "saHud", "tyHud", "kpHud", "bcHud", "tjHud", "dpHud"];
 var HUDX = (() => { try { return JSON.parse(localStorage.getItem("itlab.hudx") || "{}") || {}; } catch { return {}; } })();
 function hudSaveX() { try { localStorage.setItem("itlab.hudx", JSON.stringify(HUDX)); } catch { /* */ } }
 (() => {
